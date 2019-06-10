@@ -10,6 +10,7 @@
 		415EF2B722AD804C004658C7 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2B622AD804C004658C7 /* Player.swift */; };
 		415EF2B922AD9D60004658C7 /* editSettingsControllerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2B822AD9D60004658C7 /* editSettingsControllerTableViewController.swift */; };
 		415EF2C122AE67C1004658C7 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C022AE67C1004658C7 /* GameState.swift */; };
+		415EF2C322AE68E8004658C7 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C222AE68E8004658C7 /* History.swift */; };
 		41ED4F3822AD799000A46C19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ED4F3722AD799000A46C19 /* AppDelegate.swift */; };
 		41ED4F3A22AD799000A46C19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ED4F3922AD799000A46C19 /* ViewController.swift */; };
 		41ED4F3D22AD799000A46C19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41ED4F3B22AD799000A46C19 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 		415EF2B622AD804C004658C7 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		415EF2B822AD9D60004658C7 /* editSettingsControllerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = editSettingsControllerTableViewController.swift; sourceTree = "<group>"; };
 		415EF2C022AE67C1004658C7 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		415EF2C222AE68E8004658C7 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		41ED4F3422AD799000A46C19 /* Points.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Points.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41ED4F3722AD799000A46C19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41ED4F3922AD799000A46C19 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				415EF2C022AE67C1004658C7 /* GameState.swift */,
+				415EF2C222AE68E8004658C7 /* History.swift */,
 				41ED4F3722AD799000A46C19 /* AppDelegate.swift */,
 				41ED4F3922AD799000A46C19 /* ViewController.swift */,
 				41ED4F3B22AD799000A46C19 /* Main.storyboard */,
@@ -144,6 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				415EF2C322AE68E8004658C7 /* History.swift in Sources */,
 				415EF2C122AE67C1004658C7 /* GameState.swift in Sources */,
 				415EF2B922AD9D60004658C7 /* editSettingsControllerTableViewController.swift in Sources */,
 				415EF2B722AD804C004658C7 /* Player.swift in Sources */,

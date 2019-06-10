@@ -15,7 +15,7 @@ class ViewController: UIViewController {
 	let maxPoints = 24
 	let maxGames = 3
 	
-	var gameStateHistory: [ GameState ]!
+	var gameStateHistory: History!
 	
 	@IBOutlet var name1: UILabel!
 	@IBOutlet var name2: UILabel!
@@ -51,18 +51,16 @@ class ViewController: UIViewController {
 		updateUI()
 	}
 	
-	var currentGameState: GameState!
-	
 	func setup() {
 		player1 = Player(name: "Yo")
 		player2 = Player(name: "Tu")
-		currentGameState = GameState(with: player1, and: player2)
-		gameStateHistory = []
+		gameStateHistory = History()
 	}
 	
 	func resetScores() {
 		player1.score = 0
 		player2.score = 0
+		gameStateHistory = History()
 	}
 	
 	func gameEnded(winningTeam: Player) {
@@ -100,7 +98,7 @@ class ViewController: UIViewController {
 	}
 
 	@IBAction func addPoint(_ sender: UIButton) {
-		gameStateHistory.append(currentGameState)
+		gameStateHistory.add(state: GameState(with: player1, and: player2))
 		
 		if sender == score1 {
 			player1.addPoint()
@@ -113,20 +111,12 @@ class ViewController: UIViewController {
 	}
 
 	@IBAction func undo(_ sender: Any) {
-		guard gameStateHistory.count > 0 else { return }
-
-		let lastState = gameStateHistory.removeLast()
-		currentGameState = lastState
-		player1 = lastState.copy1()
-		player2 = lastState.copy2()
-		
+		if let curState = gameStateHistory.restoreLast() {
+			player1.score = curState.points[0]
+			player2.score = curState.points[1]
+		}
 		updateUI()
 	}
 	
 	
 }
-
-// setup
-// currentGameState = [player1.score = 0, player2.score = 0]
-// gameStateHistory = []
-
