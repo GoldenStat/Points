@@ -13,9 +13,10 @@ import Foundation
 struct GameState {
 	
 	var points: [ Int ]
+	var players: Int { get { return points.count }}
 	
-	init(with player1: Player, and player2: Player) {
-		points = [ player1.score, player2.score ]
+	init(with players: [Player] ) {
+		points = players.map{ $0.score}
 	}
 	
 }
