@@ -6,11 +6,20 @@
 //  Copyright © 2019 Alexander Völz. All rights reserved.
 //
 
+
 import UIKit
 import GameKit
 
+fileprivate extension Selector {
+	static let setupGame = #selector(PointsViewController.setupGame(with:))
+	static let editSettings = #selector(PointsViewController.editSettings)
+	static let addPoints = #selector(PointsViewController.addPoint(for:))
+	static let resetScores = #selector(PointsViewController.resetScores)
+}
+
 class PointsViewController: UIViewController, UITextFieldDelegate {
 
+	
 	var boardView : GameBoardView!
 
 	var world: GameWorld!
@@ -67,43 +76,35 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		view.bringSubviewToFront(gameScoreArea)
 	}
 
-	// REMARK: -- vc configuration
+	// REMARK: -- ViewController configuration
 
 	func initRightBarButtonItems(mode: ControlMode) {
 		switch mode {
 		case .edit:
-			let editItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editSettings))
+			let editItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: .editSettings)
 			///enable user interactions in board and score areas whilst in edit mode
-			let twoPlayers = UIBarButtonItem(title: String(2), style: .plain, target: self, action: #selector(createTwoPlayerGame))
-				/// disable user interactions in board and reset score areas whilst in edit mode functions
-			let threePlayers = UIBarButtonItem(title: String(3), style: .plain, target: self, action: #selector(createThreePlayerGame))
-			let fourPlayers = UIBarButtonItem(title: String(4), style: .plain, target: self, action: #selector(createFourPlayerGame))
-			let fivePlayers = UIBarButtonItem(title: String(5), style: .plain, target: self, action: #selector(createFivePlayerGame))
-			let sixPlayers = UIBarButtonItem(title: String(6), style: .plain, target: self, action: #selector(createSixPlayerGame))
-			navigationItem.rightBarButtonItems = [ twoPlayers, threePlayers, fourPlayers, fivePlayers, sixPlayers, editItem ]
+			var playerGameItems = [UIBarButtonItem]()
+			for count in 2 ... 6 {
+				playerGameItems.append(UIBarButtonItem(title: String(count),
+													   style: .plain,
+													   target: self,
+													   action: .setupGame))
+			}
+			playerGameItems.append(editItem)
+			navigationItem.rightBarButtonItems = playerGameItems
 		case .play:
-			let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editSettings))
+			let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: .editSettings)
 			
 			navigationItem.rightBarButtonItems = [ editItem ]
 		}
 	}
 	
-	@objc func createTwoPlayerGame() {
-		self.setup(count: 2)
+	@objc func setupGame(with button: UIBarButtonItem) {
+		// crash if the button doesn't have a title or the title is not a number: we should not be here!
+		let numberOfPlayers : Int = Int(button.title!)!
+		self.setup(count: numberOfPlayers)
 	}
-	@objc func createThreePlayerGame() {
-		self.setup(count: 3)
-	}
-	@objc func createFourPlayerGame() {
-		self.setup(count: 4)
-	}
-	@objc func createFivePlayerGame() {
-		self.setup(count: 5)
-	}
-	@objc func createSixPlayerGame() {
-		self.setup(count: 6)
-	}
-	
+
 	// REMARK: -- edit Mode
 	
 	@objc func editSettings() {
@@ -283,7 +284,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		boardView.setup(for: world.players)
 		for id in 0 ..< boardView.players.count {
 			if let ui = boardView.ui(for: id) {
-				ui.addTarget(target: self, action: #selector(addPoint(for:)))
+				ui.addTarget(target: self, action: .addPoints)
 			}
 		}
 	}
@@ -308,7 +309,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		
 		gameScoreArea.center = lastPosition ?? CGPoint(x: view.center.x, y: view.frame.maxY - gameScoreArea.frame.height / 2.0 - 20.0)
 		
-		gameScoreArea.buttonAction(from: self, action: #selector(resetScores))
+		gameScoreArea.buttonAction(from: self, action: .resetScores)
 
 		view.addSubview(gameScoreArea)
 	}

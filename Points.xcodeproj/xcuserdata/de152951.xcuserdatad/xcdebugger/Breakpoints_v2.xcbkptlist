@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
+   uuid = "FB7D1887-59B2-449E-A9EF-773F63691821"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "CF67AB7D-1073-476E-9760-2B640A4A3470"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -22,6 +24,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "3419AE65-C54A-4D7A-8D72-D7EADF372A19"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -29,15 +32,16 @@
             timestampString = "587131860.539729"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "388"
+            endingLineNumber = "388"
+            landmarkName = "updateLimit(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "74B57BFC-2C54-47CC-B381-8D185D0741D3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -47,61 +51,14 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "85"
             endingLineNumber = "85"
-            landmarkName = "add(points:)"
+            landmarkName = "setup(with:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PlayerUI.swift"
-            timestampString = "586895750.659768"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "reload(with:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Points.PlayerUI.reload(with: Swift.Int) -&gt; ()"
-                  moduleName = "Points"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PlayerUI.swift"
-                  timestampString = "587131860.870886"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "58">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.UIView) -&gt; Swift.Optional&lt;Points.ScoreButton&gt; in Points.PlayerUI.reload(with: Swift.Int) -&gt; ()"
-                  moduleName = "Points"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PlayerUI.swift"
-                  timestampString = "587131860.873732"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "41">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
+            uuid = "454F601D-380B-4601-A4B0-958DCBE5267F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
