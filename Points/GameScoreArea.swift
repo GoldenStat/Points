@@ -49,6 +49,7 @@ class GameScoreArea: UIStackView {
 	func buttonAction(from sender: Any, action: Selector) {
 		resetButton.addTarget(sender, action: action, for: .touchUpInside)
 	}
+	
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

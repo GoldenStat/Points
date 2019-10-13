@@ -10,7 +10,7 @@ import Foundation
 
 class Player {
 	
-	static var maxPoints: Int = 0
+	static var maxPoints: Int = 24
 	
 	var name: String
 	var score = 0

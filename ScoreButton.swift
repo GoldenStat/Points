@@ -8,9 +8,9 @@
 
 import UIKit
 
-fileprivate extension Selector {
-	static let addPoint = #selector(ScoreButton.addPoint)
-}
+//extension Selector {
+//	static let addPoint = #selector(ScoreButton.addPoint)
+//}
 
 /// a button has three boxes, each responsible for its own drawing
 class ScoreButton: UIButton {
@@ -23,7 +23,6 @@ class ScoreButton: UIButton {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		clipsToBounds = true
-		
 	}
 	
 	func setup(with maxPoints: Int) {
@@ -46,14 +45,13 @@ class ScoreButton: UIButton {
 				newBox = ScoreBox(frame: boxFrame.offsetBy(dx: boxWidth, dy: dy)
 					.insetBy(dx: margin, dy: margin / 2.0))
 			}
-			newBox.backgroundColor = Constant.PlayerUI.bgColor
-			
-				boxes.append(newBox)
-			
-				addSubview(newBox)
+			newBox.isUserInteractionEnabled = false
+			newBox.backgroundColor = Constant.ScoreButton.bgColor
+			boxes.append(newBox)
+			addSubview(newBox)
 		}
 		updateScore()
-		addTarget(self, action: .addPoint, for: .touchUpInside)
+//		addTarget(self, action: .addPoint, for: .touchUpInside)
 	}
 		
 	required init?(coder aDecoder: NSCoder) {
@@ -69,14 +67,14 @@ class ScoreButton: UIButton {
 	}
 
 	func updateScore() {
-		var totalScore = score
+		var remainingScore = score
 		for box in boxes {
-			if totalScore >= ScoreBox.maxScore {
+			if remainingScore >= ScoreBox.maxScore {
 				box.score = ScoreBox.maxScore
-				totalScore -= ScoreBox.maxScore
+				remainingScore -= ScoreBox.maxScore
 			} else {
-				box.score = totalScore
-				totalScore = 0
+				box.score = remainingScore
+				remainingScore = 0
 			}
 		}
 	}

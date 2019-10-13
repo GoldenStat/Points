@@ -11,15 +11,14 @@ import UIKit
 import GameKit
 
 fileprivate extension Selector {
-	static let setupGame = #selector(PointsViewController.setupGame(with:))
+	static let setupGame = #selector(PointsViewController.setupGame(from:))
 	static let editSettings = #selector(PointsViewController.editSettings)
-	static let addPoints = #selector(PointsViewController.addPoint(for:))
+	static let addPoint = #selector(PointsViewController.addPoint)
 	static let resetScores = #selector(PointsViewController.resetScores)
 }
 
 class PointsViewController: UIViewController, UITextFieldDelegate {
 
-	
 	var boardView : GameBoardView!
 
 	var world: GameWorld!
@@ -34,7 +33,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	
 	var maxPoints: Int { get { return world.maxPoints } set { world.maxPoints = newValue
 		maxPointsTextField.text = String(newValue)
-		boardView.update(with: world)
+		boardView?.update(with: world)
 		saveSettings()
 		}}
 	
@@ -58,7 +57,8 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	// REMARK: -- initialization
-
+	var numberOfPlayers = 2
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -66,16 +66,29 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 
 		initRightBarButtonItems(mode: .play)
 		
-		maxPointsTextField.delegate = self
-		maxGamesTextField.delegate = self
-
-		setup(count: 2)
+		world = GameWorld(count: numberOfPlayers)
 		loadSettings()
+		setup(count: numberOfPlayers)
 		updateUI()
 		
 		view.bringSubviewToFront(gameScoreArea)
+		gameScoreArea.backgroundColor = view.backgroundColor
+		settingsView.backgroundColor = view.backgroundColor
+		
+		let notificationCenter = NotificationCenter.default
+		notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+		notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+		
+		for constraint in view.constraints {
+			if constraint.identifier == "bottomConstraint" {
+				bottomConstraint = constraint
+				bottomConstraintConstant = bottomConstraint.constant
+			}
+		}
 	}
-
+	
+	var bottomConstraint: NSLayoutConstraint! // save a pointer to the constraint we might need to modify
+	
 	// REMARK: -- ViewController configuration
 
 	func initRightBarButtonItems(mode: ControlMode) {
@@ -99,9 +112,13 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 	
-	@objc func setupGame(with button: UIBarButtonItem) {
+	/// setupGame
+	/// sets up a new game
+	/// side effects: erases History
+	/// - Parameter barButton: the UIBarButtonItem that invokes the function. It's title must be a number.
+	@objc func setupGame(from barButton: UIBarButtonItem) {
 		// crash if the button doesn't have a title or the title is not a number: we should not be here!
-		let numberOfPlayers : Int = Int(button.title!)!
+		let numberOfPlayers : Int = Int(barButton.title!)!
 		self.setup(count: numberOfPlayers)
 	}
 
@@ -121,35 +138,39 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 			boardView.deactivate()
 			gameScoreArea.isUserInteractionEnabled = false
 			settingsView.isUserInteractionEnabled = true
-			view.bringSubviewToFront(settingsView)
+			updateControlView()
 		case .play:
 			// enable user interactions in board and score areas whilst in edit mode
 			newAlpha = 0.0
 			boardView.activate()
 			gameScoreArea.isUserInteractionEnabled = true
 			settingsView.isUserInteractionEnabled = false
-			view.bringSubviewToFront(gameScoreArea)
+			updateControlView()
 		}
 		
 		UIView.animate(withDuration: 0.5) {
 			[ weak self ] in
 			self?.settingsView.alpha = newAlpha
 			self?.gameScoreArea.alpha = 1.0 - newAlpha
+			self?.boardView.setNeedsUpdateConstraints()
 		}
 		
 		updateSettings()
 	}
-
-	func rearrange(view: UIView, to point: CGPoint) {
-		UIView.animate(withDuration: 1.0) {
-			[ weak view ] in
-			view?.center = point
+	
+	func updateControlView() {
+		if gameMode == ControlMode.play {
+			view.bringSubviewToFront(gameScoreArea)
+		} else {
+			view.bringSubviewToFront(settingsView)
 		}
 	}
 	
 	func updateUI() {
+		boardView.updatePlayerUIs()
 		updateGameScores()
 		updateSettings()
+		updateControlView()
 	}
 	
 	func updateSettings() {
@@ -157,85 +178,8 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		maxGamesTextField.text = "\(maxGames)"
 		maxPointsTextField.text = "\(maxPoints)"
 	}
-	
-	@objc func addNewPlayer() {
-		let ac = UIAlertController(title: "Nuevo Jugador", message: "como te llamas?", preferredStyle: .alert)
-		ac.addTextField()
 		
-		let action = UIAlertAction(title: "Invita!", style: .default) {
-			[ weak self, weak ac ] sender in
-			if let field = ac?.textFields?.first {
-				if let newName = field.text {
-					self?.addPlayer(name: newName)
-				}
-			}
-			
-		}
-		
-		ac.addAction(action)
-		
-		present(ac, animated: true) {
-			[ weak self ] in
-			self?.updateUI()
-		}
-	}
-	
-	func addPlayer(name: String) {
-		var playerNames = world.players.map {$0.name}
-		playerNames.append(name)
-		
-		updateUI()
-	}
-	
-	var textFieldPositionBeforeEditing: CGPoint?
-
-	func textFieldDidEndEditing(_ textField: UITextField) {
-		// idea:
-		// move textfield back animated, covering everything else, maybe zooming
-		UIView.animate(withDuration: 1.0) { [weak self, weak textField] in
-			if let oldPosition = self?.textFieldPositionBeforeEditing {
-				textField?.frame.center = oldPosition
-			} }
-		textFieldPositionBeforeEditing = nil
-		
-		if let newValue = textField.text {
-			if let number = Int(newValue) {
-				switch textField {
-				case maxGamesTextField:
-					maxGames = number
-				case maxPointsTextField:
-					maxPoints = number
-				default:
-					break
-				}
-			} else {
-				let name = newValue
-				let index = textField.tag
-				world.players[index].name = name
-			}
-		}
-	}
-	
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		self.view.endEditing(true)
-	}
-	
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		textField.resignFirstResponder()
-		
-		return true
-	}
-	
-	func textFieldDidBeginEditing(_ textField: UITextField) {
-		// idea:
-		// get textfield position
-		// move textfield up animated, covering everything else, maybe zooming
-		textFieldPositionBeforeEditing = textField.frame.center
-		UIView.animate(withDuration: 1.0) { [weak self, weak textField] in
-			let tempPosition = CGPoint(x: self?.view.frame.center.x ?? 0.0, y: 400)
-			textField?.frame.center = tempPosition
-		}
-	}
+	/// Settings
 	
 	func saveSettings() {
 		let settings : [String : Any] = [ "gamePoints": maxPoints,
@@ -259,34 +203,43 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 	
+	/// set up a new game
+	/// throws everything away and create a new world
 	func setup(count numberOfPlayers: Int) {
-		
+
 		world = GameWorld(count: numberOfPlayers)
 		gameStateHistory = History()
 
 		setupGameScoreArea()
 		setupBoardView()
-		loadSettings()
+		setDelegations(to: self)
 		updateUI()
+	}
+	
+	func setDelegations(to delegate: UITextFieldDelegate) {
+		// set the textField delegate in all places
+		boardView.delegate = delegate
+		maxGamesTextField.delegate = delegate
+		maxPointsTextField.delegate = delegate
+		
+		// set the actions for the buttons
+		for ui in boardView.playerUIs {
+			ui.scoreButton!.addTarget(self, action: .addPoint, for: .touchUpInside)
+		}
 	}
 	
 	func setupBoardView() {
 		boardView?.removeFromSuperview()
 		
 		boardView = GameBoardView(frame: view.frame)
-		boardView.set(delegate: self)
 		boardView.clipsToBounds = true
 		view.addSubview(boardView)
 		boardView.translatesAutoresizingMaskIntoConstraints = false
 		boardView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor).isActive = true
 		boardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-		boardView.bottomAnchor.constraint(equalTo: gameScoreArea.topAnchor).isActive = true
-		boardView.setup(for: world.players)
-		for id in 0 ..< boardView.players.count {
-			if let ui = boardView.ui(for: id) {
-				ui.addTarget(target: self, action: .addPoints)
-			}
-		}
+//		boardView.bottomAnchor.constraint(equalTo: gameScoreArea.topAnchor).isActive = true
+		boardView.heightAnchor.constraint(equalToConstant: view.frame.height - gameScoreArea.frame.height).isActive = true
+		boardView.setup(for: world.players) // creates world.players PlayerUIs
 	}
 		
 	var gameScoreArea: GameScoreArea!
@@ -373,7 +326,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		checkIfWon()
 		updateUI()
 	}
-
+	
 	@IBAction func undo(_ sender: Any) {
 		if let curState = gameStateHistory.restoreLast() {
 			for (index, points) in curState.points.enumerated() {
@@ -403,5 +356,75 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	@IBAction func updatePointSteps(_ sender: UISegmentedControl) {
 		selectedIndexForPoints = sender.selectedSegmentIndex
 	}
+	
+	/// Text Field Handlers
+	
+	func textFieldDidEndEditing(_ textField: UITextField) {
+		// moving up the view is covered with NotificationCenter observers
+		if let newValue = textField.text {
+			if let number = Int(newValue) {
+				switch textField {
+				case maxGamesTextField:
+					maxGames = number
+				case maxPointsTextField:
+					maxPoints = number
+				default:
+					break
+				}
+			} else {
+				let name = newValue
+				let index = textField.tag
+				world.players[index].name = name
+			}
+		}
+	}
+	
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		self.view.endEditing(true)
+	}
+	
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		
+		return true
+	}
+	
+	// limit all textFields (for names, especially) to 32 characters
+	let characterLimitForTextFields = 32
+	
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		let currentText = textField.text ?? ""
+		guard let stringRange = Range(range, in: currentText) else {return false}
 
+		let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+		
+		return updatedText.count <= characterLimitForTextFields
+	}
+
+	/// REMARK: -- move view frame if software keyboard appears
+
+	var bottomConstraintConstant: CGFloat!
+
+	@objc func adjustForKeyboard(notification: Notification) {
+		guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {return}
+		let keyboardScreenEndFrame = keyboardValue.cgRectValue
+		let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+		
+		if notification.name == UIResponder.keyboardWillHideNotification {
+			// keyboard hides, go back to normal
+			// restore anchor to old constant value
+			UIView.animate(withDuration: 1.0) { [weak self ] in
+				self?.bottomConstraint.constant = self?.bottomConstraintConstant ?? 20
+				self?.view.layoutIfNeeded()
+			}
+		} else {
+			// trigger animation
+			UIView.animate(withDuration: 1.0) { [weak self] in
+				// move up the keyboard height
+				self?.bottomConstraint.constant = keyboardViewEndFrame.height + (self?.bottomConstraintConstant ?? 20)
+				self?.view.layoutIfNeeded()
+			}
+		}
+	}
+	
 }

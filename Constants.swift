@@ -25,6 +25,17 @@ struct Constant {
 		//static var height : CGFloat { get { return nameSize + margin + scoreFrameHeight } }
 		static var height = CGFloat(290)
 	}
+	
+	struct Button {
+		static let bgColor : UIColor = PlayerUI.bgColor
+	}
+	
+	struct ScoreButton {
+		static let bgColor : UIColor = PlayerUI.bgColor
+	}
+	struct GameBoardView {
+		static let bgColor : UIColor = PlayerUI.bgColor
+	}
 }
 
 extension CGRect {

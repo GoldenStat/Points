@@ -12,7 +12,7 @@ fileprivate extension Selector {
 	static let changeName = #selector(PlayerUI.changeName(_:))
 }
 
-/// this view consists of a textfield and a button
+/// this view consists of a textfield and a ScoreButton
 class PlayerUI: UIView {
 
 	var nameTextField: UITextField?
@@ -33,6 +33,10 @@ class PlayerUI: UIView {
 		
 		super.init(frame: frame)
 		
+		layer.borderColor = UIColor.black.cgColor
+		layer.borderWidth = 2.0
+		layer.cornerRadius = 10.0
+
 		let nameFrame = CGRect(x: 0.0, y: 0.0, width: frame.width, height: Constant.PlayerUI.nameSize)
 		let nameTextField = UITextField(frame: nameFrame)
 		nameTextField.textAlignment = .center
@@ -47,15 +51,15 @@ class PlayerUI: UIView {
 	}
 		
 	func setup(with points: Int) {
-		let _ = subviews.map { if let view = $0 as? ScoreButton { view.removeFromSuperview()} }
+		let _ = subviews.map { if let view = $0 as? ScoreButton { view.removeFromSuperview()} } // delete former ScoreButtons
 		
 		let topSpace = nameHeight + Constant.PlayerUI.margin
 		let buttonFrame = CGRect(x: 0.0, y: topSpace, width: frame.width, height: frame.height - topSpace)
 		
 		let button = ScoreButton(frame: buttonFrame)
 		button.setup(with: points)
-		button.backgroundColor = Constant.PlayerUI.bgColor
-		
+		button.backgroundColor = Constant.Button.bgColor
+	
 		self.scoreButton = button
 		
 		addSubview(button)
@@ -88,10 +92,6 @@ class PlayerUI: UIView {
 	func add(points: Int) {
 		player.add(points: points)
 		scoreButton?.score += points
-	}
-
-	func addTarget(target: PointsViewController, action: Selector) {
-		scoreButton?.addTarget(target, action: action, for: .touchUpInside)
 	}
 
 	func removeTarget() {

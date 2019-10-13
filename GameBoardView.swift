@@ -8,15 +8,23 @@
 
 import UIKit
 
+/// GameBoardView:
+/// is like a virtual 'table': all player's points are subviews of this view
 class GameBoardView: UIView {
 
 	var players: [ Player ] = [] { didSet { initalizePlayerUIs() } }
-	private var playerUIs: [ PlayerUI ] = []
+	var playerUIs: [ PlayerUI ] = []
 	var maxPoints = 0 { didSet { initalizePlayerUIs() } }
-	private var intTextDelegate : UITextFieldDelegate? = nil
+	var delegate: UITextFieldDelegate! { didSet {
+		for ui in playerUIs {
+			ui.nameTextField!.delegate = self.delegate
+		}
+		}}
+	var bottomContstraintConstant: CGFloat?
 	
 	func setup(for players: [Player] ) {
 		maxPoints = Player.maxPoints
+		gameMode = ControlMode.play
 		self.players = players
 	}
 	
@@ -30,30 +38,21 @@ class GameBoardView: UIView {
 		playerUI.setup(with: player)
 		playerUI.setup(with: maxPoints)
 		playerUI.set(tag: tag)
-		playerUI.nameTextField?.delegate = textDelegate()
 		addSubview(playerUI)
 		playerUIs.append(playerUI)
 	}
-	
-	func textDelegate() -> UITextFieldDelegate? {
-		return intTextDelegate
-	}
-	
+		
 	fileprivate func initalizePlayerUIs() {
 		
 		removePlayerUIs()
 		
 		for (index,player) in players.enumerated() {
-			let playerFrame = create(frame: index)
+			let playerFrame = frameForPlayer(frame: index)
 			createOneUI(frame: playerFrame, player: player, number: index)
 		}
 	}
-	
-	func set(delegate: UITextFieldDelegate?) {
-		intTextDelegate = delegate
-	}
-	
-	func create(frame index: Int) -> CGRect {
+		
+	func frameForPlayer(frame index: Int) -> CGRect {
 
 		let height = Constant.PlayerUI.height
 		//		let topMargin : CGFloat = 90
@@ -148,13 +147,13 @@ class GameBoardView: UIView {
 		gameMode = ControlMode.edit
 	}
 	
-	var gameMode = ControlMode.play
+	var gameMode: ControlMode!
 
 	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		switch gameMode {
 		case .play:
-			return self
-		case .edit:
+			return super.hitTest(point, with: event)
+		case .edit, .none:
 			return nil
 		}
 	}

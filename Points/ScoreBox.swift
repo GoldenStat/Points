@@ -14,7 +14,16 @@ let lineWidth : [ LineType: CGFloat ] = [ .normal: 8.0, .diagonal: 5.0 ]
 class ScoreBox: UIView {
 
 	static var maxScore: Int { get { return corners.count - 1 } }
+
+	static let lines = [[ CGPoint(x:0,y:0), CGPoint(x:0,y:1)],
+						[ CGPoint(x:0,y:1), CGPoint(x:1,y:1)],
+						[ CGPoint(x:1,y:1), CGPoint(x:1,y:0)],
+						[ CGPoint(x:0,y:0), CGPoint(x:1,y:0)],
+						[ CGPoint(x:0,y:0), CGPoint(x:1,y:1)],
+						[ CGPoint(x:0,y:1), CGPoint(x:1,y:0)]]
+	
 	static let corners = [ CGPoint(x:0,y:0), CGPoint(x:0,y:1), CGPoint(x:1,y:1), CGPoint(x:1,y:0), CGPoint(x:0,y:0), CGPoint(x:1,y:1) ]
+	
 	var score: Int = 0 { didSet { setNeedsDisplay() } }
 
 	override func draw(_ rect: CGRect) {
