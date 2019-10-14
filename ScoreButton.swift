@@ -16,6 +16,10 @@ import UIKit
 class ScoreButton: UIButton {
 
 	var score: Int = 0 { didSet { updateScore() } }
+	var tmpScore: Int = 0 { didSet { updateScore() } }
+
+	var totalScore: Int { get { return score + tmpScore }}
+	
 	var boxes = [ScoreBox]()
 	let margin : CGFloat = 10
 	var step : Int = 1
@@ -51,9 +55,9 @@ class ScoreButton: UIButton {
 			addSubview(newBox)
 		}
 		updateScore()
-//		addTarget(self, action: .addPoint, for: .touchUpInside)
 	}
 		
+	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -66,16 +70,33 @@ class ScoreButton: UIButton {
 		score -= 1
 	}
 
+	func finalizeScore() {
+		score += tmpScore
+		tmpScore = 0
+	}
+	
 	func updateScore() {
-		var remainingScore = score
+		var black = self.score
+		var red = self.tmpScore
+		
 		for box in boxes {
-			if remainingScore >= ScoreBox.maxScore {
-				box.score = ScoreBox.maxScore
-				remainingScore -= ScoreBox.maxScore
+			if black > 0 {
+				let thisScore = min(ScoreBox.maxScore, black)
+				box.score = thisScore
+				black -= thisScore
+				if black == 0 { // we finished the black lines, continue with red
+					let tmpScore = min(ScoreBox.maxScore - black, red)
+					box.tmpScore = tmpScore
+					red -= tmpScore
+				} else {
+					box.tmpScore = 0 // don't count red lines down
+				}
 			} else {
-				box.score = remainingScore
-				remainingScore = 0
+				let tmpScore = min(ScoreBox.maxScore, red)
+				box.tmpScore = tmpScore
+				red -= tmpScore
 			}
 		}
 	}
+	
 }
