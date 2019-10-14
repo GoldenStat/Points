@@ -37,8 +37,8 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		saveSettings()
 		}}
 	
-	var maxGames: Int { get { return world.maxGames } set {
-		world.maxGames = newValue
+	var maxGames: Int { get { return GameWorld.maxGames } set {
+		GameWorld.maxGames = newValue
 		maxGamesTextField.text = String(newValue)
 		saveSettings()
 		}}
@@ -182,25 +182,19 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	/// Settings
 	
 	func saveSettings() {
-		let settings : [String : Any] = [ "gamePoints": maxPoints,
-										  "selectedPointsIndex": selectedIndexForPoints,
-										  "maxGames": maxGames,
-										  "playerNames" : [world.players.map {$0.name}] ]
-		
-		let defaults = UserDefaults.standard
-		defaults.set(settings, forKey: "Settings")
+		let settings = Settings(gamePoints: maxPoints,
+								selectedPointsIndex: selectedIndexForPoints,
+								maxGames: maxGames,
+								playerNames: world.names)
+		settings.save()
 	}
 	
 	func loadSettings() {
-		let defaults = UserDefaults.standard
-		if let settings = defaults.dictionary(forKey: "Settings") {
-			maxGames = settings["maxGames"] as! Int
-			maxPoints = settings["gamePoints"] as! Int
-			selectedIndexForPoints = settings["selectedPointsIndex"] as! Int
-			if let playerNames = settings["PlayerNames"] as? [ String ] {
-				world.resetPlayers(with: playerNames)
-			}
-		}
+		let settings = Settings.load()
+		maxGames = settings.maxGames
+		maxPoints = settings.gamePoints
+		selectedIndexForPoints = settings.selectedPointsIndex
+		world.resetPlayers(with: settings.playerNames)
 	}
 	
 	/// set up a new game
@@ -341,7 +335,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 			if let newMax = Int(text) {
 				switch textField {
 				case maxGamesTextField:
-					world.maxGames = newMax
+					GameWorld.maxGames = newMax
 				case maxPointsTextField:
 					world.maxPoints = newMax
 				default:
@@ -349,6 +343,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 				}
 			}
 		}
+		saveSettings()
 		checkIfWon()
 		updateUI()
 	}

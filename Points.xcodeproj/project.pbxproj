@@ -66,7 +66,6 @@
 				4180349422D28323001C2B17 /* PlayerUI.swift */,
 				41ED98A522EF4320000CEFDD /* ScoreButton.swift */,
 				41A89EB022F2D6BC004B0143 /* ScoreBox.swift */,
-				41A89EB522F9A7A0004B0143 /* Constants.swift */,
 				41ED4F3622AD799000A46C19 /* Points */,
 				41ED4F3522AD799000A46C19 /* Products */,
 			);
@@ -83,6 +82,7 @@
 		41ED4F3622AD799000A46C19 /* Points */ = {
 			isa = PBXGroup;
 			children = (
+				41A89EB522F9A7A0004B0143 /* Constants.swift */,
 				4180349922D7884A001C2B17 /* Settings.swift */,
 				4180349022D24C61001C2B17 /* GameWorld.swift */,
 				415EF2C022AE67C1004658C7 /* GameState.swift */,

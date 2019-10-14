@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 struct Constant {
+	
 	struct TextSize {
 		static let playerName : CGFloat = 32
 		static let gameScore : CGFloat = 38

@@ -14,8 +14,8 @@ struct GameWorld {
 
 	var initialNames = [ "Alexander", "Lili", "Villa", "Sebastian", "Lucas", "Maria" ]
 	var maxPoints : Int { get { return Player.maxPoints } set { Player.maxPoints = newValue } }
-	var maxGames = 3
-
+	static var maxGames = 0
+	
 	init(count: Int) {
 		for playerNo in 1 ... count {
 			players.append(Player(name: initialNames[playerNo-1]))
