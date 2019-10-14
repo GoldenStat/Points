@@ -11,9 +11,14 @@ import UIKit
 enum LineType { case normal, diagonal }
 let lineWidth : [ LineType: CGFloat ] = [ .normal: 8.0, .diagonal: 5.0 ]
 
+
+/// add a new line: tmpScore
+/// draw corners until score, then draw tmpScore lines
 class ScoreBox: UIView {
 
 	static var maxScore: Int { get { return corners.count - 1 } }
+	var score: Int = 0 { didSet { setNeedsDisplay() } }
+	var tmpScore: Int = 0 { didSet { setNeedsDisplay() } }
 
 	static let lines = [[ CGPoint(x:0,y:0), CGPoint(x:0,y:1)],
 						[ CGPoint(x:0,y:1), CGPoint(x:1,y:1)],
@@ -24,20 +29,30 @@ class ScoreBox: UIView {
 	
 	static let corners = [ CGPoint(x:0,y:0), CGPoint(x:0,y:1), CGPoint(x:1,y:1), CGPoint(x:1,y:0), CGPoint(x:0,y:0), CGPoint(x:1,y:1) ]
 	
-	var score: Int = 0 { didSet { setNeedsDisplay() } }
 
+	/// add tmpScore to score
+	func updateScore() {
+		score += tmpScore
+		tmpScore = 0
+	}
+	
+	/// draw boxes: score in black, tmpScore in red
 	override func draw(_ rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()!
 		
 		// Draw a black line
 		context.setLineWidth(lineWidth[.normal]!)
-		context.setStrokeColor(UIColor.black.cgColor)
+		context.setStrokeColor(Constant.Box.lineColor.cgColor)
 		
 		context.move(to: ScoreBox.corners[0])
-		let minScore = score > ScoreBox.maxScore ? ScoreBox.maxScore : score
-		if score > 0 {
+		let totalScore = score + tmpScore
+		let minScore = totalScore > ScoreBox.maxScore ? ScoreBox.maxScore : totalScore
+		if totalScore > 0 {
 			var oldCorner: CGPoint?
 			for count in 1 ... minScore {
+				if count > score {
+					context.setStrokeColor(Constant.Box.tmpColor.cgColor)
+				}
 				let newCorner = CGPoint(x: ScoreBox.corners[count].x * frame.width, y: ScoreBox.corners[count].y * frame.height)
 				if count == ScoreBox.maxScore {
 					if let corner = oldCorner {

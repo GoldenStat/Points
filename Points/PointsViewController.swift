@@ -357,8 +357,8 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	/// added a point, the history gets updated.
 	func setupTimer() {
 		timer?.invalidate()
-		timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: .saveHistory, userInfo: nil, repeats: true)
-		timer?.tolerance = 0.5
+		timer = Timer.scheduledTimer(timeInterval: Constant.Game.idleTime, target: self, selector: .saveHistory, userInfo: nil, repeats: true)
+		timer?.tolerance = Constant.Game.tolerance
 	}
 	
 	/// sends the UIs the addPoint signal and checks if we won

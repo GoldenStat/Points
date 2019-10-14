@@ -12,7 +12,8 @@ import UIKit
 struct Constant {
 	
 	struct Game {
-		static let idleTime = 5
+		static let idleTime = 5.0
+		static let tolerance = 0.2
 	}
 	
 	struct TextSize {
@@ -33,6 +34,11 @@ struct Constant {
 	
 	struct Button {
 		static let bgColor : UIColor = PlayerUI.bgColor
+	}
+	
+	struct Box {
+		static let lineColor : UIColor = .black
+		static let tmpColor : UIColor = .red
 	}
 	
 	struct ScoreButton {
