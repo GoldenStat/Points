@@ -11,6 +11,10 @@ import UIKit
 
 struct Constant {
 	
+	struct Game {
+		static let idleTime = 5
+	}
+	
 	struct TextSize {
 		static let playerName : CGFloat = 32
 		static let gameScore : CGFloat = 38
@@ -39,25 +43,3 @@ struct Constant {
 	}
 }
 
-extension CGRect {
-	var center : CGPoint { get { return CGPoint(x: minX + width / 2.0, y: minY + height / 2.0) }
-		set { self = CGRect(x: newValue.x - width / 2.0,
-							y: newValue.y - height / 2.0, width: width, height: height)
-		}
-		
-	}
-}
-
-enum ControlMode {
-	
-	case edit, play
-	
-	mutating func toggle() {
-		switch self {
-		case .edit:
-			self = .play
-		case .play:
-			self = .edit
-		}
-	}
-}

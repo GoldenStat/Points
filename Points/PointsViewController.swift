@@ -10,11 +10,26 @@
 import UIKit
 import GameKit
 
+enum ControlMode {
+	
+	case edit, play
+	
+	mutating func toggle() {
+		switch self {
+		case .edit:
+			self = .play
+		case .play:
+			self = .edit
+		}
+	}
+}
+
 fileprivate extension Selector {
 	static let setupGame = #selector(PointsViewController.setupGame(from:))
 	static let editSettings = #selector(PointsViewController.editSettings)
 	static let addPoint = #selector(PointsViewController.addPoint)
 	static let resetScores = #selector(PointsViewController.resetScores)
+	static let saveHistory = #selector(PointsViewController.saveHistory)
 }
 
 class PointsViewController: UIViewController, UITextFieldDelegate {
@@ -27,11 +42,14 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	let allowedPointSteps = [ 1, 5, 10, 100 ]
 	var pointSteps : Int { get { return allowedPointSteps[selectedIndexForPoints] } }
 
+	var timer: Timer?
+	
 	var selectedIndexForPoints = 0 { didSet { pointStepsSegmentedControl.selectedSegmentIndex = selectedIndexForPoints
 		saveSettings()
 		}}
 	
-	var maxPoints: Int { get { return world.maxPoints } set { world.maxPoints = newValue
+	var maxPoints: Int { get { return world.maxPoints } set {
+		world.maxPoints = newValue
 		maxPointsTextField.text = String(newValue)
 		boardView?.update(with: world)
 		saveSettings()
@@ -44,7 +62,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		}}
 	
 	/// section: Settings
-	var gameMode = ControlMode.play
+	var gameMode : ControlMode = .play
 
 	@IBOutlet var settingsView: UIStackView!
 	@IBOutlet var maxPointsTextField: UITextField!
@@ -85,6 +103,9 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 				bottomConstraintConstant = bottomConstraint.constant
 			}
 		}
+		
+		/// start the timer
+		setupTimer()
 	}
 	
 	var bottomConstraint: NSLayoutConstraint! // save a pointer to the constraint we might need to modify
@@ -202,12 +223,19 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	func setup(count numberOfPlayers: Int) {
 
 		world = GameWorld(count: numberOfPlayers)
-		gameStateHistory = History()
 
 		setupGameScoreArea()
 		setupBoardView()
 		setDelegations(to: self)
+		resetScores()
 		updateUI()
+	}
+	
+	/// The history has the initialization step
+	func setupHistory() {
+		gameStateHistory = History()
+		let currentState = GameState(with: world!.players)
+		gameStateHistory.add(state: currentState)
 	}
 	
 	func setDelegations(to delegate: UITextFieldDelegate) {
@@ -268,7 +296,7 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 	@objc func resetScores() {
 		
 		world.resetScores()
-		gameStateHistory = History()
+		setupHistory()
 		updateUI()
 	}
 	
@@ -308,11 +336,38 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		updateUI()
 	}
 	
-	@objc func addPoint(for sender: ScoreButton) {
+	var historyUpdateNeeded = false {
+		didSet {
+			if historyUpdateNeeded { setupTimer() }
+//			else { timer?.invalidate() }
+		}
+	}
 	
+	@objc func saveHistory() {
+		guard historyUpdateNeeded else { return }
 		let currentState = GameState(with: world!.players)
 		gameStateHistory.add(state: currentState)
+		historyUpdateNeeded = false
+	}
+
+	///
+	/// we want to create a timer that adds a new points History to the history
+	/// every tap invalidates this timer
+	/// let's try various intervals at, let's say 10 seconds. So if for 10 seconds no one
+	/// added a point, the history gets updated.
+	func setupTimer() {
+		timer?.invalidate()
+		timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: .saveHistory, userInfo: nil, repeats: true)
+		timer?.tolerance = 0.5
+	}
 	
+	/// sends the UIs the addPoint signal and checks if we won
+	/// invalidates the timer
+	/// notes that we need to update the history at some point
+	@objc func addPoint(for sender: ScoreButton) {
+		// invalidate the timer
+		historyUpdateNeeded = true
+		
 		if let ui = sender.parentFocusEnvironment as? PlayerUI {
 			ui.add(points: pointSteps)
 		}
@@ -321,13 +376,17 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		updateUI()
 	}
 	
+	/// go back one step in history
+	/// invalidate the timer
 	@IBAction func undo(_ sender: Any) {
 		if let curState = gameStateHistory.restoreLast() {
 			for (index, points) in curState.points.enumerated() {
 				world.players[index].score = points
 			}
 		}
+		
 		updateUI()
+		historyUpdateNeeded = false
 	}
 	
 	@IBAction func updateLimit(_ textField: UITextField) {
