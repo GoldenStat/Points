@@ -36,6 +36,34 @@ class ScoreBox: UIView {
 		tmpScore = 0
 	}
 	
+	enum LineColor {
+		case black, red
+	}
+	
+	/// returns remaining empty fields
+	func fill(with score: Int, color: LineColor) -> Int? {
+		guard score > 0 else { return nil }
+		
+		switch color {
+		case .red:
+			if score > Self.maxScore {
+				self.tmpScore = Self.maxScore
+				return score - Self.maxScore
+			} else {
+				self.tmpScore = score
+				return 0
+			}
+		case .black:
+			if score > Self.maxScore {
+				self.score = Self.maxScore
+				return score - Self.maxScore
+			} else {
+				self.score = score
+				return 0
+			}
+		}
+	}
+	
 	/// draw boxes: score in black, tmpScore in red
 	override func draw(_ rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()!

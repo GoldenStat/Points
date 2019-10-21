@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		411DF1F32359EAFA00A37C64 /* ScoreBoxUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */; };
+		411DF1F5235AF79900A37C64 /* HexagonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F4235AF79900A37C64 /* HexagonParameters.swift */; };
+		411DF1F7235AF9F500A37C64 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F6235AF9F500A37C64 /* Badge.swift */; };
+		411DF1F9235B0E3B00A37C64 /* BadgeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F8235B0E3B00A37C64 /* BadgeBackground.swift */; };
+		411DF1FB235B0EDB00A37C64 /* BadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1FA235B0EDB00A37C64 /* BadgeSymbol.swift */; };
+		411DF1FD235B12ED00A37C64 /* RotatedBadgeSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1FC235B12ED00A37C64 /* RotatedBadgeSymbol.swift */; };
+		411DF201235B4F1200A37C64 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF200235B4F1200A37C64 /* Line.swift */; };
+		411DF203235B56D400A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
+		411DF205235C84B600A37C64 /* PlayerScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF204235C84B600A37C64 /* PlayerScore.swift */; };
+		411DF207235C918200A37C64 /* BoardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF206235C918200A37C64 /* BoardUI.swift */; };
 		415EF2B722AD804C004658C7 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2B622AD804C004658C7 /* Player.swift */; };
 		415EF2C122AE67C1004658C7 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C022AE67C1004658C7 /* GameState.swift */; };
 		415EF2C322AE68E8004658C7 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C222AE68E8004658C7 /* History.swift */; };
@@ -26,6 +36,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		411DF1D12359023100A37C64 /* Points.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Points.entitlements; sourceTree = "<group>"; };
+		411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoxUI.swift; sourceTree = "<group>"; };
+		411DF1F4235AF79900A37C64 /* HexagonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexagonParameters.swift; sourceTree = "<group>"; };
+		411DF1F6235AF9F500A37C64 /* Badge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
+		411DF1F8235B0E3B00A37C64 /* BadgeBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeBackground.swift; sourceTree = "<group>"; };
+		411DF1FA235B0EDB00A37C64 /* BadgeSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeSymbol.swift; sourceTree = "<group>"; };
+		411DF1FC235B12ED00A37C64 /* RotatedBadgeSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatedBadgeSymbol.swift; sourceTree = "<group>"; };
+		411DF200235B4F1200A37C64 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		411DF202235B56D400A37C64 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		411DF204235C84B600A37C64 /* PlayerScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScore.swift; sourceTree = "<group>"; };
+		411DF206235C918200A37C64 /* BoardUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardUI.swift; sourceTree = "<group>"; };
 		415EF2B622AD804C004658C7 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Player.swift; path = ../Player.swift; sourceTree = "<group>"; };
 		415EF2C022AE67C1004658C7 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		415EF2C222AE68E8004658C7 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
@@ -57,13 +78,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		411DF1FE235B16FD00A37C64 /* Badge */ = {
+			isa = PBXGroup;
+			children = (
+				411DF1F4235AF79900A37C64 /* HexagonParameters.swift */,
+				411DF1F8235B0E3B00A37C64 /* BadgeBackground.swift */,
+				411DF1F6235AF9F500A37C64 /* Badge.swift */,
+				411DF1FA235B0EDB00A37C64 /* BadgeSymbol.swift */,
+				411DF1FC235B12ED00A37C64 /* RotatedBadgeSymbol.swift */,
+			);
+			path = Badge;
+			sourceTree = "<group>";
+		};
+		411DF1FF235B194800A37C64 /* SwiftUIModel */ = {
+			isa = PBXGroup;
+			children = (
+				411DF206235C918200A37C64 /* BoardUI.swift */,
+				411DF204235C84B600A37C64 /* PlayerScore.swift */,
+				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
+				411DF202235B56D400A37C64 /* Box.swift */,
+				411DF200235B4F1200A37C64 /* Line.swift */,
+			);
+			path = SwiftUIModel;
+			sourceTree = "<group>";
+		};
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
+				411DF1FF235B194800A37C64 /* SwiftUIModel */,
 				41ED4F3922AD799000A46C19 /* PointsViewController.swift */,
 				4180349B22DDEC52001C2B17 /* GameScoreArea.swift */,
 				41A89EB722F9C61F004B0143 /* GameBoardView.swift */,
 				4180349422D28323001C2B17 /* PlayerUI.swift */,
+				411DF1FE235B16FD00A37C64 /* Badge */,
 				41ED98A522EF4320000CEFDD /* ScoreButton.swift */,
 				41A89EB022F2D6BC004B0143 /* ScoreBox.swift */,
 				41ED4F3622AD799000A46C19 /* Points */,
@@ -82,6 +129,7 @@
 		41ED4F3622AD799000A46C19 /* Points */ = {
 			isa = PBXGroup;
 			children = (
+				411DF1D12359023100A37C64 /* Points.entitlements */,
 				41A89EB522F9A7A0004B0143 /* Constants.swift */,
 				4180349922D7884A001C2B17 /* Settings.swift */,
 				4180349022D24C61001C2B17 /* GameWorld.swift */,
@@ -113,6 +161,8 @@
 			dependencies = (
 			);
 			name = Points;
+			packageProductDependencies = (
+			);
 			productName = Points;
 			productReference = 41ED4F3422AD799000A46C19 /* Points.app */;
 			productType = "com.apple.product-type.application";
@@ -141,6 +191,8 @@
 				Base,
 			);
 			mainGroup = 41ED4F2B22AD799000A46C19;
+			packageReferences = (
+			);
 			productRefGroup = 41ED4F3522AD799000A46C19 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -168,19 +220,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				411DF1F5235AF79900A37C64 /* HexagonParameters.swift in Sources */,
 				415EF2C322AE68E8004658C7 /* History.swift in Sources */,
 				415EF2C122AE67C1004658C7 /* GameState.swift in Sources */,
 				415EF2B722AD804C004658C7 /* Player.swift in Sources */,
 				41A89EB822F9C61F004B0143 /* GameBoardView.swift in Sources */,
+				411DF207235C918200A37C64 /* BoardUI.swift in Sources */,
 				4180349A22D7884A001C2B17 /* Settings.swift in Sources */,
 				41ED4F3A22AD799000A46C19 /* PointsViewController.swift in Sources */,
 				4180349522D28323001C2B17 /* PlayerUI.swift in Sources */,
 				41A89EB622F9A7A0004B0143 /* Constants.swift in Sources */,
+				411DF201235B4F1200A37C64 /* Line.swift in Sources */,
+				411DF205235C84B600A37C64 /* PlayerScore.swift in Sources */,
+				411DF1F7235AF9F500A37C64 /* Badge.swift in Sources */,
 				41ED98A622EF4320000CEFDD /* ScoreButton.swift in Sources */,
+				411DF1FB235B0EDB00A37C64 /* BadgeSymbol.swift in Sources */,
+				411DF1F32359EAFA00A37C64 /* ScoreBoxUI.swift in Sources */,
 				41A89EB122F2D6BC004B0143 /* ScoreBox.swift in Sources */,
+				411DF203235B56D400A37C64 /* Box.swift in Sources */,
 				41ED4F3822AD799000A46C19 /* AppDelegate.swift in Sources */,
 				4180349122D24C61001C2B17 /* GameWorld.swift in Sources */,
 				4180349C22DDEC52001C2B17 /* GameScoreArea.swift in Sources */,
+				411DF1FD235B12ED00A37C64 /* RotatedBadgeSymbol.swift in Sources */,
+				411DF1F9235B0E3B00A37C64 /* BadgeBackground.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,15 +388,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Points/Points.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 2NBB26789S;
 				INFOPLIST_FILE = Points/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AV12.Points;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -344,15 +410,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Points/Points.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 2NBB26789S;
 				INFOPLIST_FILE = Points/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = AV12.Points;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -348,8 +348,10 @@ class PointsViewController: UIViewController, UITextFieldDelegate {
 		let currentState = GameState(with: world!.players)
 		gameStateHistory.add(state: currentState)
 		historyUpdateNeeded = false
+		boardView.finalizeScores()
 	}
 
+	
 	///
 	/// we want to create a timer that adds a new points History to the history
 	/// every tap invalidates this timer

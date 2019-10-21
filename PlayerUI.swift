@@ -64,6 +64,10 @@ class PlayerUI: UIView {
 		
 		addSubview(button)
 	}
+	
+	func finalizeScore() {
+		scoreButton?.finalizeScore()
+	}
 
 	func setTextFieldDelegate(_ textFieldDelegate: UITextFieldDelegate) {
 		nameTextField?.delegate = textFieldDelegate
@@ -91,7 +95,8 @@ class PlayerUI: UIView {
 	
 	func add(points: Int) {
 		player.add(points: points)
-		scoreButton?.score += points
+		scoreButton?.tmpScore += points
+		scoreButton?.updateScore()
 	}
 
 	func removeTarget() {

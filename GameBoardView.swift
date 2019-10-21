@@ -51,6 +51,10 @@ class GameBoardView: UIView {
 			createOneUI(frame: playerFrame, player: player, number: index)
 		}
 	}
+	
+	func finalizeScores() {
+		_ = playerUIs.map {$0.finalizeScore()}
+	}
 		
 	func frameForPlayer(frame index: Int) -> CGRect {
 
@@ -149,13 +153,13 @@ class GameBoardView: UIView {
 	
 	var gameMode: ControlMode!
 
-	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-		switch gameMode {
-		case .play:
-			return super.hitTest(point, with: event)
-		case .edit, .none:
-			return nil
-		}
-	}
+//	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//		switch gameMode {
+//		case .play:
+//			return super.hitTest(point, with: event)
+//		case .edit, .none:
+//			return nil
+//		}
+//	}
 
 }

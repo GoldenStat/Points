@@ -12,7 +12,7 @@ import UIKit
 struct Constant {
 	
 	struct Game {
-		static let idleTime = 5.0
+		static let idleTime = 2.0
 		static let tolerance = 0.2
 	}
 	

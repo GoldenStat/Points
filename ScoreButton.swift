@@ -15,8 +15,8 @@ import UIKit
 /// a button has three boxes, each responsible for its own drawing
 class ScoreButton: UIButton {
 
-	var score: Int = 0 { didSet { updateScore() } }
-	var tmpScore: Int = 0 { didSet { updateScore() } }
+	var score: Int = 0
+	var tmpScore: Int = 0
 
 	var totalScore: Int { get { return score + tmpScore }}
 	
@@ -57,44 +57,30 @@ class ScoreButton: UIButton {
 		updateScore()
 	}
 		
-	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-	
-	@objc func addPoint() {
-		score += 1
-	}
-	
-	func removePoint() {
-		score -= 1
 	}
 
 	func finalizeScore() {
 		score += tmpScore
 		tmpScore = 0
+		updateScore()
 	}
 	
 	func updateScore() {
-		var black = self.score
-		var red = self.tmpScore
-		
+		var blackLines = score
+		var redLines = tmpScore
+
+		// fill boxes with score, then change to self.tmpScore
 		for box in boxes {
-			if black > 0 {
-				let thisScore = min(ScoreBox.maxScore, black)
-				box.score = thisScore
-				black -= thisScore
-				if black == 0 { // we finished the black lines, continue with red
-					let tmpScore = min(ScoreBox.maxScore - black, red)
-					box.tmpScore = tmpScore
-					red -= tmpScore
-				} else {
-					box.tmpScore = 0 // don't count red lines down
+			let lines = box.fill(with: blackLines, color: .black)
+			if let lines = lines {
+				blackLines = lines
+			}
+			if blackLines == 0 {
+				if let lines = box.fill(with: redLines, color: .red) {
+				redLines = lines
 				}
-			} else {
-				let tmpScore = min(ScoreBox.maxScore, red)
-				box.tmpScore = tmpScore
-				red -= tmpScore
 			}
 		}
 	}
