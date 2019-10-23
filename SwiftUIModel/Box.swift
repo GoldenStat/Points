@@ -12,8 +12,14 @@ import SwiftUI
 struct Box : View {
 	static let maxNumberOfLines = 5
 
-	public var score = 0
-	public var tmpScore = 0
+	public var score = 0 {didSet {
+		if score < 0 { score = 0 }
+		if score > Box.maxNumberOfLines { score = Box.maxNumberOfLines }
+		}}
+	public var tmpScore = 0 { didSet {
+		if tmpScore < 0 { tmpScore = 0 }
+		if tmpScore > Box.maxNumberOfLines - score { tmpScore = Box.maxNumberOfLines - score }
+		}}
 		
 	static let uncheckedColor = Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255)
 	static let tmpColor = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
@@ -72,7 +78,7 @@ struct Box : View {
 
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-		Box(score: 1, tmpScore: 2).aspectRatio(1, contentMode: .fit)
+		Box(score: 2, tmpScore: 8).aspectRatio(1, contentMode: .fit)
 			.padding(30.0)
     }
 }
