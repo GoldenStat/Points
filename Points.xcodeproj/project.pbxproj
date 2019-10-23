@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		411DF203235B56D400A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
 		411DF205235C84B600A37C64 /* PlayerScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF204235C84B600A37C64 /* PlayerScore.swift */; };
 		411DF207235C918200A37C64 /* BoardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF206235C918200A37C64 /* BoardUI.swift */; };
+		411DF2102360565C00A37C64 /* FlowStack in Frameworks */ = {isa = PBXBuildFile; productRef = 411DF20F2360565C00A37C64 /* FlowStack */; };
 		415EF2B722AD804C004658C7 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2B622AD804C004658C7 /* Player.swift */; };
 		415EF2C122AE67C1004658C7 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C022AE67C1004658C7 /* GameState.swift */; };
 		415EF2C322AE68E8004658C7 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C222AE68E8004658C7 /* History.swift */; };
@@ -72,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				411DF2102360565C00A37C64 /* FlowStack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +164,7 @@
 			);
 			name = Points;
 			packageProductDependencies = (
+				411DF20F2360565C00A37C64 /* FlowStack */,
 			);
 			productName = Points;
 			productReference = 41ED4F3422AD799000A46C19 /* Points.app */;
@@ -192,6 +195,7 @@
 			);
 			mainGroup = 41ED4F2B22AD799000A46C19;
 			packageReferences = (
+				411DF20E2360565C00A37C64 /* XCRemoteSwiftPackageReference "FlowStack" */,
 			);
 			productRefGroup = 41ED4F3522AD799000A46C19 /* Products */;
 			projectDirPath = "";
@@ -450,6 +454,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		411DF20E2360565C00A37C64 /* XCRemoteSwiftPackageReference "FlowStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:johnsusek/FlowStack.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		411DF20F2360565C00A37C64 /* FlowStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 411DF20E2360565C00A37C64 /* XCRemoteSwiftPackageReference "FlowStack" */;
+			productName = FlowStack;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 41ED4F2C22AD799000A46C19 /* Project object */;
 }

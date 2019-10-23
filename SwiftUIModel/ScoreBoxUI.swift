@@ -16,44 +16,62 @@ struct ScoreBoxUI: View {
 	
 	static var numberOfBoxes : Int { get {
 		let overlay = Self.maxScore % Self.linesPerBox
-			let ratio = Self.maxScore / Self.linesPerBox
-			return ratio + (overlay > 0 ? 1 : 0)
+		let ratio = Self.maxScore / Self.linesPerBox
+		return ratio + (overlay > 0 ? 1 : 0)
 		} }
 	
 	var rows : Int { get {
-			let overlay = Self.numberOfBoxes % Self.columns
-			let ratio = Self.numberOfBoxes / Self.columns
-			return ratio + (overlay > 0 ? 1 : 0)
+		let overlay = Self.numberOfBoxes % Self.columns
+		let ratio = Self.numberOfBoxes / Self.columns
+		return ratio + (overlay > 0 ? 1 : 0)
 		} }
 	
-	var lastRowColums : Int { get {
+	private var lastRowColums : Int { get {
 		return Self.numberOfBoxes % Self.columns
 		} }
-
+	
+	private func value(at row: Int, column: Int) -> Int {
+		return self.score - Self.linesPerBox * (Self.columns * row + column)
+	}
+	
+	private func box(at row: Int, column: Int) -> Box {
+		return Box(score: value(at: row, column: column))
+	}
+	
+	private func width(for geometrySize: CGSize) -> CGFloat {
+		return geometrySize.width / CGFloat(Self.columns)
+	}
+	
+	private func height (for geometrySize: CGSize) -> CGFloat {
+		return geometrySize.height / CGFloat(self.rows)
+	}
+		
 	var body: some View {
 		Button(action:  {
-			self.score += 1
-			if self.score > Self.maxScore {
-				self.score = Self.maxScore
+			if self.score < Self.maxScore {
+				self.score += 1
 			}
 		}) {
 			GeometryReader { geometry in
 				VStack {
 					Text("points: \(self.score)")
 					VStack(alignment: .leading) {
-					ForEach(0 ..< self.rows - 1) { row in
-						HStack {
-							ForEach(0 ..< Self.columns) { col in
-								Text("\(Self.columns * row + col)") .background(Color.green)
-									.frame(width: geometry.size.width/CGFloat(Self.columns))
+						ForEach(0 ..< self.rows - 1) { row in
+							HStack {
+								ForEach(0 ..< Self.columns) { col in
+									self.box(at: row, column: col)
+										.padding()
+										.frame(width: self.width(for: geometry.size),
+											   height: self.height(for: geometry.size))
+								}
 							}
 						}
-					}
-					ForEach(0 ..< self.lastRowColums) { col in
-						Text("\((Self.columns * (self.rows - 1) + col))")
-							.background(Color.green)
-							.frame(width: geometry.size.width/CGFloat(Self.columns))
-					}
+						ForEach(0 ..< self.lastRowColums) { col in
+							self.box(at: self.lastRowColums, column: col)
+								.padding()
+								.frame(width: self.width(for: geometry.size),
+									   height: self.height(for: geometry.size))
+						}
 					}
 				}
 			}
@@ -62,7 +80,7 @@ struct ScoreBoxUI: View {
 }
 
 struct PlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        ScoreBoxUI()
-    }
+	static var previews: some View {
+		ScoreBoxUI()
+	}
 }
