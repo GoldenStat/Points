@@ -10,6 +10,14 @@ import SwiftUI
 
 struct PlayerScore: View {
 	var name: String
+	
+	@State private var box = ScoreBoxUI()
+	var score : Int { get { return box.publicScore } }
+
+	func resetScore() {
+		box = ScoreBoxUI()
+	}
+	
 	var body: some View {
 		VStack {
 			Text(name).font(.largeTitle)
