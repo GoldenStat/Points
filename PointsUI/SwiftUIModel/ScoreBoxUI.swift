@@ -8,8 +8,11 @@
 
 import SwiftUI
 
-struct ScoreBoxUI: View {
-	@State private var score : Int = 0
+struct ScoreBoxUI: View, Identifiable {
+	var id = UUID()
+	@State var score : Int = 0
+	@State var tmpScore : Int = 0
+
 	var publicScore : Int { get { return self.score } }
 	
 	static let maxScore = 24
@@ -22,6 +25,10 @@ struct ScoreBoxUI: View {
 		return ratio + (overlay > 0 ? 1 : 0)
 		} }
 
+	public func reset() {
+		score = 0
+	}
+	
 	private func box(at index: Int) -> Box {
 		return Box(score: score - Self.linesPerBox * index)
 	}

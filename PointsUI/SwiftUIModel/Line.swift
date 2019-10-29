@@ -29,6 +29,7 @@ struct Line: View {
 				))
 			}
 			.stroke(self.color, style: StrokeStyle(lineWidth: CGFloat(Self.width)))
+			
 		}
 	}
 }

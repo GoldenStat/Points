@@ -66,14 +66,14 @@ struct Box : View {
 						)
 					}
 				}
-		}
+			}.transition(.scale)
 	}
 }
 
 
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-		Box(score: 2, tmpScore: 8)
+		Box(score: 3, tmpScore: 0)
 			.padding()
     }
 }

@@ -11,18 +11,15 @@ import SwiftUI
 struct BoardUI: View {
 
 	@State private var games : Int = 0
-	var names: [ String ] = [ "Alexander", "Lili", "Villa" ]
+	@State var names: [ String ] = [ "Alexander", "Lili", "Villa" ]
 
 	private let bgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
 
-	
-	private var players : [ PlayerScore ] { get { return names.map { PlayerScore(name: $0) } } }
-		
 	static let maxGames = 3
 	static let columns = 2
 	
 	var numberOfPlayers : Int { get {
-		players.count
+		names.count
 		} }
 	
 	var rows : Int { get {
@@ -42,8 +39,8 @@ struct BoardUI: View {
 	
 	var body: some View {
 		VStack {
-		FlowStack(columns: Self.columns, numItems: players.count, alignment: .center) { index, colWidth in
-			self.players[index]				//				.padding()
+		FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
+			PlayerScore(name: self.names[index])
 				.frame(width: colWidth, height: colWidth! * CGFloat(2.0))
 		}
 		.background(bgColor)
@@ -51,15 +48,15 @@ struct BoardUI: View {
 		//		.edgesIgnoringSafeArea(.all)
 			
 			Button("resetScores") {
-				_ = self.players.map { $0.resetScore() }
+				self.names = [ "Alexander", "Lili", "Villa" ]
 			}
-			
 		}
 	}
 }
 
 struct BoardUI_Previews: PreviewProvider {
+	static var names = ["Alexander", "Lili"]
 	static var previews: some View {
-		BoardUI(names: ["Alexander", "Lili"] )
-    }
+		BoardUI(names: Self.names)
+	}
 }

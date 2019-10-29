@@ -24,6 +24,8 @@
 		411DF2332360824900A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
 		411DF2342360824900A37C64 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF200235B4F1200A37C64 /* Line.swift */; };
 		411DF2352360824900A37C64 /* FlowStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF2112360645200A37C64 /* FlowStack.swift */; };
+		411DF23723609E4A00A37C64 /* scoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF23623609E4900A37C64 /* scoreTest.swift */; };
+		411DF23A2363F96A00A37C64 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF2392363F96A00A37C64 /* SwiftUIView.swift */; };
 		415EF2B722AD804C004658C7 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2B622AD804C004658C7 /* Player.swift */; };
 		415EF2C122AE67C1004658C7 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C022AE67C1004658C7 /* GameState.swift */; };
 		415EF2C322AE68E8004658C7 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415EF2C222AE68E8004658C7 /* History.swift */; };
@@ -40,6 +42,8 @@
 		41ED4F3F22AD799300A46C19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41ED4F3E22AD799300A46C19 /* Assets.xcassets */; };
 		41ED4F4222AD799300A46C19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41ED4F4022AD799300A46C19 /* LaunchScreen.storyboard */; };
 		41ED98A622EF4320000CEFDD /* ScoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ED98A522EF4320000CEFDD /* ScoreButton.swift */; };
+		41F1147B23688B6000C6314D /* TransitionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F1147923688B3B00C6314D /* TransitionsView.swift */; };
+		41F1147E2368ACEF00C6314D /* CustomTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F1147C2368ABE200C6314D /* CustomTransitionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +68,8 @@
 		411DF22823607CDA00A37C64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		411DF22A23607CDA00A37C64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		411DF22E23607CF000A37C64 /* PointsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PointsUI.entitlements; sourceTree = "<group>"; };
+		411DF23623609E4900A37C64 /* scoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scoreTest.swift; sourceTree = "<group>"; };
+		411DF2392363F96A00A37C64 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		415EF2B622AD804C004658C7 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Player.swift; path = ../Player.swift; sourceTree = "<group>"; };
 		415EF2C022AE67C1004658C7 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		415EF2C222AE68E8004658C7 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
@@ -82,6 +88,8 @@
 		41ED4F4122AD799300A46C19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41ED4F4322AD799300A46C19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41ED98A522EF4320000CEFDD /* ScoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreButton.swift; sourceTree = "<group>"; };
+		41F1147923688B3B00C6314D /* TransitionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionsView.swift; sourceTree = "<group>"; };
+		41F1147C2368ABE200C6314D /* CustomTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransitionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +127,7 @@
 			children = (
 				411DF206235C918200A37C64 /* BoardUI.swift */,
 				411DF204235C84B600A37C64 /* PlayerScore.swift */,
+				411DF23623609E4900A37C64 /* scoreTest.swift */,
 				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
 				411DF200235B4F1200A37C64 /* Line.swift */,
@@ -164,9 +173,20 @@
 			path = PointsApp;
 			sourceTree = "<group>";
 		};
+		411DF2382363F94200A37C64 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				411DF2392363F96A00A37C64 /* SwiftUIView.swift */,
+				41F1147923688B3B00C6314D /* TransitionsView.swift */,
+				41F1147C2368ABE200C6314D /* CustomTransitionView.swift */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
+				411DF2382363F94200A37C64 /* Animations */,
 				411DF22F23607D9F00A37C64 /* PointsApp */,
 				411DF1FE235B16FD00A37C64 /* Badge */,
 				41ED4F3622AD799000A46C19 /* PointsAsessory */,
@@ -309,14 +329,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41F1147E2368ACEF00C6314D /* CustomTransitionView.swift in Sources */,
 				411DF21D23607CD100A37C64 /* AppDelegate.swift in Sources */,
 				411DF2332360824900A37C64 /* Box.swift in Sources */,
+				411DF23A2363F96A00A37C64 /* SwiftUIView.swift in Sources */,
 				411DF21F23607CD100A37C64 /* SceneDelegate.swift in Sources */,
 				411DF2302360824900A37C64 /* BoardUI.swift in Sources */,
+				41F1147B23688B6000C6314D /* TransitionsView.swift in Sources */,
 				411DF22123607CD100A37C64 /* ContentView.swift in Sources */,
 				411DF2342360824900A37C64 /* Line.swift in Sources */,
 				411DF2352360824900A37C64 /* FlowStack.swift in Sources */,
 				411DF2322360824900A37C64 /* ScoreBoxUI.swift in Sources */,
+				411DF23723609E4A00A37C64 /* scoreTest.swift in Sources */,
 				411DF2312360824900A37C64 /* PlayerScore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
