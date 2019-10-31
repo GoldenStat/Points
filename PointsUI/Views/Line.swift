@@ -12,7 +12,7 @@ struct Line: View {
 	let start: CGPoint
 	let end: CGPoint
 	var color = Color.black
-	static var width = 2.0
+	static var lineWidth = 2.0
 	
 	var body : some View {
 		GeometryReader { geometry in
@@ -28,7 +28,7 @@ struct Line: View {
 					y: self.end.y * height
 				))
 			}
-			.stroke(self.color, style: StrokeStyle(lineWidth: CGFloat(Self.width)))
+			.stroke(self.color, style: StrokeStyle(lineWidth: CGFloat(Self.lineWidth)))
 		}
 	}
 }
@@ -39,7 +39,7 @@ struct AnimatedLine: View {
 	var color = Color.black
 	@State private var t : Double = 1.0
 	
-	static var width = 2.0
+	static var lineWidth = 2.0
 
 	var body : some View {
 		VStack {
@@ -58,7 +58,7 @@ struct AnimatedLine: View {
 			y: self.end.y   + (self.end.y - self.start.y) * CGFloat(t)
 		))
 		}
-		.stroke(self.color, style: StrokeStyle(lineWidth: CGFloat(Self.width)))
+		.stroke(self.color, style: StrokeStyle(lineWidth: CGFloat(Self.lineWidth)))
 		.clipShape(Rectangle())
 		.frame(width: self.end.x - self.start.x, height: self.end.y - self.start.y)
 		}
@@ -69,7 +69,8 @@ struct AnimatedLine: View {
 
 struct Line_Previews: PreviewProvider {
     static var previews: some View {
-		AnimatedLine(start: CGPoint(x: 0.0, y: 100.0),
-			 end: CGPoint(x: 100.0, y: 100.0))
+			Line(start:CGPoint(x: 0.0, y: 1.0), end: CGPoint(x: 1.0, y: 1.0))
+//		AnimatedLine(start: CGPoint(x: 0.0, y: 100.0),
+//			 end: CGPoint(x: 100.0, y: 100.0))
     }
 }

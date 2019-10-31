@@ -58,7 +58,7 @@ struct Box : View {
 						self.line(index: i, color: Box.uncheckedColor)
 					}
 				}
-		}
+			}.aspectRatio(contentMode: .fit)
 	}
 }
 

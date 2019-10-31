@@ -39,15 +39,12 @@ struct BoardUI: View {
 
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
 				PlayerView(name: self.names[index])
-					.frame(width: colWidth, height: colWidth! * CGFloat(2.0))
 			}
-
 		}
 	}
 }
 
 struct BoardUI_Previews: PreviewProvider {
-	static var names = ["Alexander", "Lili"]
 	static var previews: some View {
 		BoardUI(game: Game())
 	}

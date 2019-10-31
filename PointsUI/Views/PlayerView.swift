@@ -12,24 +12,16 @@ struct PlayerView: View, Identifiable {
 	var id = UUID()
 	var name: String
 	
-	@State private var score: Int = 20
 	@State private var UIs = [ScoreBoxUI(score: 0)]
 	
 	var body: some View {
-//		VStack {
 			VStack {
-				ForEach(UIs) { UI in
-					Text(self.name).font(.title)
-					UI
-				}
+				Text(self.name).font(.title)
+				ScoreBoxUI(score: 0)				
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 4))
 				.padding()
-//			Button("reset score") {
-//				self.UIs = [ScoreBoxUI(score: 0)]
-//			}
-//		}
 	}
 }
 

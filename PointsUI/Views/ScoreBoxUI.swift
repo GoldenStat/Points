@@ -39,11 +39,7 @@ struct ScoreBoxUI: View, Identifiable {
 	
 	var body: some View {
 		VStack {
-			HStack {
-				Text("Score: \(self.score)")
-				Text("Tmp: \(self.tmpScore)")
-			}
-			
+			Text("Score: \(self.score)")
 			Button(action:  {
 				if self.score + self.tmpScore < Self.maxScore {
 					self.tmpScore += 1
@@ -54,8 +50,8 @@ struct ScoreBoxUI: View, Identifiable {
 				FlowStack(columns: Self.columns, numItems: Self.numberOfBoxes) { index, colWidth in
 					self.filledBox(at: index)
 						.padding()
-						.frame(width: colWidth, height: colWidth)
-				}
+						.frame(width: colWidth)
+				}.aspectRatio(0.7, contentMode: .fit)
 			}
 			.onReceive(self.saveTimer) { input in
 				self.score += self.tmpScore

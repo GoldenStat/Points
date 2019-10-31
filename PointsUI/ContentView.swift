@@ -16,12 +16,18 @@ struct ContentView: View {
 	}
 	
 	var body: some View {
-		BoardUI(game: game)
+		NavigationView {
+			BoardUI(game: game)
+				.navigationBarTitle(Text("Truco Venezolano").font(.caption))
+				.navigationBarItems(leading: Button("Undo") {
+					// revert history
+				}, trailing: EditButton())
+		}
 	}
 }
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		BoardUI(game: Game())
+		ContentView()
 	}
 }
