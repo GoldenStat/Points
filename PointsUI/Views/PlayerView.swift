@@ -9,24 +9,28 @@
 import SwiftUI
 
 struct PlayerView: View, Identifiable {
+	@ObservedObject var player : Player
+
 	var id = UUID()
-	var name: String
-	
-	@State private var UIs = [ScoreBoxUI(score: 0)]
-	
+	var name: String { get {
+		return player.name
+		}}
+	var score: Int { get {
+		return player.points
+		}}
+		
 	var body: some View {
 			VStack {
 				Text(self.name).font(.title)
-				ScoreBoxUI(score: 0)				
+				ScoreBoxUI(player: player)
 			}
 			.overlay(
-				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 4))
-				.padding()
+				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 0.5))
 	}
 }
 
 struct PlayerUI_Previews: PreviewProvider {
 	static var previews: some View {
-			PlayerView(name: "Alexander")
+		PlayerView(player: Player(name: "Alexander")).padding(.horizontal)
 	}
 }

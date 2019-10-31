@@ -7,10 +7,28 @@
 //
 import SwiftUI
 
-/// Player
-struct Player : Codable {
+/// Player, as data and as object
+class Player: ObservableObject {
+	var name: String
+	var points: Int
+	
+	init(name: String, points: Int = 0) {
+		self.name = name
+		self.points = points
+	}
+	
+	func encode() -> PlayerData {
+		return PlayerData(name: name, points: points)
+	}
+}
+
+struct PlayerData : Codable {
 	var name: String
 	var points: Int = 0
+	
+	func object() -> Player {
+		return Player(name: name, points: points)
+	}
 }
 
 /// Default values
@@ -20,9 +38,8 @@ struct Default {
 
 /// GameState: a list of the current players and their scores
 struct GameState : Codable {
-	var players = Default.names.map { Player(name: $0) }
+	var players = Default.names.map { Player(name: $0).encode() }
 }
-
 
 /// a list of game States
 struct History : Codable {
@@ -45,7 +62,13 @@ struct SaveData : Codable {
 /// Game has all the data that should be saved
 class Game : ObservableObject {
 	
-	var players: [Player] {
+//	var scores: [Int] {
+//		get {
+//			return saveData.state.players.map { $0.points }
+//		}
+//	}
+	
+	var players: [PlayerData] {
 		get {
 			return saveData.state.players
 		}

@@ -91,7 +91,7 @@ struct FlowStackPreview: PreviewProvider {
 		FlowStack(columns: 3, numItems: 25, alignment: .leading) { index, colWidth in
 			Text(" \(index) ")
 				.frame(width: colWidth)
-				.border(Color.gray)
+//				.border(Color.gray)
 		}	}
 }
 

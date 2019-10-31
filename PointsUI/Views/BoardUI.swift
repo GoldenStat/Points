@@ -38,7 +38,8 @@ struct BoardUI: View {
 				.edgesIgnoringSafeArea(.all)
 
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-				PlayerView(name: self.names[index])
+				PlayerView(player: self.game.players[index].object())
+				.padding(5)
 			}
 		}
 	}

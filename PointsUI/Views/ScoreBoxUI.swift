@@ -9,13 +9,18 @@
 import SwiftUI
 
 struct ScoreBoxUI: View, Identifiable {
+	@ObservedObject var player : Player
 
 	var id = UUID()
 
 	static var timer : Timer.TimerPublisher = Timer.publish(every: 5, on: .main, in: .common)
 	@State private var saveTimer = Self.timer.autoconnect()
-	@State var score : Int = 0
-	@State var tmpScore : Int = 0
+	@State private var score : Int = 0 {
+		didSet {
+			player.points = score
+		}
+	}
+	@State private var tmpScore : Int = 0
 		
 	var publicScore : Int { get { return self.score } }
 	
@@ -39,7 +44,13 @@ struct ScoreBoxUI: View, Identifiable {
 	
 	var body: some View {
 		VStack {
-			Text("Score: \(self.score)")
+			HStack {
+				Text("Puntos: \(score)")
+				if tmpScore > 0 {
+					Text(" + ")
+					Text("\(tmpScore)")
+				}
+			}
 			Button(action:  {
 				if self.score + self.tmpScore < Self.maxScore {
 					self.tmpScore += 1
@@ -63,6 +74,6 @@ struct ScoreBoxUI: View, Identifiable {
 
 struct PlayerView_Previews: PreviewProvider {
 	static var previews: some View {
-		ScoreBoxUI(score: 4, tmpScore: 10)
+		ScoreBoxUI(player: Player(name: "Alexander"))
 	}
 }
