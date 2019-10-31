@@ -65,7 +65,7 @@ struct Box : View {
 
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-		Box(score: 3, tmpScore: 0)
+		Box(score: 1, tmpScore: 3)
 			.padding()
     }
 }

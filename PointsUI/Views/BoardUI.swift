@@ -32,7 +32,6 @@ struct BoardUI: View {
 	}
 	
 	var body: some View {
-		NavigationView {
 		ZStack {
 			bgColor
 				.opacity(50.0)
@@ -43,7 +42,6 @@ struct BoardUI: View {
 					.frame(width: colWidth, height: colWidth! * CGFloat(2.0))
 			}
 
-		}
 		}
 	}
 }
