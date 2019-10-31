@@ -4,6 +4,9 @@
 //  Created by John Susek on 6/25/19.
 //  Copyright © 2019 John Susek. All rights reserved.
 //
+//  refactored by Alexander Voelz on 10/29/19
+//
+
 import SwiftUI
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -29,6 +32,17 @@ public struct FlowStack<Content>: View where Content: View {
 	private var lastRowColumns : Int { get { return numItems % columns }	}
 	
 	private var rows : Int { get { return numItems / columns } }
+	
+	public init(
+		columns: Int,
+		numItems: Int,
+		alignment: HorizontalAlignment? = HorizontalAlignment.leading,
+		@ViewBuilder content: @escaping (Int, CGFloat) -> Content) {
+		self.content = content
+		self.columns = columns
+		self.numItems = numItems
+		self.alignment = alignment ?? HorizontalAlignment.leading
+	}
 	
 	public var body : some View {
 		// A GeometryReader is required to size items in the scroll view
@@ -80,3 +94,6 @@ struct FlowStackPreview: PreviewProvider {
 				.border(Color.gray)
 		}	}
 }
+
+//the former version had the issue that it would compile because the compiler couldn't infer the types in acceptable time. So the code was split up a little and some private variables and functions.
+

@@ -24,6 +24,8 @@ struct Settings: Codable {
 		/// store the player's names
 	var playerNames: [String] = []
 
+	var history: [Game] = []
+	
 	/// save the settings into UserDefaults
 	func save() {
 		UserDefaults.standard.set(encode(), forKey: "Settings")

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct PlayerScore: View, Identifiable {
+struct PlayerView: View, Identifiable {
 	var id = UUID()
 	var name: String
 	
@@ -16,36 +16,25 @@ struct PlayerScore: View, Identifiable {
 	@State private var UIs = [ScoreBoxUI(score: 0)]
 	
 	var body: some View {
-		VStack {
+//		VStack {
 			VStack {
 				ForEach(UIs) { UI in
-					Text(self.name).font(.largeTitle)
+					Text(self.name).font(.title)
 					UI
 				}
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 4))
 				.padding()
-			Button("reset score") {
-				self.UIs = [ScoreBoxUI(score: 0)]
-			}
-		}
+//			Button("reset score") {
+//				self.UIs = [ScoreBoxUI(score: 0)]
+//			}
+//		}
 	}
 }
 
-//struct PlayerButton: View {
-//	var name: String
-//	@State private var score: Int = 0
-//
-//	var body: some View {
-//		VStack {
-//			PlayerScore(name: self.name, score: self.score)
-//		}
-//	}
-//}
-
 struct PlayerUI_Previews: PreviewProvider {
 	static var previews: some View {
-			PlayerScore(name: "Alexander")
+			PlayerView(name: "Alexander")
 	}
 }

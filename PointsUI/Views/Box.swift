@@ -40,6 +40,10 @@ struct Box : View {
 	func end(for index: Int) -> CGPoint {
 		return CGPoint(x: Self.lines[index].end.0, y: Self.lines[index].end.1)
 	}
+	
+	private func line(index: Int, color: Color) -> some View {
+		return Line(start: start(for: index), end: end(for: index), color: color)
+	}
 
 	var body: some View {
 			
@@ -47,26 +51,14 @@ struct Box : View {
 			ZStack {
 				ForEach(0..<Box.maxNumberOfLines) { i in
 					if i < self.score {
-						Line(
-							start: self.start(for: i),
-							end: self.end(for: i),
-							color: Box.solidColor
-						)
+						self.line(index: i, color: Box.solidColor)
 					} else if i < self.score + self.tmpScore {
-						Line(
-							start: self.start(for: i),
-							end: self.end(for: i),
-							color: Box.tmpColor
-						)
+						self.line(index: i, color: Box.tmpColor)
 					} else {
-						Line(
-							start: self.start(for: i),
-							end: self.end(for: i),
-							color: Box.uncheckedColor
-						)
+						self.line(index: i, color: Box.uncheckedColor)
 					}
 				}
-			}.transition(.scale)
+		}
 	}
 }
 
