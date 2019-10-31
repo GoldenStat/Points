@@ -65,8 +65,10 @@ struct ScoreBoxUI: View, Identifiable {
 				}.aspectRatio(0.7, contentMode: .fit)
 			}
 			.onReceive(self.saveTimer) { input in
-				self.score += self.tmpScore
-				self.tmpScore = 0
+                if self.tmpScore > 0 {
+                    self.score += self.tmpScore
+                    self.tmpScore = 0
+                }
 			}
 		}
 	}

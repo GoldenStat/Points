@@ -20,7 +20,7 @@ struct ContentView: View {
 			BoardUI(game: game)
 				.navigationBarTitle(Text("Truco Venezolano").font(.caption))
 				.navigationBarItems(leading: Button("Undo") {
-					// revert history
+					self.game.undo()
 				}, trailing: EditButton())
 		}
 	}

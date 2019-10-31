@@ -12,6 +12,7 @@ struct BoardUI: View {
 	
 	@State private var games : Int = 0	
 	@ObservedObject var game : Game
+    
 	var names : [ String ] { get {
 		return game.names
 		}
@@ -38,7 +39,7 @@ struct BoardUI: View {
 				.edgesIgnoringSafeArea(.all)
 
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-				PlayerView(player: self.game.players[index].object())
+				PlayerView(player: self.game.players[index])
 				.padding(5)
 			}
 		}
