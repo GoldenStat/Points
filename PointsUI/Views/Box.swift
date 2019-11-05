@@ -20,11 +20,11 @@ struct Box : View {
 		if tmpScore < 0 { tmpScore = 0 }
 		if tmpScore > Box.maxNumberOfLines - score { tmpScore = Box.maxNumberOfLines - score }
 		}}
-		
-	static let uncheckedColor = Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255)
-	static let tmpColor = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
-	static let solidColor = Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
-	
+    
+    static let uncheckedColor = Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
+    static let tmpColor = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
+    static let solidColor = Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
+
 	static let lines = [
 		(start: (0.0, 1.0), end: (0.0, 0.0)),
 		(start: (0.0, 1.0), end: (1.0, 1.0)),
@@ -49,23 +49,37 @@ struct Box : View {
 			
 		return
 			ZStack {
-				ForEach(0..<Box.maxNumberOfLines) { i in
+                ForEach(0..<Box.maxNumberOfLines) { i in
+                    self.line(index: i, color: Box.uncheckedColor)
+                }
+                ForEach(0..<Box.maxNumberOfLines) { i in
 					if i < self.score {
 						self.line(index: i, color: Box.solidColor)
 					} else if i < self.score + self.tmpScore {
 						self.line(index: i, color: Box.tmpColor)
-					} else {
-						self.line(index: i, color: Box.uncheckedColor)
 					}
 				}
 			}.aspectRatio(contentMode: .fit)
 	}
 }
 
+struct BoxNew: View {
+    
+    var count : Int
+    var tmpCount : Int
+    
+    var body: some View {
+        ZStack {
+            Lines(from: 0, to: Lines.maximumNumberOfLines, color: .unchecked)
+            Lines(from: 0, to: count, color: .solid)
+            Lines(from: count, to: tmpCount + count, color: .tmp)
+        }
+    }
+}
 
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-		Box(score: 1, tmpScore: 3)
-			.padding()
+        BoxNew(count: 5, tmpCount: 4)
+            .padding()
     }
 }
