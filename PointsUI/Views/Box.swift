@@ -25,11 +25,12 @@ struct LineShape: Shape {
 
     var from: Int = 0
     var to: Int = Self.maximumLines
+    var animatingLastLine = false
     
-    @State private var length : CGFloat = 1.0
+    @State private var lastLineLength : CGFloat = 1.0
     var animatableData : CGFloat {
-        get { return self.length }
-        set { self.length = newValue }
+        get { return self.lastLineLength }
+        set { self.lastLineLength = newValue }
     }
     
     static private let lines : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
@@ -43,15 +44,13 @@ struct LineShape: Shape {
         
     func path(in rect: CGRect) -> Path {
 
-//        print("From: \(from) To: \(to)...")
         var from = max(min(self.from, Self.maximumLines), 0)
         var to = min(max(self.to, 0),Self.maximumLines)
-//        print("...From: \(from) To: \(to)")
         
-        func pointInRect(point: (CGFloat,CGFloat)) -> CGPoint {
+        func pointInRect(point: (CGFloat,CGFloat), length: CGFloat = 1.0) -> CGPoint {
             return CGPoint(
-            x: rect.maxX + (1.0 - point.0) * (rect.minX - rect.maxX),
-            y: rect.maxY + (1.0 - point.1) * (rect.minY - rect.maxY)
+            x: rect.maxX + (1.0 - point.0) * (rect.minX - rect.maxX) * length,
+            y: rect.maxY + (1.0 - point.1) * (rect.minY - rect.maxY) * length
             )
         }
 
@@ -61,13 +60,15 @@ struct LineShape: Shape {
             let start = Self.lines[index].start
             let end = Self.lines[index].end
             path.move(to: pointInRect(point: start))
-            path.addLine(to: pointInRect(point: end))
-//            path.move(to: CGPoint(start))
-//            if index < count - 1 {
-//            path.addLine(to: CGPoint(end))
-//            } else {
-//                path.addLine(to: CGPoint(end) * self.length)
-//            }
+            if index < to - 1 {
+                path.addLine(to: pointInRect(point: end))
+            } else {
+                if (animatingLastLine) {
+                    path.addLine(to: pointInRect(point: end, length: self.lastLineLength))
+                } else {
+                    path.addLine(to: pointInRect(point: end))
+                }
+            }
         }
         return path
     }
@@ -86,7 +87,7 @@ struct Box: View {
                 .stroke(Color.unchecked)
             LineShape(from: 0, to: points)
                 .stroke(Color.solid)
-            LineShape(from: points, to: points + tmpPoints)
+            LineShape(from: points, to: points + tmpPoints, animatingLastLine: true)
                 .stroke(Color.tmp)
         }
     }
