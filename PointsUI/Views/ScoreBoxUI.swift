@@ -9,24 +9,22 @@
 import SwiftUI
 
 struct ScoreBoxUI: View, Identifiable {
+    // public vars
 	@ObservedObject var player : Player
-
 	var id = UUID()
+    var memory : MemoryPoints = MemoryPoints(points: 0)
 
-	static var timer : Timer.TimerPublisher = Timer.publish(every: 5, on: .main, in: .common)
+	static private var timer : Timer.TimerPublisher = Timer.publish(every: 5, on: .main, in: .common)
 	@State private var saveTimer = Self.timer.autoconnect()
-	@State private var score : Int = 0 {
-		didSet {
-			player.points = score
-		}
-	}
+    
+	@State private var score : Int = 0 { didSet { player.points = score } }
 	@State private var tmpScore : Int = 0
 		
 	var publicScore : Int { get { return self.score } }
 	
 	static let maxScore = 24
 	static let columns = 2
-	static let linesPerBox = Box.maxNumberOfLines
+	static let linesPerBox = Lines.maximumNumberOfLines
 	
 	static var numberOfBoxes : Int { get {
 		let overlay = Self.maxScore % Self.linesPerBox
@@ -36,11 +34,43 @@ struct ScoreBoxUI: View, Identifiable {
 	
 	public func reset() {
 		score = 0
+        tmpScore = 0
 	}
-	
-	private func filledBox(at index: Int) -> Box {
-		return Box(score: score - Self.linesPerBox * index, tmpScore: tmpScore)
-	}
+    
+    class MemoryPoints {
+        var points: Int
+        var tmpPoints: Int
+        
+        var sum : Int { get { return points + tmpPoints } }
+        
+        init(points: Int, tmpPoints: Int = -1) {
+            self.points = points
+            self.tmpPoints = tmpPoints
+        }
+        
+        var isNotSet : Bool { get {
+            return tmpPoints == -1
+        } }
+    }
+        
+    private func filledBox(at index: Int) -> Box {
+        // count points and tmp points to what should be in this box
+        
+        let start = index * Self.linesPerBox
+        let end = start + Self.linesPerBox
+        var thisBoxScore = 0
+        var thisBoxTmpScore = 0
+        
+        for point in start ... end {
+            if point < score {
+                thisBoxScore += 1
+            } else if point < score + tmpScore {
+                thisBoxTmpScore += 1
+            }
+        }
+        
+        return Box(points: thisBoxScore, tmpPoints: thisBoxTmpScore)
+    }
 	
 	var body: some View {
 		VStack {

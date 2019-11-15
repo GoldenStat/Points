@@ -107,11 +107,12 @@ class Game : ObservableObject {
     init() {
         let decoder = JSONDecoder()
         if let data = UserDefaults.standard.data(forKey: SettingsVariables.saveData.rawValue) {
+            print("loading data found in UserDefaults...")
             if let decodedData = try? decoder.decode(SaveData.self, from: data) {
                 self.saveData = decodedData
                 self.players = decodedData.state.players.map { $0.object() }
             }
-            print("loaded data")
+            print("data loaded")
             return
         } else {
             self.players = Default.names.map { Player(name: $0) }

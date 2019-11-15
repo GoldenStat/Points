@@ -8,78 +8,93 @@
 
 import SwiftUI
 
-
-struct Box : View {
-	static let maxNumberOfLines = 5
-
-	public var score = 0 { didSet {
-		if score < 0 { score = 0 }
-		if score > Box.maxNumberOfLines { score = Box.maxNumberOfLines }
-		}}
-	public var tmpScore = 0 { didSet {
-		if tmpScore < 0 { tmpScore = 0 }
-		if tmpScore > Box.maxNumberOfLines - score { tmpScore = Box.maxNumberOfLines - score }
-		}}
+extension CGPoint {
+    init(_ point: (Double,Double)) {
+        self.init(x: point.0, y: point.1)
+    }
     
-    static let uncheckedColor = Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
-    static let tmpColor = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
-    static let solidColor = Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
-
-	static let lines = [
-		(start: (0.0, 1.0), end: (0.0, 0.0)),
-		(start: (0.0, 1.0), end: (1.0, 1.0)),
-		(start: (1.0, 1.0), end: (1.0, 0.0)),
-		(start: (0.0, 0.0), end: (1.0, 0.0)),
-		(start: (0.0, 0.0), end: (1.0, 1.0)),
-		(start: (0.0, 1.0), end: (1.0, 0.0))
-	]
-
-	func start(for index: Int) -> CGPoint {
-		return CGPoint(x: Self.lines[index].start.0, y: Self.lines[index].start.1)
-	}
-	func end(for index: Int) -> CGPoint {
-		return CGPoint(x: Self.lines[index].end.0, y: Self.lines[index].end.1)
-	}
-	
-	private func line(index: Int, color: Color) -> some View {
-		return Line(start: start(for: index), end: end(for: index), color: color)
-	}
-
-	var body: some View {
-			
-		return
-			ZStack {
-                ForEach(0..<Box.maxNumberOfLines) { i in
-                    self.line(index: i, color: Box.uncheckedColor)
-                }
-                ForEach(0..<Box.maxNumberOfLines) { i in
-					if i < self.score {
-						self.line(index: i, color: Box.solidColor)
-					} else if i < self.score + self.tmpScore {
-						self.line(index: i, color: Box.tmpColor)
-					}
-				}
-			}.aspectRatio(contentMode: .fit)
-	}
+    static func * (origin: CGPoint, multiplier: CGFloat) -> CGPoint {
+        return CGPoint(x: origin.x * multiplier, y: origin.y * multiplier)
+    }
 }
 
-struct BoxNew: View {
+struct LineShape: Shape {
     
-    var count : Int
-    var tmpCount : Int
+    /// values bigger than number are ignored
+    static var maximumLines = Self.lines.count - 1
+
+    var from: Int = 0
+    var to: Int = Self.maximumLines
     
+    @State private var length : CGFloat = 1.0
+    var animatableData : CGFloat {
+        get { return self.length }
+        set { self.length = newValue }
+    }
+    
+    static private let lines : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
+        (start: (0.0, 1.0), end: (0.0, 0.0)),
+        (start: (0.0, 0.0), end: (1.0, 0.0)),
+        (start: (0.0, 1.0), end: (1.0, 1.0)),
+        (start: (1.0, 1.0), end: (1.0, 0.0)),
+        (start: (0.0, 0.0), end: (1.0, 1.0)),
+        (start: (0.0, 1.0), end: (1.0, 0.0))
+    ]
+        
+    func path(in rect: CGRect) -> Path {
+
+//        print("From: \(from) To: \(to)...")
+        var from = max(min(self.from, Self.maximumLines), 0)
+        var to = min(max(self.to, 0),Self.maximumLines)
+//        print("...From: \(from) To: \(to)")
+        
+        func pointInRect(point: (CGFloat,CGFloat)) -> CGPoint {
+            return CGPoint(
+            x: rect.maxX + (1.0 - point.0) * (rect.minX - rect.maxX),
+            y: rect.maxY + (1.0 - point.1) * (rect.minY - rect.maxY)
+            )
+        }
+
+        var path = Path()
+
+        for index in from ..< to {
+            let start = Self.lines[index].start
+            let end = Self.lines[index].end
+            path.move(to: pointInRect(point: start))
+            path.addLine(to: pointInRect(point: end))
+//            path.move(to: CGPoint(start))
+//            if index < count - 1 {
+//            path.addLine(to: CGPoint(end))
+//            } else {
+//                path.addLine(to: CGPoint(end) * self.length)
+//            }
+        }
+        return path
+    }
+
+}
+
+struct Box: View {
+    
+    var points : Int = 5
+    var tmpPoints : Int
+    static var maxCount = LineShape.maximumLines
+
     var body: some View {
         ZStack {
-            Lines(from: 0, to: Lines.maximumNumberOfLines, color: .unchecked)
-            Lines(from: 0, to: count, color: .solid)
-            Lines(from: count, to: tmpCount + count, color: .tmp)
+            LineShape(from: 0, to: Self.maxCount)
+                .stroke(Color.unchecked)
+            LineShape(from: 0, to: points)
+                .stroke(Color.solid)
+            LineShape(from: points, to: points + tmpPoints)
+                .stroke(Color.tmp)
         }
     }
 }
 
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-        BoxNew(count: 5, tmpCount: 4)
+        Box(points: 3, tmpPoints: 2)
             .padding()
     }
 }
