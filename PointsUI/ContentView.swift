@@ -12,19 +12,36 @@ struct ContentView: View {
     @ObservedObject var players = Players(names: Default.names)
     @ObservedObject var history = History()
     
+    
     @State private var isPresented = false
     
-    var historyTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    @State var historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    @State var timerHasFired = false
     
     func saveHistory() {
         // save the history if something has changed
         // get last history step
         if let lastSaved = history.states.last {
             if !(lastSaved.players == players.items) {
-                history.save(state: GameState(players: self.players.items))
+                if (!timerHasFired) {
+                    self.timerHasFired = true
+                    _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
+                        self.saveHistory()
+                    }
+                } else {
+                    history.save(state: GameState(players: self.players.items))
+                    self.timerHasFired = false
+                }
             }
         } else {
             history.save(state: GameState(players: self.players.items))
+        }
+    }
+    
+    func undo() {
+        history.undo()
+        for (index, player) in history.currentPlayers.enumerated() {
+            players.items[index].points = player.points
         }
     }
     
@@ -38,7 +55,7 @@ struct ContentView: View {
                     },
                     trailing: HStack {
                         Button("Undo") {
-                            self.history.undo()
+                            self.undo()
                         }
                         EditButton()
                 })
@@ -47,7 +64,6 @@ struct ContentView: View {
             }
             .onReceive(self.historyTimer) { input in
                 self.saveHistory()
-                
             }
         }
     }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PlayerView: View, Identifiable {
 	@ObservedObject var players : Players
-    @ObservedObject var history : History
+
     var player: Player
 
 	var id = UUID()
@@ -33,6 +33,6 @@ struct PlayerView: View, Identifiable {
 
 struct PlayerUI_Previews: PreviewProvider {
 	static var previews: some View {
-        PlayerView(players: Players(), history: History(), player: Player(name: "Alexander")).padding(.horizontal)
+        PlayerView(players: Players(), player: Player(name: "Alexander")).padding(.horizontal)
 	}
 }

@@ -23,7 +23,7 @@ struct HistoryDetailView: View {
     }
     
     var playerNames : [ String ] {
-        players.items.map {$0.name}
+        history.currentPlayers.map {$0.name}
     }
     
     var tableMatrix: [ Text ] {
@@ -79,7 +79,6 @@ struct HistoryDetailView_Previews: PreviewProvider {
             state = genNewState(from: state)
             history.save(state: state)
         }
-//        history.undo()
         return history
     }
     

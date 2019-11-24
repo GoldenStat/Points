@@ -20,7 +20,8 @@ struct BoardUI: View {
 	}
 	
 	private let bgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
-	
+        .opacity(50.0)
+
     static let maxGames = Default.maxGames
 	static let columns = 2
 	
@@ -36,11 +37,10 @@ struct BoardUI: View {
 	var body: some View {
 		ZStack {
 			bgColor
-				.opacity(50.0)
 				.edgesIgnoringSafeArea(.all)
 
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-                PlayerView(players: self.players, history: self.history, player: self.players.items[index])
+                PlayerView(players: self.players, player: self.players.items[index])
 				.padding(5)
 			}
 		}

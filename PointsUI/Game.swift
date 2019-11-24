@@ -23,6 +23,11 @@ class Players: ObservableObject {
             items.append(Player(name: name))
         }
     }
+    
+    convenience init(players: [Player]) {
+        self.init()
+        items = players
+    }
 }
 
 
@@ -46,8 +51,6 @@ func == (lhs: [Player], rhs: [Player]) -> Bool {
     return true
 }
 
-
-
 /// a list of game States
 class History : ObservableObject {
     @Published var states = [GameState]()
@@ -55,6 +58,13 @@ class History : ObservableObject {
     func undo() {
         guard states.count > 0 else { return }
         _ = states.removeLast()
+    }
+    
+    var currentPlayers : [Player] {
+        if let lastState = states.last {
+            return lastState.players
+        }
+        return []
     }
     
     func save(state: GameState) {
