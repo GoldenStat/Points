@@ -9,28 +9,31 @@
 import SwiftUI
 
 struct ContentView: View {
-	@ObservedObject var game = Game()
-	var names : [String] { get {
-		return game.names
-		}
-	}
-	
+    @ObservedObject var players = Players(names: Default.names)
+    @ObservedObject var history = History()
+    	
+    @State private var isPresented = false
+    
 	var body: some View {
 		NavigationView {
-            BoardUI(game: game)
+            BoardUI(players: players, history: history)
                 .navigationBarTitle(Text("Truco Venezolano").font(.caption))
                 .navigationBarItems(
-                    leading: NavigationLink(destination:
-                        Text("This is the game history")) {
-                            Text("Show Detail")
+                    leading: Button("History") {
+                        self.isPresented.toggle()
                         },
                     trailing: HStack {
                         Button("Undo") {
-                            self.game.undo()
+                            self.history.undo()
+                            print("%d steps saved", self.history.states.count)
                         }
                         EditButton()
                     }
             )
+                .sheet(isPresented: $isPresented) {
+                    HistoryDetailView(history: self.history, players: self.players)
+                    
+            }
         }
     }
 }

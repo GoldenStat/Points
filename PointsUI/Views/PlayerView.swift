@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct PlayerView: View, Identifiable {
-	@ObservedObject var player : Player
+	@ObservedObject var players : Players
+    @ObservedObject var history : History
+    var player: Player
 
 	var id = UUID()
 	var name: String { get {
@@ -22,7 +24,7 @@ struct PlayerView: View, Identifiable {
 	var body: some View {
 			VStack {
 				Text(self.name).font(.title)
-				ScoreBoxUI(player: player)
+                ScoreBoxUI(players: players, history: history, player: player)
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 0.5))
@@ -31,6 +33,6 @@ struct PlayerView: View, Identifiable {
 
 struct PlayerUI_Previews: PreviewProvider {
 	static var previews: some View {
-		PlayerView(player: Player(name: "Alexander")).padding(.horizontal)
+        PlayerView(players: Players(), history: History(), player: Player(name: "Alexander")).padding(.horizontal)
 	}
 }

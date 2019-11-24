@@ -19,6 +19,7 @@
 		411DF2332360824900A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
 		411DF2342360824900A37C64 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF200235B4F1200A37C64 /* Line.swift */; };
 		411DF2352360824900A37C64 /* FlowStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF2112360645200A37C64 /* FlowStack.swift */; };
+		4199BBEE2389F81700AB25D3 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */; };
 		41F114A9236A073F00C6314D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F114A8236A073F00C6314D /* Game.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		411DF22823607CDA00A37C64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		411DF22A23607CDA00A37C64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		411DF22E23607CF000A37C64 /* PointsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PointsUI.entitlements; sourceTree = "<group>"; };
+		4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
 		41F114A8236A073F00C6314D /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,6 +72,7 @@
 			children = (
 				41F114A8236A073F00C6314D /* Game.swift */,
 				411DF22023607CD100A37C64 /* ContentView.swift */,
+				4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */,
 				411DF1FF235B194800A37C64 /* Views */,
 				41F114AA236A101200C6314D /* Data */,
 				41F114AB236A102000C6314D /* Supporting Files */,
@@ -201,6 +204,7 @@
 				411DF2332360824900A37C64 /* Box.swift in Sources */,
 				411DF21F23607CD100A37C64 /* SceneDelegate.swift in Sources */,
 				411DF2302360824900A37C64 /* BoardUI.swift in Sources */,
+				4199BBEE2389F81700AB25D3 /* HistoryDetailView.swift in Sources */,
 				411DF22123607CD100A37C64 /* ContentView.swift in Sources */,
 				411DF2342360824900A37C64 /* Line.swift in Sources */,
 				41F114A9236A073F00C6314D /* Game.swift in Sources */,
