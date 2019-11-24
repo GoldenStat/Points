@@ -53,7 +53,8 @@ class History : ObservableObject {
     @Published var states = [GameState]()
     
     func undo() {
-        _ = states.dropLast()
+        guard states.count > 0 else { return }
+        _ = states.removeLast()
     }
     
     func save(state: GameState) {

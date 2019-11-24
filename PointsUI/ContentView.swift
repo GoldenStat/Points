@@ -39,7 +39,6 @@ struct ContentView: View {
                     trailing: HStack {
                         Button("Undo") {
                             self.history.undo()
-                            print("%d steps saved", self.history.states.count)
                         }
                         EditButton()
                 })

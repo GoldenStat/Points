@@ -18,6 +18,7 @@ public struct FlowStack<Content>: View where Content: View {
 	// The alignment of our columns in the last row
 	// when they don't fill all the column slots
 	var alignment = HorizontalAlignment.leading
+    var indentLastRow = true
 	
 	public let content: (Int, CGFloat) -> Content
 	
@@ -29,7 +30,7 @@ public struct FlowStack<Content>: View where Content: View {
 		return (row * self.columns) + column
 	}
 	
-	private var lastRowColumns : Int { get { return numItems % columns }	}
+    private var lastRowColumns : Int { get { return indentLastRow ? numItems % columns : columns }	}
 	
 	private var rows : Int { get { return numItems / columns } }
 	
@@ -37,11 +38,13 @@ public struct FlowStack<Content>: View where Content: View {
 		columns: Int,
 		numItems: Int,
 		alignment: HorizontalAlignment? = HorizontalAlignment.leading,
+        indentLastRow: Bool = true,
 		@ViewBuilder content: @escaping (Int, CGFloat) -> Content) {
 		self.content = content
 		self.columns = columns
 		self.numItems = numItems
 		self.alignment = alignment ?? HorizontalAlignment.leading
+        self.indentLastRow = indentLastRow
 	}
 	
 	public var body : some View {
@@ -91,9 +94,5 @@ struct FlowStackPreview: PreviewProvider {
 		FlowStack(columns: 3, numItems: 25, alignment: .leading) { index, colWidth in
 			Text(" \(index) ")
 				.frame(width: colWidth)
-//				.border(Color.gray)
 		}	}
 }
-
-//the former version had the issue that it would compile because the compiler couldn't infer the types in acceptable time. So the code was split up a little and some private variables and functions.
-
