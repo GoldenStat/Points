@@ -24,7 +24,7 @@ struct PlayerView: View, Identifiable {
 	var body: some View {
 			VStack {
 				Text(self.name).font(.title)
-                ScoreBoxUI(players: players, history: history, player: player)
+                ScoreBoxUI(players: players, player: player)
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 0.5))

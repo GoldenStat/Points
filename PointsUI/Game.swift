@@ -32,6 +32,22 @@ struct GameState : Codable, Identifiable {
     var players : [Player]
 }
 
+func == (lhs: Player, rhs: Player) -> Bool {
+    return lhs.name == rhs.name && lhs.points == rhs.points
+}
+
+func == (lhs: [Player], rhs: [Player]) -> Bool {
+    guard lhs.count == rhs.count else { return false }
+    for index in (0..<lhs.count) {
+        if !(lhs[index] == rhs[index]) {
+            return false
+        }
+    }
+    return true
+}
+
+
+
 /// a list of game States
 class History : ObservableObject {
     @Published var states = [GameState]()

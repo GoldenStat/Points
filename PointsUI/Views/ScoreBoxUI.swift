@@ -11,7 +11,6 @@ import SwiftUI
 struct ScoreBoxUI: View, Identifiable {
     // public vars
     @ObservedObject var players: Players
-    @ObservedObject var history: History
     
     var player : Player
     var id = UUID()
@@ -22,19 +21,11 @@ struct ScoreBoxUI: View, Identifiable {
             if self.tmpScore > 0 {
                 self.score += self.tmpScore
                 self.tmpScore = 0
-                _ = self.historyTimer
                 self.saveTimer.invalidate()
             }
         }
     }
-    
-    var historyTimer : Timer {
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-            self.history.save(state: GameState(players: self.players.items))
-            self.historyTimer.invalidate()
-        }
-    }
-    
+        
     @State private var score : Int = 0 { didSet {
         for (index, player) in players.items.enumerated() {
             if player.id == self.player.id {
@@ -124,6 +115,6 @@ struct ScoreBoxUI: View, Identifiable {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreBoxUI(players: Players(), history: History(), player: Player(name: "Alexander"))
+        ScoreBoxUI(players: Players(), player: Player(name: "Alexander"))
     }
 }
