@@ -53,11 +53,11 @@ public struct FlowStack<Content>: View where Content: View {
 			
 			// VStacks are our rows
 			VStack(alignment: self.alignment, spacing: 0) {
-				ForEach(0 ..< self.rows ) { row in
+                ForEach(0 ..< self.rows, id: \.self) { row in
 					
 					// HStacks are our columns
 					HStack(spacing: 0) {
-						ForEach(0 ..< self.columns) { column in
+                        ForEach(0 ..< self.columns, id: \.self) { column in
 							self.content(
 								// Pass the index to the content
 								self.index(forRow: row, column: column),
