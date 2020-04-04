@@ -38,21 +38,20 @@ struct Line: Shape {
 }
 
 struct AnimatedLine: View {
-    @State var length = 0.0
+    var length: Double { extended ? 1.0 : 0.0 }
     var animation: Bool
+    @State var extended: Bool = false
+    
     func changeLength() {
-        if length > 0.0 {
-            length = 0.0
-        } else {
-            length = 1.0
-        }
+        extended.toggle()
     }
     
     var body: some View {
         VStack {
+            Text(extended ? "Extended" : "Contracted")
             if animation {
                 Line(length: length)
-                    .frame(width: 100, height: 10)
+                    .frame(width: 200, height: 30)
                     .background(Color.gray)
                     .clipShape(Capsule(style: .circular))
                     .animation(.easeInOut(duration: 1.0))
@@ -60,15 +59,17 @@ struct AnimatedLine: View {
                         self.changeLength()
                 }
             } else {
-                Line(length: 1.0)
-                    .frame(width: 100, height: 10)
+                Line(length: length)
+                    .frame(width: 200, height: 30)
                     .background(Color.gray)
                     .clipShape(Capsule(style: .circular))
+                    .onTapGesture {
+                        self.changeLength()
+                }
             }
         }
     }
 }
-
 
 struct AnimatedLine_Previews: PreviewProvider {
     static var previews: some View {

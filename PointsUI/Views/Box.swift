@@ -19,7 +19,6 @@ extension CGPoint {
 }
 
 struct Box: View {
-    
     var points : Int = 5
     var tmpPoints : Int
     static var maxCount = LineShape.maximumLines
@@ -36,9 +35,28 @@ struct Box: View {
     }
 }
 
+struct SampleBox: View {
+    @State var points : Int = 0
+    static var maxCount = LineShape.maximumLines
+
+    var body: some View {
+        ZStack {
+            LineShape(from: 0, to: points, animatingLastLine: true)
+                .stroke(Color.solid)
+                .animation(.easeInOut(duration: 2.0))
+        }
+        .background(Color.green)
+        .onTapGesture {
+            self.points = self.points == 5 ? 0 :
+                self.points + 1
+        }
+    }
+
+}
+
 struct Box_Previews: PreviewProvider {
     static var previews: some View {
-        Box(points: 3, tmpPoints: 2)
+        SampleBox()
             .frame(width: 300, height: 300)
             .padding()
     }
