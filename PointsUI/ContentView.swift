@@ -9,45 +9,49 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var players = Players(names: Default.names)
-    @ObservedObject var history = History()
     
+    @EnvironmentObject var settings : GameSettings
+    
+    var players : Players {
+        return settings.players
+    }
+    var history : History {
+        get {
+            return settings.history
+        }
+    }
     
     @State private var isPresented = false
     
     @State var historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    @State var timerHasFired = false
     
-    func saveHistory() {
-        // save the history if something has changed
-        // get last history step
-        if let lastSaved = history.states.last {
-            if !(lastSaved.players == players.items) {
-                if (!timerHasFired) {
-                    self.timerHasFired = true
-                    _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
-                        self.saveHistory()
-                    }
-                } else {
-                    history.save(state: GameState(players: self.players.items))
-                    self.timerHasFired = false
-                }
-            }
-        } else {
-            history.save(state: GameState(players: self.players.items))
+    func resetTimer() {
+        historyTimer.upstream.connect().cancel()
+        historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    }
+    
+    func triggerHistorySave() {
+        // send the history a signal that it should be saved
+        
+        history.save(state: GameState(players: self.players.items))
+        historyTimer.upstream.connect().cancel()
+    }
+    
+    func updatePoints() {
+        for (index, player) in history.currentPlayers.enumerated() {
+            players.items[index].points = player.points
         }
+
     }
     
     func undo() {
         history.undo()
-        for (index, player) in history.currentPlayers.enumerated() {
-            players.items[index].points = player.points
-        }
+        updatePoints()
     }
     
     var body: some View {
         NavigationView {
-            BoardUI(players: players, history: history)
+            BoardUI()
                 .navigationBarTitle(Text("Truco Venezolano").font(.caption))
                 .navigationBarItems(
                     leading: Button("History") {
@@ -60,10 +64,10 @@ struct ContentView: View {
                         EditButton()
                 })
                 .sheet(isPresented: $isPresented) {
-                    HistoryDetailView(history: self.history, players: self.players)
+                    HistoryDetailView()
             }
             .onReceive(self.historyTimer) { input in
-                self.saveHistory()
+                self.triggerHistorySave()
             }
         }
     }

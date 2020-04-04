@@ -10,14 +10,16 @@ import SwiftUI
 
 struct BoardUI: View {
 	
-	@State private var games : Int = 0	
-	@ObservedObject var players : Players
-    @ObservedObject var history : History
+    @EnvironmentObject var settings : GameSettings
     
-	var names : [ String ] { get {
-        return players.names
-		}
-	}
+    var players : Players {
+        return settings.players
+    }
+    var history : History {
+        return settings.history
+    }
+
+    @State private var games : Int = 0
 	
 	private let bgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
         .opacity(50.0)
@@ -26,12 +28,12 @@ struct BoardUI: View {
 	static let columns = 2
 	
 	var numberOfPlayers : Int { get {
-		names.count
+        players.names.count
 		} }
 	
 	private func name(at row: Int, column: Int) -> String {
 		let index = row * Self.columns + column
-		return names[index]
+        return players.names[index]
 	}
 	
 	var body: some View {
@@ -40,7 +42,7 @@ struct BoardUI: View {
 				.edgesIgnoringSafeArea(.all)
 
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-                PlayerView(players: self.players, player: self.players.items[index])
+                PlayerView(player: self.players.items[index])
 				.padding(5)
 			}
 		}
@@ -49,6 +51,6 @@ struct BoardUI: View {
 
 struct BoardUI_Previews: PreviewProvider {
 	static var previews: some View {
-        BoardUI(players: Players(), history: History())
+        BoardUI()
 	}
 }

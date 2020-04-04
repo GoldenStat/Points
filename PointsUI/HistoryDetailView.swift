@@ -9,9 +9,15 @@
 import SwiftUI
 
 struct HistoryDetailView: View {
-    @ObservedObject var history: History
-    @ObservedObject var players: Players
+    @EnvironmentObject var settings : GameSettings
     
+    var players : Players {
+        return settings.players
+    }
+    var history : History {
+        return settings.history
+    }
+
     /// a computed var that transfers all history states into a list
     var flatHistoryPoints : [Int] {
         var list = [Int]()
@@ -83,7 +89,7 @@ struct HistoryDetailView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        HistoryDetailView(history: Self.genHistory(), players: Self.players)
+        HistoryDetailView()
     }
     
 }

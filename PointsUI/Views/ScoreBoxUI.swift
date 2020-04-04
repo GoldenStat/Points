@@ -10,29 +10,32 @@ import SwiftUI
 
 struct ScoreBoxUI: View, Identifiable {
     // public vars
-    @ObservedObject var players: Players
+    @EnvironmentObject var settings : GameSettings
     
+    var players : Players {
+        return settings.players
+    }
+
     var player : Player
     var id = UUID()
-    var memory : MemoryPoints = MemoryPoints(points: 0)
-        
-    private var saveTimer : Timer {
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
-            if self.tmpScore > 0 {
-                self.score += self.tmpScore
-                self.tmpScore = 0
-                self.saveTimer.invalidate()
-            }
+            
+    func saveScore() {
+        if tmpScore > 0 {
+            score += tmpScore
+            tmpScore = 0
         }
     }
         
-    @State private var score : Int = 0 { didSet {
-        for (index, player) in players.items.enumerated() {
-            if player.id == self.player.id {
-                players.items[index].points = self.score
+    @State private var score : Int = 0 {
+        didSet {
+            for (index,player) in settings.players.items.enumerated() {
+                if player.id == self.player.id {
+                    settings.players.items[index].points = self.score
+                }
             }
         }
-        }}
+    }
+    
     @State private var tmpScore : Int = 0
     
     var publicScore : Int { get { return self.score } }
@@ -50,22 +53,6 @@ struct ScoreBoxUI: View, Identifiable {
     public func reset() {
         score = 0
         tmpScore = 0
-    }
-    
-    class MemoryPoints {
-        var points: Int
-        var tmpPoints: Int
-        
-        var sum : Int { get { return points + tmpPoints } }
-        
-        init(points: Int, tmpPoints: Int = -1) {
-            self.points = points
-            self.tmpPoints = tmpPoints
-        }
-        
-        var isNotSet : Bool { get {
-            return tmpPoints == -1
-            } }
     }
     
     private func filledBox(at index: Int) -> Box {
@@ -99,7 +86,6 @@ struct ScoreBoxUI: View, Identifiable {
             Button(action: {
                 if self.score + self.tmpScore < Self.maxScore {
                     self.tmpScore += 1
-                    _ = self.saveTimer
                 }
             })
             {
@@ -109,12 +95,15 @@ struct ScoreBoxUI: View, Identifiable {
                         .frame(width: colWidth)
                 }.aspectRatio(0.7, contentMode: .fit)
             }
+            Button("Save Score") {
+                self.saveScore()
+            }
         }
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreBoxUI(players: Players(), player: Player(name: "Alexander"))
+        ScoreBoxUI(player: Player(name: "Alexander"))
     }
 }

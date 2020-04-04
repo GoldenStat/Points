@@ -9,7 +9,11 @@
 import SwiftUI
 
 struct PlayerView: View, Identifiable {
-	@ObservedObject var players : Players
+    @EnvironmentObject var settings : GameSettings
+    
+    var players : Players {
+        return settings.players
+    }
 
     var player: Player
 
@@ -24,7 +28,7 @@ struct PlayerView: View, Identifiable {
 	var body: some View {
 			VStack {
 				Text(self.name).font(.title)
-                ScoreBoxUI(players: players, player: player)
+                ScoreBoxUI(player: player)
 			}
 			.overlay(
 				RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 0.5))
@@ -33,6 +37,6 @@ struct PlayerView: View, Identifiable {
 
 struct PlayerUI_Previews: PreviewProvider {
 	static var previews: some View {
-        PlayerView(players: Players(), player: Player(name: "Alexander")).padding(.horizontal)
+        PlayerView(player: Player(name: "Alexander")).padding(.horizontal)
 	}
 }
