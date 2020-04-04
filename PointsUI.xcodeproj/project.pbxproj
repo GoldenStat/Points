@@ -17,10 +17,9 @@
 		411DF2312360824900A37C64 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF204235C84B600A37C64 /* PlayerView.swift */; };
 		411DF2322360824900A37C64 /* ScoreBoxUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */; };
 		411DF2332360824900A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
-		411DF2342360824900A37C64 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF200235B4F1200A37C64 /* Line.swift */; };
+		411DF2342360824900A37C64 /* LineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF200235B4F1200A37C64 /* LineTest.swift */; };
 		411DF2352360824900A37C64 /* FlowStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF2112360645200A37C64 /* FlowStack.swift */; };
 		417ED2992438AD9900B78865 /* LineAnimationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417ED2982438AD9900B78865 /* LineAnimationTest.swift */; };
-		417ED29B2438AE9300B78865 /* LineShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417ED29A2438AE9300B78865 /* LineShape.swift */; };
 		4199BBEE2389F81700AB25D3 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */; };
 		41DB1E1323E5C89C00E17CC8 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1223E5C89C00E17CC8 /* Player.swift */; };
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
@@ -31,7 +30,7 @@
 
 /* Begin PBXFileReference section */
 		411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoxUI.swift; sourceTree = "<group>"; };
-		411DF200235B4F1200A37C64 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		411DF200235B4F1200A37C64 /* LineTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineTest.swift; sourceTree = "<group>"; };
 		411DF202235B56D400A37C64 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		411DF204235C84B600A37C64 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		411DF206235C918200A37C64 /* BoardUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardUI.swift; sourceTree = "<group>"; };
@@ -46,7 +45,6 @@
 		411DF22A23607CDA00A37C64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		411DF22E23607CF000A37C64 /* PointsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PointsUI.entitlements; sourceTree = "<group>"; };
 		417ED2982438AD9900B78865 /* LineAnimationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnimationTest.swift; sourceTree = "<group>"; };
-		417ED29A2438AE9300B78865 /* LineShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineShape.swift; sourceTree = "<group>"; };
 		4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
 		41DB1E1223E5C89C00E17CC8 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
@@ -73,9 +71,8 @@
 				411DF204235C84B600A37C64 /* PlayerView.swift */,
 				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
-				417ED29A2438AE9300B78865 /* LineShape.swift */,
 				417ED2982438AD9900B78865 /* LineAnimationTest.swift */,
-				411DF200235B4F1200A37C64 /* Line.swift */,
+				411DF200235B4F1200A37C64 /* LineTest.swift */,
 				411DF2112360645200A37C64 /* FlowStack.swift */,
 			);
 			path = Views;
@@ -228,9 +225,8 @@
 				4199BBEE2389F81700AB25D3 /* HistoryDetailView.swift in Sources */,
 				41DB1E1723E5C8C900E17CC8 /* GameState.swift in Sources */,
 				411DF22123607CD100A37C64 /* ContentView.swift in Sources */,
-				417ED29B2438AE9300B78865 /* LineShape.swift in Sources */,
 				41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */,
-				411DF2342360824900A37C64 /* Line.swift in Sources */,
+				411DF2342360824900A37C64 /* LineTest.swift in Sources */,
 				41F114A9236A073F00C6314D /* Game.swift in Sources */,
 				411DF2352360824900A37C64 /* FlowStack.swift in Sources */,
 				411DF2322360824900A37C64 /* ScoreBoxUI.swift in Sources */,

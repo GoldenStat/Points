@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-
-struct LineAnimationTeest: View {
+struct LineAnimationTest: View {
     var body: some View {
         LineShape(from: 0, to: 3, animatingLastLine: true)
     }
@@ -17,7 +16,7 @@ struct LineAnimationTeest: View {
 
 struct LineAnimationTeest_Previews: PreviewProvider {
     static var previews: some View {
-        LineAnimationTeest()
+        LineAnimationTest()
         .padding()
     }
 }
