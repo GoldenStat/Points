@@ -21,7 +21,7 @@ extension CGPoint {
 struct Box: View {
     var points : Int = 5
     var tmpPoints : Int
-    static var maxCount = LineShape.maximumLines
+    static var maxCount = LineShape.maximumLinesIndex
 
     var body: some View {
         ZStack {
@@ -37,7 +37,7 @@ struct Box: View {
 
 struct SampleBox: View {
     @State var points : Int = 0
-    static var maxCount = LineShape.maximumLines
+    static var maxCount = LineShape.maximumLinesIndex
 
     var body: some View {
         ZStack {
