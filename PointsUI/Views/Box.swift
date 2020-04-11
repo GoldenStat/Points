@@ -29,7 +29,7 @@ struct Box: View {
                 .stroke(Color.unchecked)
             LineShape(from: 0, to: points)
                 .stroke(Color.solid)
-            LineShape(from: points, to: points + tmpPoints, animatingLastLine: true)
+            LineShape(from: points, to: points + tmpPoints)
                 .stroke(Color.tmp)
         }
     }
@@ -41,7 +41,7 @@ struct SampleBox: View {
 
     var body: some View {
         ZStack {
-            LineShape(from: 0, to: points, animatingLastLine: true)
+            LineShape(from: 0, to: points)
                 .stroke(Color.solid)
                 .animation(.easeInOut(duration: 2.0))
         }
