@@ -69,12 +69,12 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				416F37962442AB1A00D9D55B /* EdgeView.swift */,
 				411DF2112360645200A37C64 /* FlowStack.swift */,
-				411DF206235C918200A37C64 /* BoardUI.swift */,
-				411DF204235C84B600A37C64 /* PlayerView.swift */,
-				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
+				416F37962442AB1A00D9D55B /* EdgeView.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
+				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
+				411DF204235C84B600A37C64 /* PlayerView.swift */,
+				411DF206235C918200A37C64 /* BoardUI.swift */,
 				416F3798244374AA00D9D55B /* Tests */,
 			);
 			path = Views;

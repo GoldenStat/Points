@@ -69,7 +69,6 @@ struct EdgeShape: Shape {
     }
     
     func path(in rect: CGRect) -> Path {
-        //        return edge(index, in: rect, length: length)
         return edges(length: totalLength, in: rect)
     }
     

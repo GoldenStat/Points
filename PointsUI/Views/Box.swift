@@ -31,15 +31,17 @@ struct Box: View {
     var cappedPoints : Double { min(Self.maxLength, Double(points)) }
     var cappedTotal : Double { min(Self.maxLength, Double(points+tmpPoints)) }
     
-//    static var maxLength : Double { Double(EdgeShape.numberOfEdges) }
-    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1}
+//    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1}
+    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1 }
     
     var body: some View {
         ZStack {
             EdgeShape(totalLength: Self.maxLength)
                 .stroke(Color.unchecked)
+                .animation(nil)
             EdgeShape(totalLength: cappedPoints)
                 .stroke(Color.solid)
+                .animation(nil)
             EdgeShape(totalLength: cappedTotal, starting: cappedPoints)
                 .stroke(Color.tmp)
         }
