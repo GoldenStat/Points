@@ -42,7 +42,7 @@ struct ScoreBoxUI: View, Identifiable {
     
     static let maxScore = 24
     static let columns = 2
-    static let linesPerBox = Lines.maximumNumberOfLines
+    static let linesPerBox = Int(Box.maxLength)
     
     static var numberOfBoxes : Int { get {
         let overlay = Self.maxScore % Self.linesPerBox
@@ -93,6 +93,7 @@ struct ScoreBoxUI: View, Identifiable {
                     self.filledBox(at: index)
                         .padding()
                         .frame(width: colWidth)
+                        .animation(.default)
                 }.aspectRatio(0.7, contentMode: .fit)
             }
             Button("Save Score") {

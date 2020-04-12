@@ -8,9 +8,10 @@
 
 import SwiftUI
 
-struct PointEdge: Shape {
+struct EdgeShape: Shape {
     
     var totalLength: Double
+    var starting: Double = 0.0
     var index: Int { min(max(Int(totalLength), 0), Self.lines.count - 1) }
     
     var animatableData: Double {
@@ -26,6 +27,8 @@ struct PointEdge: Shape {
         (start: (0.0, 0.0), end: (1.0, 1.0)),
         (start: (0.0, 1.0), end: (1.0, 0.0))
     ]
+    
+    static var numberOfEdges : Int { lines.count }
     
     /// translate a relative Point from our corners to a CGPoint in our View
     func cornerPoint(point: (CGFloat,CGFloat), in rect: CGRect) -> CGPoint {
@@ -57,7 +60,8 @@ struct PointEdge: Shape {
         let remainingLength = totalLength - Double(index)
         
         var path = Path()
-        for counter in 0 ..< index {
+        let start = max(0,Int(starting))
+        for counter in start ..< index {
             path.addPath(edge(counter, in: rect))
         }
         path.addPath(edge(index, in: rect, length: remainingLength))
@@ -77,7 +81,7 @@ struct EdgeView: View {
     var length : Double { Double(index) }
     
     var body: some View {
-        PointEdge(totalLength: length)
+        EdgeShape(totalLength: length, starting: 1.0)
             .stroke(Color.solid)
             .padding()
             .background(Color.gray)
@@ -90,7 +94,6 @@ struct EdgeView: View {
         }
     }
 }
-
 
 struct EdgeView_Previews: PreviewProvider {
     static var previews: some View {
