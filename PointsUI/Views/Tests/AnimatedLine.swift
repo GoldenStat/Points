@@ -71,11 +71,30 @@ struct AnimatedLine: View {
     }
 }
 
+struct MultipleAnimatedLines: View {
+    
+    @State var lines = [AnimatedLine(animation: true)]
+    
+    var body: some View {
+        VStack {
+            Button("Add a line") {
+                self.lines.append(AnimatedLine(animation: true))
+            }
+            
+            VStack {
+                ForEach(0 ..< lines.count) { index in
+                    self.lines[index]
+                }
+            }
+        }
+    }
+}
 struct AnimatedLine_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            AnimatedLine(animation: true)
-            AnimatedLine(animation: false)
-        }
+        MultipleAnimatedLines()
+//        VStack {
+//            AnimatedLine(animation: true)
+//            AnimatedLine(animation: false)
+//        }
     }
 }
