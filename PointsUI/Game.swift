@@ -15,7 +15,7 @@ class GameSettings: ObservableObject {
 }
 
 func == (lhs: Player, rhs: Player) -> Bool {
-    return lhs.name == rhs.name && lhs.points == rhs.points
+    return lhs.name == rhs.name && lhs.score == rhs.score
 }
 
 func == (lhs: [Player], rhs: [Player]) -> Bool {

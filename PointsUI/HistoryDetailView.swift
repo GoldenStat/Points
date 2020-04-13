@@ -14,6 +14,7 @@ struct HistoryDetailView: View {
     var players : Players {
         return settings.players
     }
+    
     var history : History {
         return settings.history
     }
@@ -22,7 +23,7 @@ struct HistoryDetailView: View {
     var flatHistoryPoints : [Int] {
         var list = [Int]()
         for state in history.states {
-            let points : [ Int ] = state.players.map({$0.points})
+            let points : [ Int ] = state.players.map({$0.score})
             list.append(contentsOf: points)
         }
         return list
@@ -72,7 +73,7 @@ struct HistoryDetailView_Previews: PreviewProvider {
         var players: [Player] = []
         for player in  state.players {
             let newPlayer: Player
-            newPlayer = Player(name: player.name, points: player.points + Int.random(in: 0...5))
+            newPlayer = Player(name: player.name, score: player.score + Int.random(in: 0...5))
             players.append(newPlayer)
         }
         return GameState(players: players)

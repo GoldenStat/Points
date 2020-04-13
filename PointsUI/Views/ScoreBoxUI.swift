@@ -17,7 +17,7 @@ struct ScoreBoxUI: View, Identifiable {
     }
 
     var player : Player
-    var id = UUID()
+    var id: UUID { player.id }
             
     func saveScore() {
         if tmpScore > 0 {
@@ -30,7 +30,7 @@ struct ScoreBoxUI: View, Identifiable {
         didSet {
             for (index,player) in settings.players.items.enumerated() {
                 if player.id == self.player.id {
-                    settings.players.items[index].points = self.score
+                    settings.players.items[index].score = self.score
                 }
             }
         }
@@ -95,9 +95,6 @@ struct ScoreBoxUI: View, Identifiable {
                         .frame(width: colWidth)
                         .animation(.default)
                 }.aspectRatio(0.7, contentMode: .fit)
-            }
-            Button("Save Score") {
-                self.saveScore()
             }
         }
     }

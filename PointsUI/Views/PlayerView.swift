@@ -17,13 +17,9 @@ struct PlayerView: View, Identifiable {
 
     var player: Player
 
-	var id = UUID()
-	var name: String { get {
-		return player.name
-		}}
-	var score: Int { get {
-		return player.points
-		}}
+    var id : UUID { player.id }
+	var name: String { player.name }
+	var score: Int { player.score}
 		
 	var body: some View {
 			VStack {
