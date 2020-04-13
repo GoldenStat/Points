@@ -11,7 +11,7 @@ import Foundation
 
 struct Player : Codable, Identifiable {
     // name, points
-    var id = UUID()
+    var id : String { name } // MARK: check whether we should exchange this with a counter to allow equal names
     var name: String
     var score: Score = 0
 }
@@ -26,6 +26,8 @@ class Players: ObservableObject {
     var names: [String] { return items.map {$0.name} }
     
     /// convenience initiallizer - replaces all players with new structs with new names
+    /// - Parameters:
+    ///   - names: each name must be unique
     convenience init(names: [String]) {
         self.init()
         for name in names {

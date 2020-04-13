@@ -8,16 +8,18 @@
 
 import SwiftUI
 
+extension Double { static var lineAnimationSpeed = 0.2}
+
 struct ScoreBoxUI: View, Identifiable {
     // public vars
-    @EnvironmentObject var settings : GameSettings
+    @ObservedObject var settings : GameSettings
     
     var players : Players {
         return settings.players
     }
 
     var player : Player
-    var id: UUID { player.id }
+    var id: Player.ID { player.id }
             
     func saveScore() {
         if tmpScore > 0 {
@@ -38,7 +40,7 @@ struct ScoreBoxUI: View, Identifiable {
     
     @State private var tmpScore : Int = 0
     
-    var publicScore : Int { get { return self.score } }
+//    var publicScore : Int { self.score }
     
     static let maxScore = 24
     static let columns = 2
@@ -93,7 +95,7 @@ struct ScoreBoxUI: View, Identifiable {
                     self.filledBox(at: index)
                         .padding()
                         .frame(width: colWidth)
-                        .animation(.default)
+                        .animation(.easeInOut(duration: .lineAnimationSpeed))
                 }.aspectRatio(0.7, contentMode: .fit)
             }
         }
@@ -102,6 +104,6 @@ struct ScoreBoxUI: View, Identifiable {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreBoxUI(player: Player(name: "Alexander"))
+        ScoreBoxUI(settings: GameSettings(), player: Player(name: "Alexander"))
     }
 }

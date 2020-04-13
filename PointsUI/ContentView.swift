@@ -32,8 +32,8 @@ struct ContentView: View {
     
     func triggerHistorySave() {
         // send the history a signal that it should be saved
-        history.save(state: GameState(players: self.players.items))
-//        historyTimer.upstream.connect().cancel()
+        history.save(state: GameState(players: players.items))
+        //        historyTimer.upstream.connect().cancel()
     }
     
     func updatePoints() {
@@ -50,30 +50,34 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                BoardUI()
-                    .navigationBarTitle(Text("Truco Venezolano").font(.caption))
-                    .navigationBarItems(
-                        leading: Button("History") {
-                            self.isPresented.toggle()
-                        },
-                        trailing: HStack {
-                            Button("Undo") {
-                                self.undo()
-                            }
-                            EditButton()
-                    })
-                    .sheet(isPresented: $isPresented) {
-                        HistoryDetailView()
-                }
-                .onReceive(self.historyTimer) { input in
-                    self.triggerHistorySave()
-                }
-                Button("Save") {
-                    self.triggerHistorySave()
+            ZStack {
+                Color.boardbgColor
+                    .edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    BoardUI(settings: settings)
+                        .navigationBarTitle(Text("Truco Venezolano").font(.caption))
+                        .navigationBarItems(
+                            leading: Button("History") {
+                                self.isPresented.toggle()
+                            },
+                            trailing: HStack {
+                                Button("Undo") {
+                                    self.undo()
+                                }
+                                EditButton()
+                        })
+                        .sheet(isPresented: $isPresented) {
+                            HistoryDetailView(settings: self.settings)
+                    }
+//                    .onReceive(self.historyTimer) { input in
+//                        self.triggerHistorySave()
+//                    }
+                    Button("Save") {
+                        self.triggerHistorySave()
+                    }
                 }
             }
-            
         }
     }
 }

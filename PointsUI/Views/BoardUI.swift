@@ -8,9 +8,14 @@
 
 import SwiftUI
 
+extension Color {
+    static let boardbgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
+        .opacity(50.0)
+}
+
 struct BoardUI: View {
 	
-    @EnvironmentObject var settings : GameSettings
+    @ObservedObject var settings : GameSettings
     
     var players : Players {
         return settings.players
@@ -21,9 +26,6 @@ struct BoardUI: View {
 
     @State private var games : Int = 0
 	
-	private let bgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
-        .opacity(50.0)
-
     static let maxGames = Default.maxGames
 	static let columns = 2
 	
@@ -36,21 +38,23 @@ struct BoardUI: View {
         return players.names[index]
 	}
 	
+    func saveScores() {
+        for player in players.items {
+            let view = PlayerView(settings: settings, player: player)
+            view.saveScore()
+        }
+    }
+    
 	var body: some View {
-		ZStack {
-			bgColor
-				.edgesIgnoringSafeArea(.all)
-
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-                PlayerView(player: self.players.items[index])
+                PlayerView(settings: self.settings, player: self.players.items[index])
 				.padding(5)
 			}
-		}
 	}
 }
 
 struct BoardUI_Previews: PreviewProvider {
 	static var previews: some View {
-        BoardUI()
+        BoardUI(settings: GameSettings())
 	}
 }

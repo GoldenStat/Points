@@ -12,7 +12,7 @@ import Foundation
 /// used to record the progression of the entries
 class History : ObservableObject {
     @Published var states = [GameState]()
-        
+    
     /// returns last Entry of game states
     var currentPlayers : [Player] {
         if let lastState = states.last {

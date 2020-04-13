@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HistoryDetailView: View {
-    @EnvironmentObject var settings : GameSettings
+    @ObservedObject var settings : GameSettings
     
     var players : Players {
         return settings.players
@@ -18,7 +18,7 @@ struct HistoryDetailView: View {
     var history : History {
         return settings.history
     }
-
+    
     /// a computed var that transfers all history states into a list
     var flatHistoryPoints : [Int] {
         var list = [Int]()
@@ -49,9 +49,13 @@ struct HistoryDetailView: View {
     var body: some View {
         NavigationView {
             VStack {
-                FlowStack(columns: players.items.count, numItems: tableMatrix.count, alignment: .center) { index, colWidth in
-                    self.tableMatrix[index]
+                
+                ScrollView {
+                    FlowStack(columns: players.items.count, numItems: tableMatrix.count, alignment: .center) { index, colWidth in
+                        self.tableMatrix[index]
+                    }
                 }
+                .padding(.vertical, 20.0)
                 Button("Dismiss") {
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -66,21 +70,27 @@ struct HistoryDetailView: View {
 
 
 struct HistoryDetailView_Previews: PreviewProvider {
-    static let names = [ "Alexander", "Lili", "Villa" ]
-    static let players = Players(names: Self.names)
+    //    static let names = [ "Alexander", "Lili", "Villa" ]
+    //    static let players = Players(names: Self.names)
+    static var settings = GameSettings()
+    static let players = Self.settings.players
+    static let names = Self.players.names
     
-    static func genNewState(from state: GameState) -> GameState{
+    static var history: History {
+        get { Self.genHistory() }
+    }
+    
+    static func genNewState(from state: GameState) -> GameState {
         var players: [Player] = []
         for player in  state.players {
-            let newPlayer: Player
-            newPlayer = Player(name: player.name, score: player.score + Int.random(in: 0...5))
+            let newPlayer = Player(name: player.name, score: player.score + Int.random(in: 0...5))
             players.append(newPlayer)
         }
         return GameState(players: players)
     }
     
     static func genHistory() -> History {
-        let history = History()
+        let history = settings.history
         var state = GameState(players: Self.players.items)
         for _ in 0 ..< 3 {
             state = genNewState(from: state)
@@ -90,7 +100,9 @@ struct HistoryDetailView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        HistoryDetailView()
+        let settings = GameSettings()
+        settings.history = Self.history
+        return HistoryDetailView(settings: settings)
     }
     
 }
