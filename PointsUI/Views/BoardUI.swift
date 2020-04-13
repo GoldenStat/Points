@@ -37,24 +37,40 @@ struct BoardUI: View {
 		let index = row * Self.columns + column
         return players.names[index]
 	}
-	
+    
+    let playerViews : [PlayerView]
+    
+    init(settings: GameSettings) {
+        self.settings = settings
+        self.playerViews = settings.players.items.map {
+            PlayerView(settings: settings, player: $0)
+        }
+    }
+
     func saveScores() {
-        for player in players.items {
-            let view = PlayerView(settings: settings, player: player)
-            view.saveScore()
+        for playerView in playerViews {
+            playerView.saveScore()
         }
     }
     
 	var body: some View {
 			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-                PlayerView(settings: self.settings, player: self.players.items[index])
+                self.playerViews[index]
 				.padding(5)
 			}
 	}
 }
 
 struct BoardUI_Previews: PreviewProvider {
+    
+    static var boardUI = BoardUI(settings: GameSettings())
+
 	static var previews: some View {
-        BoardUI(settings: GameSettings())
+        VStack {
+            boardUI
+            Button("Save") {
+                Self.boardUI.saveScores()
+            }
+        }
 	}
 }

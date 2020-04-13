@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var settings : GameSettings = GameSettings()
+    @ObservedObject var settings : GameSettings
     
     var players : Players {
         return settings.players
@@ -30,7 +30,18 @@ struct ContentView: View {
         historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     }
     
+    let boardUI: BoardUI
+    
+    init() {
+        let settings = GameSettings()
+        self.settings = settings
+        boardUI = BoardUI(settings: settings)
+    }
+    
     func triggerHistorySave() {
+        // update all Views tmpPoints
+        boardUI.saveScores()
+        
         // send the history a signal that it should be saved
         history.save(state: GameState(players: players.items))
         //        historyTimer.upstream.connect().cancel()
@@ -55,7 +66,7 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    BoardUI(settings: settings)
+                    boardUI
                         .navigationBarTitle(Text("Truco Venezolano").font(.caption))
                         .navigationBarItems(
                             leading: Button("History") {

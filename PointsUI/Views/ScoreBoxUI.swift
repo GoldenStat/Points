@@ -10,6 +10,8 @@ import SwiftUI
 
 extension Double { static var lineAnimationSpeed = 0.2}
 
+
+/// the UI with a collection of Boxes and maximum score
 struct ScoreBoxUI: View, Identifiable {
     // public vars
     @ObservedObject var settings : GameSettings
@@ -17,17 +19,17 @@ struct ScoreBoxUI: View, Identifiable {
     var players : Players {
         return settings.players
     }
-
+    
     var player : Player
     var id: Player.ID { player.id }
-            
+    
     func saveScore() {
         if tmpScore > 0 {
             score += tmpScore
             tmpScore = 0
         }
     }
-        
+    
     @State private var score : Int = 0 {
         didSet {
             for (index,player) in settings.players.items.enumerated() {
@@ -38,9 +40,15 @@ struct ScoreBoxUI: View, Identifiable {
         }
     }
     
-    @State private var tmpScore : Int = 0
-    
-//    var publicScore : Int { self.score }
+    @State private var tmpScore : Int = 0 {
+        didSet {
+            for (index,player) in settings.players.items.enumerated() {
+                if player.id == self.player.id {
+                    settings.players.items[index].tmpScore = self.tmpScore
+                }
+            }
+        }
+    }
     
     static let maxScore = 24
     static let columns = 2
@@ -103,7 +111,15 @@ struct ScoreBoxUI: View, Identifiable {
 }
 
 struct PlayerView_Previews: PreviewProvider {
+    
+    static var box = ScoreBoxUI(settings: GameSettings(), player: Player(name: "Alexander"))
+    
     static var previews: some View {
-        ScoreBoxUI(settings: GameSettings(), player: Player(name: "Alexander"))
+        VStack {
+            box
+            Button("Save") {
+                self.box.saveScore()
+            }
+        }
     }
 }

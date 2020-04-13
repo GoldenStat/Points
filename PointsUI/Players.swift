@@ -14,6 +14,7 @@ struct Player : Codable, Identifiable {
     var id : String { name } // MARK: check whether we should exchange this with a counter to allow equal names
     var name: String
     var score: Score = 0
+    var tmpScore: Score = 0
 }
 
 /// the observable object to de- and encode the `Player` struct
