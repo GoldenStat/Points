@@ -30,7 +30,7 @@ struct ContentView: View {
         historyTimer.upstream.connect().cancel()
         historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     }
-            
+    
     func triggerHistorySave() {
         // send the history a signal that it should be saved
         players.saveScore()
@@ -43,35 +43,32 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.boardbgColor
-                    .edgesIgnoringSafeArea(.all)
-                
-                VStack {
-                    BoardUI(players: players)
-                        .navigationBarTitle(Text("Truco Venezolano").font(.caption))
-                        .navigationBarItems(
-                            leading: Button("History") {
-                                self.isPresented.toggle()
-                            },
-                            trailing: HStack {
-                                Button("Undo") {
-                                    self.undo()
-                                }
-                                EditButton()
-                        })
-                        .sheet(isPresented: $isPresented) {
-                            HistoryDetailView(settings: self.settings)
-                    }
-                    //                    .onReceive(self.historyTimer) { input in
-                    //                        self.triggerHistorySave()
-                    
-                    Button("Save") {
-                        self.triggerHistorySave()
-                    }
+        //        NavigationView {
+        ZStack {
+            Color.boardbgColor
+                .edgesIgnoringSafeArea(.all)
+            //            VStack {
+            VStack {
+                TabView {
+                    BoardUI(players: settings.players)
+                        .tabItem({ Image(systemName: "rectangle.grid.2x2")})
+                    .tag(0)
+                    ScoreTableView(settings: settings, viewMode: .diff)
+                        .tabItem({ Image(systemName: "table") })
+                    .tag(1)
+                    ScoreTableView(settings: settings, viewMode: .total)
+                        .tabItem({ Image(systemName: "table.fill") })
+                    .tag(2)
                 }
             }
+            .onReceive(self.historyTimer) { input in
+                self.triggerHistorySave()
+                    
+                    //                        Button("Save") {
+                    //                            self.triggerHistorySave()
+                    //                        }
+            }
+            //            }
         }
     }
 }
