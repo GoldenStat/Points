@@ -30,12 +30,12 @@ class History : ObservableObject {
     /// add game state to the history
     /// only save if the state is different from the last saved state
     func save(state: GameState) {
-        if let lastSaved = states.last {
-            if lastSaved != state {
+        if let lastState = states.last {
+            if lastState != state {
                 states.append(state)
-                return
             }
+        } else {
+            states.append(state)
         }
-        states.append(state)
     }
 }

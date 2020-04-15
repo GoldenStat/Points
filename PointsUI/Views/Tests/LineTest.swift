@@ -8,11 +8,7 @@
 
 import SwiftUI
 
-extension Color {
-    static let unchecked = Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
-    static let tmp = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
-    static let solid = Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
-}
+
 
 struct Lines : View {
     

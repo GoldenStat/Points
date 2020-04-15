@@ -11,7 +11,7 @@ import Foundation
 /// GameState: a list of the current players and their scores
 struct GameState : Codable, Identifiable, Equatable {
     static func == (lhs: GameState, rhs: GameState) -> Bool {
-        return lhs.players == rhs.players && lhs.scores == rhs.scores
+        return lhs.scores == rhs.scores
     }
     
     var id = UUID()
