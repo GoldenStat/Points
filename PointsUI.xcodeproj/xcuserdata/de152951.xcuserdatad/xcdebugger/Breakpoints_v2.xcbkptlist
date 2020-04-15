@@ -202,54 +202,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0C35D4D8-F40B-434B-B514-BDA65F133A30"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PointsUI/HistoryDetailView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "body"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "0C35D4D8-F40B-434B-B514-BDA65F133A30 - e97fa8d82d0cb5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.Button&lt;SwiftUI.Text&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.navigationBarItems&lt;A where A1: SwiftUI.View&gt;(trailing: A1) -&gt; some&gt;&gt;.0 in PointsUI.HistoryDetailView.body.getter : some"
-                  moduleName = "PointsUI"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/HistoryDetailView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "296">
-               </Location>
-               <Location
-                  uuid = "0C35D4D8-F40B-434B-B514-BDA65F133A30 - 6fcbceb0755c3e75"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; PointsUI.FlowStack&lt;SwiftUI.Text&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.Button&lt;SwiftUI.Text&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.navigationBarItems&lt;A where A1: SwiftUI.View&gt;(trailing: A1) -&gt; some&gt;&gt;.0 in PointsUI.HistoryDetailView.body.getter : some"
-                  moduleName = "PointsUI"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/HistoryDetailView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "49"
-                  endingLineNumber = "49"
-                  offsetFromSymbolStart = "136">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "F9DD4523-E7B3-41EA-BFC4-302F4094CD2E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -273,8 +225,8 @@
             filePath = "PointsUI/History.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "save(state:)"
             landmarkType = "7">
          </BreakpointContent>

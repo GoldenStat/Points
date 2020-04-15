@@ -13,7 +13,6 @@ struct PlayerData: Codable, Identifiable, Equatable {
     var id = UUID()
     var name: String
     var score: Score
-    
 }
 
 class Player: ObservableObject {
@@ -60,7 +59,10 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     var items : [Player] = []
+    
+    /// TODO: implement Property wrappers to simplify this
     var names: [String] { return items.map {$0.name} }
+    var scores: [Score] { return items.map {$0.score} }
     var data: [PlayerData] { return items.map {$0.data} }
     
     func saveScore() {

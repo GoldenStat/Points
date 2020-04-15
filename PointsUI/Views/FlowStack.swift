@@ -43,7 +43,7 @@ public struct FlowStack<Content>: View where Content: View {
 		self.content = content
 		self.columns = columns
 		self.numItems = numItems
-		self.alignment = alignment ?? HorizontalAlignment.leading
+		self.alignment = alignment ?? HorizontalAlignment.center
         self.indentLastRow = indentLastRow
 	}
 	
@@ -53,6 +53,7 @@ public struct FlowStack<Content>: View where Content: View {
 			
 			// VStacks are our rows
 			VStack(alignment: self.alignment, spacing: 0) {
+                
                 ForEach(0 ..< self.rows, id: \.self) { row in
 					
 					// HStacks are our columns

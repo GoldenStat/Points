@@ -8,54 +8,30 @@
 
 import SwiftUI
 
+
 struct HistoryDetailView: View {
-    @ObservedObject var settings : GameSettings
     
-    var players : Players {
-        return settings.players
-    }
+    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var settings : GameSettings
     
     var history : History {
         return settings.history
     }
-    
-    /// a computed var that transfers all history states into a list
-    var flatHistoryPoints : [Int] {
-        var list = [Int]()
-        for state in history.states {
-            let points : [ Int ] = state.players.map({$0.score})
-            list.append(contentsOf: points)
-        }
-        return list
-    }
-    
-    var playerNames : [ String ] {
-        history.currentPlayers.map {$0.name}
-    }
-    
-    var tableMatrix: [ Text ] {
-        var matrix: [Text] = []
-        for name in players.names {
-            matrix.append(Text(name).font(.headline))
-        }
-        for num in self.flatHistoryPoints {
-            matrix.append(Text("\(num)").font(.body))
-        }
-        return matrix
-    }
-    
-    @Environment(\.presentationMode) var presentationMode
+
     
     var body: some View {
         NavigationView {
             VStack {
                 
-                ScrollView {
-                    FlowStack(columns: players.items.count, numItems: tableMatrix.count, alignment: .center) { index, colWidth in
-                        self.tableMatrix[index]
-                    }
+                TabView {
+                    ScoreTableView(settings: settings, viewMode: .total)
+                        .tabItem({ Image(systemName: "circle") })
+                    .tag(0)
+                    ScoreTableView(settings: settings, viewMode: .diff)
+                        .tabItem({ Image(systemName: "car") })
+                    .tag(1)
                 }
-                .padding(.vertical, 20.0)
+                
                 Button("Dismiss") {
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -92,7 +68,7 @@ struct HistoryDetailView_Previews: PreviewProvider {
     static func genHistory() -> History {
         let history = settings.history
         var state = GameState(players: Self.players.data)
-        for _ in 0 ..< 3 {
+        for _ in 0 ..< 13 {
             state = genNewState(from: state)
             history.save(state: state)
         }
@@ -101,7 +77,7 @@ struct HistoryDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         let settings = GameSettings()
-        settings.history = Self.history
+        settings.history = genHistory()
         return HistoryDetailView(settings: settings)
     }
     

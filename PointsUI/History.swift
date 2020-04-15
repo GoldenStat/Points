@@ -21,6 +21,8 @@ class History : ObservableObject {
         return []
     }
     
+    var playerNames: [String] { currentPlayers.map {$0.name} }
+    
     /// go back one step, if there is one
     func undo() {
         guard states.count > 0 else { return }
@@ -38,4 +40,5 @@ class History : ObservableObject {
             states.append(state)
         }
     }
+    
 }
