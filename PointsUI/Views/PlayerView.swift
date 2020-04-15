@@ -56,7 +56,6 @@ struct PlayerUI_Previews: PreviewProvider {
             Button("Save") {
                 player.saveScore()
             }
-//            .padding(.horizontal)
         }
     }
 }

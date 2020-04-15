@@ -18,22 +18,19 @@ struct HistoryDetailView: View {
         return settings.history
     }
 
-    
     var body: some View {
         NavigationView {
             VStack {
-                
                 TabView {
-                    ScoreTableView(settings: settings, viewMode: .total)
-                        .tabItem({ Image(systemName: "circle") })
+                    BoardUI(players: settings.players)
+                        .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
                     ScoreTableView(settings: settings, viewMode: .diff)
-                        .tabItem({ Image(systemName: "car") })
+                        .tabItem({ Image(systemName: "table") })
                     .tag(1)
-                }
-                
-                Button("Dismiss") {
-                    self.presentationMode.wrappedValue.dismiss()
+                    ScoreTableView(settings: settings, viewMode: .total)
+                        .tabItem({ Image(systemName: "table.fill") })
+                    .tag(2)
                 }
             }
             .navigationBarTitle(Text("Game History"))
