@@ -11,9 +11,15 @@ import Foundation
 /// GameState: a list of the current players and their scores
 struct GameState : Codable, Identifiable, Equatable {
     static func == (lhs: GameState, rhs: GameState) -> Bool {
-        return lhs.players == rhs.players
+        return lhs.players == rhs.players && lhs.scores == rhs.scores
     }
     
     var id = UUID()
-    var players : [Player]
+    var players : [PlayerData] // TODO: is players needed in the game state?
+    var scores : [Score]
+    
+    init(players: [PlayerData]) {
+        self.players = players
+        self.scores = players.map { $0.score }
+    }
 }

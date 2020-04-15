@@ -9,8 +9,47 @@ import SwiftUI
 
 typealias Score = Int
 
+
+/// UserDefault property wrapper:
+/// define a default, and store the variable in UserDefaults whenever it is set
+///
+/// example:
+///
+///     enum GlobalSettings {
+///         @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
+///     }
+///
+@propertyWrapper
+struct UserDefault<T> {
+    let key: String
+    let defaultValue: T
+    
+    var wrappedValue: T {
+        get {
+            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: key)
+        }
+    }
+}
+
+/// all our default values stored in UserDefaults as enum
+///
+/// - Parameters
+/// - Parameter maxGames: how many games does a player have to win
+/// - scorePerGame: how much can a player score before he wins a game
+/// - playerNames: Who is playing
+///
+enum GlobalSettings {
+    @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
+    @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
+    @UserDefault(key: "PlayerNames", defaultValue: [ "Alexander", "Lili", "Villa", "Sebastian" ])
+        static var playerNames: [ String ]
+}
+
 class GameSettings: ObservableObject {
-    @Published var players = Players(names: Default.names)
+    @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
 }
 
@@ -26,12 +65,4 @@ func == (lhs: [Player], rhs: [Player]) -> Bool {
         }
     }
     return true
-}
-
-
-/// Default values
-struct Default {
-    static let names = [ "Alexander", "Lili", "Villa", "Sebastian" ]
-    static var maxGames = 3
-    static var pointsPerGame = 24
 }

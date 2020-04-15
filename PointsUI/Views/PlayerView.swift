@@ -9,51 +9,54 @@
 import SwiftUI
 
 struct PlayerView: View, Identifiable {
-    @ObservedObject var settings : GameSettings
+    @ObservedObject var player : Player
     
-    var players : Players {
-        return settings.players
-    }
-    
-    var player: Player
-    
-    var id : Player.ID { player.id }
+    var id : PlayerData.ID { player.id }
     var name: String { player.name }
     var score: Int { player.score }
-    
-    func saveScore() {
-        boxUI.saveScore()
-    }
-    
-    let boxUI : ScoreBoxUI
-    
-    init(settings: GameSettings, player: Player) {
-        self.settings = settings
-        self.player = player
-        boxUI = ScoreBoxUI(settings: settings, player: player)
-    }
+    var tmpScore: Score { player.tmpScore }
     
     var body: some View {
+        
         VStack {
             Text(self.name).font(.title)
-            boxUI
+            
+            HStack {
+                Text("Puntos: \(score)")
+                if tmpScore > 0 {
+                    Text(" + ")
+                    Text("\(tmpScore)")
+                }
+            }
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.black, lineWidth: 1.5)
+                
+                Button(action: {
+                self.player.add(score: 1)
+                }) {
+                    ScoreBoxUI(score: player.score, tmpScore: player.tmpScore)
+                    }
+            }
+            .padding(.horizontal)
+                    
+            Spacer()
         }
-        .overlay(
-            RoundedRectangle(cornerRadius: 16).stroke(Color.black, lineWidth: 0.5))
     }
 }
 
 struct PlayerUI_Previews: PreviewProvider {
     
-    static var playerView = PlayerView(settings: GameSettings(), player: Player(name: "Alexander"))
+    static var player = Player(name: "Alexander")
     
     static var previews: some View {
         VStack {
-            playerView
+            PlayerView(player: player)
             Button("Save") {
-                Self.playerView.saveScore()
+                player.saveScore()
             }
-            .padding(.horizontal)
+//            .padding(.horizontal)
         }
     }
 }

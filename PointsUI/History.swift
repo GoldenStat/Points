@@ -14,7 +14,7 @@ class History : ObservableObject {
     @Published var states = [GameState]()
     
     /// returns last Entry of game states
-    var currentPlayers : [Player] {
+    var currentPlayers : [PlayerData] {
         if let lastState = states.last {
             return lastState.players
         }

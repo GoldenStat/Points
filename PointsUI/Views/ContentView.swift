@@ -10,11 +10,12 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var settings : GameSettings
+    @ObservedObject var settings = GameSettings()
     
     var players : Players {
         return settings.players
     }
+    
     var history : History {
         get {
             return settings.history
@@ -29,34 +30,16 @@ struct ContentView: View {
         historyTimer.upstream.connect().cancel()
         historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     }
-    
-    let boardUI: BoardUI
-    
-    init() {
-        let settings = GameSettings()
-        self.settings = settings
-        boardUI = BoardUI(settings: settings)
-    }
-    
+            
     func triggerHistorySave() {
-        // update all Views tmpPoints
-        boardUI.saveScores()
-        
         // send the history a signal that it should be saved
-        history.save(state: GameState(players: players.items))
+        players.saveScore()
+        history.save(state: GameState(players: players.data))
         //        historyTimer.upstream.connect().cancel()
-    }
-    
-    func updatePoints() {
-        for (index, player) in history.currentPlayers.enumerated() {
-            players.items[index].score = player.score
-        }
-        
     }
     
     func undo() {
         history.undo()
-        updatePoints()
     }
     
     var body: some View {
@@ -66,7 +49,7 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    boardUI
+                    BoardUI(players: players)
                         .navigationBarTitle(Text("Truco Venezolano").font(.caption))
                         .navigationBarItems(
                             leading: Button("History") {
@@ -81,9 +64,9 @@ struct ContentView: View {
                         .sheet(isPresented: $isPresented) {
                             HistoryDetailView(settings: self.settings)
                     }
-//                    .onReceive(self.historyTimer) { input in
-//                        self.triggerHistorySave()
-//                    }
+                    //                    .onReceive(self.historyTimer) { input in
+                    //                        self.triggerHistorySave()
+                    
                     Button("Save") {
                         self.triggerHistorySave()
                     }

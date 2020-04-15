@@ -13,64 +13,35 @@ extension Color {
         .opacity(50.0)
 }
 
+/// the whole board, all player's points are seen here
 struct BoardUI: View {
 	
-    @ObservedObject var settings : GameSettings
-    
-    var players : Players {
-        return settings.players
-    }
-    var history : History {
-        return settings.history
-    }
-
+    @ObservedObject var players: Players
     @State private var games : Int = 0
 	
-    static let maxGames = Default.maxGames
+    static let maxGames = GlobalSettings.maxGames
 	static let columns = 2
-	
-	var numberOfPlayers : Int { get {
-        players.names.count
-		} }
-	
-	private func name(at row: Int, column: Int) -> String {
-		let index = row * Self.columns + column
-        return players.names[index]
-	}
-    
-    let playerViews : [PlayerView]
-    
-    init(settings: GameSettings) {
-        self.settings = settings
-        self.playerViews = settings.players.items.map {
-            PlayerView(settings: settings, player: $0)
-        }
-    }
 
-    func saveScores() {
-        for playerView in playerViews {
-            playerView.saveScore()
-        }
-    }
-    
+	var numberOfPlayers : Int { get {
+        players.items.count
+		} }
+	            
 	var body: some View {
-			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) { index, colWidth in
-                self.playerViews[index]
-				.padding(5)
+        VStack {
+			FlowStack(columns: Self.columns, numItems: numberOfPlayers, alignment: .center) {
+                index, colWidth in
+                PlayerView(player: self.players.items[index])
 			}
+        }
 	}
 }
 
 struct BoardUI_Previews: PreviewProvider {
     
-    static var boardUI = BoardUI(settings: GameSettings())
+    static var defaultPlayers = Players(names: GlobalSettings.playerNames)
 
 	static var previews: some View {
-        VStack {
-            boardUI
-            Button("Save") {
-                Self.boardUI.saveScores()
-            }
-        }
-	}
+            BoardUI(players: defaultPlayers)
+    }
 }
+

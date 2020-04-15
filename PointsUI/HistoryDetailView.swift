@@ -81,9 +81,9 @@ struct HistoryDetailView_Previews: PreviewProvider {
     }
     
     static func genNewState(from state: GameState) -> GameState {
-        var players: [Player] = []
+        var players: [PlayerData] = []
         for player in  state.players {
-            let newPlayer = Player(name: player.name, score: player.score + Int.random(in: 0...5))
+            let newPlayer = PlayerData(name: player.name, score: player.score + Int.random(in: 0...5))
             players.append(newPlayer)
         }
         return GameState(players: players)
@@ -91,7 +91,7 @@ struct HistoryDetailView_Previews: PreviewProvider {
     
     static func genHistory() -> History {
         let history = settings.history
-        var state = GameState(players: Self.players.items)
+        var state = GameState(players: Self.players.data)
         for _ in 0 ..< 3 {
             state = genNewState(from: state)
             history.save(state: state)
