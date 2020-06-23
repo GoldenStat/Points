@@ -19,6 +19,7 @@
 		411DF2332360824900A37C64 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
 		411DF2352360824900A37C64 /* FlowStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF2112360645200A37C64 /* FlowStack.swift */; };
 		416F37972442AB1A00D9D55B /* EdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416F37962442AB1A00D9D55B /* EdgeView.swift */; };
+		4194BF1B24A29209007CDBA1 /* Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* Title.swift */; };
 		4199BBEE2389F81700AB25D3 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */; };
 		419A44AC24475CE000EA91F3 /* ScoreTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 419A44AB24475CE000EA91F3 /* ScoreTableView.swift */; };
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
@@ -43,6 +44,7 @@
 		411DF22A23607CDA00A37C64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		411DF22E23607CF000A37C64 /* PointsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PointsUI.entitlements; sourceTree = "<group>"; };
 		416F37962442AB1A00D9D55B /* EdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeView.swift; sourceTree = "<group>"; };
+		4194BF1A24A29209007CDBA1 /* Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Title.swift; sourceTree = "<group>"; };
 		4199BBED2389F81700AB25D3 /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
 		419A44AB24475CE000EA91F3 /* ScoreTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreTableView.swift; sourceTree = "<group>"; };
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				41DB1E1623E5C8C900E17CC8 /* GameState.swift */,
 				41DB1E1823E5C8F100E17CC8 /* History.swift */,
 				41F114A8236A073F00C6314D /* Game.swift */,
+				4194BF1A24A29209007CDBA1 /* Title.swift */,
 				411DF1FF235B194800A37C64 /* Views */,
 				41F114AA236A101200C6314D /* Data */,
 				41F114AB236A102000C6314D /* Supporting Files */,
@@ -231,6 +234,7 @@
 				411DF22123607CD100A37C64 /* ContentView.swift in Sources */,
 				416F37972442AB1A00D9D55B /* EdgeView.swift in Sources */,
 				41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */,
+				4194BF1B24A29209007CDBA1 /* Title.swift in Sources */,
 				41F114A9236A073F00C6314D /* Game.swift in Sources */,
 				411DF2352360824900A37C64 /* FlowStack.swift in Sources */,
 				411DF2322360824900A37C64 /* ScoreBoxUI.swift in Sources */,

@@ -16,62 +16,48 @@ struct ContentView: View {
         return settings.players
     }
     
-    var history : History {
-        get {
-            return settings.history
-        }
-    }
-    
     @State private var isPresented = false
-    
-    @State var historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    
-    func resetTimer() {
-        historyTimer.upstream.connect().cancel()
-        historyTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    }
-    
-    func triggerHistorySave() {
-        // send the history a signal that it should be saved
-        players.saveScore()
-        history.save(state: GameState(players: players.data))
-        //        historyTimer.upstream.connect().cancel()
-    }
-    
+        
     func undo() {
-        history.undo()
+        settings.history.undo()
     }
     
     var body: some View {
-        //        NavigationView {
         ZStack {
+            
             Color.boardbgColor
                 .edgesIgnoringSafeArea(.all)
-            //            VStack {
-            VStack {
-                TabView {
-                    BoardUI(settings: $settings)
-                        .tabItem({ Image(systemName: "rectangle.grid.2x2")})
+
+//            Background()
+
+            TabView {
+                BoardUI(settings: $settings)
+                    .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
-                    ScoreTableView(settings: $settings, viewMode: .diff)
-                        .tabItem({ Image(systemName: "table") })
+                ScoreTableView(settings: $settings, viewMode: .diff)
+                    .tabItem({ Image(systemName: "table") })
                     .tag(1)
-                    ScoreTableView(settings: $settings, viewMode: .total)
-                        .tabItem({ Image(systemName: "table.fill") })
+                ScoreTableView(settings: $settings, viewMode: .total)
+                    .tabItem({ Image(systemName: "table.fill") })
                     .tag(2)
-                }
             }
-            .onReceive(self.historyTimer) { input in
-                self.triggerHistorySave()
-                    
-                    //                        Button("Save") {
-                    //                            self.triggerHistorySave()
-                    //                        }
-            }
-            //            }
+            
+            Title(opacity: titleOpacity)
         }
+        .navigationBarTitle(GameSettings.name)
+        .navigationBarHidden(true)
+        .onTapGesture(count: 2) {
+            navigationBarIsHidden.toggle()
+        }
+        .onAppear { titleOpacity = 0.0 }
     }
+    
+    @State var titleOpacity = 0.1
+    
+    // MARK: Local variables
+    @State var navigationBarIsHidden = true
 }
+    
 
 
 struct ContentView_Previews: PreviewProvider {

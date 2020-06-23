@@ -51,6 +51,7 @@ enum GlobalSettings {
 class GameSettings: ObservableObject {
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
+    static let name = "Truco Points"
 }
 
 func == (lhs: Player, rhs: Player) -> Bool {
