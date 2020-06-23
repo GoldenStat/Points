@@ -68,6 +68,7 @@ struct EdgeShape: Shape {
         
         var path = Path()
         let start = max(0,Int(starting))
+        guard (index > start) else { return Path() }
         for counter in start ..< index {
             path.addPath(edge(counter, in: rect))
         }

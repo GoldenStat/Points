@@ -16,9 +16,11 @@ extension Color {
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
 	
-    @ObservedObject var players: Players
+    @Binding var settings: GameSettings
     @State private var games : Int = 0
-	
+
+    var players: Players { settings.players }
+
     static let maxGames = GlobalSettings.maxGames
 	static let columns = 2
 
@@ -41,7 +43,7 @@ struct BoardUI_Previews: PreviewProvider {
     static var defaultPlayers = Players(names: GlobalSettings.playerNames)
 
 	static var previews: some View {
-            BoardUI(players: defaultPlayers)
+        BoardUI(settings: .constant(GameSettings()))
     }
 }
 

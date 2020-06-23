@@ -21,7 +21,7 @@ enum HistoryViewMode { case diff, total }
 struct ScoreTableView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var settings : GameSettings
+    @Binding var settings : GameSettings
     
     var history : History { settings.history }
     var players : Players { settings.players }
@@ -142,7 +142,7 @@ struct ScoreTableView_Previews: PreviewProvider {
         settings = GameSettings()
         settings.history = genHistory()
         return  VStack {
-            ScoreTableView(settings: settings, viewMode: .total)
+            ScoreTableView(settings: .constant(settings), viewMode: .total)
         }
     }
     

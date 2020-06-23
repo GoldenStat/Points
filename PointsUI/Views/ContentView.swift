@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var settings = GameSettings()
+    @State var settings = GameSettings()
     
     var players : Players {
         return settings.players
@@ -50,13 +50,13 @@ struct ContentView: View {
             //            VStack {
             VStack {
                 TabView {
-                    BoardUI(players: settings.players)
+                    BoardUI(settings: $settings)
                         .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
-                    ScoreTableView(settings: settings, viewMode: .diff)
+                    ScoreTableView(settings: $settings, viewMode: .diff)
                         .tabItem({ Image(systemName: "table") })
                     .tag(1)
-                    ScoreTableView(settings: settings, viewMode: .total)
+                    ScoreTableView(settings: $settings, viewMode: .total)
                         .tabItem({ Image(systemName: "table.fill") })
                     .tag(2)
                 }

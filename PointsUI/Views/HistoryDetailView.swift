@@ -12,7 +12,7 @@ import SwiftUI
 struct HistoryDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var settings : GameSettings
+    @State var settings : GameSettings
     
     var history : History {
         return settings.history
@@ -22,13 +22,13 @@ struct HistoryDetailView: View {
         NavigationView {
             VStack {
                 TabView {
-                    BoardUI(players: settings.players)
+                    BoardUI(settings: $settings)
                         .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
-                    ScoreTableView(settings: settings, viewMode: .diff)
+                    ScoreTableView(settings: $settings, viewMode: .diff)
                         .tabItem({ Image(systemName: "table") })
                     .tag(1)
-                    ScoreTableView(settings: settings, viewMode: .total)
+                    ScoreTableView(settings: $settings, viewMode: .total)
                         .tabItem({ Image(systemName: "table.fill") })
                     .tag(2)
                 }
