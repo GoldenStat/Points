@@ -32,7 +32,7 @@ class Player: ObservableObject {
     }
     
     func add(score newScore: Score) {
-        if newScore + tmpScore < GlobalSettings.scorePerGame {
+        if newScore + tmpScore + score <= GlobalSettings.scorePerGame {
             tmpScore += 1
         }
     }

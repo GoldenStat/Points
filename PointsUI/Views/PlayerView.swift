@@ -19,7 +19,7 @@ struct PlayerView: View, Identifiable {
     var body: some View {
         
         VStack {
-            Text(self.name).font(.title)
+            Text(name).font(.title)
             
             HStack {
                 Text("Puntos: \(score)")
@@ -33,14 +33,15 @@ struct PlayerView: View, Identifiable {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.black, lineWidth: 1.5)
                 
-                Button(action: {
-                self.player.add(score: 1)
-                }) {
+                Button() {
+                    player.add(score: 1)
+                }
+                label: {
                     ScoreBoxUI(score: player.score, tmpScore: player.tmpScore)
-                    }
+                }
             }
             .padding(.horizontal)
-                    
+            
             Spacer()
         }
     }
