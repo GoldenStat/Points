@@ -17,26 +17,34 @@ struct Title: View {
     @State var degrees : Double = 0.0
     @State var zoom : CGFloat = 0.0
     @State var opacity : Double = 0.3
-    let fadeDuration : Double = 5
     
     var body: some View {
         Text(GameSettings.name)
-            .font(.system(size: 144))
+            .font(.system(size: fontSize))
             .opacity(opacity)
             .animation(
                 .linear(duration: fadeDuration))
             .rotationEffect(.degrees(degrees),
                             anchor: .center)
-            .animation(.spring(response: 0.6,
-                               dampingFraction: 0.3,
-                               blendDuration: 1.0))
+            .animation(.spring(response: spring.response,
+                               dampingFraction: spring.dampingFraction,
+                               blendDuration: spring.blendDuration))
             .scaleEffect(zoom)
             .animation(.easeOut)
             .onAppear {
-                degrees = 45.0
-                zoom = 1.0
+                degrees = finalDegrees
+                zoom = finalZoom
             }
     }
+    
+//    MARK: local variables
+    let fontSize : CGFloat = 144
+    let fadeDuration : Double = 5
+    let finalDegrees : Double = 45
+    let finalZoom: CGFloat = 1.0
+    
+    let spring = ( response: 0.6, dampingFraction: 0.3, blendDuration: 1.0)
+
 }
 
 struct Background: View {

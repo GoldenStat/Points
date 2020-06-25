@@ -12,7 +12,9 @@ import Foundation
 /// used to record the progression of the entries
 class History : ObservableObject {
     @Published var states = [GameState]()
-    
+
+    var playerNames: [String] { currentPlayers.map {$0.name} }
+
     /// returns last Entry of game states
     var currentPlayers : [PlayerData] {
         if let lastState = states.last {
@@ -20,9 +22,7 @@ class History : ObservableObject {
         }
         return []
     }
-    
-    var playerNames: [String] { currentPlayers.map {$0.name} }
-    
+        
     /// go back one step, if there is one
     func undo() {
         guard states.count > 0 else { return }

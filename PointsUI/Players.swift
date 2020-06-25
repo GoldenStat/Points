@@ -8,8 +8,9 @@
 
 import Foundation
 
-
+/// Data representation of a player as a struct
 struct PlayerData: Codable, Identifiable, Equatable {
+    
     var id = UUID()
     var name: String
     var score: Score
@@ -22,12 +23,11 @@ struct PlayerData: Codable, Identifiable, Equatable {
 }
 
 class Player: ObservableObject {
-    // name, points
-//    var id = \Player.name // MARK: check whether we should exchange this with a counter to allow equal names
+
     var id = UUID()
-    
     var name: String
-    @Published var score = Score(0)
+    
+    @Published var score = Score(0) // this is why this needs to be a class
     
     func saveScore() {
         score.save()
@@ -36,6 +36,8 @@ class Player: ObservableObject {
     func add(score newScore: Int) {
         score.add(points: newScore)
     }
+
+    // MARK: initializers and converters
     
     init(from data: PlayerData) {
         self.name = data.name
@@ -90,3 +92,17 @@ class Players: ObservableObject {
     }
 }
 
+// MARK: Player equality functions 
+func == (lhs: Player, rhs: Player) -> Bool {
+    return lhs.name == rhs.name && lhs.score == rhs.score
+}
+
+func == (lhs: [Player], rhs: [Player]) -> Bool {
+    guard lhs.count == rhs.count else { return false }
+    for index in (0..<lhs.count) {
+        if !(lhs[index] == rhs[index]) {
+            return false
+        }
+    }
+    return true
+}

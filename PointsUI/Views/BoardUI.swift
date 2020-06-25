@@ -10,7 +10,6 @@ import SwiftUI
 
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
-    
     @EnvironmentObject var settings: GameSettings
     
     var numberOfPlayers : Int { settings.players.items.count }

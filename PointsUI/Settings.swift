@@ -54,6 +54,10 @@ class GameSettings: ObservableObject {
         
     static let name = "Truco Points"
     
+    var numberOfPlayers: Int { players.items.count }
+    
+    // MARK: Timer
+    
     // when the timer fires, players need to b updated, and history saved...
     var timerCancellable : Cancellable?
     
@@ -73,16 +77,3 @@ class GameSettings: ObservableObject {
 
 }
 
-func == (lhs: Player, rhs: Player) -> Bool {
-    return lhs.name == rhs.name && lhs.score == rhs.score
-}
-
-func == (lhs: [Player], rhs: [Player]) -> Bool {
-    guard lhs.count == rhs.count else { return false }
-    for index in (0..<lhs.count) {
-        if !(lhs[index] == rhs[index]) {
-            return false
-        }
-    }
-    return true
-}
