@@ -22,7 +22,8 @@ struct BoardUI: View {
         }
     }
     
-    // MARK: local variables
+    // MARK: local variables -- make columns depend on number of players and device orientation
+    // MARK: also inspect new LazyGridView option
     private var maxGames : Int { GlobalSettings.maxGames }
     private let columns = 2
 

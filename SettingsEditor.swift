@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// MARK: -- TODO: create a view to change settings
 struct SettingsEditor: View {
 //    @Environment(\.colorScheme) var scheme
 //    @Environment(\.layoutDirection) var layout

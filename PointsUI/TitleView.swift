@@ -12,7 +12,7 @@ extension Color {
     static let boardbgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
 }
 
-struct Title: View {
+struct TitleView: View {
 
     @State var degrees : Double = 0.0
     @State var zoom : CGFloat = 0.0
@@ -59,7 +59,7 @@ struct Background_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Background()
-            Title(opacity: 0.1)
+            TitleView(opacity: 0.1)
         }
     }
 }

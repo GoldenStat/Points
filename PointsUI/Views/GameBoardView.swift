@@ -18,14 +18,16 @@ struct GameBoardView: View {
                 .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                 .tag(0)
             
-            ScoreTableView(viewMode: .diff)
+            ScoreTableView(history: settings.history, viewMode: .diff)
                 .tabItem({ Image(systemName: "table") })
                 .tag(1)
             
-            ScoreTableView(viewMode: .total)
+            ScoreTableView(history: settings.history, viewMode: .total)
                 .tabItem({ Image(systemName: "table.fill") })
                 .tag(2)
         }
+        .environmentObject(settings)
+
     }
 }
 

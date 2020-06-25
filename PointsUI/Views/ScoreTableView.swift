@@ -12,23 +12,23 @@ enum HistoryViewMode { case diff, total }
 
 /// show the history for evey player
 struct ScoreTableView: View {
-    @EnvironmentObject var settings : GameSettings
-    
+//    @EnvironmentObject var settings : GameSettings
+    @ObservedObject var history: History
     var viewMode: HistoryViewMode
             
     var body: some View {
         VStack {
-            namesView.flow(withColumns: columns)
+            namesView.flow(withColumns: playerNames.count)
                 .font(.headline)
                 .frame(maxHeight: sumHeight)
             
             ScrollView {
-                tableMatrix.flow(withColumns: columns)
+                tableMatrix.flow(withColumns: playerNames.count)
             }.frame(maxHeight: tableHeight)
 
             if viewMode == .diff {
                 Divider()
-                sumView.flow(withColumns: columns)
+                sumView.flow(withColumns: playerNames.count)
                     .frame(maxHeight: sumHeight)
             }
         }
@@ -40,13 +40,13 @@ struct ScoreTableView: View {
         
         switch viewMode {
         case .diff:
-            for num in settings.history.risingScores {
+            for num in history.risingScores {
                 matrix.append(Text("\(num)")
                                 .font(.body)
                 )
             }
         case .total:
-            for num in settings.history.flatScores {
+            for num in history.flatScores {
                 matrix.append(Text("\(num)").font(.body))
             }
         }
@@ -57,11 +57,10 @@ struct ScoreTableView: View {
     private let sumHeight: CGFloat = 32
     private let tableHeight: CGFloat = 200
     
-    private var columns : Int { settings.players.items.count }
-    private var playerNames : [ String ] { settings.history.playerNames }
+    private var playerNames : [ String ] { history.playerNames }
     private var namesView: [ Text ] { playerNames.map { Text($0) } }
 
-    private var sumView: [ Text ] { settings.history.flatSums.map { Text("\($0)") } }
+    private var sumView: [ Text ] { history.flatSums.map { Text("\($0)") } }
 
 }
 
@@ -98,7 +97,7 @@ struct ScoreTableView_Previews: PreviewProvider {
     }
     
     static func genHistory() -> History {
-        let history = settings.history
+        let history = History()
         var state = GameState(players: Self.players.data)
         for _ in 0 ..< 10 {
             state = genNewState(from: state)
@@ -108,10 +107,8 @@ struct ScoreTableView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        settings = GameSettings()
-        settings.history = genHistory()
         return  VStack {
-            ScoreTableView(viewMode: .total)
+            ScoreTableView(history: genHistory(), viewMode: .total)
         }
     }
     
