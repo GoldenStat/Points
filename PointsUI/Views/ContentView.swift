@@ -10,7 +10,6 @@ import SwiftUI
 //import Combine
 
 struct ContentView: View {
-    
     @ObservedObject var settings = GameSettings()
         
     // MARK: Change Appearance
@@ -31,39 +30,15 @@ struct ContentView: View {
             .onTapGesture(count: 2) {
                 navigationBarIsHidden.toggle()
             }
+            .sheet(isPresented: $settingsEditorIsShown) {
+                SettingsEditor()
+            }
         }
     }
-    
 }
-    
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-struct GameBoardView: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    var body: some View {
-        TabView {
-            
-            BoardUI()
-                .tabItem({ Image(systemName: "rectangle.grid.2x2")})
-                .tag(0)
-                .onTapGesture {
-                    settings.resetTimer()
-                }
-            
-            ScoreTableView(viewMode: .diff)
-                .tabItem({ Image(systemName: "table") })
-                .tag(1)
-            
-            ScoreTableView(viewMode: .total)
-                .tabItem({ Image(systemName: "table.fill") })
-                .tag(2)
-        }
     }
 }

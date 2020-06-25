@@ -23,7 +23,7 @@ struct UserDefault<T> {
     
     var wrappedValue: T {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
         }
         set {
             UserDefaults.standard.set(newValue, forKey: key)
@@ -45,31 +45,30 @@ enum GlobalSettings {
         static var playerNames: [ String ]
 }
 
-import Combine
-
 class GameSettings: ObservableObject {
     
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
         
     static let name = "Truco Points"
-    
+
     var numberOfPlayers: Int { players.items.count }
     
     // MARK: Timer
+    private var timer : Timer?
+    private var updateTime: TimeInterval = 5.0
     
-    // when the timer fires, players need to b updated, and history saved...
-    var timerCancellable : Cancellable?
-    
-    func resetTimer() {
-        if let cancellable = timerCancellable {
-            cancellable.cancel()
-        }
-        let publisher = Timer.publish(every: 5, on: .main, in: .common)
-        timerCancellable = publisher.connect()
+    func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: updateTime,
+                                     target: self,
+                                     selector: #selector(update),
+                                     userInfo: nil,
+                                     repeats: true)
     }
     
-    func update() {
+    // when the timer fires, players need to b updated, and history saved...
+    @objc private func update() {
         // send the history a signal that it should be saved
         players.saveScore()
         history.save(state: GameState(players: players.data))

@@ -30,8 +30,10 @@ struct PlayerView: View, Identifiable {
                         ScoreBoxUI(score: player.score)
                     })
                     .onTapGesture(perform: {
-                                    player.add(score: 1) }
-                )
+                        player.add(score: 1)
+                        settings.startTimer()
+                    }
+                    )
             }
             .padding(.horizontal)
             
