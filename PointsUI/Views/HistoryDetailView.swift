@@ -22,13 +22,13 @@ struct HistoryDetailView: View {
         NavigationView {
             VStack {
                 TabView {
-                    BoardUI(settings: $settings)
+                    BoardUI()
                         .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
-                    ScoreTableView(settings: $settings, viewMode: .diff)
+                    ScoreTableView(viewMode: .diff)
                         .tabItem({ Image(systemName: "table") })
                     .tag(1)
-                    ScoreTableView(settings: $settings, viewMode: .total)
+                    ScoreTableView(viewMode: .total)
                         .tabItem({ Image(systemName: "table.fill") })
                     .tag(2)
                 }

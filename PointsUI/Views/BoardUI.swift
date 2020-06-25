@@ -13,7 +13,7 @@ import SwiftUI
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
     
-    @Binding var settings: GameSettings
+    @EnvironmentObject var settings: GameSettings
     @State private var games : Int = 0
     
     var history : History { settings.history }
@@ -37,7 +37,7 @@ struct BoardUI_Previews: PreviewProvider {
     static var defaultPlayers = Players(names: GlobalSettings.playerNames)
 
 	static var previews: some View {
-        BoardUI(settings: .constant(GameSettings()))
+        BoardUI()
     }
 }
 

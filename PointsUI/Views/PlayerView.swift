@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct PlayerView: View, Identifiable {
+    @EnvironmentObject var settings: GameSettings
+    
     @ObservedObject var player : Player
     
     var id : PlayerData.ID { player.id }
@@ -16,7 +18,6 @@ struct PlayerView: View, Identifiable {
     var score: Score { player.score }
     
     var body: some View {
-        
         VStack {
             Text(name).font(.title)
             
