@@ -12,18 +12,30 @@ enum HistoryViewMode { case diff, total }
 
 /// show the history for evey player
 struct ScoreTableView: View {
-    
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var settings : GameSettings
-    @State var viewMode: HistoryViewMode
+    
+    var viewMode: HistoryViewMode
+            
+    var body: some View {
+        VStack {
+            namesView.flow(withColumns: columns)
+                .font(.headline)
+                .frame(maxHeight: sumHeight)
+            
+            ScrollView {
+                tableMatrix.flow(withColumns: columns)
+            }.frame(maxHeight: tableHeight)
 
-    var columns : Int { settings.players.items.count }
-        
-    
-    var playerNames : [ String ] { settings.history.playerNames }
-    var namesView: [ Text ] { playerNames.map { Text($0) } }
-    
-    var tableMatrix: [ Text ] {
+            if viewMode == .diff {
+                Divider()
+                sumView.flow(withColumns: columns)
+                    .frame(maxHeight: sumHeight)
+            }
+        }
+    }
+
+    // MARK: function to display nicely in a stack... change?
+    private var tableMatrix: [ Text ] {
         var matrix: [Text] = []
         
         switch viewMode {
@@ -40,26 +52,16 @@ struct ScoreTableView: View {
         }
         return matrix
     }
-            
-    var body: some View {
-        VStack {
-            namesView.flow(withColumns: columns)
-                .font(.headline)
-                .frame(maxHeight: 32.0)
-            
-            ScrollView {
-                tableMatrix.flow(withColumns: columns)
-            }.frame(maxHeight: 200.0)
-
-            if viewMode == .diff {
-                Divider()
-                sumView.flow(withColumns: columns)
-                    .frame(maxHeight: 32.0)
-            }
-        }
-    }
     
-    var sumView: [ Text ] { settings.history.flatSums.map { Text("\($0)") } }
+    // MARK: private variables
+    private let sumHeight: CGFloat = 32
+    private let tableHeight: CGFloat = 200
+    
+    private var columns : Int { settings.players.items.count }
+    private var playerNames : [ String ] { settings.history.playerNames }
+    private var namesView: [ Text ] { playerNames.map { Text($0) } }
+
+    private var sumView: [ Text ] { settings.history.flatSums.map { Text("\($0)") } }
 
 }
 

@@ -75,11 +75,11 @@
 			children = (
 				411DF2112360645200A37C64 /* FlowStack.swift */,
 				416F37962442AB1A00D9D55B /* EdgeShape.swift */,
-				419A44AB24475CE000EA91F3 /* ScoreTableView.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
 				411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */,
 				411DF204235C84B600A37C64 /* PlayerView.swift */,
 				411DF206235C918200A37C64 /* BoardUI.swift */,
+				419A44AB24475CE000EA91F3 /* ScoreTableView.swift */,
 				4173576324A507DA002C10B2 /* GameBoardView.swift */,
 				411DF22023607CD100A37C64 /* ContentView.swift */,
 			);
