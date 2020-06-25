@@ -56,7 +56,8 @@ struct HistoryDetailView_Previews: PreviewProvider {
     static func genNewState(from state: GameState) -> GameState {
         var players: [PlayerData] = []
         for player in  state.players {
-            let newPlayer = PlayerData(name: player.name, score: player.score + Int.random(in: 0...5))
+            let newScore = player.score.value + Int.random(in: 0...EdgeShape.numberOfEdges)
+            let newPlayer = PlayerData(name: player.name, points: newScore)
             players.append(newPlayer)
         }
         return GameState(players: players)

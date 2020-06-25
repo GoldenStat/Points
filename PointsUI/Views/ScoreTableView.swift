@@ -18,6 +18,7 @@ extension Array where Element: View {
 
 enum HistoryViewMode { case diff, total }
 
+/// show the history for evey player
 struct ScoreTableView: View {
     
     @Environment(\.presentationMode) var presentationMode
@@ -32,27 +33,27 @@ struct ScoreTableView: View {
         var list = [Int]()
         
         for state in history.states {
-            let points : [ Int ] = state.players.map({$0.score})
+            let points : [ Int ] = state.players.map({$0.score.value})
             list.append(contentsOf: points)
         }
         
         return list
     }
     
-    var flatRisingScore : [Score] {
-        var list = [Score]()
-        var lastScore: [Score]?
+    var flatRisingScore : [Int] {
+        var list = [Int]()
+        var lastScore: [Int]?
         
         for state in history.states {
-            let currentScore : [ Score ] = state.players.map({$0.score})
+            let currentScore : [Int] = state.players.map({$0.score.value})
             if let lastScore = lastScore {
                 var diffScore = [Int]()
                 for index in 0 ..< lastScore.count {
-                    diffScore.append(currentScore[index]-lastScore[index])
+                    diffScore.append(currentScore[index] - lastScore[index])
                 }
                 list.append(contentsOf: diffScore)
             } else {
-                list.append(contentsOf: currentScore)
+                list.append(contentsOf: currentScore.map { $0 } )
             }
             lastScore = currentScore
         }
@@ -60,9 +61,10 @@ struct ScoreTableView: View {
         return list
     }
     
-    var flatSum: [Score] {
-        history.states.last?.scores ?? [Int].init(repeating: Score(0), count: columns)
+    var flatSum: [Int] {
+        history.states.last?.scores.map { $0.value } ?? [Int].init(repeating: 0, count: columns)
     }
+    
     var sumView: [ Text ] { flatSum.map { Text("\($0)") } }
     
     var playerNames : [ String ] { history.playerNames }
@@ -121,8 +123,11 @@ struct ScoreTableView_Previews: PreviewProvider {
     
     static func genNewState(from state: GameState) -> GameState {
         var players: [PlayerData] = []
+        
+        // add randonm points for every player
         for player in  state.players {
-            let newPlayer = PlayerData(name: player.name, score: player.score + Int.random(in: 0...5))
+            let newScore = player.score.value + Int.random(in: 0...5)
+            let newPlayer = PlayerData(name: player.name, points: newScore)
             players.append(newPlayer)
         }
         return GameState(players: players)

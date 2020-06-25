@@ -12,6 +12,7 @@ import SwiftUI
 
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
+    
     @Binding var settings: GameSettings
     @State private var games : Int = 0
     

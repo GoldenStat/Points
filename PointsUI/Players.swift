@@ -13,6 +13,12 @@ struct PlayerData: Codable, Identifiable, Equatable {
     var id = UUID()
     var name: String
     var score: Score
+    
+    // when initializing a player, tmpPoints don't make sense.
+    init(name: String, points: Int) {
+        self.name = name
+        self.score = Score(points)
+    }
 }
 
 class Player: ObservableObject {
@@ -21,20 +27,14 @@ class Player: ObservableObject {
     var id = UUID()
     
     var name: String
-    @Published var score: Score = 0
-    @Published var tmpScore: Score = 0
+    @Published var score = Score(0)
     
     func saveScore() {
-        if tmpScore>0 {
-            score += tmpScore
-            tmpScore = 0
-        }
+        score.save()
     }
     
-    func add(score newScore: Score) {
-        if newScore + tmpScore + score <= GlobalSettings.scorePerGame {
-            tmpScore += 1
-        }
+    func add(score newScore: Int) {
+        score.add(points: newScore)
     }
     
     init(from data: PlayerData) {
@@ -47,7 +47,7 @@ class Player: ObservableObject {
     }
     
     var data: PlayerData {
-        PlayerData(name: name, score: score)
+        PlayerData(name: name, points: score.value)
     }
     
 }
@@ -66,7 +66,11 @@ class Players: ObservableObject {
     var data: [PlayerData] { return items.map {$0.data} }
     
     func saveScore() {
-        _ = items.map { $0.saveScore() }
+        _ = items.map { $0.score.save() }
+    }
+    
+    subscript(index: Int) -> Player {
+        items[index]
     }
     
     /// convenience initiallizer - replaces all players with new structs with new names

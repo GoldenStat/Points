@@ -7,9 +7,6 @@
 //
 import SwiftUI
 
-typealias Score = Int
-
-
 /// UserDefault property wrapper:
 /// define a default, and store the variable in UserDefaults whenever it is set
 ///

@@ -13,40 +13,32 @@ struct PlayerView: View, Identifiable {
     
     var id : PlayerData.ID { player.id }
     var name: String { player.name }
-    var score: Int { player.score }
-    var tmpScore: Score { player.tmpScore }
+    var score: Score { player.score }
     
     var body: some View {
         
         VStack {
             Text(name).font(.title)
             
-            HStack {
-                Text("Puntos: \(score)")
-                if tmpScore > 0 {
-                    Text(" + ")
-                    Text("\(tmpScore)")
-                }
-            }
+            ScoreRow(score: score)
 
             ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.black, lineWidth: 1.5)
-                
-                Button() {
-                    player.add(score: 1)
-                }
-                label: {
-                    Emphasize(theme: .light) {
-                        ScoreBoxUI(score: player.score, tmpScore: player.tmpScore)
-                    }
-                }
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.black, lineWidth: lineWidth)
+                    .overlay( Emphasize(theme: .light) {
+                        ScoreBoxUI(score: player.score)
+                    })
+                    .onTapGesture(perform: {
+                                    player.add(score: 1) }
+                )
             }
             .padding(.horizontal)
             
             Spacer()
         }
     }
+    private let cornerRadius : CGFloat = 16.0
+    private let lineWidth : CGFloat = 1.5
 }
 
 struct PlayerUI_Previews: PreviewProvider {
@@ -54,10 +46,20 @@ struct PlayerUI_Previews: PreviewProvider {
     static var player = Player(name: "Alexander")
     
     static var previews: some View {
-        VStack {
             PlayerView(player: player)
-            Button("Save") {
-                player.saveScore()
+    }
+}
+
+
+struct ScoreRow: View {
+    let score: Score
+    
+    var body: some View {
+        HStack {
+            Text("Puntos: \(score.value)")
+            if score.tmp > 0 {
+                Text(" + ")
+                Text("\(score.tmp)")
             }
         }
     }

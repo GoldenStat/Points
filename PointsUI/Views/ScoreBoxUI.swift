@@ -16,8 +16,7 @@ struct ScoreBoxUI: View, Identifiable {
     
     let id = UUID()
     
-    var score: Int
-    var tmpScore : Int
+    var score: Score
     
     static let maxScore = GlobalSettings.scorePerGame
     static let columns = 2
@@ -34,18 +33,17 @@ struct ScoreBoxUI: View, Identifiable {
         
         let start = index * Self.linesPerBox
         let end = start + Self.linesPerBox
-        var thisBoxScore = 0
-        var thisBoxTmpScore = 0
+        var thisBoxScore = Score()
         
         for point in start ... end {
-            if point < score {
-                thisBoxScore += 1
-            } else if point < score + tmpScore {
-                thisBoxTmpScore += 1
+            if point < score.value {
+                thisBoxScore.value += 1
+            } else if point < score.sum {
+                thisBoxScore.add()
             }
         }
         
-        return Box(points: thisBoxScore, tmpPoints: thisBoxTmpScore)
+        return Box(score: thisBoxScore)
     }
     
     var body: some View {
@@ -62,14 +60,14 @@ struct ScoreBoxUI: View, Identifiable {
 
 struct PlayerView_Previews: PreviewProvider {
     
-    static func reroll(max score: Score) -> Score {
-        let score = max(0,min(score, ScoreBoxUI.maxScore))
-        return Score.random(in: 0 ... score)
+    static func reroll(max value: Int) -> Score {
+        let points: Int = max(0,min(value, ScoreBoxUI.maxScore))
+        return Score(Int.random(in: 0 ... points))
     }
     
     static var previews: some View {
         VStack {
-            ScoreBoxUI(score: reroll(max: 15), tmpScore: reroll(max: 5))
+            ScoreBoxUI(score: reroll(max: 15))
         }
     }
 }

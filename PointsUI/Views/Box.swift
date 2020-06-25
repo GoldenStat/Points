@@ -20,18 +20,15 @@ extension CGPoint {
 
 /// a box that counts part of a score
 /// - Parameters
-/// - Parameter points: the current points the box has saved (drawn in Color.solid)
-/// - Parameter tmpPoints: the points that are not yet added, but marked to add (drawn in Color.tmp)
+/// - Parameter score: the current score the box has saved (drawn in Color.solid and Color.tmp)
 /// - Parameter maxLength: the maximum Edges that will be used from EdgeShape
 struct Box: View {
 
-    var points : Int
-    var tmpPoints : Int
+    var score : Score
 
-    var cappedPoints : Double { min(Self.maxLength, Double(points)) }
-    var cappedTotal : Double { min(Self.maxLength, Double(points+tmpPoints)) }
+    var cappedPoints : Double { min(Self.maxLength, Double(score.value)) }
+    var cappedTotal : Double { min(Self.maxLength, Double(score.sum)) }
     
-//    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1}
     static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1 }
     
     var body: some View {
@@ -67,20 +64,17 @@ struct SampleBox: View {
 }
 
 struct Box_Previews: PreviewProvider {
-
-    @State static var tmpPoints = 2
-    static let points = 2
+    
+    @State static var score = Score(2,tmp: 2)
     
     static var previews: some View {
-        Box(points: Self.points, tmpPoints: Self.tmpPoints)
+        Box(score: score)
             .frame(width: 300, height: 300)
             .padding()
             .onTapGesture {
-                if tmpPoints > 5 - Self.points {
-                    tmpPoints = Self.points
-                } else {
-                    tmpPoints += 1
+                if score.sum <= EdgeShape.numberOfEdges {
+                    score.add()
                 }
-        }
+            }
     }
 }
