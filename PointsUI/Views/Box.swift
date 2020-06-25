@@ -20,7 +20,7 @@ extension CGPoint {
 
 /// a box that counts part of a score
 /// - Parameters
-/// - Parameter score: the current score the box has saved (drawn in Color.solid and Color.tmp)
+/// - Parameter score: the current score the box has saved (drawn in Color.solid and Color.buffer)
 /// - Parameter maxLength: the maximum Edges that will be used from EdgeShape
 struct Box: View {
 
@@ -40,7 +40,7 @@ struct Box: View {
                 .stroke(Color.solid)
                 .animation(nil)
             EdgeShape(totalLength: cappedTotal, starting: cappedPoints)
-                .stroke(Color.tmp)
+                .stroke(Color.buffer)
         }
     }
 }
@@ -65,7 +65,7 @@ struct SampleBox: View {
 
 struct Box_Previews: PreviewProvider {
     
-    @State static var score = Score(2,tmp: 2)
+    @State static var score = Score(2,buffer: 2)
     
     static var previews: some View {
         Box(score: score)

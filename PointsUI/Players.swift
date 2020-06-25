@@ -14,7 +14,7 @@ struct PlayerData: Codable, Identifiable, Equatable {
     var name: String
     var score: Score
     
-    // when initializing a player, tmpPoints don't make sense.
+    // when initializing a player his score has no buffer
     init(name: String, points: Int) {
         self.name = name
         self.score = Score(points)

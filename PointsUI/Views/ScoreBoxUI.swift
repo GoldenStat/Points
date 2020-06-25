@@ -29,7 +29,7 @@ struct ScoreBoxUI: View, Identifiable {
         } }
         
     private func filledBox(at index: Int) -> Box {
-        // count points and tmp points to what should be in this box
+        // count points and buffer points to what should be in this box
         
         let start = index * Self.linesPerBox
         let end = start + Self.linesPerBox

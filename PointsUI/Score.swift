@@ -11,22 +11,22 @@ import Foundation
 struct Score: Codable, Equatable {
     
     var value: Int
-    var tmp: Int
+    var buffer: Int
     
-    var sum: Int { value + tmp }
+    var sum: Int { value + buffer }
     
-    init(_ value: Int = 0, tmp: Int = 0) {
+    init(_ value: Int = 0, buffer: Int = 0) {
         self.value = value
-        self.tmp = tmp
+        self.buffer = buffer
     }
 
     mutating func save() {
-        guard tmp > 0, sum <= GlobalSettings.scorePerGame else { return }
-        value += tmp
-        tmp = 0
+        guard buffer > 0, sum <= GlobalSettings.scorePerGame else { return }
+        value += buffer
+        buffer = 0
     }
     
     mutating func add(points: Int = 1) {
-        tmp += points
+        buffer += points
     }
 }

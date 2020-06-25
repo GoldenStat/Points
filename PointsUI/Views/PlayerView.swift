@@ -57,9 +57,9 @@ struct ScoreRow: View {
     var body: some View {
         HStack {
             Text("Puntos: \(score.value)")
-            if score.tmp > 0 {
+            if score.buffer > 0 {
                 Text(" + ")
-                Text("\(score.tmp)")
+                Text("\(score.buffer)")
             }
         }
     }
