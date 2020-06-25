@@ -8,14 +8,6 @@
 
 import SwiftUI
 
-extension Array where Element: View {
-    func flow(withColumns columns: Int) -> some View {
-        FlowStack(columns: columns, numItems: self.count) { index, colWidth in
-            self[index]
-        }
-    }
-}
-
 enum HistoryViewMode { case diff, total }
 
 /// show the history for evey player
@@ -23,65 +15,26 @@ struct ScoreTableView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var settings : GameSettings
-    
-    var history : History { settings.history }
-    var players : Players { settings.players }
-    var columns : Int { players.items.count }
-    
-    /// a computed var that transfers all history states into a list
-    var flatHistoryScore : [Int] {
-        var list = [Int]()
-        
-        for state in history.states {
-            let points : [ Int ] = state.players.map({$0.score.value})
-            list.append(contentsOf: points)
-        }
-        
-        return list
-    }
-    
-    var flatRisingScore : [Int] {
-        var list = [Int]()
-        var lastScore: [Int]?
-        
-        for state in history.states {
-            let currentScore : [Int] = state.players.map({$0.score.value})
-            if let lastScore = lastScore {
-                var diffScore = [Int]()
-                for index in 0 ..< lastScore.count {
-                    diffScore.append(currentScore[index] - lastScore[index])
-                }
-                list.append(contentsOf: diffScore)
-            } else {
-                list.append(contentsOf: currentScore.map { $0 } )
-            }
-            lastScore = currentScore
-        }
-        
-        return list
-    }
-    
-    var flatSum: [Int] {
-        history.states.last?.scores.map { $0.value } ?? [Int].init(repeating: 0, count: columns)
-    }
-    
-    var sumView: [ Text ] { flatSum.map { Text("\($0)") } }
-    
-    var playerNames : [ String ] { history.playerNames }
-    var namesView: [ Text ] { playerNames.map { Text($0) } }
-    
     @State var viewMode: HistoryViewMode
 
+    var columns : Int { settings.players.items.count }
+        
+    
+    var playerNames : [ String ] { settings.history.playerNames }
+    var namesView: [ Text ] { playerNames.map { Text($0) } }
+    
     var tableMatrix: [ Text ] {
         var matrix: [Text] = []
         
         switch viewMode {
         case .diff:
-            for num in self.flatRisingScore {
-                matrix.append(Text("\(num)").font(.body))
+            for num in settings.history.risingScores {
+                matrix.append(Text("\(num)")
+                                .font(.body)
+                )
             }
         case .total:
-            for num in self.flatHistoryScore {
+            for num in settings.history.flatScores {
                 matrix.append(Text("\(num)").font(.body))
             }
         }
@@ -98,13 +51,22 @@ struct ScoreTableView: View {
                 tableMatrix.flow(withColumns: columns)
             }.frame(maxHeight: 200.0)
 
-            
-            
             if viewMode == .diff {
                 Divider()
                 sumView.flow(withColumns: columns)
-                .frame(maxHeight: 32.0)
+                    .frame(maxHeight: 32.0)
             }
+        }
+    }
+    
+    var sumView: [ Text ] { settings.history.flatSums.map { Text("\($0)") } }
+
+}
+
+extension Array where Element: View {
+    func flow(withColumns columns: Int) -> some View {
+        FlowStack(columns: columns, numItems: self.count) { index, colWidth in
+            self[index]
         }
     }
 }
