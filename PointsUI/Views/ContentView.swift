@@ -24,16 +24,12 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            
-            Color.boardbgColor
-                .edgesIgnoringSafeArea(.all)
-
-//            Background()
 
             TabView {
                 BoardUI(settings: $settings)
                     .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                     .tag(0)
+
                 ScoreTableView(settings: $settings, viewMode: .diff)
                     .tabItem({ Image(systemName: "table") })
                     .tag(1)
@@ -41,18 +37,19 @@ struct ContentView: View {
                     .tabItem({ Image(systemName: "table.fill") })
                     .tag(2)
             }
-            
-            Title(opacity: titleOpacity)
+            .background(Color.boardbgColor)
+            .onTapGesture {
+                settings.resetTimer()
+            }
+
         }
         .navigationBarTitle(GameSettings.name)
         .navigationBarHidden(true)
         .onTapGesture(count: 2) {
             navigationBarIsHidden.toggle()
         }
-        .onAppear { titleOpacity = 0.0 }
     }
     
-    @State var titleOpacity = 0.1
     
     // MARK: Local variables
     @State var navigationBarIsHidden = true

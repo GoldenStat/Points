@@ -37,7 +37,9 @@ struct PlayerView: View, Identifiable {
                     player.add(score: 1)
                 }
                 label: {
-                    ScoreBoxUI(score: player.score, tmpScore: player.tmpScore)
+                    Emphasize(theme: .light) {
+                        ScoreBoxUI(score: player.score, tmpScore: player.tmpScore)
+                    }
                 }
             }
             .padding(.horizontal)

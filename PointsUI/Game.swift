@@ -48,10 +48,32 @@ enum GlobalSettings {
         static var playerNames: [ String ]
 }
 
+import Combine
+
 class GameSettings: ObservableObject {
+    
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
+        
     static let name = "Truco Points"
+    
+    // when the timer fires, players need to b updated, and history saved...
+    var timerCancellable : Cancellable?
+    
+    func resetTimer() {
+        if let cancellable = timerCancellable {
+            cancellable.cancel()
+        }
+        let publisher = Timer.publish(every: 5, on: .main, in: .common)
+        timerCancellable = publisher.connect()
+    }
+    
+    func update() {
+        // send the history a signal that it should be saved
+        players.saveScore()
+        history.save(state: GameState(players: players.data))
+    }
+
 }
 
 func == (lhs: Player, rhs: Player) -> Bool {
