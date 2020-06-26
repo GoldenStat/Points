@@ -11,10 +11,12 @@ import Foundation
 /// a list of game States
 /// used to record the progression of the entries
 class History : ObservableObject {
-    @Published var states = [GameState]()
+    @Published var states = [GameState]() { didSet { canUndo = states.count > 1 } }
 
     var playerNames: [String] { currentPlayers.map {$0.name} }
     var numOfPlayers: Int { currentPlayers.count }
+
+    var redoStack : [GameState] = []
     
     /// returns last Entry of game states
     var currentPlayers : [PlayerData] {
@@ -25,21 +27,28 @@ class History : ObservableObject {
     }
         
     /// go back one step, if there is one
+    @Published var canUndo: Bool = false
     func undo() {
-        guard states.count > 0 else { return }
-        _ = states.removeLast()
+        guard canUndo else { return }
+        redoStack.append(states.removeLast())
+        canRedo = true
+    }
+    
+    @Published var canRedo: Bool = false
+    func redo() {
+        guard canRedo else { return }
+        states.append(redoStack.removeLast())
     }
 
     /// add game state to the history
     /// only save if the state is different from the last saved state
     func save(state: GameState) {
-        if let lastState = states.last {
-            if lastState != state {
-                states.append(state)
-            }
-        } else {
-            states.append(state)
-        }
+        guard let lastState = states.last,
+              lastState != state else { return }
+
+        states.append(state)
+        redoStack = [] // empty redoStack if we added a new game state
+        canRedo = false
     }
     
     /// a computed var that transfers all history states into a list

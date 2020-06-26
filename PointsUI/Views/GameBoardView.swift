@@ -14,7 +14,7 @@ struct GameBoardView: View {
     var body: some View {
         TabView {
             
-            BoardUI()
+            BoardUI(players: settings.players)
                 .tabItem({ Image(systemName: "rectangle.grid.2x2")})
                 .tag(0)
             

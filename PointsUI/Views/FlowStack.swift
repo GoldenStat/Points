@@ -30,9 +30,10 @@ public struct FlowStack<Content>: View where Content: View {
 		return (row * self.columns) + column
 	}
 	
-    private var lastRowColumns : Int { get { return indentLastRow ? numItems % columns : columns }	}
+    private var lastRowColumns : Int { get { return indentLastRow ? numItems % safeColumns : safeColumns }	}
 	
-	private var rows : Int { get { return numItems / columns } }
+    var safeColumns: Int { columns == 0 ? 1 : columns }
+    private var rows : Int { get { return numItems / safeColumns } }
 	
 	public init(
 		columns: Int,

@@ -11,14 +11,15 @@ import SwiftUI
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
+    @ObservedObject var players: Players
     
-    var numberOfPlayers : Int { settings.players.items.count }
+    var numberOfPlayers : Int { players.items.count }
     
     var body: some View {
         FlowStack(columns: columns,
                   numItems: numberOfPlayers,
                   alignment: .center) { index, colWidth in
-            PlayerView(player: settings.players.items[index])
+            PlayerView(player: players.items[index])
         }
     }
     
@@ -31,7 +32,7 @@ struct BoardUI: View {
 
 struct BoardUI_Previews: PreviewProvider {
 	static var previews: some View {
-        BoardUI()
+        BoardUI(players: GameSettings().players)
     }
 }
 

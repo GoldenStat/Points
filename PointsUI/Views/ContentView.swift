@@ -27,6 +27,22 @@ struct ContentView: View {
             .environmentObject(settings)
             .navigationBarTitle(GameSettings.name)
             .navigationBarHidden(true)
+            .navigationBarItems(leading: HStack {
+                Button() {
+                    settings.history.undo()
+                } label: {
+                    Image(systemName: "arrow.uturn.left")
+                        .padding()
+                }
+                .disabled(!settings.history.canUndo)
+                Button() {
+                    settings.history.redo()
+                } label: {
+                    Image(systemName: "arrow.uturn.right")
+                        .padding()
+                }
+                .disabled(!settings.history.canRedo)
+            })
             .onTapGesture(count: 2) {
                 navigationBarIsHidden.toggle()
             }
