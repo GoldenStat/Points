@@ -56,7 +56,7 @@ class GameSettings: ObservableObject {
     
     // MARK: Timer
     private var timer : Timer?
-    private var updateTime: TimeInterval = 1.0
+    private var updateTime: TimeInterval = 5.0
     
     func startTimer() {
         timer?.invalidate()
@@ -67,7 +67,7 @@ class GameSettings: ObservableObject {
                                      repeats: true)
     }
     
-    // when the timer fires, players need to b updated, and history saved...
+    // when the timer fires, players need to be updated, and history saved...
     @objc private func update() {
         // send the history a signal that it should be saved
         players.saveScore() // update all scores' buffer

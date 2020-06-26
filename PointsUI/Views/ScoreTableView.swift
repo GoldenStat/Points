@@ -12,7 +12,6 @@ enum HistoryViewMode { case diff, total }
 
 /// show the history for evey player
 struct ScoreTableView: View {
-//    @EnvironmentObject var settings : GameSettings
     @ObservedObject var history: History
     var viewMode: HistoryViewMode
             
@@ -74,8 +73,6 @@ extension Array where Element: View {
 
 
 struct ScoreTableView_Previews: PreviewProvider {
-    //    static let names = [ "Alexander", "Lili", "Villa" ]
-    //    static let players = Players(names: Self.names)
     static var settings = GameSettings()
     static let players = Self.settings.players
     static let names = Self.players.names

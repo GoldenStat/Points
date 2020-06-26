@@ -7,11 +7,10 @@
 //
 
 import SwiftUI
-//import Combine
 
 struct ContentView: View {
     @ObservedObject var settings = GameSettings()
-        
+    
     // MARK: Change Appearance
     @State var navigationBarIsHidden = true
     @State private var settingsEditorIsShown = false
@@ -34,14 +33,14 @@ struct ContentView: View {
                     Image(systemName: "arrow.uturn.left")
                         .padding()
                 }
-                .disabled(!settings.history.canUndo)
+//                .disabled(!settings.history.canUndo)
                 Button() {
                     settings.history.redo()
                 } label: {
                     Image(systemName: "arrow.uturn.right")
                         .padding()
                 }
-                .disabled(!settings.history.canRedo)
+//                .disabled(!settings.history.canRedo)
             })
             .onTapGesture(count: 2) {
                 navigationBarIsHidden.toggle()
