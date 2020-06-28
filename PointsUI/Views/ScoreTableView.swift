@@ -17,17 +17,17 @@ struct ScoreTableView: View {
             
     var body: some View {
         VStack {
-            namesView.flow(withColumns: playerNames.count)
+            namesView.flow(withColumns: numberOfColumms)
                 .font(.headline)
                 .frame(maxHeight: sumHeight)
             
             ScrollView {
-                tableMatrix.flow(withColumns: playerNames.count)
+                tableMatrix.flow(withColumns: numberOfColumms)
             }.frame(maxHeight: tableHeight)
 
             if viewMode == .diff {
                 Divider()
-                sumView.flow(withColumns: playerNames.count)
+                sumView.flow(withColumns: numberOfColumms)
                     .frame(maxHeight: sumHeight)
             }
         }
@@ -36,6 +36,10 @@ struct ScoreTableView: View {
     // MARK: function to display nicely in a stack... change?
     private var tableMatrix: [ Text ] {
         var matrix: [Text] = []
+        
+        if history.states.isEmpty { // return lines with only zeroes in case we don't have any states
+            return(Array<Text>.init(repeating: Text("0").font(.body), count: numberOfColumms))
+        }
         
         switch viewMode {
         case .diff:
@@ -56,7 +60,8 @@ struct ScoreTableView: View {
     private let sumHeight: CGFloat = 32
     private let tableHeight: CGFloat = 200
     
-    private var playerNames : [ String ] { history.playerNames }
+    var numberOfColumms: Int { GlobalSettings.playerNames.count }
+    private var playerNames : [ String ] { GlobalSettings.playerNames }
     private var namesView: [ Text ] { playerNames.map { Text($0) } }
 
     private var sumView: [ Text ] { history.flatSums.map { Text("\($0)") } }

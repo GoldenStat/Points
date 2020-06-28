@@ -74,6 +74,16 @@ class GameSettings: ObservableObject {
         history.save(state: GameState(players: players.data))
         timer?.invalidate()
     }
+    
+    /// updates the players with score from current state
+    func updatePlayersWithCurrentState() {
+        if history.currentPlayers.isEmpty {
+            // set all to zero
+            players = Players(names: GlobalSettings.playerNames)
+        } else {
+            players.data = history.currentPlayers
+        }
+    }
 
 }
 

@@ -14,6 +14,7 @@ struct ContentView: View {
     // MARK: Change Appearance
     @State var navigationBarIsHidden = true
     @State private var settingsEditorIsShown = false
+    @State private var needsUpdate = false
     
     var body: some View {
         NavigationView {
@@ -29,6 +30,9 @@ struct ContentView: View {
             .navigationBarItems(leading: HStack {
                 Button() {
                     settings.history.undo()
+                    settings.updatePlayersWithCurrentState()
+                    needsUpdate.toggle()
+                    
                 } label: {
                     Image(systemName: "arrow.uturn.left")
                         .padding()
@@ -36,6 +40,8 @@ struct ContentView: View {
 //                .disabled(!settings.history.canUndo)
                 Button() {
                     settings.history.redo()
+                    settings.updatePlayersWithCurrentState()
+                    needsUpdate.toggle()
                 } label: {
                     Image(systemName: "arrow.uturn.right")
                         .padding()

@@ -13,7 +13,7 @@ import Foundation
 class History : ObservableObject {
     @Published var states = [GameState]() {
         didSet {
-            canUndo = states.count > 1
+            canUndo = states.count > 0
             canRedo = redoStack.count > 0
         }
     }

@@ -63,9 +63,17 @@ class Players: ObservableObject {
     var items : [Player] = []
     
     /// TODO: implement Property wrappers to simplify this
-    var names: [String] { return items.map {$0.name} }
-    var scores: [Score] { return items.map {$0.score} }
-    var data: [PlayerData] { return items.map {$0.data} }
+    var names: [String] { items.map {$0.name} }
+    var scores: [Score] { items.map {$0.score} }
+    var data: [PlayerData] {
+        get { items.map {$0.data} }
+        set { // updates the players with the given data
+            let maxIndex = min(names.count, newValue.count)
+            for i in 0 ..< maxIndex {
+                items[i].score = newValue[i].score
+            }
+        }
+    }
     
     func saveScore() {
         _ = items.map { $0.score.save() }

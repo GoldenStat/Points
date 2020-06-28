@@ -22,4 +22,5 @@ struct GameState : Codable, Identifiable, Equatable {
         self.players = players
         self.scores = players.map { $0.score }
     }
+    
 }
