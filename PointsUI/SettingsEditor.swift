@@ -19,6 +19,7 @@ struct SettingsEditor: View {
     @State var names : [ String ] = []
     @State var maxGames: String = ""
     @State var maxPoints: String = ""
+    @State var updateTime: Double = 0.0
     
     var body: some View {
         NavigationView {
@@ -49,6 +50,12 @@ struct SettingsEditor: View {
                             TextField("Rounds", text: $maxGames)
                                 .keyboardType(.numberPad)
                         }
+                        HStack {
+                            Text("Update Time:")
+                            Spacer()
+                            Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
+                            Text("\(updateTime, specifier: "%.1f")")
+                        }
                     }
                 }
                 
@@ -68,11 +75,14 @@ struct SettingsEditor: View {
                 GlobalSettings.playerNames = names
                 GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
                 GlobalSettings.scorePerGame = Int(maxPoints) ?? GlobalSettings.scorePerGame
+                GlobalSettings.updateTime = TimeInterval(updateTime)
+                settings.updateSettings()
             }
             .onAppear() {
                 names = GlobalSettings.playerNames
                 maxGames = String(GlobalSettings.maxGames)
                 maxPoints = String(GlobalSettings.scorePerGame)
+                updateTime = Double(GlobalSettings.updateTime)
             }
             .environment(\.editMode, $editMode)
         }

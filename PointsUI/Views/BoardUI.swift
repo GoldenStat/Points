@@ -13,8 +13,6 @@ struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var players: Players
         
-    var numberOfPlayers : Int { GlobalSettings.playerNames.count }
-
     // MARK: replace magic numbers!
 //    var columns = Array<GridItem>.init(repeating: GridItem(.flexible(minimum: 80, maximum: 160)()), count: Int(settings.numberOfPlayers / 2))
 //    var rows = Array<GridItem>.init(repeating: GridItem(.flexible(minimum: 320, maximum: 4*160)), count: 2)
@@ -45,8 +43,9 @@ struct BoardUI: View {
     
     // MARK: local variables -- make columns depend on number of players and device orientation
     // MARK: also inspect new LazyGridView option
+    private var numberOfPlayers : Int { GlobalSettings.playerNames.count }
     private var maxGames : Int { GlobalSettings.maxGames }
-    private let columns = 2
+    private var columns : Int { Int(numberOfPlayers / 2) }
 
 }
     

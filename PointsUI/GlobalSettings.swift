@@ -39,9 +39,10 @@ struct UserDefault<T> {
 /// - playerNames: Who is playing
 ///
 enum GlobalSettings {
+    @UserDefault(key: "UpdateTime", defaultValue: 5) static var updateTime: TimeInterval
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
-    @UserDefault(key: "PlayerNames", defaultValue: [ "Alexander", "Lili", "Villa" ])
+    @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
         static var playerNames: [ String ]
 }
 
@@ -50,6 +51,9 @@ class GameSettings: ObservableObject {
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
         
+    let maxPlayers = 3
+    let minPlayers = 2
+    
     static let name = "Truco Points"
 
     var numberOfPlayers: Int { players.items.count }
@@ -75,6 +79,7 @@ class GameSettings: ObservableObject {
     func updateSettings() {
         players = Players(names: GlobalSettings.playerNames)
         history = History()
+        updateTime = GlobalSettings.updateTime
     }
     
     init() {
@@ -103,7 +108,7 @@ class GameSettings: ObservableObject {
     
     // MARK: Timer
     private var timer : Timer?
-    private var updateTime: TimeInterval = 5.0
+    private var updateTime: TimeInterval = GlobalSettings.updateTime
     
     func startTimer() {
         timer?.invalidate()
