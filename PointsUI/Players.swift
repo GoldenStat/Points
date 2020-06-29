@@ -22,7 +22,7 @@ struct PlayerData: Codable, Identifiable, Equatable {
     }
 }
 
-class Player: ObservableObject {
+class Player: ObservableObject, Identifiable {
 
     var id = UUID()
     var name: String

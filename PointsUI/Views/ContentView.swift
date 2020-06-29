@@ -13,7 +13,6 @@ struct ContentView: View {
     
     // MARK: Change Appearance
     @State private var settingsEditorIsShown = false
-    @Environment(\.editMode) var editMode
     
     var body: some View {
         NavigationView {

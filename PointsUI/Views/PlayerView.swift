@@ -20,6 +20,7 @@ struct PlayerView: View, Identifiable {
     var body: some View {
         VStack {
             Text(name).font(.title)
+                .fixedSize()
             
             ScoreRow(score: score)
 
@@ -57,15 +58,16 @@ struct PlayerUI_Previews: PreviewProvider {
 
 
 struct ScoreRow: View {
+    @State var editMode: EditMode = .inactive
+
     let score: Score
     
     var body: some View {
         HStack {
-            Text("Puntos: \(score.value)")
-            if score.buffer > 0 {
-                Text(" + ")
-                Text("\(score.buffer)")
-            }
+            Text("Puntos: \(score.value)" +
+                    (score.buffer > 0 ? " + \(score.buffer)" : "")
+            )
         }
+        .fixedSize()
     }
 }

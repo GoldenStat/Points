@@ -46,16 +46,36 @@ struct ScoreBoxUI: View, Identifiable {
         return Box(score: thisBoxScore)
     }
     
+//    var boxes = (0 ..< ScoreBoxUI.numberOfBoxes).map { filledBox(at: $0) }
+//
+//    let columns : [ GridItem ] = [
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//    ]
+//
+//    let rows : [ GridItem ] = [
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//        GridItem(.adaptive(minimum: 80, maximum: 200)),
+//    ]
+    
     var body: some View {
-        VStack {    
-            FlowStack(columns: Self.columns, numItems: Self.numberOfBoxes) { index, colWidth in
-                self.filledBox(at: index)
-                    .padding()
-                    .frame(width: colWidth)
-                    .animation(.easeInOut(duration: .lineAnimationSpeed))
-            }.aspectRatio(0.7, contentMode: .fit)
-        }
+        //        LazyVGrid(columns: columns) {
+        //            LazyHGrid(rows: rows) {
+        
+        FlowStack(columns: ScoreBoxUI.columns,
+                  numItems: ScoreBoxUI.numberOfBoxes) { index, colWidth in
+            filledBox(at: index)
+                .padding()
+                .frame(width: colWidth)
+                .animation(.easeInOut(duration: .lineAnimationSpeed))
+        }.aspectRatio(ratio, contentMode: .fit)
+        //            }
+        //        }
     }
+    
+    private let ratio : CGFloat = 1.0 // 0.7
 }
 
 struct PlayerView_Previews: PreviewProvider {

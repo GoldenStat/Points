@@ -23,7 +23,7 @@ struct SettingsEditor: View {
     var body: some View {
         NavigationView {
             VStack {
-                List {
+                Form {
                     Section(header: Text("Players")) {
                         ForEach(names, id: \.self) { name in
                             if let index = names.firstIndex(of: name) {
@@ -33,6 +33,7 @@ struct SettingsEditor: View {
                         .onDelete() { indexSet in
                             names.remove(atOffsets: indexSet)
                         }
+                        .animation(.easeInOut)
                     }
                     
                     Section(header: Text("Game Settings")) {
@@ -59,7 +60,7 @@ struct SettingsEditor: View {
                 }
             }
             .navigationBarItems(
-                leading: Button() { names.insert("New Player", at: 0) }
+                leading: Button() { withAnimation(.easeInOut) { names.insert("New Player", at: 0) } }
                     label: { Image(systemName: "plus.circle").padding() },
                 trailing: EditButton()
             )
