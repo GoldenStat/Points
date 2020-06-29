@@ -12,7 +12,7 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var players: Players
-    
+        
     var numberOfPlayers : Int { players.items.count }
     
     var body: some View {

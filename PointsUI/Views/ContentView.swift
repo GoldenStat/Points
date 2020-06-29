@@ -17,11 +17,13 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
+            
             ZStack {
                 Color.lightMidnight
                     .edgesIgnoringSafeArea(.all)
-                
+                            
                 GameBoardView()
+                    .animation(.default)
             }
             .environmentObject(settings)
             .navigationBarTitle(Text(GameSettings.name))
@@ -47,12 +49,15 @@ struct ContentView: View {
                     Button() {
                         settingsEditorIsShown.toggle()
                     } label: {
-                        Text("Edit")
+                        Image(systemName: "gear")
                     }
                 })
             .sheet(isPresented: $settingsEditorIsShown) {
                 SettingsEditor()
                     .environmentObject(settings)
+                    .onDisappear {
+                        settings.updateSettings()
+                    }
             }
         }
     }

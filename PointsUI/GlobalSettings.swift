@@ -70,11 +70,15 @@ class GameSettings: ObservableObject {
     
     func resetPlayers() {
         GlobalSettings.playerNames = [ "Alexander", "Lili", "Villa" ]
-
+    }
+    
+    func updateSettings() {
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
     }
     
     init() {
-        resetPlayers()
+//        resetPlayers()
     }
     
     func addPlayer(named name: String) {

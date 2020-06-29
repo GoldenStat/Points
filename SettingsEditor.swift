@@ -35,11 +35,19 @@ struct SettingsEditor: View {
                         }
                     }
                     
-                    Section(header: Text("Other")) {
-                        TextField("Max Points", text: $maxPoints)
-                            .keyboardType(.numberPad)
-                        TextField("Rounds", text: $maxGames)
-                            .keyboardType(.numberPad)
+                    Section(header: Text("Game Settings")) {
+                        HStack {
+                            Text("Points:")
+                            Spacer()
+                            TextField("Max Points", text: $maxPoints)
+                                .keyboardType(.numberPad)
+                        }
+                        HStack {
+                            Text("Rounds:")
+                            Spacer()
+                            TextField("Rounds", text: $maxGames)
+                                .keyboardType(.numberPad)
+                        }
                     }
                 }
                 
@@ -50,7 +58,11 @@ struct SettingsEditor: View {
                         .padding()
                 }
             }
-            .navigationBarItems(trailing: EditButton())
+            .navigationBarItems(
+                leading: Button() { names.insert("New Player", at: 0) }
+                    label: { Image(systemName: "plus.circle").padding() },
+                trailing: EditButton()
+            )
             .onDisappear() {
                 GlobalSettings.playerNames = names
                 GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames

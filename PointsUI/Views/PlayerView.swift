@@ -12,7 +12,7 @@ struct PlayerView: View, Identifiable {
     @EnvironmentObject var settings: GameSettings
     
     @ObservedObject var player : Player
-    
+
     var id : PlayerData.ID { player.id }
     var name: String { player.name }
     var score: Score { player.score }
@@ -39,7 +39,9 @@ struct PlayerView: View, Identifiable {
             
             Spacer()
         }
+        .transition(.offset(offsetPoint))
     }
+    private let offsetPoint = CGSize(width: 1000, height: 200)
     private let cornerRadius : CGFloat = 16.0
     private let lineWidth : CGFloat = 1.5
 }
