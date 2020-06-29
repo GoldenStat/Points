@@ -10,16 +10,59 @@ import SwiftUI
 
 // MARK: -- TODO: create a view to change settings
 struct SettingsEditor: View {
-//    @Environment(\.colorScheme) var scheme
-//    @Environment(\.layoutDirection) var layout
-//    @Environment(\.undoManager) var undoManager
     @Environment(\.presentationMode) var presentationMode
-
     @EnvironmentObject var settings: GameSettings
-    @State var isShowing: Bool = false
+    
+    @State var editMode: EditMode = .inactive
+    
+    // MARK: things to edit
+    @State var names : [ String ] = []
+    @State var maxGames: String = ""
+    @State var maxPoints: String = ""
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            VStack {
+                List {
+                    Section(header: Text("Players")) {
+                        ForEach(names, id: \.self) { name in
+                            if let index = names.firstIndex(of: name) {
+                                TextField("Name", text: $names[index])
+                            }
+                        }
+                        .onDelete() { indexSet in
+                            names.remove(atOffsets: indexSet)
+                        }
+                    }
+                    
+                    Section(header: Text("Other")) {
+                        TextField("Max Points", text: $maxPoints)
+                            .keyboardType(.numberPad)
+                        TextField("Rounds", text: $maxGames)
+                            .keyboardType(.numberPad)
+                    }
+                }
+                
+                Button() {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Dismiss")
+                        .padding()
+                }
+            }
+            .navigationBarItems(trailing: EditButton())
+            .onDisappear() {
+                GlobalSettings.playerNames = names
+                GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
+                GlobalSettings.scorePerGame = Int(maxPoints) ?? GlobalSettings.scorePerGame
+            }
+            .onAppear() {
+                names = GlobalSettings.playerNames
+                maxGames = String(GlobalSettings.maxGames)
+                maxPoints = String(GlobalSettings.scorePerGame)
+            }
+            .environment(\.editMode, $editMode)
+        }
     }
 }
 

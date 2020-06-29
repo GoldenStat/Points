@@ -48,12 +48,11 @@ class History : ObservableObject {
     /// add game state to the history
     /// only save if the state is different from the last saved state
     func save(state: GameState) {
-//    guard let lastState = states.last,
-//          lastState != state else { return }
+//    guard states.last == nil ||
+//          states.last! != state else { return }
 //
 //    states.append(state)
 //    redoStack = [] // empty redoStack if we added a new game state
-//    canRedo = false
         if let lastState = states.last {
             if lastState != state {
                 redoStack = []

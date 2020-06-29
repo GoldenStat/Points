@@ -41,7 +41,7 @@ struct UserDefault<T> {
 enum GlobalSettings {
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
-    @UserDefault(key: "PlayerNames", defaultValue: [ "Alexander", "Lili", "Villa", "Sebastian" ])
+    @UserDefault(key: "PlayerNames", defaultValue: [ "Alexander", "Lili", "Villa" ])
         static var playerNames: [ String ]
 }
 
@@ -53,6 +53,49 @@ class GameSettings: ObservableObject {
     static let name = "Truco Points"
 
     var numberOfPlayers: Int { players.items.count }
+    
+    var playerNames: [ String ] {
+        players.names
+    }
+    
+    func player(named name: String) -> Player? {
+        players.items.filter {$0.name == name}.first
+    }
+    
+    func changePlayerName(from name: String, to newName: String) {
+        if let player = player(named: name) {
+            player.name = newName
+        }
+    }
+    
+    func resetPlayers() {
+        GlobalSettings.playerNames = [ "Alexander", "Lili", "Villa" ]
+
+    }
+    
+    init() {
+        resetPlayers()
+    }
+    
+    func addPlayer(named name: String) {
+        GlobalSettings.playerNames.append(name)
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+    }
+    
+    func removeLastPlayer() {
+        guard !GlobalSettings.playerNames.isEmpty else { return }
+        _ = GlobalSettings.playerNames.removeLast()
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+    }
+    
+    func removePlayer(named name: String) {
+        let newPlayerNames = GlobalSettings.playerNames.filter {$0 == name}
+        GlobalSettings.playerNames = newPlayerNames
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+    }
     
     // MARK: Timer
     private var timer : Timer?

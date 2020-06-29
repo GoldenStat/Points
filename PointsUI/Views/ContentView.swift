@@ -12,9 +12,8 @@ struct ContentView: View {
     @ObservedObject var settings = GameSettings()
     
     // MARK: Change Appearance
-    @State var navigationBarIsHidden = true
     @State private var settingsEditorIsShown = false
-    @State private var needsUpdate = false
+    @Environment(\.editMode) var editMode
     
     var body: some View {
         NavigationView {
@@ -25,34 +24,35 @@ struct ContentView: View {
                 GameBoardView()
             }
             .environmentObject(settings)
-            .navigationBarTitle(GameSettings.name)
-            .navigationBarHidden(true)
-            .navigationBarItems(leading: HStack {
-                Button() {
-                    settings.history.undo()
-                    settings.updatePlayersWithCurrentState()
-                    needsUpdate.toggle()
-                    
-                } label: {
-                    Image(systemName: "arrow.uturn.left")
-                        .padding()
-                }
-//                .disabled(!settings.history.canUndo)
-                Button() {
-                    settings.history.redo()
-                    settings.updatePlayersWithCurrentState()
-                    needsUpdate.toggle()
-                } label: {
-                    Image(systemName: "arrow.uturn.right")
-                        .padding()
-                }
-//                .disabled(!settings.history.canRedo)
-            })
-            .onTapGesture(count: 2) {
-                navigationBarIsHidden.toggle()
-            }
+            .navigationBarTitle(Text(GameSettings.name))
+            .navigationBarItems(
+                leading: HStack {
+                    Button() {
+                        settings.history.undo()
+                        settings.updatePlayersWithCurrentState()
+                        
+                    } label: {
+                        Image(systemName: "arrow.uturn.left")
+                            .padding()
+                    }
+                    Button() {
+                        settings.history.redo()
+                        settings.updatePlayersWithCurrentState()
+                    } label: {
+                        Image(systemName: "arrow.uturn.right")
+                            .padding()
+                    }
+                },
+                trailing: HStack {
+                    Button() {
+                        settingsEditorIsShown.toggle()
+                    } label: {
+                        Text("Edit")
+                    }
+                })
             .sheet(isPresented: $settingsEditorIsShown) {
                 SettingsEditor()
+                    .environmentObject(settings)
             }
         }
     }

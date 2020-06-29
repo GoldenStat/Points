@@ -56,7 +56,7 @@ class Player: ObservableObject {
 
 /// the observable object to de- and encode the `Player` struct
 class Players: ObservableObject {
-
+    
     /// - Parameters:
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
@@ -65,24 +65,24 @@ class Players: ObservableObject {
     /// TODO: implement Property wrappers to simplify this
     var names: [String] { items.map {$0.name} }
     var scores: [Score] { items.map {$0.score} }
+    
+    // MARK: conversion
     var data: [PlayerData] {
         get { items.map {$0.data} }
         set { // updates the players with the given data
-            let maxIndex = min(names.count, newValue.count)
+            let maxIndex = Swift.min(names.count, newValue.count)
             for i in 0 ..< maxIndex {
                 items[i].score = newValue[i].score
             }
         }
     }
     
-    func saveScore() {
-        _ = items.map { $0.score.save() }
-    }
+    // MARK: update score for all players
+    func saveScore() { _ = items.map { $0.score.save() } }
     
-    subscript(index: Int) -> Player {
-        items[index]
-    }
+    subscript(index: Int) -> Player { items[index] }
     
+    // MARK: convenience functions
     /// convenience initiallizer - replaces all players with new structs with new names
     /// - Parameters:
     ///   - names: each name must be unique
