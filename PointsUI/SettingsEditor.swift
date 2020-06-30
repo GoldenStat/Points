@@ -90,22 +90,22 @@ struct SettingsEditor: View {
 }
 
 struct EditView : View {
-
+    
     var body: some View {
         // MARK: add more later
         VStack {
-            HistoryButtons()
             
             GlobalSettingsView()
-
+            
             PickNumberOfPlayers()
         }
+        .padding()
     }
 }
 
 struct HistoryButtons: View {
     @EnvironmentObject var settings: GameSettings
-
+    
     var body: some View {
         HStack {
             Button() { settings.undo() }
@@ -124,33 +124,32 @@ struct HistoryButtons: View {
 
 struct GlobalSettingsView: View {
     @EnvironmentObject var settings: GameSettings
-
+    
     // MARK: things to edit
     @State var names : [ String ] = []
     @State var maxGames: String = ""
     @State var maxPoints: String = ""
     @State var updateTime: Double = 0.0
-
+    
     var body: some View {
         Section(header: Text("Game Settings")) {
-            HStack {
-                Text("Points:")
-                Spacer()
-                TextField("Max Points", text: $maxPoints)
-                    .keyboardType(.numberPad)
+            VStack {
+                HStack {
+                    FieldWithBackground("Points:") {
+                        TextField("Max Points", text: $maxPoints)
+                    }
+                    
+                    FieldWithBackground("Rounds:") {
+                        TextField("Rounds", text: $maxGames)
+                    }
+                }
+                
+                FieldWithBackground("Update Time:") {
+                    Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
+                    Text("\(updateTime, specifier: "%.1f")")
+                }
             }
-            HStack {
-                Text("Rounds:")
-                Spacer()
-                TextField("Rounds", text: $maxGames)
-                    .keyboardType(.numberPad)
-            }
-            HStack {
-                Text("Update Time:")
-                Spacer()
-                Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
-                Text("\(updateTime, specifier: "%.1f")")
-            }
+            .keyboardType(.numberPad)
         }
         .onDisappear() {
             GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
@@ -163,7 +162,53 @@ struct GlobalSettingsView: View {
             maxPoints = String(GlobalSettings.scorePerGame)
             updateTime = Double(GlobalSettings.updateTime)
         }
+        
+    }
+}
 
+struct FieldWithBackground<Content: View>: View {
+    
+    var text: String
+    var content: Content
+    
+    init(_ text: String, @ViewBuilder content: () -> Content) {
+        self.text = text
+        self.content = content()
+    }
+    
+    var body: some View {
+        HStack {
+            Text(text)
+            Spacer()
+            content
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 5)
+                .fill(
+                    Color(.sRGB, white: 0.8, opacity: 0.2)
+                )
+        )
+    }
+    
+}
+
+struct PickNumberOfPlayers: View {
+    @EnvironmentObject var settings: GameSettings
+    @State var chosenPlayers: Int = 2
+    var allOptions = GameSettings.availablePlayers
+    
+    var body: some View {
+        
+        Picker("Jugadores", selection: $chosenPlayers) {
+            ForEach(allOptions, id: \.self) { (count: Int) in
+                Text("\(count)")
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .onDisappear() {
+            settings.chosenNumberOfPlayers = chosenPlayers
+        }
     }
 }
 

@@ -16,12 +16,9 @@ struct BoardUI: View {
     
     // MARK: replace magic numbers!
     var columns = Array<GridItem>.init(repeating: GridItem(.fixed(160)), count: 2)
-//    Int(settings.numberOfPlayers / 2))
     var rows = Array<GridItem>.init(repeating: GridItem(.fixed(4*160), alignment: .center), count: 1)
-//
+
     var body: some View {
-//        return lazyGridView()
-//        return flowView()
         lazyGridView()
     }
     

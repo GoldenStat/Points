@@ -20,9 +20,7 @@ struct PlayerView: View, Identifiable {
     var body: some View {
         VStack {
             
-            Text(player.name).font(.largeTitle).fontWeight(.bold)
-//            HeaderView(name: $player.name)
-            
+            Text(player.name).font(.largeTitle).fontWeight(.bold)            
             if showScore {
                 ScoreRow(score: score)
             }
@@ -43,7 +41,7 @@ struct PlayerView: View, Identifiable {
             
             Spacer()
         }
-        .transition(.offset(offsetPoint))
+        .transition(.slide)
     }
     
     // MARK: -- private variables

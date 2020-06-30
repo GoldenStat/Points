@@ -13,31 +13,32 @@ struct ContentView: View {
     
     // MARK: Change Appearance
     @State private var settingsEditorIsShown = false
+    @State private var settingsAreShown = false
     @Environment(\.editMode) var editMode
     
     var body: some View {
+        NavigationView {
+
             VStack {
                 
-                if editMode?.wrappedValue == .inactive {
+                if settingsAreShown {
                     EditView()
                 }
                 
                 ZStack {
-                    
                     Color.lightMidnight
                         .edgesIgnoringSafeArea(.all)
                     
                     GameBoardView()
                 }
-                
                 .animation(.default)
             }
             .environmentObject(settings)
             .navigationBarItems(
+                leading: HistoryButtons(),
                 trailing: HStack {
-                    EditButton()
                     Button() {
-                        settingsEditorIsShown.toggle()
+                        settingsAreShown.toggle()
                     } label: {
                         Image(systemName: "gear")
                     }
@@ -49,6 +50,7 @@ struct ContentView: View {
                         settings.updateSettings()
                     }
             }
+        }
     }
 }
 
