@@ -15,14 +15,18 @@ struct PlayerView: View, Identifiable {
     
     var id : PlayerData.ID { player.id }
     var score: Score { player.score }
+    var showScore = false
     
     var body: some View {
         VStack {
             
-            HeaderView(name: $player.name)
+            Text(player.name).font(.largeTitle).fontWeight(.bold)
+//            HeaderView(name: $player.name)
             
-            ScoreRow(score: score)
-
+            if showScore {
+                ScoreRow(score: score)
+            }
+            
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(Color.black, lineWidth: lineWidth)

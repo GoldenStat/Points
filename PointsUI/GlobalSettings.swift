@@ -42,8 +42,10 @@ enum GlobalSettings {
     @UserDefault(key: "UpdateTime", defaultValue: 5) static var updateTime: TimeInterval
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
+    @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
-        static var playerNames: [ String ]
+    static var playerNames : [String]
+
 }
 
 class GameSettings: ObservableObject {
@@ -52,8 +54,12 @@ class GameSettings: ObservableObject {
     @Published var history = History()
     
     var chosenNumberOfPlayers : Int {
-        get { GlobalSettings.playerNames.count }
-        set { players = Players(names: GameSettings.names(for: newValue)) }
+        get { GlobalSettings.chosenNumberOfPlayers }
+        set {
+            GlobalSettings.playerNames = GameSettings.names(for: newValue)
+            GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
+            updateSettings()
+        }
     }
 
     static let name = "Truco Points"
@@ -80,9 +86,9 @@ class GameSettings: ObservableObject {
         }
     }
     
-    init() {
-        GlobalSettings.playerNames = Self.names(for: 3)
-    }
+//    init() {
+//        GlobalSettings.playerNames = Self.names(for: 2)
+//    }
     
     var numberOfPlayers: Int { players.items.count }
     

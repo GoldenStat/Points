@@ -89,6 +89,17 @@ struct SettingsEditor: View {
     }
 }
 
+struct EditView : View {
+    @EnvironmentObject var settings: GameSettings
+    @State var editMode: EditMode = .inactive
+
+    var body: some View {
+        // MARK: add more later
+        PickNumberOfPlayers()
+    }
+}
+
+
 struct SettingsEditor_Previews: PreviewProvider {
     static var previews: some View {
         SettingsEditor()

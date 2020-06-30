@@ -13,13 +13,16 @@ struct ContentView: View {
     
     // MARK: Change Appearance
     @State private var settingsEditorIsShown = false
+    @Environment(\.editMode) var editMode
     
     var body: some View {
         NavigationView {
             
             VStack {
                 
-                PickNumberOfPlayers()
+                if editMode?.wrappedValue == .inactive {
+                    EditView()
+                }
                 
                 ZStack {
                     
@@ -32,7 +35,7 @@ struct ContentView: View {
                 .animation(.default)
             }
             .environmentObject(settings)
-            .navigationBarTitle(Text(GameSettings.name))
+//            .navigationBarTitle(Text(GameSettings.name))
             .navigationBarItems(
                 leading: HStack {
                     Button() { settings.undo() }
@@ -61,10 +64,10 @@ struct ContentView: View {
                         settings.updateSettings()
                     }
             }
+            
         }
     }
 }
-
 
 
 struct ContentView_Previews: PreviewProvider {

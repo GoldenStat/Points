@@ -13,7 +13,7 @@ struct PickNumberOfPlayers: View {
     
     var body: some View {
         Picker("Jugadores", selection: $settings.chosenNumberOfPlayers) {
-            ForEach(GameSettings.availablePlayers, id: \.self) { count in
+            ForEach(GameSettings.availablePlayers, id: \.self) { (count: Int) in
                 Text("\(count)")
             }
         }.pickerStyle(SegmentedPickerStyle())    }
