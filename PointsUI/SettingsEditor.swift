@@ -90,15 +90,82 @@ struct SettingsEditor: View {
 }
 
 struct EditView : View {
-    @EnvironmentObject var settings: GameSettings
-    @State var editMode: EditMode = .inactive
 
     var body: some View {
         // MARK: add more later
-        PickNumberOfPlayers()
+        VStack {
+            HistoryButtons()
+            
+            GlobalSettingsView()
+
+            PickNumberOfPlayers()
+        }
     }
 }
 
+struct HistoryButtons: View {
+    @EnvironmentObject var settings: GameSettings
+
+    var body: some View {
+        HStack {
+            Button() { settings.undo() }
+                label: {
+                    Image(systemName: "arrow.uturn.left")
+                        .padding()
+                }
+            Button() { settings.redo() }
+                label: {
+                    Image(systemName: "arrow.uturn.right")
+                        .padding()
+                }
+        }
+    }
+}
+
+struct GlobalSettingsView: View {
+    @EnvironmentObject var settings: GameSettings
+
+    // MARK: things to edit
+    @State var names : [ String ] = []
+    @State var maxGames: String = ""
+    @State var maxPoints: String = ""
+    @State var updateTime: Double = 0.0
+
+    var body: some View {
+        Section(header: Text("Game Settings")) {
+            HStack {
+                Text("Points:")
+                Spacer()
+                TextField("Max Points", text: $maxPoints)
+                    .keyboardType(.numberPad)
+            }
+            HStack {
+                Text("Rounds:")
+                Spacer()
+                TextField("Rounds", text: $maxGames)
+                    .keyboardType(.numberPad)
+            }
+            HStack {
+                Text("Update Time:")
+                Spacer()
+                Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
+                Text("\(updateTime, specifier: "%.1f")")
+            }
+        }
+        .onDisappear() {
+            GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
+            GlobalSettings.scorePerGame = Int(maxPoints) ?? GlobalSettings.scorePerGame
+            GlobalSettings.updateTime = TimeInterval(updateTime)
+            settings.updateSettings()
+        }
+        .onAppear() {
+            maxGames = String(GlobalSettings.maxGames)
+            maxPoints = String(GlobalSettings.scorePerGame)
+            updateTime = Double(GlobalSettings.updateTime)
+        }
+
+    }
+}
 
 struct SettingsEditor_Previews: PreviewProvider {
     static var previews: some View {

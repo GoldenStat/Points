@@ -16,8 +16,6 @@ struct ContentView: View {
     @Environment(\.editMode) var editMode
     
     var body: some View {
-        NavigationView {
-            
             VStack {
                 
                 if editMode?.wrappedValue == .inactive {
@@ -35,20 +33,7 @@ struct ContentView: View {
                 .animation(.default)
             }
             .environmentObject(settings)
-//            .navigationBarTitle(Text(GameSettings.name))
             .navigationBarItems(
-                leading: HStack {
-                    Button() { settings.undo() }
-                        label: {
-                            Image(systemName: "arrow.uturn.left")
-                                .padding()
-                        }
-                    Button() { settings.redo() }
-                        label: {
-                            Image(systemName: "arrow.uturn.right")
-                                .padding()
-                        }
-                },
                 trailing: HStack {
                     EditButton()
                     Button() {
@@ -64,8 +49,6 @@ struct ContentView: View {
                         settings.updateSettings()
                     }
             }
-            
-        }
     }
 }
 
