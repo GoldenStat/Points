@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension Double { static var lineAnimationSpeed = 0.2}
+extension Double { static var lineAnimationSpeed = 0.3}
 
 
 /// the UI with a collection of Boxes and maximum score
@@ -70,12 +70,10 @@ struct ScoreBoxUI: View, Identifiable {
                 .padding()
                 .frame(width: colWidth)
                 .animation(.easeInOut(duration: .lineAnimationSpeed))
-        }.aspectRatio(ratio, contentMode: .fit)
-        //            }
-        //        }
+        }.aspectRatio(ratio, contentMode: .fill)
     }
     
-    private let ratio : CGFloat = 1.0 // 0.7
+    private let ratio : CGFloat = 0.7
 }
 
 struct PlayerView_Previews: PreviewProvider {

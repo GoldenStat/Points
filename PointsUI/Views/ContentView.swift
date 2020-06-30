@@ -40,7 +40,7 @@ struct ContentView: View {
                     Button() {
                         settingsAreShown.toggle()
                     } label: {
-                        Image(systemName: "gear")
+                        settingsAreShown ? Image(systemName: "text.badge.checkmark") : Image(systemName: "gear")
                     }
                 })
             .sheet(isPresented: $settingsEditorIsShown) {

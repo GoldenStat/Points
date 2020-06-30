@@ -11,7 +11,6 @@ import SwiftUI
 struct PlayerView: View, Identifiable {
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
-    @State var deleteMe = false
     
     var id : PlayerData.ID { player.id }
     var score: Score { player.score }
@@ -20,7 +19,10 @@ struct PlayerView: View, Identifiable {
     var body: some View {
         VStack {
             
-            Text(player.name).font(.largeTitle).fontWeight(.bold)            
+            Text(player.name)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
             if showScore {
                 ScoreRow(score: score)
             }
@@ -30,18 +32,18 @@ struct PlayerView: View, Identifiable {
                     .stroke(Color.black, lineWidth: lineWidth)
                     .overlay(Emphasize(theme: .light) {
                         ScoreBoxUI(score: player.score)
+                            .padding()
                     })
                     .onTapGesture(perform: {
                         player.add(score: 1)
                         settings.startTimer()
-                    }
-                    )
+                    })
             }
             .padding(.horizontal)
             
             Spacer()
         }
-        .transition(.slide)
+        .transition(.opacity)
     }
     
     // MARK: -- private variables
@@ -50,19 +52,7 @@ struct PlayerView: View, Identifiable {
     private let lineWidth : CGFloat = 1.5
 }
 
-struct HeaderView: View {
-    @Binding var name: String
-    @State var editMode : EditMode = .inactive
-    
-    var body: some View {
-        
-        if editMode == .inactive {
-            return AnyView{ Text(name).font(.largeTitle).fontWeight(.bold) }
-        } else {
-            return AnyView{TextField("New Player", text: $name)}
-        }
-    }
-}
+
 
 
 struct PlayerUI_Previews: PreviewProvider {

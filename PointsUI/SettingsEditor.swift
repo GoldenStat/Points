@@ -94,9 +94,7 @@ struct EditView : View {
     var body: some View {
         // MARK: add more later
         VStack {
-            
             GlobalSettingsView()
-            
             PickNumberOfPlayers()
         }
         .padding()
@@ -132,30 +130,30 @@ struct GlobalSettingsView: View {
     @State var updateTime: Double = 0.0
     
     var body: some View {
-        Section(header: Text("Game Settings")) {
-            VStack {
-                HStack {
-                    FieldWithBackground("Points:") {
-                        TextField("Max Points", text: $maxPoints)
-                    }
-                    
-                    FieldWithBackground("Rounds:") {
-                        TextField("Rounds", text: $maxGames)
-                    }
+        VStack {
+            HStack {
+                FieldWithBackground("Points:") {
+                    TextField("Max Points", text: $maxPoints)
                 }
                 
-                FieldWithBackground("Update Time:") {
-                    Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
-                    Text("\(updateTime, specifier: "%.1f")")
+                FieldWithBackground("Rounds:") {
+                    TextField("Rounds", text: $maxGames)
                 }
             }
-            .keyboardType(.numberPad)
+            
+            FieldWithBackground("Update Time:") {
+                Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
+                Text("\(updateTime, specifier: "%.1f")")
+            }
         }
+        .keyboardType(.numberPad)
         .onDisappear() {
             GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
             GlobalSettings.scorePerGame = Int(maxPoints) ?? GlobalSettings.scorePerGame
             GlobalSettings.updateTime = TimeInterval(updateTime)
-            settings.updateSettings()
+            if settings.chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers {
+                settings.updateSettings()
+            }
         }
         .onAppear() {
             maxGames = String(GlobalSettings.maxGames)
@@ -195,8 +193,13 @@ struct FieldWithBackground<Content: View>: View {
 
 struct PickNumberOfPlayers: View {
     @EnvironmentObject var settings: GameSettings
-    @State var chosenPlayers: Int = 2
+    @State private var chosenPlayers: Int
     var allOptions = GameSettings.availablePlayers
+    
+    init() {
+        _chosenPlayers = State(wrappedValue: GlobalSettings.chosenNumberOfPlayers)
+        print("Init: \(chosenPlayers)")
+    }
     
     var body: some View {
         
@@ -207,7 +210,10 @@ struct PickNumberOfPlayers: View {
         }
         .pickerStyle(SegmentedPickerStyle())
         .onDisappear() {
-            settings.chosenNumberOfPlayers = chosenPlayers
+            if chosenPlayers != GlobalSettings.chosenNumberOfPlayers {
+                GlobalSettings.chosenNumberOfPlayers = chosenPlayers
+                settings.chosenNumberOfPlayers = chosenPlayers
+            }
         }
     }
 }

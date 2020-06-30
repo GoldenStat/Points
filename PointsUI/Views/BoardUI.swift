@@ -32,24 +32,12 @@ struct BoardUI: View {
             LazyVGrid(columns: columns) {
                 ForEach(players.items) { player in
                     PlayerView(player: player)
-                        .frame(width: 160, height: 280)
+                        .frame(minWidth: 180, minHeight: 240)
                 }
             }
         }
     }
     
-//    func gridView() -> some View {
-//        return VStack {
-//            ForEach(0 ..< rows) { row in
-//                HStack {
-//                    ForEach(0 ..< columns) { column in
-//                        PlayerView(player: players.items[ row * columns + column])
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
 //    func flowView() -> some View {
 //        FlowStack(columns: objects <= 2 ? 1 : 2,
 //                  numItems: objects,
