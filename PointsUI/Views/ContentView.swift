@@ -17,34 +17,37 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             
-            ZStack {
-                Color.lightMidnight
-                    .edgesIgnoringSafeArea(.all)
-                            
-                GameBoardView()
-                    .animation(.default)
+            VStack {
+                
+                PickNumberOfPlayers()
+                
+                ZStack {
+                    
+                    Color.lightMidnight
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    GameBoardView()
+                }
+                
+                .animation(.default)
             }
             .environmentObject(settings)
             .navigationBarTitle(Text(GameSettings.name))
             .navigationBarItems(
                 leading: HStack {
-                    Button() {
-                        settings.history.undo()
-                        settings.updatePlayersWithCurrentState()
-                        
-                    } label: {
-                        Image(systemName: "arrow.uturn.left")
-                            .padding()
-                    }
-                    Button() {
-                        settings.history.redo()
-                        settings.updatePlayersWithCurrentState()
-                    } label: {
-                        Image(systemName: "arrow.uturn.right")
-                            .padding()
-                    }
+                    Button() { settings.undo() }
+                        label: {
+                            Image(systemName: "arrow.uturn.left")
+                                .padding()
+                        }
+                    Button() { settings.redo() }
+                        label: {
+                            Image(systemName: "arrow.uturn.right")
+                                .padding()
+                        }
                 },
                 trailing: HStack {
+                    EditButton()
                     Button() {
                         settingsEditorIsShown.toggle()
                     } label: {
@@ -61,6 +64,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

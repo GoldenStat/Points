@@ -10,24 +10,23 @@ import SwiftUI
 
 struct PlayerView: View, Identifiable {
     @EnvironmentObject var settings: GameSettings
-    
     @ObservedObject var player : Player
-
+    @State var deleteMe = false
+    
     var id : PlayerData.ID { player.id }
-    var name: String { player.name }
     var score: Score { player.score }
     
     var body: some View {
         VStack {
-            Text(name).font(.title)
-                .fixedSize()
+            
+            HeaderView(name: $player.name)
             
             ScoreRow(score: score)
 
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(Color.black, lineWidth: lineWidth)
-                    .overlay( Emphasize(theme: .light) {
+                    .overlay(Emphasize(theme: .light) {
                         ScoreBoxUI(score: player.score)
                     })
                     .onTapGesture(perform: {
@@ -42,17 +41,34 @@ struct PlayerView: View, Identifiable {
         }
         .transition(.offset(offsetPoint))
     }
+    
+    // MARK: -- private variables
     private let offsetPoint = CGSize(width: 1000, height: 200)
     private let cornerRadius : CGFloat = 16.0
     private let lineWidth : CGFloat = 1.5
 }
+
+struct HeaderView: View {
+    @Binding var name: String
+    @State var editMode : EditMode = .inactive
+    
+    var body: some View {
+        
+        if editMode == .inactive {
+            return AnyView{ Text(name).font(.largeTitle).fontWeight(.bold) }
+        } else {
+            return AnyView{TextField("New Player", text: $name)}
+        }
+    }
+}
+
 
 struct PlayerUI_Previews: PreviewProvider {
     
     static var player = Player(name: "Alexander")
     
     static var previews: some View {
-            PlayerView(player: player)
+        PlayerView(player: player)
     }
 }
 

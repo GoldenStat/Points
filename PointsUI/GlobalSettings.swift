@@ -50,12 +50,40 @@ class GameSettings: ObservableObject {
     
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
-        
-    let maxPlayers = 3
-    let minPlayers = 2
     
-    static let name = "Truco Points"
+    var chosenNumberOfPlayers : Int {
+        get { GlobalSettings.playerNames.count }
+        set { players = Players(names: GameSettings.names(for: newValue)) }
+    }
 
+    static let name = "Truco Points"
+    
+    static let availablePlayers = [ 2, 3, 4, 6 ]
+
+    static func names(for numberOfPlayers: Int) -> [String] {
+        guard GameSettings.availablePlayers.contains(numberOfPlayers) else { return [] }
+        
+        let singlePlayers = [ "Yo", "Tu", "El" ]
+        let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
+        
+        switch numberOfPlayers {
+        case 2:
+            return [ singlePlayers[0], singlePlayers[1] ]
+        case 3:
+            return [ singlePlayers[0], singlePlayers[1], singlePlayers[2] ]
+        case 4:
+            return [ pairedPlayers[0], pairedPlayers[1] ]
+        case 6:
+            return [ pairedPlayers[0], pairedPlayers[1], pairedPlayers[2] ]
+        default:
+            return []
+        }
+    }
+    
+    init() {
+        GlobalSettings.playerNames = Self.names(for: 3)
+    }
+    
     var numberOfPlayers: Int { players.items.count }
     
     var playerNames: [ String ] {
@@ -71,21 +99,13 @@ class GameSettings: ObservableObject {
             player.name = newName
         }
     }
-    
-    func resetPlayers() {
-        GlobalSettings.playerNames = [ "Alexander", "Lili", "Villa" ]
-    }
-    
+        
     func updateSettings() {
         players = Players(names: GlobalSettings.playerNames)
         history = History()
         updateTime = GlobalSettings.updateTime
     }
-    
-    init() {
-//        resetPlayers()
-    }
-    
+        
     func addPlayer(named name: String) {
         GlobalSettings.playerNames.append(name)
         players = Players(names: GlobalSettings.playerNames)
@@ -106,6 +126,16 @@ class GameSettings: ObservableObject {
         history = History()
     }
     
+    func undo() {
+        history.undo()
+        updatePlayersWithCurrentState()
+    }
+    
+    func redo() {
+        history.redo()
+        updatePlayersWithCurrentState()
+    }
+
     // MARK: Timer
     private var timer : Timer?
     private var updateTime: TimeInterval = GlobalSettings.updateTime

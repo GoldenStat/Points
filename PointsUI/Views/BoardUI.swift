@@ -12,7 +12,7 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var players: Players
-        
+    
     // MARK: replace magic numbers!
 //    var columns = Array<GridItem>.init(repeating: GridItem(.flexible(minimum: 80, maximum: 160)()), count: Int(settings.numberOfPlayers / 2))
 //    var rows = Array<GridItem>.init(repeating: GridItem(.flexible(minimum: 320, maximum: 4*160)), count: 2)
@@ -45,7 +45,7 @@ struct BoardUI: View {
     // MARK: also inspect new LazyGridView option
     private var numberOfPlayers : Int { GlobalSettings.playerNames.count }
     private var maxGames : Int { GlobalSettings.maxGames }
-    private var columns : Int { Int(numberOfPlayers / 2) }
+    private var columns : Int { numberOfPlayers <= 2 ? 1 : 2 } // 1,2 -> 1; 3,4 -> 2
 
 }
     
