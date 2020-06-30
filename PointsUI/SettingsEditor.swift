@@ -132,16 +132,16 @@ struct GlobalSettingsView: View {
     var body: some View {
         VStack {
             HStack {
-                FieldWithBackground("Points:") {
-                    TextField("Max Points", text: $maxPoints)
+                FieldWithBackground("Puntos:") {
+                    TextField("Max Puntos", text: $maxPoints)
                 }
                 
-                FieldWithBackground("Rounds:") {
-                    TextField("Rounds", text: $maxGames)
+                FieldWithBackground("Manos:") {
+                    TextField("Max Manos", text: $maxGames)
                 }
             }
             
-            FieldWithBackground("Update Time:") {
+            FieldWithBackground("Animacion:") {
                 Slider(value: $updateTime, in: 0.5 ... 5.0, step: 0.1)
                 Text("\(updateTime, specifier: "%.1f")")
             }
@@ -180,7 +180,7 @@ struct FieldWithBackground<Content: View>: View {
             Spacer()
             content
         }
-        .padding()
+        .padding(.horizontal)
         .background(
             RoundedRectangle(cornerRadius: 5)
                 .fill(
