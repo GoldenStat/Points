@@ -56,8 +56,8 @@ class GameSettings: ObservableObject {
     var chosenNumberOfPlayers : Int {
         get { GlobalSettings.chosenNumberOfPlayers }
         set {
-            GlobalSettings.playerNames = GameSettings.names(for: newValue)
             GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
+            GlobalSettings.playerNames = GameSettings.names(for: newValue)
             updateSettings()
         }
     }

@@ -11,45 +11,49 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var settings = GameSettings()
     
-    // MARK: Change Appearance
     @State private var settingsEditorIsShown = false
-    @State private var settingsAreShown = false
-    @Environment(\.editMode) var editMode
     
     var body: some View {
         NavigationView {
-
+            
             VStack {
-                
-                if settingsAreShown {
-                    EditView()
-                }
                 
                 ZStack {
                     Color.lightMidnight
                         .edgesIgnoringSafeArea(.all)
                     
                     GameBoardView()
+                        .environmentObject(settings)
                 }
                 .animation(.default)
             }
-            .environmentObject(settings)
-            .navigationBarItems(
-                leading: HistoryButtons(),
-                trailing: HStack {
-                    Button() {
-                        settingsAreShown.toggle()
-                    } label: {
-                        settingsAreShown ? Image(systemName: "text.badge.checkmark") : Image(systemName: "gear")
-                    }
-                })
-            .sheet(isPresented: $settingsEditorIsShown) {
-                SettingsEditor()
-                    .environmentObject(settings)
-                    .onDisappear {
-                        settings.updateSettings()
-                    }
+            .navigationBarItems(leading: HistoryButtons())
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    SettingsButton()
+                        .environmentObject(settings)
+                }
             }
+        }
+    }
+}
+
+struct SettingsButton: View {
+    @EnvironmentObject var settings: GameSettings
+    
+    @State var isShown: Bool = false
+    
+    var body: some View {
+        Button() {
+            isShown.toggle()
+        } label: {
+            isShown ? Image(systemName: "text.badge.checkmark") : Image(systemName: "gear")
+        }
+        .popover(isPresented: $isShown) {
+            EditView()
+                .onDisappear() {
+                    settings.updateSettings()
+                }
         }
     }
 }

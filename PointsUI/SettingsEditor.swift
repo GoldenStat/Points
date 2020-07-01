@@ -90,12 +90,16 @@ struct SettingsEditor: View {
 }
 
 struct EditView : View {
-    
+    @Environment(\.presentationMode) var presentationMode
+
     var body: some View {
         // MARK: add more later
         VStack {
             GlobalSettingsView()
             PickNumberOfPlayers()
+            Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            }
         }
         .padding()
     }
@@ -151,9 +155,6 @@ struct GlobalSettingsView: View {
             GlobalSettings.maxGames = Int(maxGames) ?? GlobalSettings.maxGames
             GlobalSettings.scorePerGame = Int(maxPoints) ?? GlobalSettings.scorePerGame
             GlobalSettings.updateTime = TimeInterval(updateTime)
-            if settings.chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers {
-                settings.updateSettings()
-            }
         }
         .onAppear() {
             maxGames = String(GlobalSettings.maxGames)
@@ -164,6 +165,7 @@ struct GlobalSettingsView: View {
     }
 }
 
+/// only updates global settings
 struct FieldWithBackground<Content: View>: View {
     
     var text: String
@@ -177,34 +179,38 @@ struct FieldWithBackground<Content: View>: View {
     var body: some View {
         HStack {
             Text(text)
-            Spacer()
+            Spacer(minLength: minSpacing)
             content
         }
         .padding(.horizontal)
         .background(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(
-                    Color(.sRGB, white: 0.8, opacity: 0.2)
+                    Color(.sRGB, white: grayScale, opacity: opacity)
                 )
         )
     }
     
+    private let minSpacing: CGFloat = 20
+    private let cornerRadius: CGFloat = 5
+    private let grayScale: Double = 0.8
+    private let opacity: Double = 0.2
+    
 }
 
+/// only updates global settings
 struct PickNumberOfPlayers: View {
-    @EnvironmentObject var settings: GameSettings
     @State private var chosenPlayers: Int
-    var allOptions = GameSettings.availablePlayers
+    @EnvironmentObject var settings: GameSettings
     
     init() {
         _chosenPlayers = State(wrappedValue: GlobalSettings.chosenNumberOfPlayers)
-        print("Init: \(chosenPlayers)")
     }
     
     var body: some View {
         
         Picker("Jugadores", selection: $chosenPlayers) {
-            ForEach(allOptions, id: \.self) { (count: Int) in
+            ForEach(GameSettings.availablePlayers, id: \.self) { (count: Int) in
                 Text("\(count)")
             }
         }
