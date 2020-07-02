@@ -86,10 +86,6 @@ class GameSettings: ObservableObject {
         }
     }
     
-//    init() {
-//        GlobalSettings.playerNames = Self.names(for: 2)
-//    }
-    
     var numberOfPlayers: Int { players.items.count }
     
     var playerNames: [ String ] {
