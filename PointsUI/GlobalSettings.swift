@@ -61,6 +61,8 @@ class GameSettings: ObservableObject {
             updateSettings()
         }
     }
+    
+    var playerWon: Player?
 
     static let name = "Truco Points"
     
@@ -159,6 +161,8 @@ class GameSettings: ObservableObject {
         players.saveScore() // update all scores' buffer
         history.save(state: GameState(players: players.data))
         timer?.invalidate()
+        
+        playerWon = players.items.filter({ $0.score.value >= GlobalSettings.scorePerGame }).first
     }
     
     /// updates the players with score from current state

@@ -181,8 +181,8 @@ struct FieldWithBackground<Content: View>: View {
 
 /// only updates global settings
 struct PickNumberOfPlayers: View {
-    @State private var chosenPlayers: Int
     @EnvironmentObject var settings: GameSettings
+    @State private var chosenPlayers: Int
     
     init() {
         _chosenPlayers = State(wrappedValue: GlobalSettings.chosenNumberOfPlayers)
@@ -197,8 +197,7 @@ struct PickNumberOfPlayers: View {
         }
         .pickerStyle(SegmentedPickerStyle())
         .onDisappear() {
-            if chosenPlayers != GlobalSettings.chosenNumberOfPlayers {
-                GlobalSettings.chosenNumberOfPlayers = chosenPlayers
+            if chosenPlayers != settings.chosenNumberOfPlayers {
                 settings.chosenNumberOfPlayers = chosenPlayers
             }
         }

@@ -14,11 +14,13 @@ struct PlayerData: Codable, Identifiable, Equatable {
     var id = UUID()
     var name: String
     var score: Score
+    var games: Int = 0
     
     // when initializing a player his score has no buffer
-    init(name: String, points: Int) {
+    init(name: String, points: Int, games: Int) {
         self.name = name
         self.score = Score(points)
+        self.games = games
     }
 }
 
@@ -26,7 +28,7 @@ class Player: ObservableObject, Identifiable {
 
     var id = UUID()
     var name: String
-    
+    @Published var games: Int = 0
     @Published var score = Score(0) // this is why this needs to be a class
     
     func saveScore() {
@@ -42,6 +44,7 @@ class Player: ObservableObject, Identifiable {
     init(from data: PlayerData) {
         self.name = data.name
         self.score = data.score
+        self.games = data.games
     }
     
     init(name: String) {
@@ -49,7 +52,7 @@ class Player: ObservableObject, Identifiable {
     }
     
     var data: PlayerData {
-        PlayerData(name: name, points: score.value)
+        PlayerData(name: name, points: score.value, games: games)
     }
     
 }
@@ -73,6 +76,7 @@ class Players: ObservableObject {
             let maxIndex = Swift.min(names.count, newValue.count)
             for i in 0 ..< maxIndex {
                 items[i].score = newValue[i].score
+                items[i].games = newValue[i].games
             }
         }
     }

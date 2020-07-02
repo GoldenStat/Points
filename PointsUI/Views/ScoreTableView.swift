@@ -92,7 +92,7 @@ struct ScoreTableView_Previews: PreviewProvider {
         // add randonm points for every player
         for player in  state.players {
             let newScore = player.score.value + Int.random(in: 0...5)
-            let newPlayer = PlayerData(name: player.name, points: newScore)
+            let newPlayer = PlayerData(name: player.name, points: newScore, games: Int(1))
             players.append(newPlayer)
         }
         return GameState(players: players)
