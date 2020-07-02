@@ -105,25 +105,6 @@ struct EditView : View {
     }
 }
 
-struct HistoryButtons: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    var body: some View {
-        HStack {
-            Button() { settings.undo() }
-                label: {
-                    Image(systemName: "arrow.uturn.left")
-                        .padding()
-                }
-            Button() { settings.redo() }
-                label: {
-                    Image(systemName: "arrow.uturn.right")
-                        .padding()
-                }
-        }
-    }
-}
-
 struct GlobalSettingsView: View {
     @EnvironmentObject var settings: GameSettings
     

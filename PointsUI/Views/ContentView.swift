@@ -9,9 +9,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var settings = GameSettings()
-    
-    @State private var settingsEditorIsShown = false
+    @StateObject var settings : GameSettings = GameSettings()
+    var settingsEditorIsShown = false
     
     var body: some View {
         NavigationView {
@@ -27,13 +26,33 @@ struct ContentView: View {
                 }
                 .animation(.default)
             }
-            .navigationBarItems(leading: HistoryButtons())
+            .navigationBarItems(leading: HistoryButtons()
+                                    .environmentObject(settings))
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     SettingsButton()
                         .environmentObject(settings)
                 }
             }
+        }
+    }
+}
+
+struct HistoryButtons: View {
+    @EnvironmentObject var settings: GameSettings
+    
+    var body: some View {
+        HStack {
+            Button() { settings.undo() }
+                label: {
+                    Image(systemName: "arrow.uturn.left")
+                        .padding()
+                }
+            Button() { settings.redo() }
+                label: {
+                    Image(systemName: "arrow.uturn.right")
+                        .padding()
+                }
         }
     }
 }
@@ -61,6 +80,6 @@ struct SettingsButton: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(settings: GameSettings())
     }
 }
