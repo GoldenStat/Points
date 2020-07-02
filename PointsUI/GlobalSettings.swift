@@ -57,7 +57,7 @@ class GameSettings: ObservableObject {
         get { GlobalSettings.chosenNumberOfPlayers }
         set {
             GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
-            GlobalSettings.playerNames = GameSettings.names(for: newValue)
+            GlobalSettings.playerNames = names(for: newValue)
             updateSettings()
         }
     }
@@ -68,14 +68,39 @@ class GameSettings: ObservableObject {
         GlobalSettings.maxGames = 3
     }
     
+    @Published var maxGames: Int = GlobalSettings.maxGames
+    @Published var maxPoints: Int = GlobalSettings.scorePerGame
+    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
+
+    var maxGamesString: String {
+        get { String(maxGames) }
+        set { maxGames = Int(newValue) ?? GlobalSettings.maxGames
+            updateSettings()
+        }
+    }
+    
+    var maxPointsString: String {
+        get { String(maxPoints) }
+        set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame
+            updateSettings()
+        }
+    }
+    
+    var updateTimeIntervalString: String {
+        get { String(updateTime) }
+        set { updateTime = TimeInterval(newValue) ?? GlobalSettings.updateTime
+            updateSettings()
+        }
+    }
+    
     var playerWon: Player?
 
     static let name = "Truco Points"
     
-    static let availablePlayers = [ 2, 3, 4, 6 ]
+    let availablePlayers = [ 2, 3, 4, 6 ]
 
-    static func names(for numberOfPlayers: Int) -> [String] {
-        guard GameSettings.availablePlayers.contains(numberOfPlayers) else { return [] }
+    func names(for numberOfPlayers: Int) -> [String] {
+        guard availablePlayers.contains(numberOfPlayers) else { return [] }
         
         let singlePlayers = [ "Yo", "Tu", "El" ]
         let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
@@ -115,7 +140,9 @@ class GameSettings: ObservableObject {
             players = Players(names: GlobalSettings.playerNames)
             history = History()
         }
-        updateTime = GlobalSettings.updateTime
+        GlobalSettings.scorePerGame = maxPoints
+        GlobalSettings.maxGames = maxGames
+        GlobalSettings.updateTime = updateTime
     }
         
     func addPlayer(named name: String) {

@@ -39,6 +39,9 @@ struct MenuBar: View {
                 
                 Button() {
                     presentEditView.toggle()
+                    if !presentEditView {
+                        settings.updateSettings()
+                    }
                 } label: {
                     presentEditView ? Image(systemName: "chevron.compact.up") : Image(systemName: "chevron.compact.down")
                 }
