@@ -62,6 +62,12 @@ class GameSettings: ObservableObject {
         }
     }
     
+    init () {
+        chosenNumberOfPlayers = 3
+        GlobalSettings.scorePerGame = 24
+        GlobalSettings.maxGames = 3
+    }
+    
     var playerWon: Player?
 
     static let name = "Truco Points"

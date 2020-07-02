@@ -35,10 +35,12 @@ struct GlobalSettingsView: View {
             HStack {
                 FieldWithBackground("Puntos:") {
                     TextField("Max Puntos", text: $maxPoints)
+                        .padding(2)
                 }
                 
                 FieldWithBackground("Manos:") {
                     TextField("Max Manos", text: $maxGames)
+                        .padding(5)
                 }
             }
             
@@ -81,6 +83,8 @@ struct FieldWithBackground<Content: View>: View {
             Text(text)
             Spacer(minLength: minSpacing)
             content
+                .padding(.horizontal)
+
         }
         .padding(.horizontal)
         .background(

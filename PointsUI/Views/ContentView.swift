@@ -34,7 +34,9 @@ struct ContentView: View {
             }
         }
         .onTapGesture(count: 2) {
-            showMenuBar.toggle()
+            if !isEditing {
+                showMenuBar.toggle()
+            }
         }
         .animation(.default)
         .environmentObject(settings)

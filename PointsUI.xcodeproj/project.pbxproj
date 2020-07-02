@@ -86,6 +86,7 @@
 				419A44AB24475CE000EA91F3 /* ScoreTableView.swift */,
 				4173576324A507DA002C10B2 /* GameBoardView.swift */,
 				411DF22023607CD100A37C64 /* ContentView.swift */,
+				4173576524A509D6002C10B2 /* SettingsEditor.swift */,
 				418D8B8724AE2B06008A4A3E /* MenuBar.swift */,
 				418D8B8524AE19F7008A4A3E /* PlayerWon.swift */,
 			);
@@ -96,7 +97,6 @@
 			isa = PBXGroup;
 			children = (
 				41F114A8236A073F00C6314D /* GlobalSettings.swift */,
-				4173576524A509D6002C10B2 /* SettingsEditor.swift */,
 				4173575B24A3EA47002C10B2 /* ViewBuilder.swift */,
 				41DB1E1423E5C8B800E17CC8 /* Players.swift */,
 				41DB1E1623E5C8C900E17CC8 /* GameState.swift */,
