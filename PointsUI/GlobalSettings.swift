@@ -107,8 +107,10 @@ class GameSettings: ObservableObject {
     }
         
     func updateSettings() {
-        players = Players(names: GlobalSettings.playerNames)
-        history = History()
+        if (players.names != GlobalSettings.playerNames) {
+            players = Players(names: GlobalSettings.playerNames)
+            history = History()
+        }
         updateTime = GlobalSettings.updateTime
     }
         
