@@ -23,8 +23,6 @@ struct BoardUI: View {
     }
     
     var numberOfPlayers : Int { GlobalSettings.playerNames.count }
-//    var columns : Int {Int(numberOfPlayers <= 2 ? 1 : 2) }
-//    var rows : Int { Int(numberOfPlayers / columns) }
 
     @available(iOS 14.0, *)
     func lazyGridView() -> some View {
@@ -36,15 +34,7 @@ struct BoardUI: View {
                 }
             }
         }
-    }
-    
-//    func flowView() -> some View {
-//        FlowStack(columns: objects <= 2 ? 1 : 2,
-//                  numItems: objects,
-//                  alignment: .center) { index, colWidth in
-//            PlayerView(player: players.items[index])
-//        }
-//    }
+    }    
 }
 
 

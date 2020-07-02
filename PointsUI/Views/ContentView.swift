@@ -22,19 +22,18 @@ struct ContentView: View {
                         .edgesIgnoringSafeArea(.all)
                     
                     GameBoardView()
-                        .environmentObject(settings)
                 }
                 .animation(.default)
             }
-            .navigationBarItems(leading: HistoryButtons()
-                                    .environmentObject(settings))
+            .navigationBarItems(leading: HistoryButtons())
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     SettingsButton()
-                        .environmentObject(settings)
                 }
             }
         }
+        .environmentObject(settings)
+
     }
 }
 
