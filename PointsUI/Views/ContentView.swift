@@ -10,30 +10,37 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var settings : GameSettings = GameSettings()
-    var settingsEditorIsShown = false
+    @State var showMenuBar = false
     
     var body: some View {
-        NavigationView {
+        
+        ZStack {
+            Color.darkNoon
+                .edgesIgnoringSafeArea(.all)
             
             VStack {
-                
-                ZStack {
-                    Color.lightMidnight
-                        .edgesIgnoringSafeArea(.all)
-                    
-                    GameBoardView()
+                if showMenuBar {
+                    MenuBar()
+                        .transition(.move(edge: .top))
                 }
-                .animation(.default)
+                GameBoardView()
+                    .background(Color.darkNoon)
             }
-            .navigationBarItems(leading: HistoryButtons())
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    SettingsButton()
-                }
+            .onTapGesture(count: 2) {
+                showMenuBar.toggle()
             }
         }
+        .animation(.default)
         .environmentObject(settings)
+    }
+}
 
+struct MenuBar: View {
+    var body: some View {
+        HStack {
+            HistoryButtons()
+            SettingsButton()
+        }
     }
 }
 
@@ -72,6 +79,8 @@ struct SettingsButton: View {
                 .onDisappear() {
                     settings.updateSettings()
                 }
+                .environmentObject(settings)
+
         }
     }
 }

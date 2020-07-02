@@ -97,6 +97,7 @@ struct EditView : View {
         VStack {
             GlobalSettingsView()
             PickNumberOfPlayers()
+
             Button("Done") {
                 presentationMode.wrappedValue.dismiss()
             }
