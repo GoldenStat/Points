@@ -11,77 +11,33 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var settings : GameSettings = GameSettings()
     @State var showMenuBar = false
+    @State var isEditing = false
+    
+    let bgColor = Color.darkNoon
     
     var body: some View {
         
         ZStack {
-            Color.darkNoon
+            bgColor
                 .edgesIgnoringSafeArea(.all)
             
-            VStack {
+            ZStack {
+                GameBoardView()
+                    .blur(radius: isEditing ? 4.0 : 0.0 )
+                    .background(bgColor)
+
                 if showMenuBar {
-                    MenuBar()
+                    MenuBar(presentEditView: $isEditing)
                         .transition(.move(edge: .top))
                 }
-                GameBoardView()
-                    .background(Color.darkNoon)
+                
             }
-            .onTapGesture(count: 2) {
-                showMenuBar.toggle()
-            }
+        }
+        .onTapGesture(count: 2) {
+            showMenuBar.toggle()
         }
         .animation(.default)
         .environmentObject(settings)
-    }
-}
-
-struct MenuBar: View {
-    var body: some View {
-        HStack {
-            HistoryButtons()
-            SettingsButton()
-        }
-    }
-}
-
-struct HistoryButtons: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    var body: some View {
-        HStack {
-            Button() { settings.undo() }
-                label: {
-                    Image(systemName: "arrow.uturn.left")
-                        .padding()
-                }
-            Button() { settings.redo() }
-                label: {
-                    Image(systemName: "arrow.uturn.right")
-                        .padding()
-                }
-        }
-    }
-}
-
-struct SettingsButton: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    @State var isShown: Bool = false
-    
-    var body: some View {
-        Button() {
-            isShown.toggle()
-        } label: {
-            isShown ? Image(systemName: "text.badge.checkmark") : Image(systemName: "gear")
-        }
-        .popover(isPresented: $isShown) {
-            EditView()
-                .onDisappear() {
-                    settings.updateSettings()
-                }
-                .environmentObject(settings)
-
-        }
     }
 }
 
