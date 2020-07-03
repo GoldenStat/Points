@@ -20,13 +20,23 @@ struct MenuBar: View {
                             Image(systemName: "arrow.uturn.left")
                                 .padding()
                         }
+                        .disabled(!settings.history.canUndo)
                     Button() { settings.redo() }
                         label: {
                             Image(systemName: "arrow.uturn.right")
                                 .padding()
                         }
-                    
+                        .disabled(!settings.history.canRedo)
+
                     Spacer()
+                    
+                    Button() {
+                        showInfo.toggle()
+                    } label: {
+                        Image(systemName:
+                            "info.circle")
+                            .padding()
+                    }
                     
                 }
                 
@@ -39,43 +49,44 @@ struct MenuBar: View {
                     presentEditView ? Image(systemName: "chevron.compact.up") : Image(systemName: "chevron.compact.down")
                 }
                 .font(.largeTitle)
+                .foregroundColor(.gray)
+
                 
             }
-            .foregroundColor(.gray)
             .background(Color.darkNoon
                             .edgesIgnoringSafeArea(.top)
             )
+            
+            Divider()
             
             EditView()
                 .background(Color.darkNoon)
                 .offset(x: 0, y: editViewOffset)
                 .animation(.default)
+                .opacity(presentEditView ? 1.0 : 0.0)
                 .zIndex(-1) // let it scroll down from 'behind' the menu bar
             
             Spacer()
-            
         }
         // now, create an 'invisible' background that handles doubletaps
         .background(presentEditView ? backgroundAlmostInvisible : backgroundNotRespondigToClicks)
-        .onTapGesture() {
+        .onTapGesture(count: 2) {
             presentEditView = false
         }
-        
-        
+        .popover(isPresented: $showInfo) {
+            InfoView()
+        }
     }
+
+    // MARK: present Info
+    @State var showInfo: Bool = false
     
     // MARK: handle EditView appearance
-    @Binding var presentEditView: Bool
+    @State var presentEditView: Bool = false
     var editViewOffset: CGFloat { presentEditView ? endOffset : startOffset }
     
     let startOffset: CGFloat = -200 // height + safe area
-    let endOffset: CGFloat = 0
+    let endOffset: CGFloat = -10 // safe area?
     let backgroundAlmostInvisible = Color.white.opacity(0.01)
     let backgroundNotRespondigToClicks: Color = Color.clear
-}
-
-struct MenuBar_Previews: PreviewProvider {
-    static var previews: some View {
-        MenuBar(presentEditView: .constant(true))
-    }
 }

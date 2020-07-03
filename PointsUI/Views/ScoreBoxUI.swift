@@ -12,27 +12,43 @@ extension Double { static var lineAnimationSpeed = 0.3}
 
 
 /// the UI with a collection of Boxes and maximum score
-struct ScoreBoxUI: View, Identifiable {
+struct ScoreBoxUI: View {
+    @EnvironmentObject var settings: GameSettings
     
     let id = UUID()
     
     var score: Score
-    
-    static let maxScore = GlobalSettings.scorePerGame
-    static let columns = 2
-    static let linesPerBox = Int(Box.maxLength)
-    
-    static var numberOfBoxes : Int { get {
-        let overlay = Self.maxScore % Self.linesPerBox
-        let ratio = Self.maxScore / Self.linesPerBox
+        
+    var numberOfBoxes : Int { get {
+        let overlay = maxScore % linesPerBox
+        let ratio = maxScore / linesPerBox
         return ratio + (overlay > 0 ? 1 : 0)
         } }
-        
+    
+    var body: some View {
+        FlowStack(columns: columns,
+                  numItems: numberOfBoxes) { index, colWidth in
+            filledBox(at: index)
+                .padding()
+                .frame(width: colWidth)
+                .animation(.easeInOut(duration: .lineAnimationSpeed))
+                .aspectRatio(ratio, contentMode: .fit)
+        }
+    }
+    
+    // MARK: -- constants
+    var maxScore : Int { settings.maxPoints } // depends on game settings
+    
+    private let ratio : CGFloat = 1.0
+    private let columns = 2 // make variable?
+    private let linesPerBox = Int(Box.maxLength) // depends on how many points a Box struct can hold
+
+    // MARK: -- calculate points for each box
     private func filledBox(at index: Int) -> Box {
         // count points and buffer points to what should be in this box
         
-        let start = index * Self.linesPerBox
-        let end = start + Self.linesPerBox
+        let start = index * linesPerBox
+        let end = start + linesPerBox
         var thisBoxScore = Score()
         
         for point in start ... end {
@@ -45,41 +61,12 @@ struct ScoreBoxUI: View, Identifiable {
         
         return Box(score: thisBoxScore)
     }
-    
-//    var boxes = (0 ..< ScoreBoxUI.numberOfBoxes).map { filledBox(at: $0) }
-//
-//    let columns : [ GridItem ] = [
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//    ]
-//
-//    let rows : [ GridItem ] = [
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//        GridItem(.adaptive(minimum: 80, maximum: 200)),
-//    ]
-    
-    var body: some View {
-        //        LazyVGrid(columns: columns) {
-        //            LazyHGrid(rows: rows) {
-        
-        FlowStack(columns: ScoreBoxUI.columns,
-                  numItems: ScoreBoxUI.numberOfBoxes) { index, colWidth in
-            filledBox(at: index)
-                .padding()
-                .frame(width: colWidth)
-                .animation(.easeInOut(duration: .lineAnimationSpeed))
-        }.aspectRatio(ratio, contentMode: .fill)
-    }
-    
-    private let ratio : CGFloat = 0.7
 }
 
 struct PlayerView_Previews: PreviewProvider {
     
     static func reroll(max value: Int) -> Score {
-        let points: Int = max(0,min(value, ScoreBoxUI.maxScore))
+        let points: Int = max(0,min(value, GlobalSettings.scorePerGame))
         return Score(Int.random(in: 0 ... points))
     }
     
