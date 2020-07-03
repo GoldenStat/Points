@@ -28,15 +28,13 @@ struct ContentView: View {
 
                 if showMenuBar {
                     MenuBar()
-//                        .transition(.move(edge: .top))
+                        .transition(.move(edge: .top))
                 }
                 
             }
         }
         .onTapGesture(count: 2) {
-//            if !isEditing {
-                showMenuBar.toggle()
-//            }
+            showMenuBar.toggle()
         }
         .animation(.default)
         .environmentObject(settings)
