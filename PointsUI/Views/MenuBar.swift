@@ -20,13 +20,13 @@ struct MenuBar: View {
                             Image(systemName: "arrow.uturn.left")
                                 .padding()
                         }
-                        .disabled(!settings.history.canUndo)
+                        .disabled(!settings.canUndo)
                     Button() { settings.redo() }
                         label: {
                             Image(systemName: "arrow.uturn.right")
                                 .padding()
                         }
-                        .disabled(!settings.history.canRedo)
+                        .disabled(!settings.canRedo)
 
                     Spacer()
                     
