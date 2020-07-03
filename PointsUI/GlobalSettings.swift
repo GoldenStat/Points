@@ -52,7 +52,11 @@ class GameSettings: ObservableObject {
     
     @Published var players = Players(names: GlobalSettings.playerNames)
     @Published var history = History()
-    
+    @Published var maxGames: Int = GlobalSettings.maxGames
+    @Published var maxPoints: Int = GlobalSettings.scorePerGame
+    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
+    @Published var playerWon: Player?
+
     var chosenNumberOfPlayers : Int {
         get { GlobalSettings.chosenNumberOfPlayers }
         set {
@@ -68,9 +72,6 @@ class GameSettings: ObservableObject {
         GlobalSettings.maxGames = 3
     }
     
-    @Published var maxGames: Int = GlobalSettings.maxGames
-    @Published var maxPoints: Int = GlobalSettings.scorePerGame
-    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
 
     var maxGamesString: String {
         get { String(maxGames) }
@@ -93,11 +94,22 @@ class GameSettings: ObservableObject {
         }
     }
     
-    var playerWon: Player?
-
+    // MARK: constant data for this class
     static let name = "Truco Points"
-    
     let availablePlayers = [ 2, 3, 4, 6 ]
+            
+    func updateSettings() {
+        if (players.names != GlobalSettings.playerNames) {
+            players = Players(names: GlobalSettings.playerNames)
+            history = History()
+        }
+        GlobalSettings.scorePerGame = maxPoints
+        GlobalSettings.maxGames = maxGames
+        GlobalSettings.updateTime = updateTime
+    }
+        
+    // MARK: control player data
+    var numberOfPlayers: Int { players.items.count }
 
     func names(for numberOfPlayers: Int) -> [String] {
         guard availablePlayers.contains(numberOfPlayers) else { return [] }
@@ -118,12 +130,8 @@ class GameSettings: ObservableObject {
             return []
         }
     }
-    
-    var numberOfPlayers: Int { players.items.count }
-    
-    var playerNames: [ String ] {
-        players.names
-    }
+
+    var playerNames: [ String ] { players.names }
     
     func player(named name: String) -> Player? {
         players.items.filter {$0.name == name}.first
@@ -134,17 +142,7 @@ class GameSettings: ObservableObject {
             player.name = newName
         }
     }
-        
-    func updateSettings() {
-        if (players.names != GlobalSettings.playerNames) {
-            players = Players(names: GlobalSettings.playerNames)
-            history = History()
-        }
-        GlobalSettings.scorePerGame = maxPoints
-        GlobalSettings.maxGames = maxGames
-        GlobalSettings.updateTime = updateTime
-    }
-        
+
     func addPlayer(named name: String) {
         GlobalSettings.playerNames.append(name)
         players = Players(names: GlobalSettings.playerNames)
@@ -165,6 +163,7 @@ class GameSettings: ObservableObject {
         history = History()
     }
     
+    // MARK: History functions
     func undo() {
         history.undo()
         updatePlayersWithCurrentState()

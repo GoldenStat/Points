@@ -30,7 +30,7 @@ struct BoardUI: View {
             LazyVGrid(columns: columns) {
                 ForEach(players.items) { player in
                     PlayerView(player: player)
-                        .frame(minWidth: 180, minHeight: 240)
+                        .frame(minWidth: 180, minHeight: 240, maxHeight: 400)
                 }
             }
         }

@@ -11,13 +11,6 @@ import SwiftUI
 struct MenuBar: View {
     @EnvironmentObject var settings: GameSettings
     
-    @Binding var presentEditView: Bool
-    
-    var editViewOffset: CGFloat { presentEditView ? endOffset : startOffset }
-    
-    let startOffset: CGFloat = -200 // height + safe area
-    let endOffset: CGFloat = 0
-    
     var body: some View {
         VStack {
             ZStack {
@@ -46,30 +39,39 @@ struct MenuBar: View {
                     presentEditView ? Image(systemName: "chevron.compact.up") : Image(systemName: "chevron.compact.down")
                 }
                 .font(.largeTitle)
-
+                
             }
             .foregroundColor(.gray)
             .background(Color.darkNoon
                             .edgesIgnoringSafeArea(.top)
-)
-
-
-//            if presentEditView {
-                EditView()
-                    .background(Color.darkNoon)
-                    .offset(x: 0, y: editViewOffset)
-                    .animation(.default)
-                    .onDisappear() {
-                        settings.updateSettings()
-                    }
-                    .zIndex(-1)
-
-//            }
+            )
+            
+            EditView()
+                .background(Color.darkNoon)
+                .offset(x: 0, y: editViewOffset)
+                .animation(.default)
+                .zIndex(-1) // let it scroll down from 'behind' the menu bar
+            
             Spacer()
-
+            
         }
-
+        // now, create an 'invisible' background that handles doubletaps
+        .background(presentEditView ? backgroundAlmostInvisible : backgroundNotRespondigToClicks)
+        .onTapGesture() {
+            presentEditView = false
+        }
+        
+        
     }
+    
+    // MARK: handle EditView appearance
+    @Binding var presentEditView: Bool
+    var editViewOffset: CGFloat { presentEditView ? endOffset : startOffset }
+    
+    let startOffset: CGFloat = -200 // height + safe area
+    let endOffset: CGFloat = 0
+    let backgroundAlmostInvisible = Color.white.opacity(0.01)
+    let backgroundNotRespondigToClicks: Color = Color.clear
 }
 
 struct MenuBar_Previews: PreviewProvider {
