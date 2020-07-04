@@ -14,13 +14,13 @@ struct PlayerData: Codable, Identifiable, Equatable {
     var id = UUID()
     var name: String
     var score: Score
-    var games: Int = 0
+    var gamesWon: Int = 0
     
     // when initializing a player his score has no buffer
     init(name: String, points: Int, games: Int) {
         self.name = name
         self.score = Score(points)
-        self.games = games
+        self.gamesWon = games
     }
 }
 
@@ -44,7 +44,7 @@ class Player: ObservableObject, Identifiable {
     init(from data: PlayerData) {
         self.name = data.name
         self.score = data.score
-        self.games = data.games
+        self.games = data.gamesWon
     }
     
     init(name: String) {
@@ -76,7 +76,7 @@ class Players: ObservableObject {
             let maxIndex = Swift.min(names.count, newValue.count)
             for i in 0 ..< maxIndex {
                 items[i].score = newValue[i].score
-                items[i].games = newValue[i].games
+                items[i].games = newValue[i].gamesWon
             }
         }
     }

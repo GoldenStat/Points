@@ -21,25 +21,21 @@ struct PlayerView: View, Identifiable {
             
             Text(player.name)
                 .font(.title)
-//                .fontWeight(.bold)
             
             if showScore {
                 ScoreRow(score: score)
             }
             
-//            ZStack {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.black, lineWidth: lineWidth)
-                    .overlay(Emphasize(theme: .light) {
-                        ScoreBoxUI(score: player.score)
-                    })
-                    .onTapGesture(perform: {
-                        player.add(score: 1)
-                        settings.startTimer()
-                    })
-                    .aspectRatio(scoreBoardRatio, contentMode: .fit)
-//            }
-            .padding(.horizontal)
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .overlay(Emphasize(theme: .light) {
+                    ScoreBoxUI(score: player.score)
+                })
+                .onTapGesture(perform: {
+                    player.add(score: 1)
+                    settings.startTimer()
+                })
+                .aspectRatio(scoreBoardRatio, contentMode: .fit)
+                .padding(.horizontal)
             
             Spacer()
         }

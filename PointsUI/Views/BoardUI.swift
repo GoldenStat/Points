@@ -11,37 +11,43 @@ import SwiftUI
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
-    @ObservedObject var players: Players
-    var objects : Int { players.items.count }
+    @Environment(\.horizontalSizeClass) var hSizeClass
     
-    // MARK: replace magic numbers!
-    var columns = Array<GridItem>.init(repeating: GridItem(.fixed(160)), count: 2)
-    var rows = Array<GridItem>.init(repeating: GridItem(.fixed(4*160), alignment: .center), count: 1)
-
-    var body: some View {
-        lazyGridView()
+    var objects : [Player] { settings.players.items }
+    let minAmount: CGFloat = 200
+    
+    /// working in iPhone 11 Pro Max in all configurations but .compact, 3 players
+    var gridItems: [GridItem] {
+        switch hSizeClass {
+        case .compact:
+            if objects.count == 2 {
+                return [
+                    GridItem(.adaptive(minimum: minAmount)),
+                    GridItem(.adaptive(minimum: minAmount)),
+                ]
+            }
+            // two columns with three objects
+            return [
+                GridItem(.adaptive(minimum: minAmount)),
+                GridItem(.adaptive(minimum: minAmount)),
+            ]
+        case .regular:
+//            return Array<GridItem>.init(repeating: GridItem(.flexible(minimum: minAmount)), count: objects.count)
+            return [ GridItem(.adaptive(minimum: minAmount)) ]
+        default:
+            return [
+                GridItem(.adaptive(minimum: minAmount))
+            ]
+        }
     }
     
-    var numberOfPlayers : Int { GlobalSettings.playerNames.count }
-
-    @available(iOS 14.0, *)
-    func lazyGridView() -> some View {
-        LazyHGrid(rows: rows) {
-            LazyVGrid(columns: columns) {
-                ForEach(players.items) { player in
-                    PlayerView(player: player)
-                        .frame(minWidth: 180, minHeight: 240, maxHeight: 400)
-                }
+    var body: some View {
+        LazyHGrid(rows: gridItems,
+                  alignment: .center) {
+            ForEach(objects) { player in
+                PlayerView(player: player)
             }
         }
-    }    
-}
-
-
-
-struct BoardUI_Previews: PreviewProvider {
-	static var previews: some View {
-        BoardUI(players: GameSettings().players)
     }
 }
 

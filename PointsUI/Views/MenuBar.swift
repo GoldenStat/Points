@@ -10,7 +10,8 @@ import SwiftUI
 
 struct MenuBar: View {
     @EnvironmentObject var settings: GameSettings
-    
+    @Binding var presentEditView: Bool // so the calling view can blur...
+
     var body: some View {
         VStack {
             ZStack {
@@ -82,7 +83,6 @@ struct MenuBar: View {
     @State var showInfo: Bool = false
     
     // MARK: handle EditView appearance
-    @State var presentEditView: Bool = false
     var editViewOffset: CGFloat { presentEditView ? endOffset : startOffset }
     
     let startOffset: CGFloat = -200 // height + safe area

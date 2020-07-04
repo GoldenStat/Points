@@ -25,9 +25,10 @@ struct ContentView: View {
                 GameBoardView()
                     .blur(radius: isEditing ? 4.0 : 0.0 )
                     .background(bgColor)
+                    .padding()
 
                 if showMenuBar {
-                    MenuBar()
+                    MenuBar(presentEditView: $isEditing)
                         .transition(.move(edge: .top))
                 }
                 
@@ -35,6 +36,7 @@ struct ContentView: View {
         }
         .onTapGesture(count: 2) {
             showMenuBar.toggle()
+            isEditing = false
         }
         .animation(.default)
         .environmentObject(settings)

@@ -17,11 +17,8 @@ class GameSettings: ObservableObject {
     @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
     @Published var playerWon: Player?
 
-    var chosenNumberOfPlayers : Int {
-        get { GlobalSettings.chosenNumberOfPlayers }
-        set {
-            GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
-            GlobalSettings.playerNames = names(for: newValue)
+    @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers {
+        didSet {
             updateSettings()
         }
     }
@@ -31,7 +28,6 @@ class GameSettings: ObservableObject {
         GlobalSettings.scorePerGame = 24
         GlobalSettings.maxGames = 3
     }
-    
 
     var maxGamesString: String {
         get { String(maxGames) }
@@ -59,10 +55,13 @@ class GameSettings: ObservableObject {
     let availablePlayers = [ 2, 3, 4, 6 ]
             
     func updateSettings() {
-        if (players.names != GlobalSettings.playerNames) {
-            players = Players(names: GlobalSettings.playerNames)
+        // if number of players changed, restart the game
+        if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
+            players = Players(names: names(for: chosenNumberOfPlayers))
             history = History()
         }
+        GlobalSettings.playerNames = players.names
+        GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTime = updateTime
