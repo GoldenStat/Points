@@ -13,7 +13,7 @@ struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.verticalSizeClass) var vSizeClass
-   
+    
     var objects : [Player] { settings.players.items }
     let minAmount: CGFloat = 200
     
@@ -24,26 +24,35 @@ struct BoardUI: View {
         GridItem(.adaptive(minimum: minAmount)),
         GridItem(.adaptive(minimum: minAmount)),
     ] }
-
+    
     var vGridItems : [GridItem] {
         objects.count == 2 ? oneColumn : twoColumns
     }
     
     @ViewBuilder var body: some View {
         if UIDevice.current.orientation.isLandscape {
+            // in landscape we always put all players in a row -- there is always enough space
             HStack(alignment: .center) {
-                ForEach(objects) { player in
-                    PlayerView(player: player)
-                }
+                playerViews()
             }
         } else {
-            // small device, not landscape
-            LazyVGrid(columns: vGridItems,
-                      alignment: .center) {
-                ForEach(objects) { player in
-                    PlayerView(player: player)
+            // not landscape
+            if objects.count == 2 {
+                VStack(alignment: .center) {
+                    playerViews()
+                }
+            } else {
+                LazyVGrid(columns: vGridItems,
+                          alignment: .center) {
+                    playerViews()
                 }
             }
+        }
+    }
+    
+    func playerViews() -> some View {
+        ForEach(objects) { player in
+            PlayerView(player: player)
         }
     }
 }
