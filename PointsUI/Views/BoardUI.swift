@@ -28,39 +28,18 @@ struct BoardUI: View {
     var vGridItems : [GridItem] {
         objects.count == 2 ? oneColumn : twoColumns
     }
-
+    
     @ViewBuilder var body: some View {
-        if hSizeClass == .compact {
-            // if the 'screen' is 'vertical'
-            if vSizeClass == .compact {
-                // we are on a small phone, not sure what to do...
-                if UIDevice.current.orientation.isLandscape {
-                    HStack(alignment: .center) {
-                        ForEach(objects) { player in
-                            PlayerView(player: player)
-                        }
-                    }
-                } else {
-                    // small device, not landscape
-                    LazyVGrid(columns: vGridItems,
-                              alignment: .center) {
-                        ForEach(objects) { player in
-                            PlayerView(player: player)
-                        }
-                    }
-                }
-                
-            } else {
-            LazyVGrid(columns: vGridItems,
-                      alignment: .center) {
+        if UIDevice.current.orientation.isLandscape {
+            HStack(alignment: .center) {
                 ForEach(objects) { player in
                     PlayerView(player: player)
                 }
             }
-            }
-        }
-        else {
-            HStack(alignment: .center) {
+        } else {
+            // small device, not landscape
+            LazyVGrid(columns: vGridItems,
+                      alignment: .center) {
                 ForEach(objects) { player in
                     PlayerView(player: player)
                 }
