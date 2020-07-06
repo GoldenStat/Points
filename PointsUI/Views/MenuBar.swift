@@ -10,8 +10,16 @@ import SwiftUI
 
 struct MenuBar: View {
     @EnvironmentObject var settings: GameSettings
-    @Binding var presentEditView: Bool // so the calling view can blur...
-
+    
+    @Binding // this is a binding so the calling view can blur...
+    var presentEditView: Bool
+    {
+        didSet {
+            if !presentEditView { settings.updateSettings() }
+        }
+    }
+    
+    // MARK: -- make this less confusing:
     var body: some View {
         VStack {
             ZStack {
@@ -73,6 +81,7 @@ struct MenuBar: View {
         .background(presentEditView ? backgroundAlmostInvisible : backgroundNotRespondigToClicks)
         .onTapGesture(count: 2) {
             presentEditView = false
+            settings.updateSettings()
         }
         .popover(isPresented: $showInfo) {
             InfoView()

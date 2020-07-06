@@ -17,37 +17,22 @@ class GameSettings: ObservableObject {
     @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
     @Published var playerWon: Player?
 
-    @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers {
-        didSet {
-            updateSettings()
-        }
-    }
-    
-    init () {
-        chosenNumberOfPlayers = 3
-        GlobalSettings.scorePerGame = 24
-        GlobalSettings.maxGames = 3
-    }
+    @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
+    // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
     var maxGamesString: String {
         get { String(maxGames) }
-        set { maxGames = Int(newValue) ?? GlobalSettings.maxGames
-            updateSettings()
-        }
+        set { maxGames = Int(newValue) ?? GlobalSettings.maxGames }
     }
     
     var maxPointsString: String {
         get { String(maxPoints) }
-        set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame
-            updateSettings()
-        }
+        set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
     }
     
     var updateTimeIntervalString: String {
         get { String(updateTime) }
-        set { updateTime = TimeInterval(newValue) ?? GlobalSettings.updateTime
-            updateSettings()
-        }
+        set { updateTime = TimeInterval(newValue) ?? GlobalSettings.updateTime }
     }
     
     // MARK: constant data for this class
