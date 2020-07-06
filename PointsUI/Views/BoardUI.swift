@@ -12,40 +12,58 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.horizontalSizeClass) var hSizeClass
-    
+    @Environment(\.verticalSizeClass) var vSizeClass
+   
     var objects : [Player] { settings.players.items }
     let minAmount: CGFloat = 200
     
-    /// working in iPhone 11 Pro Max in all configurations but .compact, 3 players
-    var gridItems: [GridItem] {
-        switch hSizeClass {
-        case .compact:
-            if objects.count == 2 {
-                return [
-                    GridItem(.adaptive(minimum: minAmount)),
-                    GridItem(.adaptive(minimum: minAmount)),
-                ]
-            }
-            // two columns with three objects
-            return [
-                GridItem(.adaptive(minimum: minAmount)),
-                GridItem(.adaptive(minimum: minAmount)),
-            ]
-        case .regular:
-//            return Array<GridItem>.init(repeating: GridItem(.flexible(minimum: minAmount)), count: objects.count)
-            return [ GridItem(.adaptive(minimum: minAmount)) ]
-        default:
-            return [
-                GridItem(.adaptive(minimum: minAmount))
-            ]
-        }
-    }
     
-    var body: some View {
-        LazyHGrid(rows: gridItems,
-                  alignment: .center) {
-            ForEach(objects) { player in
-                PlayerView(player: player)
+    var oneColumn : [GridItem]  { [                 GridItem(.adaptive(minimum: minAmount)),
+    ] }
+    var twoColumns : [GridItem]  { [
+        GridItem(.adaptive(minimum: minAmount)),
+        GridItem(.adaptive(minimum: minAmount)),
+    ] }
+
+    var vGridItems : [GridItem] {
+        objects.count == 2 ? oneColumn : twoColumns
+    }
+
+    @ViewBuilder var body: some View {
+        if hSizeClass == .compact {
+            // if the 'screen' is 'vertical'
+            if vSizeClass == .compact {
+                // we are on a small phone, not sure what to do...
+                if UIDevice.current.orientation.isLandscape {
+                    HStack(alignment: .center) {
+                        ForEach(objects) { player in
+                            PlayerView(player: player)
+                        }
+                    }
+                } else {
+                    // small device, not landscape
+                    LazyVGrid(columns: vGridItems,
+                              alignment: .center) {
+                        ForEach(objects) { player in
+                            PlayerView(player: player)
+                        }
+                    }
+                }
+                
+            } else {
+            LazyVGrid(columns: vGridItems,
+                      alignment: .center) {
+                ForEach(objects) { player in
+                    PlayerView(player: player)
+                }
+            }
+            }
+        }
+        else {
+            HStack(alignment: .center) {
+                ForEach(objects) { player in
+                    PlayerView(player: player)
+                }
             }
         }
     }
