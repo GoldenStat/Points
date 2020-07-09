@@ -8,27 +8,23 @@
 
 import SwiftUI
 
-struct PlayerView: View, Identifiable {
+struct PlayerView: View {
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
-    
-    var id : PlayerData.ID { player.id }
-    var score: Score { player.score }
     
     var body: some View {
         
         VStack {
             
-            Text(player.name)
-                .font(.title)
+            PlayerHeadline(player: player)
             
             if showScore {
-                ScoreRow(score: score)
+                ScoreRow(player: player)
             }
             
             RoundedRectangle(cornerRadius: cornerRadius)
                 .overlay(Emphasize(theme: .light) {
-                    ScoreBoxUI(score: player.score)
+                    ScoreBoxUI(player: player)
                 })
                 .onTapGesture(perform: {
                     player.add(score: 1)
@@ -44,15 +40,13 @@ struct PlayerView: View, Identifiable {
     }
 
     // MARK: -- the local variables
-    let scoreBoardRatio: CGFloat = 0.7
-//    var scoreBoardRatio : CGFloat { CGFloat ( (settings.maxPoints / Int(Box.maxLength) / 2) / 2
-//    ) }
+    let scoreBoardRatio: CGFloat = 3/4
 
     // MARK: -- show the score details
     @GestureState var showScore = false
     
     var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 3)
+        LongPressGesture(minimumDuration: 2)
             .updating($showScore) { currentstate, gestureState, transaction in
                 gestureState = currentstate
             }
@@ -64,10 +58,20 @@ struct PlayerView: View, Identifiable {
     private let lineWidth : CGFloat = 1.5
 }
 
+struct PlayerHeadline: View {
+    @ObservedObject var player : Player
+
+    var body: some View {
+        Text("\(player.name)\(player.games == 0 ? "" : "(\(player.games))")")
+            .font(.title)
+    }
+}
+
 struct ScoreRow: View {
     @State var editMode: EditMode = .inactive
 
-    let score: Score
+    let player: Player
+    var score: Score { player.score }
     
     var body: some View {
         HStack {

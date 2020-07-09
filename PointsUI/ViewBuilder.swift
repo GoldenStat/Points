@@ -48,58 +48,40 @@ struct Emphasize<Content: View> : View {
     let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
 }
 
-struct Frame<Content: View> : View {
+struct Clip<Content: View> : View {
     var isInvisible: Bool = false
     var content: Content
-    
-    init(@ViewBuilder content: () -> Content, isInvisible: Bool = false) {
+    var borderColor: Color
+    var lineWidth : CGFloat
+    var cornerRadius: CGFloat
+
+    init(borderColor: Color = Color.blue, cornerRadius: CGFloat = 4, lineWidth: CGFloat = 4, isInvisible: Bool = false, @ViewBuilder content: () -> Content) {
         self.content = content()
         self.isInvisible = isInvisible
-    }
-    var body: some View {
-        content
-            .clipShape(
-                clipShape()
-        )
-            .overlay(
-                clipShape()
-                    .stroke(strokeColor, lineWidth: border)
-        )
+        self.borderColor = borderColor
+        self.cornerRadius = cornerRadius
+        self.lineWidth = lineWidth
     }
     
-    var strokeColor: Color { isInvisible ? Color.clear : Color.blue }
-    let radius : CGFloat = 10
-    let border : CGFloat = 4
-
-    func clipShape() -> RoundedRectangle {
-        RoundedRectangle(cornerRadius: radius)
+    var body: some View {
+        content
+            .background(Color.darkNoon)
+            .clipShape(
+                RoundedRectangle(cornerRadius: cornerRadius)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(strokeColor, lineWidth: lineWidth)
+            )
     }
+    
+    var strokeColor: Color { isInvisible ? Color.clear : borderColor }
 }
 
-struct Clip<Content: View> : View {
-    var framed: Bool = false
-    var content: Content
-    
-    init(@ViewBuilder content: () -> Content, framed: Bool = false) {
-        self.content = content()
-        self.framed = framed
-    }
-    var body: some View {
-        content
-            .clipShape(
-                clipShape()
-        )
-            .overlay(
-                clipShape()
-                    .stroke(strokeColor, lineWidth: border)
-        )
-    }
-    
-    var strokeColor: Color { framed ? Color.blue : Color.clear }
-    let radius : CGFloat = 4
-    let border : CGFloat = 4
-
-    func clipShape() -> RoundedRectangle {
-        RoundedRectangle(cornerRadius: radius)
+extension View {
+    func framedClip(borderColor: Color = Color.blue, cornerRadius: CGFloat = 4, lineWidth: CGFloat = 4, isInvisible: Bool = false) -> some View {
+        Clip(borderColor: borderColor, cornerRadius: cornerRadius, lineWidth: lineWidth, isInvisible: isInvisible) {
+            self
+        }
     }
 }

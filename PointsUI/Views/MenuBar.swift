@@ -24,54 +24,59 @@ struct MenuBar: View {
         VStack {
             ZStack {
                 HStack {
-                    Button() { settings.undo() }
-                        label: {
-                            Image(systemName: "arrow.uturn.left")
-                                .padding()
-                        }
-                        .disabled(!settings.canUndo)
-                    Button() { settings.redo() }
-                        label: {
-                            Image(systemName: "arrow.uturn.right")
-                                .padding()
-                        }
-                        .disabled(!settings.canRedo)
-
+                    // History Buttons
+                    HStack {
+                        Button() { settings.undo() }
+                            label: {
+                                Image(systemName: "arrow.uturn.left")
+                                    .padding()
+                            }
+                            .disabled(!settings.canUndo)
+                        Button() { settings.redo() }
+                            label: {
+                                Image(systemName: "arrow.uturn.right")
+                                    .padding()
+                            }
+                            .disabled(!settings.canRedo)
+                    }
+                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
+                    
+                    
                     Spacer()
                     
+                    // Info Button
                     Button() {
                         showInfo.toggle()
                     } label: {
                         Image(systemName:
-                            "info.circle")
+                                "info")
                             .padding()
                     }
+                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
                     
                 }
+                .padding()
                 
+                // Drag Down
                 Button() {
-                    presentEditView.toggle()
+                    withAnimation(.easeInOut(duration: 1.5)) {
+                        presentEditView.toggle()
+                    }
                     if !presentEditView {
                         settings.updateSettings()
                     }
                 } label: {
-                    presentEditView ? Image(systemName: "chevron.compact.up") : Image(systemName: "chevron.compact.down")
+                    presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
                 }
-                .font(.largeTitle)
                 .foregroundColor(.gray)
-
+                .padding()
+                .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
                 
             }
-            .background(Color.darkNoon
-                            .edgesIgnoringSafeArea(.top)
-            )
-            
-            Divider()
             
             EditView()
                 .background(Color.darkNoon)
                 .offset(x: 0, y: editViewOffset)
-                .animation(.default)
                 .opacity(presentEditView ? 1.0 : 0.0)
                 .zIndex(-1) // let it scroll down from 'behind' the menu bar
             
@@ -87,7 +92,7 @@ struct MenuBar: View {
             InfoView()
         }
     }
-
+    
     // MARK: present Info
     @State var showInfo: Bool = false
     

@@ -16,14 +16,14 @@ struct ScoreBoxUI: View {
     @EnvironmentObject var settings: GameSettings
     
     let id = UUID()
-    
-    var score: Score
+    let player: Player
+    var score: Score { player.score }
         
-    var numberOfBoxes : Int { get {
-        let overlay = maxScore % linesPerBox
-        let ratio = maxScore / linesPerBox
-        return ratio + (overlay > 0 ? 1 : 0)
-        } }
+    var numberOfBoxes : Int {
+        let remainder = maxScore % linesPerBox
+        let full = maxScore / linesPerBox
+        return full + (remainder > 0 ? 1 : 0)
+        }
     
     var body: some View {
         FlowStack(columns: columns,
@@ -60,19 +60,5 @@ struct ScoreBoxUI: View {
         }
         
         return Box(score: thisBoxScore)
-    }
-}
-
-struct PlayerView_Previews: PreviewProvider {
-    
-    static func reroll(max value: Int) -> Score {
-        let points: Int = max(0,min(value, GlobalSettings.scorePerGame))
-        return Score(Int.random(in: 0 ... points))
-    }
-    
-    static var previews: some View {
-        VStack {
-            ScoreBoxUI(score: reroll(max: 15))
-        }
     }
 }

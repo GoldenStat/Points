@@ -13,6 +13,7 @@ struct ContentView: View {
     @State var showMenuBar = false
     @State var isEditing = false
     
+    
     let bgColor = Color.darkNoon
     
     var body: some View {
@@ -29,16 +30,29 @@ struct ContentView: View {
 
                 if showMenuBar {
                     MenuBar(presentEditView: $isEditing)
-                        .transition(.move(edge: .top))
+                        .transition(
+                            .move(edge: .top))
                 }
                 
             }
+            
+            if settings.playerWonRound != nil {
+                PlayerWonRound()
+                    .transition(.opacity)
+            }
+            
+            if settings.playerWonGame != nil {
+                PlayerWonGame()
+                    .transition(.opacity)
+            }
         }
+        .animation(.default)
         .onTapGesture(count: 2) {
             showMenuBar.toggle()
             isEditing = false
+            settings.updateSettings()
         }
-        .animation(.default)
+        .animation(.spring(response: 1.0, dampingFraction: 0.85, blendDuration: 0))
         .environmentObject(settings)
     }
 }

@@ -8,17 +8,41 @@
 
 import Foundation
 
+//protocol StringExpressable {
+//    init(_ string: String) -> Self?
+//}
+//
+//@propertyWrapper
+//struct StringConvertible<Value : CustomStringConvertible, StringExpressable> {
+//    var wrappedValue: Value
+//    var defaultValue: Value
+//    var string : String {
+//        get { wrappedValue.description }
+//        set { Value.init(newValue) ?? defaultValue }
+//    }
+//    
+//    init(wrappedValue: Value, defaultValue: Value) {
+//        self.wrappedValue = wrappedValue
+//        self.defaultValue = defaultValue
+//    }
+//}
+
 class GameSettings: ObservableObject {
     
-    @Published var players = Players(names: GlobalSettings.playerNames)
-    @Published var history = History()
+    @Published var players : Players
+    @Published var history : History
     @Published var maxGames: Int = GlobalSettings.maxGames
     @Published var maxPoints: Int = GlobalSettings.scorePerGame
     @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
-    @Published var playerWon: Player?
-
+    @Published var playerWonRound: Player?
+    @Published var playerWonGame: Player?
+    
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
+    init() {
+        self.players = Players(names: GlobalSettings.playerNames)
+        self.history = History()
+    }
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
     var maxGamesString: String {
         get { String(maxGames) }
@@ -43,7 +67,7 @@ class GameSettings: ObservableObject {
         // if number of players changed, restart the game
         if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
             players = Players(names: names(for: chosenNumberOfPlayers))
-            history = History()
+            history.reset()
         }
         GlobalSettings.playerNames = players.names
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
@@ -51,7 +75,7 @@ class GameSettings: ObservableObject {
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTime = updateTime
     }
-        
+    
     // MARK: control player data
     var numberOfPlayers: Int { players.items.count }
 
@@ -89,6 +113,12 @@ class GameSettings: ObservableObject {
 
     func addPlayer(named name: String) {
         GlobalSettings.playerNames.append(name)
+        resetPlayers()
+    }
+    
+    func resetPlayers() {
+        // create new players
+        // also resets the wonGames!
         players = Players(names: GlobalSettings.playerNames)
         history = History()
     }
@@ -96,16 +126,33 @@ class GameSettings: ObservableObject {
     func removeLastPlayer() {
         guard !GlobalSettings.playerNames.isEmpty else { return }
         _ = GlobalSettings.playerNames.removeLast()
-        players = Players(names: GlobalSettings.playerNames)
-        history = History()
-    }
+        resetPlayers()    }
     
     func removePlayer(named name: String) {
-        let newPlayerNames = GlobalSettings.playerNames.filter {$0 == name}
-        GlobalSettings.playerNames = newPlayerNames
-        players = Players(names: GlobalSettings.playerNames)
-        history = History()
+        GlobalSettings.playerNames = GlobalSettings.playerNames.filter {$0 == name}
+        resetPlayers()
     }
+    
+    func updateState() {
+        playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
+        playerWonGame = players.items.filter { $0.games >= maxGames }.first
+    }
+
+    func newRound() {
+        if let playerWon = playerWonRound {
+            playerWon.games += 1
+            playerWonRound = nil
+        }
+        // only set scores to zero, don't reset won games!
+        _ = players.items.map { $0.score = Score(0) }
+    }
+
+    func newGame() {
+        resetPlayers()
+        playerWonRound = nil
+        playerWonGame = nil
+    }
+    
     
     // a hack to send an event to all observers when the history functions are used
     @Published var needsUpdate = false
@@ -145,7 +192,7 @@ class GameSettings: ObservableObject {
         history.save(state: GameState(players: players.data))
         timer?.invalidate()
         
-        playerWon = players.items.filter({ $0.score.value >= GlobalSettings.scorePerGame }).first
+        updateState()
     }
     
     /// updates the players with score from current state

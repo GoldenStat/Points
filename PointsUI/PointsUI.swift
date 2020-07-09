@@ -10,7 +10,7 @@
 import SwiftUI
 
 @main
-struct PointsUI: App {
+struct PointsUIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
