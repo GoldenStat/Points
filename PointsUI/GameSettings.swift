@@ -119,8 +119,9 @@ class GameSettings: ObservableObject {
     func resetPlayers() {
         // create new players
         // also resets the wonGames!
+        // history needs reset, when players reset
         players = Players(names: GlobalSettings.playerNames)
-        history = History()
+        history.reset()
     }
     
     func removeLastPlayer() {
@@ -149,6 +150,7 @@ class GameSettings: ObservableObject {
 
     func newGame() {
         resetPlayers()
+        history.reset()
         playerWonRound = nil
         playerWonGame = nil
     }

@@ -39,13 +39,15 @@ struct PlayerWonRound: View {
     @State var animatedSize: CGFloat = 0.0
     @State var animatedRotation: Angle = Angle(degrees: 0)
     @State var dim = true
-    @State var offset : CGFloat = 0
+    @State var offset : CGFloat = 50
     
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
             .fill(Color.darkNoon)
             .overlay(
                 VStack {
+                    Spacer()
+                    
                     Text(emoji)
                         .font(.system(size: 144))
                         .scaleEffect(animatedSize)
@@ -55,11 +57,14 @@ struct PlayerWonRound: View {
                         .animation(animation)
                     Text(message)
                         .font(.largeTitle)
+                    
                     Spacer()
+                    
                     Button("Jugamos Otra") {
                         settings.newRound()
                         presentationMode.wrappedValue.dismiss()
                     }
+                    
                     Spacer()
                 }
                 .opacity(dim ? 0.0 : 1.0)
@@ -68,11 +73,13 @@ struct PlayerWonRound: View {
                 animatedSize = 1
                 animatedRotation = .degrees(720)
                 dim  = false
-                offset = -100
+                offset = -50
             }
     }
     
-    let animation = Animation.interpolatingSpring(mass: 1, stiffness: 0.8, damping: 0.8, initialVelocity: 2)
+    var animation: Animation { state == .won ? animationWon : animationLost }
+    let animationWon = Animation.interpolatingSpring(mass: 1, stiffness: 0.8, damping: 0.8, initialVelocity: 2)
+    let animationLost = Animation.spring(response: 1.0, dampingFraction: 0.8, blendDuration: 0.8)
     
 }
 

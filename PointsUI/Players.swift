@@ -38,7 +38,7 @@ class Player: ObservableObject, Identifiable {
     func add(score newScore: Int) {
         score.add(points: newScore)
     }
-
+    
     // MARK: initializers and converters
     
     init(from data: PlayerData) {
@@ -96,7 +96,7 @@ class Players: ObservableObject {
             items.append(Player(name: name))
         }
     }
-    
+        
     /// convenience initiallizer - replaces all players with new structs with given players with their current score
     convenience init(players: [Player]) {
         self.init()

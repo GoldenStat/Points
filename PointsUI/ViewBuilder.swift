@@ -84,4 +84,10 @@ extension View {
             self
         }
     }
+    
+    func emphasize(theme: Theme = .dark) -> some View {
+        Emphasize(theme: theme) {
+            self
+        }
+    }
 }
