@@ -39,7 +39,7 @@ struct GlobalSettingsView: View {
             }
             
             FieldWithBackground("Animacion:") {
-                Slider(value: $settings.updateTimeInterval, in: 0.5 ... 5.0, step: 0.1)
+                Slider(value: $settings.updateTimeInterval, in: 0.5 ... 5.0, step: 0.5)
                 Text("\(settings.updateTimeInterval, specifier: "%.1f")")
             }
         }

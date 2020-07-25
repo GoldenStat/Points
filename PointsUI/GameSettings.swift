@@ -8,25 +8,6 @@
 
 import Foundation
 
-//protocol StringExpressable {
-//    init(_ string: String) -> Self?
-//}
-//
-//@propertyWrapper
-//struct StringConvertible<Value : CustomStringConvertible, StringExpressable> {
-//    var wrappedValue: Value
-//    var defaultValue: Value
-//    var string : String {
-//        get { wrappedValue.description }
-//        set { Value.init(newValue) ?? defaultValue }
-//    }
-//    
-//    init(wrappedValue: Value, defaultValue: Value) {
-//        self.wrappedValue = wrappedValue
-//        self.defaultValue = defaultValue
-//    }
-//}
-
 class GameSettings: ObservableObject {
     
     @Published var players : Players
@@ -146,6 +127,7 @@ class GameSettings: ObservableObject {
         }
         // only set scores to zero, don't reset won games!
         _ = players.items.map { $0.score = Score(0) }
+        history.reset()
     }
 
     func newGame() {

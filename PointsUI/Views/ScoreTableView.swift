@@ -12,7 +12,9 @@ enum HistoryViewMode { case diff, total }
 
 /// show the history for evey player
 struct ScoreTableView: View {
-    @ObservedObject var history: History
+    @EnvironmentObject var settings: GameSettings
+    var history: History { settings.history }
+    var players: Players { settings.players }
     var viewMode: HistoryViewMode
             
     var body: some View {
@@ -38,19 +40,18 @@ struct ScoreTableView: View {
         var matrix: [Text] = []
         
         if history.states.isEmpty { // return lines with only zeroes in case we don't have any states
-            return(Array<Text>.init(repeating: Text("0").font(.body), count: numberOfColumms))
+            return(Array<Text>.init(repeating: Text("0").font(.title), count: numberOfColumms))
         }
         
         switch viewMode {
         case .diff:
             for num in history.risingScores {
-                matrix.append(Text("\(num)")
-                                .font(.body)
+                matrix.append(Text("\(num)").font(.title)
                 )
             }
         case .total:
             for num in history.flatScores {
-                matrix.append(Text("\(num)").font(.body))
+                matrix.append(Text("\(num)").font(.title))
             }
         }
         return matrix
@@ -60,11 +61,19 @@ struct ScoreTableView: View {
     private let sumHeight: CGFloat = 32
     private let tableHeight: CGFloat = 200
     
-    var numberOfColumms: Int { GlobalSettings.playerNames.count }
-    private var playerNames : [ String ] { GlobalSettings.playerNames }
-    private var namesView: [ Text ] { playerNames.map { Text($0) } }
+    var numberOfColumms: Int { players.items.count }
+    private var playerNames : [ String ] { players.names }
+    private var namesView: [ Text ] {
+        players.items.map {
+            Text("\($0.name)" + string(for: $0.games)).font(.largeTitle)
+        }
+    }
+    
+    func string(for games: Int) -> String {
+        games > 1 ? " - \(games)" : ""
+    }
 
-    private var sumView: [ Text ] { history.flatSums.map { Text("\($0)") } }
+    private var sumView: [ Text ] { history.flatSums.map { Text("\($0)").font(.title).fontWeight(.bold) } }
 
 }
 
@@ -77,41 +86,41 @@ extension Array where Element: View {
 }
 
 
-struct ScoreTableView_Previews: PreviewProvider {
-    static var settings = GameSettings()
-    static let players = Self.settings.players
-    static let names = Self.players.names
-    
-    static var history: History {
-        get { Self.genHistory() }
-    }
-    
-    static func genNewState(from state: GameState) -> GameState {
-        var players: [PlayerData] = []
-        
-        // add randonm points for every player
-        for player in  state.players {
-            let newScore = player.score.value + Int.random(in: 0...5)
-            let newPlayer = PlayerData(name: player.name, points: newScore, games: Int(1))
-            players.append(newPlayer)
-        }
-        return GameState(players: players)
-    }
-    
-    static func genHistory() -> History {
-        let history = History()
-        var state = GameState(players: Self.players.data)
-        for _ in 0 ..< 10 {
-            state = genNewState(from: state)
-            history.save(state: state)
-        }
-        return history
-    }
-    
-    static var previews: some View {
-        return  VStack {
-            ScoreTableView(history: genHistory(), viewMode: .total)
-        }
-    }
-    
-}
+//struct ScoreTableView_Previews: PreviewProvider {
+//    static var settings = GameSettings()
+//    static let players = Self.settings.players
+//    static let names = Self.players.names
+//
+//    static var history: History {
+//        get { Self.genHistory() }
+//    }
+//
+//    static func genNewState(from state: GameState) -> GameState {
+//        var players: [PlayerData] = []
+//
+//        // add randonm points for every player
+//        for player in  state.players {
+//            let newScore = player.score.value + Int.random(in: 0...5)
+//            let newPlayer = PlayerData(name: player.name, points: newScore, games: Int(1))
+//            players.append(newPlayer)
+//        }
+//        return GameState(players: players)
+//    }
+//
+//    static func genHistory() -> History {
+//        let history = History()
+//        var state = GameState(players: Self.players.data)
+//        for _ in 0 ..< 10 {
+//            state = genNewState(from: state)
+//            history.save(state: state)
+//        }
+//        return history
+//    }
+//
+//    static var previews: some View {
+//        return  VStack {
+//            ScoreTableView(history: genHistory(), viewMode: .total)
+//        }
+//    }
+//
+//}

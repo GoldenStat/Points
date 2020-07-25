@@ -21,33 +21,88 @@ extension Color {
 /// in this context it tries to make put a mnemonic(?) frame around it
 struct Emphasize<Content: View> : View {
     var theme: Theme
+    var maxHeight: CGFloat
     var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
     var content: Content
-    init(theme: Theme = .dark, @ViewBuilder content: () -> Content) {
+    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
         self.theme = theme
+        self.maxHeight = maxHeight
         self.content = content()
     }
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(emphasizeColor)
-                .clipped()
-                .frame(maxHeight: maxHeight)
-                .blur(radius: blurRadius)
-                .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
-                .overlay(
-                    content
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(emphasizeColor)
+            .clipped()
+            .frame(maxHeight: maxHeight)
+            .blur(radius: blurRadius)
+            .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
+            .overlay(
+                content
             )
-        }
     }
     
     let cornerRadius: CGFloat = 4
-    let maxHeight: CGFloat = .infinity
     let blurRadius: CGFloat = 5
     let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
 }
 
+struct EmphasizeCircle<Content: View> : View {
+    var theme: Theme
+    var maxHeight: CGFloat
+    var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
+    var content: Content
+    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
+        self.theme = theme
+        self.maxHeight = maxHeight
+        self.content = content()
+    }
+    
+    var body: some View {
+        Circle()
+            .fill(emphasizeColor)
+            .clipped()
+            .frame(maxHeight: maxHeight)
+            .blur(radius: blurRadius)
+            .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
+            .overlay(
+                content
+            )
+    }
+    
+    let cornerRadius: CGFloat = 4
+    let blurRadius: CGFloat = 5
+    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
+}
+
+struct EmphasizeShape<Content: View> : View {
+    var theme: Theme
+    var maxHeight: CGFloat
+    var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
+    var content: Content
+    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
+        self.theme = theme
+        self.maxHeight = maxHeight
+        self.content = content()
+    }
+    
+    var body: some View {
+        Clip(isInvisible: true) {
+            content
+        }
+            .clipped()
+            .frame(maxHeight: maxHeight)
+            .blur(radius: blurRadius)
+            .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
+            .overlay(
+                content
+            )
+    }
+    
+    let cornerRadius: CGFloat = 4
+    let blurRadius: CGFloat = 5
+    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
+}
 struct Clip<Content: View> : View {
     var isInvisible: Bool = false
     var content: Content
@@ -85,9 +140,21 @@ extension View {
         }
     }
     
-    func emphasize(theme: Theme = .dark) -> some View {
-        Emphasize(theme: theme) {
+    func emphasize(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
+        Emphasize(theme: theme, maxHeight: maxHeight) {
             self
         }
     }
+    func emphasizeShape(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
+        EmphasizeShape(theme: theme, maxHeight: maxHeight) {
+            self
+        }
+    }
+
+    func emphasizeCircle(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
+        EmphasizeCircle(theme: theme, maxHeight: maxHeight) {
+            self
+        }
+    }
+    
 }

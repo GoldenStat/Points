@@ -39,9 +39,10 @@ struct MenuBar: View {
                             }
                             .disabled(!settings.canRedo)
                     }
-                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
-                    
-                    
+                    .emphasizeShape()
+//                    .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
+//                    .emphasizeCircle(maxHeight: 60)
+
                     Spacer()
                     
                     // Info Button
@@ -52,8 +53,9 @@ struct MenuBar: View {
                                 "info")
                             .padding()
                     }
-                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
-                    
+                    .emphasizeShape()
+//                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
+//                    .emphasizeCircle(maxHeight: 60)
                 }
                 .padding()
                 
@@ -70,8 +72,9 @@ struct MenuBar: View {
                 }
                 .foregroundColor(.gray)
                 .padding()
-                .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
-                
+                .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
+                .emphasizeCircle(maxHeight: 60)
+
             }
             
             EditView()

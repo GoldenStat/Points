@@ -28,11 +28,42 @@
 		418D8B8824AE2B06008A4A3E /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418D8B8724AE2B06008A4A3E /* MenuBar.swift */; };
 		4194BF1B24A29209007CDBA1 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* TitleView.swift */; };
 		419A44AC24475CE000EA91F3 /* ScoreTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 419A44AB24475CE000EA91F3 /* ScoreTableView.swift */; };
+		41C12BCF24CB1D460043EEE1 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41C12BCE24CB1D460043EEE1 /* WidgetKit.framework */; };
+		41C12BD124CB1D460043EEE1 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41C12BD024CB1D460043EEE1 /* SwiftUI.framework */; };
+		41C12BD424CB1D460043EEE1 /* PointsUI_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C12BD324CB1D460043EEE1 /* PointsUI_Widget.swift */; };
+		41C12BD724CB1D4A0043EEE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41C12BD624CB1D4A0043EEE1 /* Assets.xcassets */; };
+		41C12BD924CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */; };
+		41C12BDA24CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */; };
+		41C12BDD24CB1D4A0043EEE1 /* PointsUI WidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 41C12BCC24CB1D460043EEE1 /* PointsUI WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
 		41DB1E1723E5C8C900E17CC8 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1623E5C8C900E17CC8 /* GameState.swift */; };
 		41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1823E5C8F100E17CC8 /* History.swift */; };
 		41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F114A8236A073F00C6314D /* GlobalSettings.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		41C12BDB24CB1D4A0043EEE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41ED4F2C22AD799000A46C19 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41C12BCB24CB1D460043EEE1;
+			remoteInfo = "PointsUI WidgetExtension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		41C12BDE24CB1D4A0043EEE1 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				41C12BDD24CB1D4A0043EEE1 /* PointsUI WidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		411DF1F22359EAFA00A37C64 /* ScoreBoxUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoxUI.swift; sourceTree = "<group>"; };
@@ -59,6 +90,13 @@
 		418D8B8724AE2B06008A4A3E /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		4194BF1A24A29209007CDBA1 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		419A44AB24475CE000EA91F3 /* ScoreTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreTableView.swift; sourceTree = "<group>"; };
+		41C12BCC24CB1D460043EEE1 /* PointsUI WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "PointsUI WidgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		41C12BCE24CB1D460043EEE1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		41C12BD024CB1D460043EEE1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		41C12BD324CB1D460043EEE1 /* PointsUI_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsUI_Widget.swift; sourceTree = "<group>"; };
+		41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PointsUI_Widget.intentdefinition; sourceTree = "<group>"; };
+		41C12BD624CB1D4A0043EEE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		41C12BD824CB1D4A0043EEE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		41DB1E1623E5C8C900E17CC8 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		41DB1E1823E5C8F100E17CC8 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
@@ -70,6 +108,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41C12BC924CB1D460043EEE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41C12BD124CB1D460043EEE1 /* SwiftUI.framework in Frameworks */,
+				41C12BCF24CB1D460043EEE1 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,10 +172,32 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		41C12BCD24CB1D460043EEE1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41C12BCE24CB1D460043EEE1 /* WidgetKit.framework */,
+				41C12BD024CB1D460043EEE1 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		41C12BD224CB1D460043EEE1 /* PointsUI Widget */ = {
+			isa = PBXGroup;
+			children = (
+				41C12BD324CB1D460043EEE1 /* PointsUI_Widget.swift */,
+				41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */,
+				41C12BD624CB1D4A0043EEE1 /* Assets.xcassets */,
+				41C12BD824CB1D4A0043EEE1 /* Info.plist */,
+			);
+			path = "PointsUI Widget";
+			sourceTree = "<group>";
+		};
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
 				411DF21B23607CD100A37C64 /* PointsUI */,
+				41C12BD224CB1D460043EEE1 /* PointsUI Widget */,
+				41C12BCD24CB1D460043EEE1 /* Frameworks */,
 				41ED4F3522AD799000A46C19 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -137,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				411DF21A23607CD100A37C64 /* PointsUI.app */,
+				41C12BCC24CB1D460043EEE1 /* PointsUI WidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,10 +230,12 @@
 				411DF21623607CD100A37C64 /* Sources */,
 				411DF21723607CD100A37C64 /* Frameworks */,
 				411DF21823607CD100A37C64 /* Resources */,
+				41C12BDE24CB1D4A0043EEE1 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				41C12BDC24CB1D4A0043EEE1 /* PBXTargetDependency */,
 			);
 			name = PointsUI;
 			packageProductDependencies = (
@@ -172,18 +244,38 @@
 			productReference = 411DF21A23607CD100A37C64 /* PointsUI.app */;
 			productType = "com.apple.product-type.application";
 		};
+		41C12BCB24CB1D460043EEE1 /* PointsUI WidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41C12BE124CB1D4A0043EEE1 /* Build configuration list for PBXNativeTarget "PointsUI WidgetExtension" */;
+			buildPhases = (
+				41C12BC824CB1D460043EEE1 /* Sources */,
+				41C12BC924CB1D460043EEE1 /* Frameworks */,
+				41C12BCA24CB1D460043EEE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PointsUI WidgetExtension";
+			productName = "PointsUI WidgetExtension";
+			productReference = 41C12BCC24CB1D460043EEE1 /* PointsUI WidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		41ED4F2C22AD799000A46C19 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1110;
+				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Alexander Völz";
 				TargetAttributes = {
 					411DF21923607CD100A37C64 = {
 						CreatedOnToolsVersion = 11.1;
+					};
+					41C12BCB24CB1D460043EEE1 = {
+						CreatedOnToolsVersion = 12.0;
 					};
 				};
 			};
@@ -203,6 +295,7 @@
 			projectRoot = "";
 			targets = (
 				411DF21923607CD100A37C64 /* PointsUI */,
+				41C12BCB24CB1D460043EEE1 /* PointsUI WidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -215,6 +308,14 @@
 				411DF22923607CDA00A37C64 /* LaunchScreen.storyboard in Resources */,
 				411DF22623607CDA00A37C64 /* Preview Assets.xcassets in Resources */,
 				411DF22323607CDA00A37C64 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41C12BCA24CB1D460043EEE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41C12BD724CB1D4A0043EEE1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +342,7 @@
 				41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */,
 				4194BF1B24A29209007CDBA1 /* TitleView.swift in Sources */,
 				41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */,
+				41C12BDA24CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */,
 				411DF2352360824900A37C64 /* FlowStack.swift in Sources */,
 				411DF2322360824900A37C64 /* ScoreBoxUI.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
@@ -250,7 +352,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		41C12BC824CB1D460043EEE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41C12BD924CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */,
+				41C12BD424CB1D460043EEE1 /* PointsUI_Widget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		41C12BDC24CB1D4A0043EEE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 41C12BCB24CB1D460043EEE1 /* PointsUI WidgetExtension */;
+			targetProxy = 41C12BDB24CB1D4A0043EEE1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		411DF22723607CDA00A37C64 /* LaunchScreen.storyboard */ = {
@@ -267,6 +386,7 @@
 		411DF22C23607CDA00A37C64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PointsUI/PointsUI.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -292,6 +412,7 @@
 		411DF22D23607CDA00A37C64 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PointsUI/PointsUI.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -309,6 +430,50 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		41C12BDF24CB1D4A0043EEE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2NBB26789S;
+				INFOPLIST_FILE = "PointsUI Widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "AV12.PointsUI.PointsUI-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		41C12BE024CB1D4A0043EEE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2NBB26789S;
+				INFOPLIST_FILE = "PointsUI Widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "AV12.PointsUI.PointsUI-Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -440,6 +605,15 @@
 			buildConfigurations = (
 				411DF22C23607CDA00A37C64 /* Debug */,
 				411DF22D23607CDA00A37C64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41C12BE124CB1D4A0043EEE1 /* Build configuration list for PBXNativeTarget "PointsUI WidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41C12BDF24CB1D4A0043EEE1 /* Debug */,
+				41C12BE024CB1D4A0043EEE1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

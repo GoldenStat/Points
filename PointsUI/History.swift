@@ -64,7 +64,6 @@ class History : ObservableObject {
             states.append(state)
         }
     }
-
     
     /// a computed var that transfers all history states into a list
     var flatScores : [Int] {

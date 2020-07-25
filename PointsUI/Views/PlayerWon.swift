@@ -8,12 +8,13 @@
 
 import SwiftUI
 
+enum WinState { case won, lost, theyWon }
+
 struct PlayerWonRound: View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var presentationMode
     @State var isShowing = true
     
-    enum WinState { case won, lost, theyWon }
     
     var state: WinState {
         switch player.name {
@@ -89,14 +90,31 @@ struct PlayerWonGame: View {
     @State var isShowing = true
     var player : Player { settings.playerWonGame ?? Player(name: "Wrong Player")}
     
+    var state: WinState {
+        switch player.name {
+        case "Yo", "Nosotros": return .won
+        case "Tu", "Ustedes": return .lost
+        case "Ellos", "El", "Ella": return .theyWon
+        default: return .theyWon
+        }
+    }
+    
+    var message: String {
+        switch state {
+        case .won: return "Ganaste toda las manos, chamo!!"
+        case .lost: return "Ay, Perdimos!!"
+        case .theyWon: return "Nos ganaron!"
+        }
+    }
+    
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
             .fill(Color.darkNoon)
             .overlay(
                 VStack {
-                    Text("Ganaste el Juego, \(player.name)! :)")
+                    Text(message)
                         .font(.largeTitle)
-                    Button("Otra") {
+                    Button("Otro juego!") {
                         settings.newGame()
                         presentationMode.wrappedValue.dismiss()
                     }

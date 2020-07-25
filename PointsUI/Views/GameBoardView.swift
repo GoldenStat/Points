@@ -51,9 +51,9 @@ struct GameBoardView: View {
             case .currentState:
                 BoardUI()
             case .diffHistory:
-                ScoreTableView(history: settings.history, viewMode: .diff)
+                ScoreTableView(viewMode: .diff)
             case .sumHistory:
-                ScoreTableView(history: settings.history, viewMode: .total)
+                ScoreTableView(viewMode: .total)
             }
         }
         .environmentObject(settings)
