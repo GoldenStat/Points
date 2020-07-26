@@ -15,7 +15,6 @@ struct PlayerWonRound: View {
     @Environment(\.presentationMode) var presentationMode
     @State var isShowing = true
     
-    
     var state: WinState {
         switch player.name {
         case "Yo", "Nosotros": return .won
@@ -44,7 +43,7 @@ struct PlayerWonRound: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
-            .fill(Color.darkNoon)
+            .fill(Color.background)
             .overlay(
                 VStack {
                     Spacer()
@@ -109,7 +108,7 @@ struct PlayerWonGame: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
-            .fill(Color.darkNoon)
+            .fill(Color.background)
             .overlay(
                 VStack {
                     Text(message)
@@ -123,11 +122,11 @@ struct PlayerWonGame: View {
     }
 }
 
-struct PlayerWon_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            PlayerWonRound()
-            PlayerWonGame()
-        }
-    }
-}
+//struct PlayerWon_Previews: PreviewProvider {
+//    static var previews: some View {
+//        VStack {
+//            PlayerWonRound()
+//            PlayerWonGame()
+//        }
+//    }
+//}

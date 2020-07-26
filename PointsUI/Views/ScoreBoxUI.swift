@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension Double { static var lineAnimationSpeed = 0.3}
+extension Double { static var lineAnimationSpeed = 0.3 }
 
 
 /// the UI with a collection of Boxes and maximum score
@@ -62,3 +62,4 @@ struct ScoreBoxUI: View {
         return Box(score: thisBoxScore)
     }
 }
+

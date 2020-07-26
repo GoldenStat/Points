@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension Color {
-    static let boardbgColor = Color(red: 200 / 255.0, green: 200 / 255.0, blue: 255 / 255.0)
+    static let boardbgColor = Color.background
 }
 
 struct TitleView: View {

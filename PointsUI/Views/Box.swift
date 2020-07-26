@@ -34,13 +34,13 @@ struct Box: View {
     var body: some View {
         ZStack {
             EdgeShape(totalLength: Self.maxLength)
-                .stroke(Color.unchecked)
+                .stroke(Color.unchecked, lineWidth: 5.0, ())
                 .animation(nil)
             EdgeShape(totalLength: cappedPoints)
                 .stroke(Color.solid)
                 .animation(nil)
             EdgeShape(totalLength: cappedTotal, starting: cappedPoints)
-                .stroke(Color.buffer)
+                .stroke(Color.pointbuffer)
         }
     }
 }
@@ -52,9 +52,9 @@ struct SampleBox: View {
         ZStack {
             EdgeShape(totalLength: Double(points))
                 .stroke(Color.solid)
-                .animation(.easeInOut(duration: 1.0))
+                .animation(.easeInOut(duration: 0.3))
         }
-        .background(Color.green)
+        .background(Color.background)
         .onTapGesture {
             self.points = self.points == 5 ? 0 :
                 self.points + 1
@@ -68,13 +68,39 @@ struct Box_Previews: PreviewProvider {
     @State static var score = Score(2,buffer: 2)
     
     static var previews: some View {
-        Box(score: score)
-            .frame(width: 300, height: 300)
-            .padding()
-            .onTapGesture {
-                if score.sum <= EdgeShape.numberOfEdges {
-                    score.add()
+        Group {
+            ZStack {
+                VStack {
+                    
+                    Box(score: score)
+                        .frame(width: 300, height: 300)
+                        .padding()
+                        .onTapGesture {
+                            if score.sum <= EdgeShape.numberOfEdges {
+                                score.add()
+                            }
+                        }
+                    SampleBox()
+                        .padding()
+                }
+                Background()
+            }
+            ZStack {
+                VStack {
+                    
+                    Box(score: score)
+                        .frame(width: 300, height: 300)
+                        .padding()
+                        .onTapGesture {
+                            if score.sum <= EdgeShape.numberOfEdges {
+                                score.add()
+                            }
+                        }
+                    SampleBox()
+                        .padding()
                 }
             }
+            .preferredColorScheme(.dark)
+        }
     }
 }

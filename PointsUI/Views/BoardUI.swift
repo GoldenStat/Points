@@ -11,8 +11,6 @@ import SwiftUI
 /// the whole board, all player's points are seen here
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
-    @Environment(\.horizontalSizeClass) var hSizeClass
-    @Environment(\.verticalSizeClass) var vSizeClass
     
     var objects : [Player] { settings.players.items }
     let minAmount: CGFloat = 300

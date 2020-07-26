@@ -6,33 +6,21 @@
 //  Copyright © 2020 Alexander Völz. All rights reserved.
 //
 
-import Foundation
-
 import SwiftUI
-
-enum Theme { case dark, light }
-
-extension Color {
-    static let darkNoon = Color(red: 220/255, green: 220/255, blue: 255/255)
-    static let lightMidnight = Color(red: 25/255, green: 25/255, blue: 0/255 )
-}
 
 /// a viewbuilder that emphasizes a view
 /// in this context it tries to make put a mnemonic(?) frame around it
 struct Emphasize<Content: View> : View {
-    var theme: Theme
     var maxHeight: CGFloat
-    var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
     var content: Content
-    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
-        self.theme = theme
+    init(maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
         self.maxHeight = maxHeight
         self.content = content()
     }
     
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(emphasizeColor)
+            .fill(Color.background)
             .clipped()
             .frame(maxHeight: maxHeight)
             .blur(radius: blurRadius)
@@ -48,19 +36,16 @@ struct Emphasize<Content: View> : View {
 }
 
 struct EmphasizeCircle<Content: View> : View {
-    var theme: Theme
     var maxHeight: CGFloat
-    var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
     var content: Content
-    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
-        self.theme = theme
+    init(maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
         self.maxHeight = maxHeight
         self.content = content()
     }
     
     var body: some View {
         Circle()
-            .fill(emphasizeColor)
+            .fill(Color.background)
             .clipped()
             .frame(maxHeight: maxHeight)
             .blur(radius: blurRadius)
@@ -76,12 +61,9 @@ struct EmphasizeCircle<Content: View> : View {
 }
 
 struct EmphasizeShape<Content: View> : View {
-    var theme: Theme
     var maxHeight: CGFloat
-    var emphasizeColor: Color { theme == .dark ? .lightMidnight : .darkNoon }
     var content: Content
-    init(theme: Theme = .dark,maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
-        self.theme = theme
+    init(maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
         self.maxHeight = maxHeight
         self.content = content()
     }
@@ -120,7 +102,7 @@ struct Clip<Content: View> : View {
     
     var body: some View {
         content
-            .background(Color.darkNoon)
+            .background(Color.background)
             .clipShape(
                 RoundedRectangle(cornerRadius: cornerRadius)
             )
@@ -140,19 +122,19 @@ extension View {
         }
     }
     
-    func emphasize(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
-        Emphasize(theme: theme, maxHeight: maxHeight) {
+    func emphasize(maxHeight: CGFloat = 100) -> some View {
+        Emphasize(maxHeight: maxHeight) {
             self
         }
     }
-    func emphasizeShape(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
-        EmphasizeShape(theme: theme, maxHeight: maxHeight) {
+    func emphasizeShape(maxHeight: CGFloat = 100) -> some View {
+        EmphasizeShape(maxHeight: maxHeight) {
             self
         }
     }
 
-    func emphasizeCircle(theme: Theme = .light, maxHeight: CGFloat = 100) -> some View {
-        EmphasizeCircle(theme: theme, maxHeight: maxHeight) {
+    func emphasizeCircle(maxHeight: CGFloat = 100) -> some View {
+        EmphasizeCircle(maxHeight: maxHeight) {
             self
         }
     }

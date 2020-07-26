@@ -23,7 +23,7 @@ struct PlayerView: View {
             }
             
             RoundedRectangle(cornerRadius: cornerRadius)
-                .overlay(Emphasize(theme: .light) {
+                .overlay(Emphasize() {
                     ScoreBoxUI(player: player)
                 })
                 .onTapGesture(perform: {

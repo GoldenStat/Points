@@ -29,12 +29,12 @@ struct GlobalSettingsView: View {
             HStack {
                 FieldWithBackground("Puntos:") {
                     TextField("Max Puntos", text: $settings.maxPointsString)
-                        .padding(2)
+                        .padding(.vertical, 5)
                 }
                 
                 FieldWithBackground("Manos:") {
                     TextField("Max Manos", text: $settings.maxGamesString)
-                        .padding(5)
+                        .padding(.vertical, 5)
                 }
             }
             
@@ -73,14 +73,14 @@ struct FieldWithBackground<Content: View>: View {
         .background(
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(
-                    Color(.sRGB, white: grayScale, opacity: backgroundIntensity)
+                    Color.inactive
                 )
         )
+        .foregroundColor(Color.text)
     }
     
     private let minSpacing: CGFloat = 20
-    private let cornerRadius: CGFloat = 5
-    private let grayScale: Double = 0.8
+    private let cornerRadius: CGFloat = 8
     
 }
 
@@ -96,11 +96,7 @@ struct NumbersOfPlayersPicker: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
-    }
-}
-
-struct SettingsEditor_Previews: PreviewProvider {
-    static var previews: some View {
-        EditView()
+        .background(Color.inactive)
+        .foregroundColor(Color.text)
     }
 }

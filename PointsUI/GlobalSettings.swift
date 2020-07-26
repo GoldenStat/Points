@@ -47,3 +47,12 @@ enum GlobalSettings {
     static var playerNames : [String]
 
 }
+
+extension Color {
+    static let background  = Color("background")
+    static let text  = Color("text")
+//    static let points  = Color("points").accentColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+    static let points = Color.accentColor
+    static let inactive  = Color("inactive")
+    static let pointbuffer  = Color("buffer")
+}

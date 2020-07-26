@@ -50,7 +50,6 @@ struct MenuBar: View {
                                 "info")
                             .padding()
                     }
-                    //                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
                 }
                 
                 // Drag Down
@@ -64,22 +63,21 @@ struct MenuBar: View {
                 } label: {
                     presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
                 }
-                
                 .foregroundColor(.gray)
                 .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
                 .emphasizeCircle(maxHeight: 60)
                 
             }
-            .background(Color.darkNoon)
+//            .background(Color.darkNoon)
             .zIndex(2)
             if (presentEditView) {
                 VStack(spacing: 0){
                     EditView()
                         .padding()
-                        .background(Color.darkNoon)
+                        .background(Color.background)
                         .zIndex(1) // let it scroll down from 'behind' the menu bar
                     
-                    Color.darkNoon.opacity(0.1)
+                    Color.background.opacity(0.1)
                 }
                 .transition(.move(edge: .top))
             }
@@ -89,7 +87,6 @@ struct MenuBar: View {
         .popover(isPresented: $showInfo) {
             InfoView()
         }
-//        .animation(.default)
         .onTapGesture(count: 2) {
             withAnimation {
             presentEditView = false
@@ -114,6 +111,7 @@ struct SampleEditView: View {
             .environmentObject(gameSettings)
     }
 }
+
 struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
         SampleEditView()

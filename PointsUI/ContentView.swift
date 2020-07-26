@@ -10,21 +10,24 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var settings : GameSettings = GameSettings()
-    @State var showMenuBar = false
+
+    @State var showMenuBar = false { didSet {
+        if !showMenuBar {
+            isEditing = false
+        }
+    }}
+    
     @State var isEditing = false
-    
-    let bgColor = Color.darkNoon
-    
+        
     var body: some View {
         
         ZStack {
-            bgColor
+            Color.background
                 .edgesIgnoringSafeArea(.all)
             
             ZStack {
                 GameBoardView()
                     .blur(radius: isEditing ? 4.0 : 0.0 )
-                    .background(bgColor)
                     .padding()
 
                 if showMenuBar {
@@ -37,18 +40,23 @@ struct ContentView: View {
             
             if settings.playerWonRound != nil {
                 PlayerWonRound()
-                    .transition(.opacity)
+                    .transition(.move(edge: .bottom))
+                    .onAppear {
+                        showMenuBar = false
+                    }
             }
             
             if settings.playerWonGame != nil {
                 PlayerWonGame()
                     .transition(.opacity)
+                    .onAppear {
+                        showMenuBar = false
+                    }
             }
         }
         .animation(.default)
         .onTapGesture(count: 2) {
             showMenuBar.toggle()
-            isEditing = false
             settings.updateSettings()
         }
         .animation(.spring(response: 1.0, dampingFraction: 0.85, blendDuration: 0))
@@ -59,6 +67,10 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(settings: GameSettings())
+        Group {
+            ContentView(settings: GameSettings())
+            ContentView(settings: GameSettings())
+                .preferredColorScheme(.dark)
+        }
     }
 }
