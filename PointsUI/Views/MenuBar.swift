@@ -19,7 +19,6 @@ struct MenuBar: View {
         }
     }
     
-    // MARK: -- make this less confusing:
     var body: some View {
         VStack {
             ZStack {
@@ -28,21 +27,19 @@ struct MenuBar: View {
                     HStack {
                         Button() { settings.undo() }
                             label: {
-                                Image(systemName: "arrow.uturn.left")
+                                Image(systemName: "arrow.left")
                                     .padding()
                             }
                             .disabled(!settings.canUndo)
                         Button() { settings.redo() }
                             label: {
-                                Image(systemName: "arrow.uturn.right")
+                                Image(systemName: "arrow.right")
                                     .padding()
                             }
                             .disabled(!settings.canRedo)
+                        
                     }
-                    .emphasizeShape()
-//                    .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
-//                    .emphasizeCircle(maxHeight: 60)
-
+                    
                     Spacer()
                     
                     // Info Button
@@ -53,15 +50,12 @@ struct MenuBar: View {
                                 "info")
                             .padding()
                     }
-                    .emphasizeShape()
-//                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
-//                    .emphasizeCircle(maxHeight: 60)
+                    //                    .framedClip(borderColor: .white, cornerRadius: 25.0, lineWidth: 1.0)
                 }
-                .padding()
                 
                 // Drag Down
                 Button() {
-                    withAnimation(.easeInOut(duration: 1.5)) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
                         presentEditView.toggle()
                     }
                     if !presentEditView {
@@ -70,40 +64,52 @@ struct MenuBar: View {
                 } label: {
                     presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
                 }
+                
                 .foregroundColor(.gray)
-                .padding()
                 .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
                 .emphasizeCircle(maxHeight: 60)
-
+                
             }
-            
-            EditView()
-                .background(Color.darkNoon)
-                .offset(x: 0, y: editViewOffset)
-                .opacity(presentEditView ? 1.0 : 0.0)
-                .zIndex(-1) // let it scroll down from 'behind' the menu bar
+            .background(Color.darkNoon)
+            .zIndex(2)
+            if (presentEditView) {
+                EditView()
+                    .background(Color.darkNoon)
+                    .zIndex(1) // let it scroll down from 'behind' the menu bar
+                    .transition(.move(edge: .top))
+            }
             
             Spacer()
         }
-        // now, create an 'invisible' background that handles doubletaps
-        .background(presentEditView ? backgroundAlmostInvisible : backgroundNotRespondigToClicks)
+        .padding(.horizontal)
+        .popover(isPresented: $showInfo) {
+            InfoView()
+        }
+        .animation(.default)
         .onTapGesture(count: 2) {
             presentEditView = false
             settings.updateSettings()
-        }
-        .popover(isPresented: $showInfo) {
-            InfoView()
         }
     }
     
     // MARK: present Info
     @State var showInfo: Bool = false
     
-    // MARK: handle EditView appearance
-    var editViewOffset: CGFloat { presentEditView ? endOffset : startOffset }
+ }
+
+
+struct SampleEditView: View {
+    @State var isVisible = true
     
-    let startOffset: CGFloat = -200 // height + safe area
-    let endOffset: CGFloat = -10 // safe area?
-    let backgroundAlmostInvisible = Color.white.opacity(0.01)
-    let backgroundNotRespondigToClicks: Color = Color.clear
+    var gameSettings = GameSettings()
+    
+    var body: some View {
+        MenuBar(presentEditView: $isVisible)
+            .environmentObject(gameSettings)
+    }
+}
+struct MenuBar_Previews: PreviewProvider {
+    static var previews: some View {
+        SampleEditView()
+    }
 }

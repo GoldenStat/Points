@@ -15,7 +15,8 @@ struct BoardUI: View {
     @Environment(\.verticalSizeClass) var vSizeClass
     
     var objects : [Player] { settings.players.items }
-    let minAmount: CGFloat = 200
+    let minAmount: CGFloat = 300
+    let maxAmount: CGFloat = 400
     
     
     var oneColumn : [GridItem]  { [                 GridItem(.adaptive(minimum: minAmount)),
@@ -42,7 +43,7 @@ struct BoardUI: View {
                     playerViews()
                 }
             } else {
-                LazyVGrid(columns: vGridItems,
+                LazyVGrid(columns: twoColumns,
                           alignment: .center) {
                     playerViews()
                 }

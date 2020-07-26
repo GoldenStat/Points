@@ -74,7 +74,7 @@ class GameSettings: ObservableObject {
         case 4:
             return [ pairedPlayers[0], pairedPlayers[1] ]
         case 6:
-            return [ pairedPlayers[0], pairedPlayers[1], pairedPlayers[2] ]
+            return [ pairedPlayers[0], pairedPlayers[1] ]
         default:
             return []
         }
