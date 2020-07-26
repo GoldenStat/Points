@@ -20,7 +20,7 @@ struct MenuBar: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ZStack {
                 HStack {
                     // History Buttons
@@ -73,22 +73,28 @@ struct MenuBar: View {
             .background(Color.darkNoon)
             .zIndex(2)
             if (presentEditView) {
-                EditView()
-                    .background(Color.darkNoon)
-                    .zIndex(1) // let it scroll down from 'behind' the menu bar
-                    .transition(.move(edge: .top))
+                VStack(spacing: 0){
+                    EditView()
+                        .background(Color.darkNoon)
+                        .zIndex(1) // let it scroll down from 'behind' the menu bar
+                        .transition(.move(edge: .top))
+//                        .padding()
+                    
+//                    Color.darkNoon.opacity(0.1)
+                }
             }
             
             Spacer()
         }
-        .padding(.horizontal)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
-        .animation(.default)
+//        .animation(.default)
         .onTapGesture(count: 2) {
+            withAnimation {
             presentEditView = false
             settings.updateSettings()
+            }
         }
     }
     
