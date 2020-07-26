@@ -13,7 +13,6 @@ struct ContentView: View {
     @State var showMenuBar = false
     @State var isEditing = false
     
-    
     let bgColor = Color.darkNoon
     
     var body: some View {

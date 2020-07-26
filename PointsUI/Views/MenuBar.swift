@@ -75,13 +75,13 @@ struct MenuBar: View {
             if (presentEditView) {
                 VStack(spacing: 0){
                     EditView()
+                        .padding()
                         .background(Color.darkNoon)
                         .zIndex(1) // let it scroll down from 'behind' the menu bar
-                        .transition(.move(edge: .top))
-//                        .padding()
                     
-//                    Color.darkNoon.opacity(0.1)
+                    Color.darkNoon.opacity(0.1)
                 }
+                .transition(.move(edge: .top))
             }
             
             Spacer()
