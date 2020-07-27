@@ -10,8 +10,10 @@ import SwiftUI
 
 /// Color extensions for EdgeShape colors
 extension Color {
-    static let unchecked = Color.inactive //Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
-//    static let buffer = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
+    static let unchecked =
+        Color.inactive
+//    Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
+////    static let buffer = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
     static let solid = Color.text // Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
 }
 
@@ -19,14 +21,15 @@ struct EdgeShape: Shape {
     
     var totalLength: Double
     var starting: Double = 0.0
-    var index: Int { min(max(Int(totalLength), 0), Self.lines.count - 1) }
+    
+    private var index: Int { min(max(Int(totalLength), 0), Self.lines.count - 1) }
     
     var animatableData: Double {
         get { totalLength }
         set { totalLength = newValue }
     }
     
-    static let lines : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
+    private static let lines : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
         (start: (0.0, 1.0), end: (0.0, 0.0)),
         (start: (0.0, 0.0), end: (1.0, 0.0)),
         (start: (0.0, 1.0), end: (1.0, 1.0)),
@@ -38,14 +41,14 @@ struct EdgeShape: Shape {
     static var numberOfEdges : Int { lines.count }
     
     /// translate a relative Point from our corners to a CGPoint in our View
-    func cornerPoint(point: (CGFloat,CGFloat), in rect: CGRect) -> CGPoint {
+    private func cornerPoint(point: (CGFloat,CGFloat), in rect: CGRect) -> CGPoint {
         return CGPoint(
             x: rect.maxX + (1.0 - point.0) * (rect.minX - rect.maxX),
             y: rect.maxY + (1.0 - point.1) * (rect.minY - rect.maxY)
         )
     }
     
-    func edge(_ edge: Int, in rect: CGRect, length: Double = 1.0) -> Path {
+    private func edge(_ edge: Int, in rect: CGRect, length: Double = 1.0) -> Path {
         
         let start = cornerPoint(point: Self.lines[edge].start, in: rect)
         let end = cornerPoint(point: Self.lines[edge].end, in: rect)
@@ -54,7 +57,6 @@ struct EdgeShape: Shape {
         let y = start.y + ( end.y - start.y ) * CGFloat(length)
         
         let toPoint = CGPoint(x: x, y: y)
-        
         var path = Path()
         
         path.move(to: start)
@@ -63,7 +65,7 @@ struct EdgeShape: Shape {
         return path
     }
     
-    func edges(length: Double, in rect: CGRect) -> Path {
+    private func edges(length: Double, in rect: CGRect) -> Path {
         let remainingLength = totalLength - Double(index)
         
         var path = Path()
@@ -82,6 +84,7 @@ struct EdgeShape: Shape {
     
 }
 
+// MARK: - sample views
 struct EdgeView: View {
     
     @State var index = 0
@@ -89,7 +92,7 @@ struct EdgeView: View {
     
     var body: some View {
         EdgeShape(totalLength: length, starting: 1.0)
-            .stroke(Color.solid)
+            .stroke(Color.solid, style: StrokeStyle(lineCap: .round,lineJoin: .round))
             .padding()
             .background(Color.gray)
             .animation(.default)

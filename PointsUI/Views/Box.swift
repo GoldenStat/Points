@@ -29,25 +29,32 @@ struct Box: View {
     var cappedPoints : Double { min(Self.maxLength, Double(score.value)) }
     var cappedTotal : Double { min(Self.maxLength, Double(score.sum)) }
     
-    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1 }
+    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1.0 }
     
     var body: some View {
         ZStack {
             EdgeShape(totalLength: Self.maxLength)
-                .stroke(Color.unchecked, lineWidth: 5.0)
+                .stroke(Color.unchecked,
+                        style: strokeStyle)
+                .zIndex(-1)
                 .animation(nil)
             EdgeShape(totalLength: cappedPoints)
-                .stroke(Color.solid, lineWidth: 5.0)
+                .stroke(Color.solid,
+                        style: strokeStyle)
+                .zIndex(1)
                 .animation(nil)
             EdgeShape(totalLength: cappedTotal, starting: cappedPoints)
-                .stroke(Color.pointbuffer, lineWidth: 5.0)
+                .stroke(Color.pointbuffer,
+                        style: strokeStyle)
         }
     }
     
     let lineWidth : CGFloat = 1.0
+    let strokeStyle: StrokeStyle = .init(lineWidth: 10.0, lineCap: .round, lineJoin: .round)
     
 }
 
+// MARK: - sample Views
 struct SampleBox: View {
     @State var points : Score = Score(0)
     
