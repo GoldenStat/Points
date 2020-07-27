@@ -45,7 +45,7 @@ struct GameBoardView: View {
     
     var body: some View {
         ZStack {
-            Color.white.opacity(almostInvisible)
+            Color.background.opacity(almostInvisible)
             
             switch activeView {
             case .currentState:

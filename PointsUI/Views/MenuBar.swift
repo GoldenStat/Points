@@ -11,6 +11,7 @@ import SwiftUI
 struct MenuBar: View {
     @EnvironmentObject var settings: GameSettings
     
+    @State var showInfo: Bool = false
     @Binding // this is a binding so the calling view can blur...
     var presentEditView: Bool
     {
@@ -18,88 +19,118 @@ struct MenuBar: View {
             if !presentEditView { settings.updateSettings() }
         }
     }
-    
+       
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                HStack {
-                    // History Buttons
+        VStack(spacing: noSpacing) {
+            Group { // visible part
+                ZStack {
                     HStack {
-                        Button() { settings.undo() }
-                            label: {
-                                Image(systemName: "arrow.left")
-                                    .padding()
-                            }
-                            .disabled(!settings.canUndo)
-                        Button() { settings.redo() }
-                            label: {
-                                Image(systemName: "arrow.right")
-                                    .padding()
-                            }
-                            .disabled(!settings.canRedo)
+                        // History Buttons
+                        historyButtons
                         
+                        Spacer()
+                        
+                        // Info Button
+                        infoButton
                     }
                     
-                    Spacer()
+                    // Drag Down
+                    editViewButton
                     
-                    // Info Button
-                    Button() {
-                        showInfo.toggle()
-                    } label: {
-                        Image(systemName:
-                                "info")
+                }
+                .zIndex(2)
+                
+                if (presentEditView) {
+                    VStack(spacing: noSpacing){
+                        EditView()
                             .padding()
+                            .zIndex(1) // let it scroll down from 'behind' the menu bar
                     }
+                    .transition(.move(edge: .top))
+                    .background(LinearGradient(gradient: Gradient(colors: [.background,.background,.background,.clear]), startPoint: .top, endPoint: .bottom))
                 }
-                
-                // Drag Down
-                Button() {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        presentEditView.toggle()
-                    }
-                    if !presentEditView {
-                        settings.updateSettings()
-                    }
-                } label: {
-                    presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
-                }
-                .foregroundColor(.gray)
-                .framedClip(borderColor: .clear, cornerRadius: 25.0, lineWidth: 1.0)
-                .emphasizeCircle(maxHeight: 60)
-                
-            }
-//            .background(Color.darkNoon)
-            .zIndex(2)
-            if (presentEditView) {
-                VStack(spacing: 0){
-                    EditView()
-                        .padding()
-                        .background(Color.background)
-                        .zIndex(1) // let it scroll down from 'behind' the menu bar
-                    
-                    Color.background.opacity(0.1)
-                }
-                .transition(.move(edge: .top))
             }
             
-            Spacer()
+            Spacer() // "invisible" part
+                .background(Color.background.opacity(invisible))
+                .edgesIgnoringSafeArea(.bottom)
         }
         .popover(isPresented: $showInfo) {
             InfoView()
         }
         .onTapGesture(count: 2) {
             withAnimation {
-            presentEditView = false
-            settings.updateSettings()
+                presentEditView = false
+                settings.updateSettings()
             }
         }
     }
+        
+    // MARK: - constants
+    let maxButtonHeight: CGFloat = 60
+    let animationDuration: Double = 2.5
+    let noSpacing: CGFloat = 0
+    let invisible: Double = 0.01
     
-    // MARK: present Info
-    @State var showInfo: Bool = false
     
- }
+    // MARK: - Menu Bar symbols
+    
+    // MARK: editView button
+    var editViewButton: some View {
+        Button() {
+            withAnimation(.easeInOut(duration: animationDuration)) {
+                presentEditView.toggle()
+            }
+            if !presentEditView {
+                settings.updateSettings()
+            }
+        } label: {
+            editViewSymbol
+        }
+        .foregroundColor(.gray)
+        .framedClip(borderColor: .clear)
+        .emphasizeCircle(maxHeight: maxButtonHeight)
+    }
+    
+    var editViewSymbol: some View {                         presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
+    }
+    
+    // MARK: info button
 
+    var infoButton: some View {
+        Button() {
+            showInfo.toggle()
+        } label: {
+            Image(systemName:
+                    "info")
+                .padding()
+        }
+    }
+    
+    // MARK: history button
+    var historyButtons: some View {
+        HStack {
+            Button() { settings.undo() }
+                label: {
+                    undoSymbol
+                        .padding()
+                }
+                .disabled(!settings.canUndo)
+            Button() { settings.redo() }
+                label: {
+                    redoSymbol
+                        .padding()
+                }
+                .disabled(!settings.canRedo)
+        }
+    }
+    
+    var undoSymbol: some View { Image(systemName: "arrow.left")}
+    var redoSymbol: some View { Image(systemName: "arrow.right")}
+ 
+}
+
+// MARK: - preview Views
 
 struct SampleEditView: View {
     @State var isVisible = true

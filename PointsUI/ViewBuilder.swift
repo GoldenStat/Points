@@ -32,7 +32,7 @@ struct Emphasize<Content: View> : View {
     
     let cornerRadius: CGFloat = 4
     let blurRadius: CGFloat = 5
-    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
+    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 14.0, x: 6, y: 6)
 }
 
 struct EmphasizeCircle<Content: View> : View {
@@ -47,9 +47,9 @@ struct EmphasizeCircle<Content: View> : View {
         Circle()
             .fill(Color.background)
             .clipped()
-            .frame(maxHeight: maxHeight)
-            .blur(radius: blurRadius)
-            .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
+            .frame(maxHeight: 40)
+            .blur(radius: 3)
+            .shadow(color: shadow.color, radius: 0, x: 4, y: 6)
             .overlay(
                 content
             )
@@ -57,7 +57,7 @@ struct EmphasizeCircle<Content: View> : View {
     
     let cornerRadius: CGFloat = 4
     let blurRadius: CGFloat = 5
-    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
+    let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 2.0, x: 2, y: 4)
 }
 
 struct EmphasizeShape<Content: View> : View {

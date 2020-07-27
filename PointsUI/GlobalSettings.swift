@@ -42,6 +42,7 @@ enum GlobalSettings {
     @UserDefault(key: "UpdateTime", defaultValue: 5) static var updateTime: TimeInterval
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
+    @UserDefault(key: "LineWidth", defaultValue: 1.0) static var pointsLineWidth: CGFloat
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
     static var playerNames : [String]
@@ -55,4 +56,8 @@ extension Color {
     static let points = Color.accentColor
     static let inactive  = Color("inactive")
     static let pointbuffer  = Color("buffer")
+}
+
+extension CGFloat {
+    static let lineWidth : Self = 1.0
 }

@@ -14,34 +14,51 @@ struct EditView : View {
     var body: some View {
         // MARK: add more later
         VStack {
+            Group {
             GlobalSettingsView()
             NumbersOfPlayersPicker()
+            }
+            .padding(.vertical)
+            
+            Spacer()
+                .background(Color.background.opacity(0.01))
         }
-        .padding(.vertical)
     }
 }
 
 struct GlobalSettingsView: View {
     @EnvironmentObject var settings: GameSettings
         
+    @State var lineWidth : CGFloat = GlobalSettings.pointsLineWidth {
+        didSet {
+            GlobalSettings.pointsLineWidth = $lineWidth.wrappedValue
+        }
+    }
+    
     var body: some View {
         VStack {
             HStack {
                 FieldWithBackground("Puntos:") {
                     TextField("Max Puntos", text: $settings.maxPointsString)
-                        .padding(.vertical, 5)
                 }
                 
                 FieldWithBackground("Manos:") {
                     TextField("Max Manos", text: $settings.maxGamesString)
-                        .padding(.vertical, 5)
                 }
+                
             }
+            .padding(.vertical, 5)
             
-            FieldWithBackground("Animacion:") {
+            FieldWithBackground("Animación:") {
                 Slider(value: $settings.updateTimeInterval, in: 0.5 ... 5.0, step: 0.5)
                 Text("\(settings.updateTimeInterval, specifier: "%.1f")")
             }
+
+            FieldWithBackground("Line Width:") {
+                Slider(value: $lineWidth, in: 0.5 ... 5.0, step: 0.1)
+                Text("\(lineWidth, specifier: "%.1f")")
+            }
+
         }
         .keyboardType(.numberPad)
     }
@@ -79,7 +96,7 @@ struct FieldWithBackground<Content: View>: View {
         .foregroundColor(Color.text)
     }
     
-    private let minSpacing: CGFloat = 20
+    private let minSpacing: CGFloat = 10
     private let cornerRadius: CGFloat = 8
     
 }
@@ -96,7 +113,6 @@ struct NumbersOfPlayersPicker: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
-        .background(Color.inactive)
         .foregroundColor(Color.text)
     }
 }

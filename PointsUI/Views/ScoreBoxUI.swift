@@ -62,4 +62,3 @@ struct ScoreBoxUI: View {
         return Box(score: thisBoxScore)
     }
 }
-

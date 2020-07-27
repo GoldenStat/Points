@@ -34,30 +34,33 @@ struct Box: View {
     var body: some View {
         ZStack {
             EdgeShape(totalLength: Self.maxLength)
-                .stroke(Color.unchecked, lineWidth: 5.0, ())
+                .stroke(Color.unchecked, lineWidth: 5.0)
                 .animation(nil)
             EdgeShape(totalLength: cappedPoints)
-                .stroke(Color.solid)
+                .stroke(Color.solid, lineWidth: 5.0)
                 .animation(nil)
             EdgeShape(totalLength: cappedTotal, starting: cappedPoints)
-                .stroke(Color.pointbuffer)
+                .stroke(Color.pointbuffer, lineWidth: 5.0)
         }
     }
+    
+    let lineWidth : CGFloat = 1.0
+    
 }
 
 struct SampleBox: View {
-    @State var points : Int = 0
+    @State var points : Score = Score(0)
     
     var body: some View {
         ZStack {
-            EdgeShape(totalLength: Double(points))
-                .stroke(Color.solid)
-                .animation(.easeInOut(duration: 0.3))
+            Box(score: points)
         }
         .background(Color.background)
         .onTapGesture {
-            self.points = self.points == 5 ? 0 :
-                self.points + 1
+            points.add(points: 1)
+            if points.sum > 5 {
+                points = Score(0)
+            }
         }
     }
     

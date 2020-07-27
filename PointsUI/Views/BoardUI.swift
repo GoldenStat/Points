@@ -59,7 +59,12 @@ struct BoardUI: View {
 
 struct BoardUI_Previews: PreviewProvider {
     static var previews: some View {
-        BoardUI()
-            .environmentObject(GameSettings())
+        Group {
+            BoardUI()
+                .environmentObject(GameSettings())
+            BoardUI()
+                .preferredColorScheme(.dark)
+                .environmentObject(GameSettings())
+        }
     }
 }
