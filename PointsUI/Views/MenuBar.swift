@@ -107,7 +107,7 @@ struct MenuBar: View {
         }
     }
     
-    // MARK: history button
+    // MARK: history buttons
     var historyButtons: some View {
         HStack {
             Button() { settings.undo() }

@@ -36,4 +36,5 @@ struct Score: Codable, Equatable {
         guard sum < maxPoints else { return }
         buffer += points
     }
+    
 }

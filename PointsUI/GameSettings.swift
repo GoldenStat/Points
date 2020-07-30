@@ -24,6 +24,7 @@ class GameSettings: ObservableObject {
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
     }
+    
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
     var maxGamesString: String {
         get { String(maxGames) }
@@ -142,11 +143,20 @@ class GameSettings: ObservableObject {
     @Published var needsUpdate = false
     var canUndo: Bool { history.canUndo }
     var canRedo: Bool { history.canRedo }
-
+    
+    /// clears all players buffers (used for undo)
+    /// returns true if a buffer was cleared
+    private func clearBuffers() -> Bool {
+        return players.clearBuffers()
+    }
+    
     // MARK: History functions
+    /// clears buffers first, then goes back in history
     func undo() {
         needsUpdate.toggle()
-        history.undo()
+        if !clearBuffers() {
+            history.undo()
+        }
         updatePlayersWithCurrentState()
     }
     

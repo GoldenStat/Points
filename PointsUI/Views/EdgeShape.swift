@@ -8,28 +8,30 @@
 
 import SwiftUI
 
-/// Color extensions for EdgeShape colors
-extension Color {
-    static let unchecked =
-        Color.inactive
-//    Color(red: 235.0 / 255, green: 235.0 / 255, blue: 235.0 / 255).opacity(0.75)
-////    static let buffer = Color(red: 250.0 / 255, green: 50.0 / 255, blue: 50.0 / 255)
-    static let solid = Color.text // Color(red: 30.0 / 255, green: 30.0 / 255, blue: 30.0 / 255)
-}
-
+/// connect points as edges
+///
+///
+/// *struct lines*
+/// - TODO: the connetion point in Unit Points
+/// start and endpoints scaled to a UnitRect
+///
 struct EdgeShape: Shape {
     
+    /// where is the last point
     var totalLength: Double
+    
+    /// which is the first step
     var starting: Double = 0.0
     
-    private var index: Int { min(max(Int(totalLength), 0), Self.lines.count - 1) }
+    /// start
+    private var index: Int { min(max(Int(totalLength), 0), Self.edges.count - 1) }
     
     var animatableData: Double {
         get { totalLength }
         set { totalLength = newValue }
     }
     
-    private static let lines : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
+    private static let edges : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
         (start: (0.0, 1.0), end: (0.0, 0.0)),
         (start: (0.0, 0.0), end: (1.0, 0.0)),
         (start: (0.0, 1.0), end: (1.0, 1.0)),
@@ -38,7 +40,7 @@ struct EdgeShape: Shape {
         (start: (0.0, 1.0), end: (1.0, 0.0))
     ]
     
-    static var numberOfEdges : Int { lines.count }
+    static var numberOfEdges : Int { edges.count }
     
     /// translate a relative Point from our corners to a CGPoint in our View
     private func cornerPoint(point: (CGFloat,CGFloat), in rect: CGRect) -> CGPoint {
@@ -48,10 +50,11 @@ struct EdgeShape: Shape {
         )
     }
     
+    /// calculate one edge to be drawn animated
     private func edge(_ edge: Int, in rect: CGRect, length: Double = 1.0) -> Path {
         
-        let start = cornerPoint(point: Self.lines[edge].start, in: rect)
-        let end = cornerPoint(point: Self.lines[edge].end, in: rect)
+        let start = cornerPoint(point: Self.edges[edge].start, in: rect)
+        let end = cornerPoint(point: Self.edges[edge].end, in: rect)
         
         let x = start.x + ( end.x - start.x ) * CGFloat(length)
         let y = start.y + ( end.y - start.y ) * CGFloat(length)
@@ -65,21 +68,25 @@ struct EdgeShape: Shape {
         return path
     }
     
+    /// combine edges from the startpoint to the last edge
     private func edges(length: Double, in rect: CGRect) -> Path {
         let remainingLength = totalLength - Double(index)
         
         var path = Path()
         let start = max(0,Int(starting))
-        guard (index > start) else { return Path() }
-        for counter in start ..< index {
-            path.addPath(edge(counter, in: rect))
+        for edgeIndex in start ..< index {
+            path.addPath(edge(edgeIndex, in: rect))
         }
         path.addPath(edge(index, in: rect, length: remainingLength))
         return path
     }
     
     func path(in rect: CGRect) -> Path {
+        if totalLength > 0 {
         return edges(length: totalLength, in: rect)
+        } else {
+            return Path()
+        }
     }
     
 }
@@ -87,20 +94,31 @@ struct EdgeShape: Shape {
 // MARK: - sample views
 struct EdgeView: View {
     
-    @State var index = 0
-    var length : Double { Double(index) }
+    @State var index : Double = 0
     
     var body: some View {
-        EdgeShape(totalLength: length, starting: 1.0)
-            .stroke(Color.solid, style: StrokeStyle(lineCap: .round,lineJoin: .round))
-            .padding()
-            .background(Color.gray)
-            .animation(.default)
-            .onTapGesture {
-                self.index += 1
-                if self.index > 5 {
-                    self.index = 0
+        ZStack {
+            Background()
+            
+            EdgeShape(totalLength: index)
+                .stroke(Color.points,
+                        style: StrokeStyle(
+                            lineWidth: 5.0,
+                            lineCap:  .round,
+                            lineJoin: .round))
+                .padding()
+            
+            Text(index.description)
+        }
+        .onTapGesture {
+            if Int(self.index) + 1 > 5 {
+                index = 0
+                
+            } else {
+                withAnimation(.easeOut(duration: 1.0)) {
+                    index += 1
                 }
+            }
         }
     }
 }

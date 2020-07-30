@@ -42,7 +42,7 @@ enum GlobalSettings {
     @UserDefault(key: "UpdateTime", defaultValue: 5) static var updateTime: TimeInterval
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
-    @UserDefault(key: "LineWidth", defaultValue: 1.0) static var pointsLineWidth: CGFloat
+    @UserDefault(key: "LineWidth", defaultValue: 5.0) static var pointsLineWidth: CGFloat
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
     static var playerNames : [String]
@@ -52,10 +52,11 @@ enum GlobalSettings {
 extension Color {
     static let background  = Color("background")
     static let text  = Color("text")
-//    static let points  = Color("points").accentColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-    static let points = Color.accentColor
+    static let points  = Color("points")
     static let inactive  = Color("inactive")
     static let pointbuffer  = Color("buffer")
+    static let pointsTop = Color("points-top")
+    static let boardbgColor = Color.background
 }
 
 extension CGFloat {

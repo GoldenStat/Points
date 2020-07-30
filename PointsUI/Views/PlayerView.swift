@@ -85,10 +85,10 @@ struct ScoreRow: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    
     static var player = Player(name: "Alexander")
     
     static var previews: some View {
         PlayerView(player: player)
+            .environmentObject(GameSettings())
     }
 }

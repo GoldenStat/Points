@@ -97,6 +97,12 @@ class Players: ObservableObject {
         }
     }
         
+    public func clearBuffers() -> Bool {
+        let playersWithBuffer = items.filter { $0.score.buffer > 0 }
+        _ = playersWithBuffer.map { $0.score.buffer = 0 }
+        return playersWithBuffer.count > 0
+    }
+    
     /// convenience initiallizer - replaces all players with new structs with given players with their current score
     convenience init(players: [Player]) {
         self.init()

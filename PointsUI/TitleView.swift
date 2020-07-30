@@ -8,10 +8,6 @@
 
 import SwiftUI
 
-extension Color {
-    static let boardbgColor = Color.background
-}
-
 struct TitleView: View {
 
     @State var degrees : Double = 0.0
