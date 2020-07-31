@@ -10,10 +10,12 @@ import SwiftUI
 
 struct TitleView: View {
     
+    @State private var animatedState = Params.initial
+
     var body: some View {
         ZStack {
             Color.background
-            Text(GameSettings.name)
+            Text(PointsUIApp.name)
                 .font(.system(size: animatedState.fontSize))
                 .rotationEffect(.degrees(animatedState.textAngle),
                                 anchor: .center)
@@ -30,14 +32,9 @@ struct TitleView: View {
             animatedState = Params.background
         }
     }
-    
-    //    MARK: local variables
-    let fadeDuration : Double = 5
-    
-    @State var animatedState = Params.initial
-    
-    // MARK: state variable for different moments of view
-    struct Params {
+        
+    // MARK: - Defining constant parameters used for animating states
+    private struct Params {
         
         let spring: Animation
         let offset: CGSize
@@ -47,7 +44,7 @@ struct TitleView: View {
         let color: Color
         let opacity: Double
         
-        static let initial = Params(spring: Animation.spring(response: 1.0, dampingFraction: 0.0, blendDuration: 1.0),
+        public static let initial = Params(spring: Animation.spring(response: 1.0, dampingFraction: 0.0, blendDuration: 1.0),
                                             offset: CGSize(width: 0.0, height: -200),
                                             fontSize: 134,
                                             textAngle: 0,
@@ -55,7 +52,7 @@ struct TitleView: View {
                                             color: Color.primary,
                                             opacity: 1.0)
         
-        static let appear = Params(spring: Animation.spring(response: 2.0, dampingFraction: 0.6, blendDuration: 1.0),
+        public static let appear = Params(spring: Animation.spring(response: 2.0, dampingFraction: 0.6, blendDuration: 1.0),
                                            offset: CGSize(width: 0.0, height: 0),
                                            fontSize: 134,
                                            textAngle: 0,
@@ -63,7 +60,7 @@ struct TitleView: View {
                                            color: Color.points,
                                            opacity: 0.6)
         
-        static let background = Params(spring: Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.4),
+        public static let background = Params(spring: Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.4),
                                                offset: CGSize(width: 0.0, height: 0),
                                                fontSize: 134,
                                                textAngle: 45,

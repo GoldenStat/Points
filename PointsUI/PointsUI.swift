@@ -11,7 +11,8 @@ import SwiftUI
 
 @main
 struct PointsUIApp: App {
-    @State var showTitle = true
+    static let name = "Truco Points"
+
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct MainGameView: View {
+    
     @StateObject var settings : GameSettings = GameSettings()
 
     @State var showMenuBar = false { didSet {
