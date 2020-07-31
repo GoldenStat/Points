@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-extension Double { static var lineAnimationSpeed = 0.3 }
+extension Double { static var lineAnimationSpeed = 1.0 }
 
 
 /// the UI with a collection of Boxes and maximum score
-struct ScoreBoxUI: View {
+struct ScoreBoardView: View {
     @EnvironmentObject var settings: GameSettings
     
     let id = UUID()
@@ -60,5 +60,16 @@ struct ScoreBoxUI: View {
         }
         
         return Box(score: thisBoxScore)
+    }
+}
+
+struct ScoreBoxUI_Previews: PreviewProvider {
+    static var previews: some View {
+        ZStack {
+            Background()
+            
+            ScoreBoardView(player: Player(name: "Alexander"))
+                .environmentObject(GameSettings())
+        }
     }
 }

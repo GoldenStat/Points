@@ -32,11 +32,11 @@ struct EditView : View {
 struct GlobalSettingsView: View {
     @EnvironmentObject var settings: GameSettings
     
-    @State var lineWidth : CGFloat = GlobalSettings.pointsLineWidth {
-        didSet {
-            GlobalSettings.pointsLineWidth = $lineWidth.wrappedValue
-        }
-    }
+//    @State var lineWidth : CGFloat = GlobalSettings.pointsLineWidth {
+//        didSet {
+//            GlobalSettings.pointsLineWidth = $lineWidth.wrappedValue
+//        }
+//    }
     
     var body: some View {
         VStack {
@@ -48,20 +48,8 @@ struct GlobalSettingsView: View {
                 FieldWithBackground("Manos:") {
                     TextField("Max Manos", text: $settings.maxGamesString)
                 }
-                
             }
             .padding(.vertical, 5)
-            
-            FieldWithBackground("Animación:") {
-                Slider(value: $settings.updateTimeInterval, in: 0.5 ... 5.0, step: 0.5)
-                Text("\(settings.updateTimeInterval, specifier: "%.1f")")
-            }
-
-            FieldWithBackground("Line Width:") {
-                Slider(value: $lineWidth, in: 0.5 ... 5.0, step: 0.1)
-                Text("\(lineWidth, specifier: "%.1f")")
-            }
-
         }
         .keyboardType(.numberPad)
     }
@@ -115,8 +103,6 @@ struct NumbersOfPlayersPicker: View {
                 ForEach(settings.availablePlayers, id:
                             \.self) { number in
                     Text(number.description)
-//                    peopleSymbol(for: number)
-//                    Text(emojis(for: number))
                 }
             }
         }

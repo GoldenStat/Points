@@ -22,17 +22,22 @@ struct PlayerView: View {
                 ScoreRow(player: player)
             }
             
-            RoundedRectangle(cornerRadius: cornerRadius)
-                .overlay(Emphasize() {
-                    ScoreBoxUI(player: player)
-                })
-                .onTapGesture(perform: {
-                    player.add(score: 1)
-                    settings.startTimer()
-                })
-                .aspectRatio(scoreBoardRatio, contentMode: .fit)
-                .padding(.horizontal)
-            
+            ZStack {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .overlay(Emphasize() {
+                        ScoreBoardView(player: player)
+                    })
+                    .onTapGesture(perform: {
+                        player.add(score: 1)
+                        settings.startTimer()
+                    })
+                    .aspectRatio(scoreBoardRatio, contentMode: .fit)
+                    .padding(.horizontal)
+                
+                if player.score.buffer > 0 {
+                    PlayerViewCount(number: player.score.buffer)
+                }
+            }
             Spacer()
         }
         .gesture(longPress)
@@ -53,11 +58,17 @@ struct PlayerView: View {
     }
 
     // MARK: -- private variables
-    private let offsetPoint = CGSize(width: 1000, height: 200)
     private let cornerRadius : CGFloat = 16.0
-    private let lineWidth : CGFloat = 1.5
 }
 
+struct PlayerViewCount: View {
+    var number: Int
+    var body: some View {
+        Text(number.description)
+            .font(.system(size: 128, weight: .semibold, design: .rounded))
+            .opacity(0.3)
+    }
+}
 struct PlayerHeadline: View {
     @ObservedObject var player : Player
 

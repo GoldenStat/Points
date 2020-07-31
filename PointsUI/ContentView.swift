@@ -2,75 +2,37 @@
 //  ContentView.swift
 //  PointsUI
 //
-//  Created by Alexander Völz on 23.10.19.
-//  Copyright © 2019 Alexander Völz. All rights reserved.
+//  Created by Alexander Völz on 30.07.20.
+//  Copyright © 2020 Alexander Völz. All rights reserved.
 //
 
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var settings : GameSettings = GameSettings()
 
-    @State var showMenuBar = false { didSet {
-        if !showMenuBar {
-            isEditing = false
-        }
-    }}
-    
-    @State var isEditing = false
-        
+    @State var gameStarted = false
+
     var body: some View {
+        let tapGesture = TapGesture()
+            .onEnded {
+                gameStarted = true
+            }
         
-        ZStack {
-            Color.background
+        return ZStack {
+            TitleView()
                 .edgesIgnoringSafeArea(.all)
             
-            ZStack {
-                GameBoardView()
-                    .blur(radius: isEditing ? 4.0 : 0.0 )
-                    .padding()
-
-                if showMenuBar {
-                    MenuBar(presentEditView: $isEditing)
-                        .transition(
-                            .move(edge: .top))
-                }
-                
-            }
-            
-            if settings.playerWonRound != nil {
-                PlayerWonRound()
-                    .transition(.move(edge: .bottom))
-                    .onAppear {
-                        showMenuBar = false
-                    }
-            }
-            
-            if settings.playerWonGame != nil {
-                PlayerWonGame()
-                    .transition(.opacity)
-                    .onAppear {
-                        showMenuBar = false
-                    }
+            if gameStarted {
+                MainGameView()
             }
         }
-        .animation(.default)
-        .onTapGesture(count: 2) {
-            showMenuBar.toggle()
-            settings.updateSettings()
-        }
-        .animation(.spring(response: 1.0, dampingFraction: 0.85, blendDuration: 0))
-        .environmentObject(settings)
+        .simultaneousGesture(tapGesture)
     }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ContentView(settings: GameSettings())
-            ContentView(settings: GameSettings())
-                .preferredColorScheme(.dark)
-        }
+        ContentView()
     }
 }

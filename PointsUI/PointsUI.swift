@@ -11,6 +11,7 @@ import SwiftUI
 
 @main
 struct PointsUIApp: App {
+    @State var showTitle = true
     var body: some Scene {
         WindowGroup {
             ContentView()

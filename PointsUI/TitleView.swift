@@ -9,53 +9,85 @@
 import SwiftUI
 
 struct TitleView: View {
-
-    @State var degrees : Double = 0.0
-    @State var zoom : CGFloat = 0.0
-    @State var opacity : Double = 0.3
     
     var body: some View {
-        Text(GameSettings.name)
-            .font(.system(size: fontSize))
-            .opacity(opacity)
-            .animation(
-                .linear(duration: fadeDuration))
-            .rotationEffect(.degrees(degrees),
-                            anchor: .center)
-            .animation(.spring(response: spring.response,
-                               dampingFraction: spring.dampingFraction,
-                               blendDuration: spring.blendDuration))
-            .scaleEffect(zoom)
-            .animation(.easeOut)
-            .onAppear {
-                degrees = finalDegrees
-                zoom = finalZoom
-            }
+        ZStack {
+            Color.background
+            Text(GameSettings.name)
+                .font(.system(size: animatedState.fontSize))
+                .rotationEffect(.degrees(animatedState.textAngle),
+                                anchor: .center)
+                .offset(animatedState.offset)
+                .scaleEffect(animatedState.textZoom)
+                .opacity(animatedState.opacity)
+                .foregroundColor(animatedState.color)
+                .animation(animatedState.spring)
+                .onAppear {
+                    animatedState = Params.appear
+                }
+        }
+        .onTapGesture {
+            animatedState = Params.background
+        }
     }
     
-//    MARK: local variables
-    let fontSize : CGFloat = 144
+    //    MARK: local variables
     let fadeDuration : Double = 5
-    let finalDegrees : Double = 45
-    let finalZoom: CGFloat = 1.0
     
-    let spring = ( response: 0.6, dampingFraction: 0.3, blendDuration: 1.0)
-
+    @State var animatedState = Params.initial
+    
+    // MARK: state variable for different moments of view
+    struct Params {
+        
+        let spring: Animation
+        let offset: CGSize
+        let fontSize: CGFloat
+        let textAngle: Double
+        let textZoom: CGFloat
+        let color: Color
+        let opacity: Double
+        
+        static let initial = Params(spring: Animation.spring(response: 1.0, dampingFraction: 0.0, blendDuration: 1.0),
+                                            offset: CGSize(width: 0.0, height: -200),
+                                            fontSize: 134,
+                                            textAngle: 0,
+                                            textZoom: 0,
+                                            color: Color.primary,
+                                            opacity: 1.0)
+        
+        static let appear = Params(spring: Animation.spring(response: 2.0, dampingFraction: 0.6, blendDuration: 1.0),
+                                           offset: CGSize(width: 0.0, height: 0),
+                                           fontSize: 134,
+                                           textAngle: 0,
+                                           textZoom: 1.0,
+                                           color: Color.points,
+                                           opacity: 0.6)
+        
+        static let background = Params(spring: Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.4),
+                                               offset: CGSize(width: 0.0, height: 0),
+                                               fontSize: 134,
+                                               textAngle: 45,
+                                               textZoom: 1.6,
+                                               color: Color.pointbuffer,
+                                               opacity: 0.1)
+    }
 }
 
 struct Background: View {
+    
     var body: some View {
-        Color.boardbgColor
-            .edgesIgnoringSafeArea(.all)
+        ZStack {
+            Color.boardbgColor
+                .edgesIgnoringSafeArea(.all)
+            TitleView()
+        }
     }
 }
 
+
 struct Background_Previews: PreviewProvider {
-    @State static var opacity = 0.1
+    
     static var previews: some View {
-        ZStack {
-            Background()
-            TitleView(opacity: 0.1)
-        }
+        Background()
     }
 }

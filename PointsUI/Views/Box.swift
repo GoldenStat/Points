@@ -57,7 +57,10 @@ struct Box: View {
     
     @State var bufferColor: Color = Color.pointbuffer
     
-    let strokeStyle: StrokeStyle = .init(lineWidth: GlobalSettings.pointsLineWidth, lineCap: .round, lineJoin: .round)
+    let strokeStyle: StrokeStyle =
+        .init(lineWidth: 5.0,
+//      GlobalSettings.pointsLineWidth,
+              lineCap: .round, lineJoin: .round)
     
 }
 
@@ -71,7 +74,7 @@ struct AnimatedBox: View {
             Box(score: points)
         }
         .onTapGesture {
-            withAnimation(.easeOut(duration: 1.5)) {
+            withAnimation(.easeOut(duration: 1.0)) {
                 points.add(points: 1)
             }
             if points.buffer > 5 {
