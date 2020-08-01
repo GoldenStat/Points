@@ -26,7 +26,7 @@ struct InfoView: View {
     
     var body: some View {
         VStack {
-            Text(GameSettings.name)
+            Text(PointsUIApp.name)
                 .font(.largeTitle)
             Text(description)
                 .font(.subheadline)

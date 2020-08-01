@@ -14,7 +14,6 @@ class GameSettings: ObservableObject {
     @Published var history : History
     @Published var maxGames: Int = GlobalSettings.maxGames
     @Published var maxPoints: Int = GlobalSettings.scorePerGame
-    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTime
     @Published var playerWonRound: Player?
     @Published var playerWonGame: Player?
     
@@ -38,12 +37,11 @@ class GameSettings: ObservableObject {
     }
     
     var updateTimeIntervalString: String {
-        get { String(updateTime) }
-        set { updateTime = TimeInterval(newValue) ?? GlobalSettings.updateTime }
+        get { String(updateTimeInterval) }
+        set { updateTimeInterval = TimeInterval(newValue) ?? GlobalSettings.updateTimeInterval }
     }
     
     // MARK: constant data for this class
-    static let name = "Truco Points"
     let availablePlayers = [ 2, 3, 4, 6 ]
             
     func updateSettings() {
@@ -56,7 +54,7 @@ class GameSettings: ObservableObject {
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
-        GlobalSettings.updateTime = updateTime
+        GlobalSettings.updateTimeInterval = updateTimeInterval
     }
     
     // MARK: control player data
@@ -169,11 +167,11 @@ class GameSettings: ObservableObject {
 
     // MARK: Timer
     private var timer : Timer?
-    private var updateTime: TimeInterval = GlobalSettings.updateTime
-    
+    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTimeInterval
+
     func startTimer() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: updateTime,
+        timer = Timer.scheduledTimer(timeInterval: updateTimeInterval,
                                      target: self,
                                      selector: #selector(update),
                                      userInfo: nil,

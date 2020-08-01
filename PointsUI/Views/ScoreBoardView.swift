@@ -66,7 +66,7 @@ struct ScoreBoardView: View {
 struct ScoreBoxUI_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            Background()
+            Color.background
             
             ScoreBoardView(player: Player(name: "Alexander"))
                 .environmentObject(GameSettings())

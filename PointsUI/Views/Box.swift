@@ -43,14 +43,13 @@ struct Box: View {
                 .stroke(
                     Color.points,
                     style: strokeStyle)
-                .zIndex(1)
                 .animation(nil)
+                .zIndex(1)
             
             EdgeShape(totalLength: cappedTotal,
                       starting: cappedPoints)
-                .stroke(Color.white,
+                .stroke(bufferColor,
                         style: strokeStyle)
-                .colorMultiply(bufferColor)
         }
     }
     
@@ -59,56 +58,40 @@ struct Box: View {
     
     let strokeStyle: StrokeStyle =
         .init(lineWidth: 5.0,
-//      GlobalSettings.pointsLineWidth,
               lineCap: .round, lineJoin: .round)
     
 }
 
 // MARK: - sample Views
 struct AnimatedBox: View {
-    @State var points : Score = Score(0)
+    @State var score : Score = Score(0)
+    @State var animatedColor = Color.pointbuffer
     
     var body: some View {
         ZStack {
-            Background()
-            Box(score: points)
+            Color.background
+            Box(score: score, bufferColor: animatedColor)
         }
         .onTapGesture {
+            animatedColor = Color.pointbuffer
             withAnimation(.easeOut(duration: 1.0)) {
-                points.add(points: 1)
+                score.add(points: 1)
+                animatedColor = Color.points
             }
-            if points.buffer > 5 {
-                points.save()
+            if score.buffer > 5 {
+                score.save()
             }
-            if points.value > 5 {
-                points = Score(0)
+            if score.value > 5 {
+                score = Score(0)
             }
         }
     }
 }
 
+
 struct Box_Previews: PreviewProvider {
-    
-    @State static var score = Score(2,buffer: 2)
-    
     static var previews: some View {
-        
-        VStack {
-            ZStack {
-                Background()
-                
-                Box(score: score)
-                    .frame(width: 300, height: 300)
-                    .padding()
-            }
-            
-            AnimatedBox()
-                .padding()
-        }
-        .onTapGesture {
-            if score.sum <= EdgeShape.numberOfEdges {
-                score.add()
-            }
-        }        
+        AnimatedBox()
+            .frame(width: 200, height: 200)
     }
 }

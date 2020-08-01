@@ -24,7 +24,7 @@ struct EdgeShape: Shape {
     var starting: Double = 0.0
     
     /// start
-    private var index: Int { min(max(Int(totalLength), 0), Self.edges.count - 1) }
+    private var index: Int { min(max(Int(totalLength), 0), Self.numberOfEdges - 1) }
     
     var animatableData: Double {
         get { totalLength }
@@ -73,10 +73,12 @@ struct EdgeShape: Shape {
         let remainingLength = totalLength - Double(index)
         
         var path = Path()
-        let start = max(0,Int(starting))
+        let start = min(max(0,Int(starting)),index)
+
         for edgeIndex in start ..< index {
             path.addPath(edge(edgeIndex, in: rect))
         }
+
         path.addPath(edge(index, in: rect, length: remainingLength))
         return path
     }

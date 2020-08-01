@@ -27,10 +27,6 @@ struct PlayerView: View {
                     .overlay(Emphasize() {
                         ScoreBoardView(player: player)
                     })
-                    .onTapGesture(perform: {
-                        player.add(score: 1)
-                        settings.startTimer()
-                    })
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
@@ -38,6 +34,11 @@ struct PlayerView: View {
                     PlayerViewCount(number: player.score.buffer)
                 }
             }
+            .onTapGesture(perform: {
+                player.add(score: 1)
+                settings.startTimer()
+            })
+
             Spacer()
         }
         .gesture(longPress)
