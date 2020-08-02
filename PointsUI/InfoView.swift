@@ -19,7 +19,7 @@ struct InfoView: View {
 
     Double-clicking gets you into the menubar which has history options, so you can go back and forth in case you did make an error somewhen.
 
-    Also, if you click on the little arrow on the top you get to set things like how long it takes to make the noted points permanent, the number of players - pretty limited in Truco - or the amount of points per game, as there are various variants (usually 24 or 30, but I made this freely available)
+    Also, if you click on the little arrow on the top you get to set things like how long it takes to make the noted points permanent, the number of players - pretty limited in Truco - or the amount of points per game, as there are various variants (usually 24 or 30, but I made this configurable available)
 
     Note that you loose tracking points for the game if you change the number of players.
 """

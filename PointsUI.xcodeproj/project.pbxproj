@@ -142,7 +142,6 @@
 				4177075724D6A18F00FD851A /* HistorySymbolRow.swift */,
 				418D8B8724AE2B06008A4A3E /* MenuBar.swift */,
 				4173576524A509D6002C10B2 /* EditView.swift */,
-				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				418D8B8524AE19F7008A4A3E /* PlayerWon.swift */,
 			);
 			path = Views;
@@ -151,6 +150,7 @@
 		411DF21B23607CD100A37C64 /* PointsUI */ = {
 			isa = PBXGroup;
 			children = (
+				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				4168CE2824B3899D00DACD62 /* PointsUI.swift */,
 				4196485424D2CF09002FD363 /* ContentView.swift */,
 				411DF22023607CD100A37C64 /* MainGameView.swift */,
