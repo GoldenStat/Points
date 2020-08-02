@@ -130,6 +130,7 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				4194BF1A24A29209007CDBA1 /* TitleView.swift */,
 				411DF2112360645200A37C64 /* FlowStack.swift */,
 				416F37962442AB1A00D9D55B /* EdgeShape.swift */,
@@ -150,7 +151,6 @@
 		411DF21B23607CD100A37C64 /* PointsUI */ = {
 			isa = PBXGroup;
 			children = (
-				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				4168CE2824B3899D00DACD62 /* PointsUI.swift */,
 				4196485424D2CF09002FD363 /* ContentView.swift */,
 				411DF22023607CD100A37C64 /* MainGameView.swift */,

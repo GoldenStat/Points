@@ -11,7 +11,6 @@ import SwiftUI
 struct MenuBar: View {
     @EnvironmentObject var settings: GameSettings
     
-    @State var showInfo: Bool = false
     @Binding // this is a binding so the calling view can blur...
     var presentEditView: Bool
     {
@@ -21,24 +20,9 @@ struct MenuBar: View {
     }
        
     var body: some View {
-        VStack() {
+        VStack {
             Group { // visible part
-                ZStack {
-                    HStack {
-                        // History Buttons
-                        historyButtons
-                        
-                        Spacer()
-                        
-                        // Info Button
-                        infoButton
-                    }
-                    
-                    // Drag Down
-                    editViewButton
-                    
-                }
-                .zIndex(2)
+                editViewButton
                 
                 if (presentEditView) {
                     VStack(spacing: noSpacing){
@@ -54,9 +38,6 @@ struct MenuBar: View {
             Spacer() // "invisible" part
                 .background(Color.background.opacity(invisible))
                 .edgesIgnoringSafeArea(.bottom)
-        }
-        .popover(isPresented: $showInfo) {
-            InfoView()
         }
         .onTapGesture(count: 2) {
             withAnimation {
@@ -97,18 +78,7 @@ struct MenuBar: View {
         presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
     }
     
-    // MARK: info button
 
-    var infoButton: some View {
-        Button() {
-            showInfo.toggle()
-        } label: {
-            Image(systemName:
-                    "info")
-                .padding()
-        }
-    }
-    
     // MARK: history buttons
     var historyButtons: some View {
         HStack {

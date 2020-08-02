@@ -29,6 +29,8 @@ struct MainGameView: View {
                     .blur(radius: isEditing ? 4.0 : 0.0 )
                     .padding()
 
+                infoButton
+                
                 if showMenuBar {
                     MenuBar(presentEditView: $isEditing)
                         .transition(
@@ -60,6 +62,28 @@ struct MainGameView: View {
         }
         .animation(.spring(response: 1.0, dampingFraction: 0.85, blendDuration: 0))
         .environmentObject(settings)
+        .popover(isPresented: $showInfo) {
+            InfoView()
+        }
+    }
+    
+    // MARK: info button
+    @State var showInfo: Bool = false
+
+    var infoButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button() {
+                    showInfo.toggle()
+                } label: {
+                    Image(systemName:
+                            "info")
+                        .padding()
+                }
+            }
+            Spacer()
+        }
     }
 }
 
