@@ -16,7 +16,12 @@ class GameSettings: ObservableObject {
     @Published var maxPoints: Int = GlobalSettings.scorePerGame
     @Published var playerWonRound: Player?
     @Published var playerWonGame: Player?
-    
+    @Published var updateSpeed: UpdateTimes = UpdateTimes(value: GlobalSettings.updateTimeInterval) {
+        didSet {
+            GlobalSettings.updateTimeInterval = updateSpeed.double
+        }
+    }
+
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
     init() {
@@ -34,11 +39,7 @@ class GameSettings: ObservableObject {
         get { String(maxPoints) }
         set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
     }
-    
-    var updateTimeIntervalString: String {
-        get { String(updateTimeInterval) }
-        set { updateTimeInterval = TimeInterval(newValue) ?? GlobalSettings.updateTimeInterval }
-    }
+        
     
     // MARK: constant data for this class
     let availablePlayers = [ 2, 3, 4, 6 ]
@@ -53,7 +54,7 @@ class GameSettings: ObservableObject {
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
-        GlobalSettings.updateTimeInterval = updateTimeInterval
+        GlobalSettings.updateTimeInterval = updateSpeed.double
     }
     
     // MARK: control player data
@@ -166,7 +167,7 @@ class GameSettings: ObservableObject {
 
     // MARK: Timer
     private var timer : Timer?
-    @Published var updateTimeInterval: TimeInterval = GlobalSettings.updateTimeInterval
+    var updateTimeInterval: TimeInterval { updateSpeed.double }
 
     func startTimer() {
         timer?.invalidate()

@@ -66,11 +66,14 @@ struct GameBoardView: View {
         DragGesture()
             .onChanged() { value in
                 guard !longPress else { return }
-                startingSwipePosition = value.location
+                if startingSwipePosition != nil {
+                    endingSwipePosition = value.location
+                } else {
+                    startingSwipePosition = value.location
+                }
             }
             .onEnded() { value in
                 guard !longPress else { return }
-                endingSwipePosition = value.location
                 if dragAmount.width > distanceToSwipe {
                     viewIndex = (viewIndex + 1) % viewTypes.count
                 } else if  dragAmount.width < -distanceToSwipe {
@@ -89,12 +92,9 @@ struct GameBoardView: View {
 
     var historyGesture : some Gesture {
         let longPress = LongPressGesture(minimumDuration: 2.0)
-            .updating($longPress) { _, _, _ in
+            .onChanged() { value in
                 showHistorySymbols = true
             }
-//            .onEnded { _ in
-//                showHistorySymbols = false
-//            }
         
         let dragGesture = DragGesture(minimumDistance: 20)
             .onChanged() { value in

@@ -36,9 +36,10 @@ enum UpdateTimes : Int, CaseIterable {
 }
 
 struct AnimationSpeedPicker: View {
-    @Binding var selection: UpdateTimes
+    @EnvironmentObject var settings: GameSettings
+
     var body: some View {
-        Picker("animation", selection: $selection) {
+        Picker("animation", selection: $settings.updateSpeed) {
             ForEach(UpdateTimes.allCases, id: \.self) { value in
                 Text(value.description)
             }
@@ -49,29 +50,22 @@ struct AnimationSpeedPicker: View {
 
 struct EditView : View {
     @Environment(\.presentationMode) var presentationMode
-        
-    @State var speedSelection: UpdateTimes =
-            UpdateTimes(value: GlobalSettings.updateTimeInterval)
-    {
-        didSet {
-            GlobalSettings.updateTimeInterval = speedSelection.double
-        }
-    }
+    @EnvironmentObject var settings: GameSettings
     
     var body: some View {
-        Form {
+//        Form {
             VStack {
                 
                 Group {
                     GlobalSettingsView()
-                    AnimationSpeedPicker(selection: $speedSelection)
+                    AnimationSpeedPicker()
                     NumbersOfPlayersPicker()
                 }
                 
                 Spacer()
                     .background(Color.background.opacity(invisible))
             }
-        }
+//        }
         .padding(.top)
     }
     
