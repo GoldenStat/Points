@@ -26,7 +26,7 @@ struct MainGameView: View {
             
             ZStack {
                 GameBoardView()
-                    .blur(radius: isEditing ? 4.0 : 0.0 )
+                    .blur(radius: blurRadius)
                     .padding()
 
                 infoButton
@@ -63,6 +63,10 @@ struct MainGameView: View {
         .popover(isPresented: $showInfo) {
             InfoView()
         }
+    }
+
+    var blurRadius : CGFloat {
+        isEditing ? 4.0 : 0.0
     }
     
     // MARK: info button
