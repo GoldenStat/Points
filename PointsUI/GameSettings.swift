@@ -22,7 +22,6 @@ class GameSettings: ObservableObject {
     init() {
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
-        self.updateTimeInterval = 1.0
     }
     
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions

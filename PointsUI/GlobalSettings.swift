@@ -39,7 +39,7 @@ struct UserDefault<T> {
 /// - playerNames: Who is playing
 ///
 enum GlobalSettings {
-    @UserDefault(key: "UpdateTime", defaultValue: 1) static var updateTimeInterval: TimeInterval
+    @UserDefault(key: "UpdateTime", defaultValue: 3) static var updateTimeInterval: TimeInterval
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 24) static var scorePerGame: Int
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int

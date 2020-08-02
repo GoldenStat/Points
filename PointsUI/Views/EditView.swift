@@ -8,22 +8,71 @@
 
 import SwiftUI
 
+enum UpdateTimes : Int, CaseIterable {
+    case short = 1, medium = 3, long = 5
+    var double: Double { Double(rawValue) }
+    var description: String {
+        switch self {
+        case .short: return "short"
+        case .medium: return "medium"
+        case .long: return "long"
+        }
+    }
+    init(value: Double) {
+        switch value.rounded() {
+        case 1:
+            self = .short
+        case 3:
+            self = .medium
+        case 5:
+            self = .long
+        default:
+            self = .medium
+        }
+    }
+    init(value: Int) {
+        self.init(value: Double(value))
+    }
+}
+
+struct AnimationSpeedPicker: View {
+    @Binding var selection: UpdateTimes
+    var body: some View {
+        Picker("animation", selection: $selection) {
+            ForEach(UpdateTimes.allCases, id: \.self) { value in
+                Text(value.description)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+    }
+}
+
 struct EditView : View {
     @Environment(\.presentationMode) var presentationMode
+        
+    @State var speedSelection: UpdateTimes =
+            UpdateTimes(value: GlobalSettings.updateTimeInterval)
+    {
+        didSet {
+            GlobalSettings.updateTimeInterval = speedSelection.double
+        }
+    }
     
     var body: some View {
-
-        VStack {
-            Group {
-                GlobalSettingsView()
-                NumbersOfPlayersPicker()
+        Form {
+            VStack {
+                
+                Group {
+                    GlobalSettingsView()
+                    AnimationSpeedPicker(selection: $speedSelection)
+                    NumbersOfPlayersPicker()
+                }
+                
+                Spacer()
+                    .background(Color.background.opacity(invisible))
             }
-            
-            Spacer()
-                .background(Color.background.opacity(invisible))
         }
         .padding(.top)
-
     }
     
     let invisible: Double = 0.01
@@ -31,13 +80,7 @@ struct EditView : View {
 
 struct GlobalSettingsView: View {
     @EnvironmentObject var settings: GameSettings
-    
-//    @State var lineWidth : CGFloat = GlobalSettings.pointsLineWidth {
-//        didSet {
-//            GlobalSettings.pointsLineWidth = $lineWidth.wrappedValue
-//        }
-//    }
-    
+        
     var body: some View {
         VStack {
             HStack {
@@ -96,7 +139,6 @@ struct FieldWithBackground<Content: View>: View {
 struct NumbersOfPlayersPicker: View {
     @EnvironmentObject var settings: GameSettings
     
-    let symbol = "person"
     var body: some View {
         VStack {
             Picker("Jugadores", selection: $settings.chosenNumberOfPlayers) {
@@ -110,6 +152,7 @@ struct NumbersOfPlayersPicker: View {
         .foregroundColor(Color.text)
     }
     
+
     func emojis(for count: Int) -> String {
         [String](repeating: "👨", count: count).joined()
     }
@@ -145,4 +188,10 @@ struct NumbersOfPlayersPicker: View {
         }
     }
 
+}
+
+struct EditView_Previews: PreviewProvider {
+    static var previews: some View {
+        EditView()
+    }
 }

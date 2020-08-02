@@ -21,7 +21,7 @@ struct MenuBar: View {
     }
        
     var body: some View {
-        VStack(spacing: noSpacing) {
+        VStack() {
             Group { // visible part
                 ZStack {
                     HStack {
@@ -70,6 +70,7 @@ struct MenuBar: View {
     let maxButtonHeight: CGFloat = 60
     let animationDuration: Double = 2.5
     let noSpacing: CGFloat = 0
+    let littleSpacing: CGFloat = 10
     let invisible: Double = 0.01
     
     
@@ -92,7 +93,8 @@ struct MenuBar: View {
         .emphasizeCircle(maxHeight: maxButtonHeight)
     }
     
-    var editViewSymbol: some View {                         presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
+    var editViewSymbol: some View {
+        presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
     }
     
     // MARK: info button
