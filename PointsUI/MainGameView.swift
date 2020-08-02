@@ -55,12 +55,10 @@ struct MainGameView: View {
                     }
             }
         }
-        .animation(.default)
         .onTapGesture(count: 2) {
             showMenuBar.toggle()
             settings.updateSettings()
         }
-        .animation(.spring(response: 1.0, dampingFraction: 0.85, blendDuration: 0))
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
