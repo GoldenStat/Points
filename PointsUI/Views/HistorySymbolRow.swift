@@ -10,40 +10,47 @@ import SwiftUI
 
 struct HistorySymbolRow: View {
     @EnvironmentObject var settings: GameSettings
-
-    @State var activeSide: OverlayHistorySymbol.Side?
-    @State var animationState: OverlayHistorySymbol.AnimationState = OverlayHistorySymbol.initial
     
+    @State var activeSide: OverlayHistorySymbol.Side?
+    @State var animationStateLeft: OverlayHistorySymbol.AnimationState = OverlayHistorySymbol.initial
+    @State var animationStateRight: OverlayHistorySymbol.AnimationState = OverlayHistorySymbol.initial
+
     var body: some View {
         return HStack {
-            OverlayHistorySymbol(active: activeSide == .left, side: .left, state: animationState)
+            OverlayHistorySymbol(active: activeSide == .left, side: .left, state: animationStateLeft)
             Spacer()
-            OverlayHistorySymbol(active: activeSide == .right, side: .right, state: animationState)
+            OverlayHistorySymbol(active: activeSide == .right, side: .right, state: animationStateRight)
         }
         .padding()
-        .gesture(dragGesture)
+//        .gesture(dragGesture)
     }
+    
     
     var dragGesture : some Gesture {
         DragGesture()
             .onChanged() { value in
                 if value.translation.width < 0 {
                     activeSide = .left
+                    animationStateLeft = OverlayHistorySymbol.selected
+                    animationStateRight = OverlayHistorySymbol.initial
+
                 } else {
                     activeSide = .right
+                    animationStateLeft = OverlayHistorySymbol.initial
+                    animationStateRight = OverlayHistorySymbol.selected
                 }
-                animationState = OverlayHistorySymbol.selected
             }
             .onEnded() { _ in
-                animationState = OverlayHistorySymbol.final
-                activeSide = nil
+                animationStateLeft = OverlayHistorySymbol.final
+                animationStateRight = OverlayHistorySymbol.final
+//                activeSide = nil
             }
     }
 
 }
 
 struct OverlayHistorySymbol: View {
-    @State var active = false
+    var active = false
     let side : Side
     
     var animation : Animation? {
@@ -91,7 +98,8 @@ struct OverlayHistorySymbol: View {
     
     var body: some View {
         image
-            .animation(animation)
+//            .animation(animation)
+            .animation(.easeInOut(duration: 5.0))
     }
 }
 

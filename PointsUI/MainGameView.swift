@@ -29,7 +29,7 @@ struct MainGameView: View {
                     .blur(radius: blurRadius)
                     .padding()
 
-                infoButton
+                topBar
                 
                 if showMenuBar {
                     MenuBar(presentEditView: $isEditing)
@@ -69,12 +69,13 @@ struct MainGameView: View {
         isEditing ? 4.0 : 0.0
     }
     
-    // MARK: info button
+    // MARK: Top Bar
     @State var showInfo: Bool = false
 
-    var infoButton: some View {
+    var topBar: some View {
         VStack {
             HStack {
+                historyButtons
                 Spacer()
                 Button() {
                     showInfo.toggle()
@@ -87,6 +88,27 @@ struct MainGameView: View {
             Spacer()
         }
     }
+    
+    // MARK: history buttons
+    var historyButtons: some View {
+        HStack {
+            Button() { settings.undo() }
+                label: {
+                    undoSymbol
+                        .padding()
+                }
+                .disabled(!settings.canUndo)
+            Button() { settings.redo() }
+                label: {
+                    redoSymbol
+                        .padding()
+                }
+                .disabled(!settings.canRedo)
+        }
+    }
+    
+    var undoSymbol: some View { Image(systemName: "arrow.left")}
+    var redoSymbol: some View { Image(systemName: "arrow.right")}
 }
 
 

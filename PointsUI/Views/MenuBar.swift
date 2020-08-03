@@ -22,7 +22,7 @@ struct MenuBar: View {
     var body: some View {
         VStack {
             Group { // visible part
-                editViewButton
+                EditViewButton
                 
                 if (presentEditView) {
                     VStack(spacing: noSpacing){
@@ -58,7 +58,7 @@ struct MenuBar: View {
     // MARK: - Menu Bar symbols
     
     // MARK: editView button
-    var editViewButton: some View {
+    var EditViewButton: some View {
         Button() {
             withAnimation(.easeInOut(duration: animationDuration)) {
                 presentEditView.toggle()
@@ -77,28 +77,6 @@ struct MenuBar: View {
     var editViewSymbol: some View {
         presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
     }
-    
-
-    // MARK: history buttons
-    var historyButtons: some View {
-        HStack {
-            Button() { settings.undo() }
-                label: {
-                    undoSymbol
-                        .padding()
-                }
-                .disabled(!settings.canUndo)
-            Button() { settings.redo() }
-                label: {
-                    redoSymbol
-                        .padding()
-                }
-                .disabled(!settings.canRedo)
-        }
-    }
-    
-    var undoSymbol: some View { Image(systemName: "arrow.left")}
-    var redoSymbol: some View { Image(systemName: "arrow.right")}
  
 }
 

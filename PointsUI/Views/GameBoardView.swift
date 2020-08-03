@@ -17,29 +17,36 @@ struct GameBoardView: View {
     var activeView: GameBoardViewType { viewTypes[viewIndex % viewTypes.count] }
     let viewTypes : [GameBoardViewType] =  [ .currentState,
                                              .diffHistory,
-                                             .sumHistory ]
+//                                             .sumHistory
+    ]
+    
     @State var viewIndex = 0
     
     var body: some View {
         ZStack {
             Color.background.opacity(almostInvisible)
-                .gesture(dragGesture)
+                .gesture(
+//                    historyGesture
+//                            .exclusively(before:
+                    dragGesture)
+//            )
 
             switch activeView {
             case .currentState:
                 BoardUI()
-//                    .gesture(historyGesture)
             case .diffHistory:
                 ScoreTableView(viewMode: .diff)
             case .sumHistory:
                 ScoreTableView(viewMode: .total)
             }
             
-//            if showHistorySymbols {
-//                if settings.canUndo || settings.canRedo {
-//                    HistorySymbolRow(activeSide: historySymbol, animationState: historySymbolAnimationState)
-//                }
-//            }
+            if showHistorySymbols {
+                if settings.canUndo || settings.canRedo {
+                    HistorySymbolRow(activeSide: historySymbol, animationStateLeft: historySymbolAnimationStateLeft,
+                                     animationStateRight: historySymbolAnimationStateRight)
+                        .transition(.scale)
+                }
+            }
         }
         .environmentObject(settings)
         .offset(dragAmount)
@@ -53,8 +60,9 @@ struct GameBoardView: View {
         .animation(.default)
     }
     
-    @State var historySymbolAnimationState = OverlayHistorySymbol.initial
-    
+    @State var historySymbolAnimationStateLeft = OverlayHistorySymbol.initial
+    @State var historySymbolAnimationStateRight = OverlayHistorySymbol.initial
+
     // MARK: - constants
     let almostInvisible : Double = 0.01
     let distanceToSwipe : CGFloat = 120
@@ -89,41 +97,48 @@ struct GameBoardView: View {
         }
     }
     
-//    let distanceForHistory: CGFloat = 10
-//
-//    @State var showHistorySymbols = false
-//    @State var historySymbol : OverlayHistorySymbol.Side?
-//    @GestureState var longPress : Bool = false
-//
-//    var historyGesture : some Gesture {
-//        let longPress = LongPressGesture(minimumDuration: 2.0)
-//            .onChanged() { value in
-//                showHistorySymbols = true
-//            }
-//
-//        let dragGesture = DragGesture(minimumDistance: 20)
-//            .onChanged() { value in
-//                if value.translation.width < 0 {
-//                    historySymbol = .left
-//                } else {
-//                    historySymbol = .right
-//                }
-//                historySymbolAnimationState = OverlayHistorySymbol.selected
-//            }
-//            .onEnded() { value in
-//                if value.translation.width < 0 {
-//                    settings.undo()
-//
-//                } else {
-//                    settings.redo()
-//                }
-//                historySymbolAnimationState = OverlayHistorySymbol.final
-//                showHistorySymbols = false
-//            }
-//
-//        return longPress
-//            .sequenced(before: dragGesture )
-//    }
+    let distanceForHistory: CGFloat = 10
+
+    @State var showHistorySymbols = false
+    @State var historySymbol : OverlayHistorySymbol.Side?
+    @GestureState var longPress : Bool = false
+
+    var historyGesture : some Gesture {
+        let longPress = LongPressGesture(minimumDuration: 2.0)
+            .onChanged() { value in
+                showHistorySymbols = true
+            }
+
+        let dragGesture = DragGesture(minimumDistance: 20)
+            .onChanged() { value in
+                if value.translation.width < 20 {
+                    historySymbol = .left
+                    historySymbolAnimationStateLeft = OverlayHistorySymbol.selected
+                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
+                } else if value.translation.width > 20{
+                    historySymbol = .right
+                    historySymbolAnimationStateLeft = OverlayHistorySymbol.selected
+                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
+                } else {
+                    historySymbol = nil
+                    historySymbolAnimationStateLeft = OverlayHistorySymbol.initial
+                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
+                }
+            }
+            .onEnded() { value in
+                if value.translation.width < 0 {
+                    settings.undo()
+                    historySymbolAnimationStateLeft = OverlayHistorySymbol.final
+                } else {
+                    settings.redo()
+                    historySymbolAnimationStateRight = OverlayHistorySymbol.final
+                }
+                showHistorySymbols = false
+            }
+
+        return longPress
+            .sequenced(before: dragGesture )
+    }
 }
 
 struct GameBoardView_Previews: PreviewProvider {
