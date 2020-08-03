@@ -14,14 +14,16 @@ enum GameBoardViewType {
 
 struct GameBoardView: View {
     @EnvironmentObject var settings: GameSettings
-    var activeView: GameBoardViewType { viewTypes[viewIndex % viewTypes.count]}
-    let viewTypes : [GameBoardViewType] =  [ .currentState, .diffHistory, .sumHistory ]
+    var activeView: GameBoardViewType { viewTypes[viewIndex % viewTypes.count] }
+    let viewTypes : [GameBoardViewType] =  [ .currentState,
+                                             .diffHistory,
+                                             .sumHistory ]
     @State var viewIndex = 0
     
     var body: some View {
         ZStack {
             Color.background.opacity(almostInvisible)
-                .gesture(dragGesture)//, including: .all)
+                .gesture(dragGesture)
 
             switch activeView {
             case .currentState:
@@ -41,6 +43,14 @@ struct GameBoardView: View {
         }
         .environmentObject(settings)
         .offset(dragAmount)
+        .rotation3DEffect(
+            .degrees(min(Double(dragAmount.width)/4,maxRotation)),
+            axis: /*@START_MENU_TOKEN@*/(x: 0.0, y: 1.0, z: 0.0)/*@END_MENU_TOKEN@*/,
+            anchor: .center,
+            anchorZ: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/,
+            perspective: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/
+        )
+        .animation(.default)
     }
     
     @State var historySymbolAnimationState = OverlayHistorySymbol.initial
@@ -48,21 +58,25 @@ struct GameBoardView: View {
     // MARK: - constants
     let almostInvisible : Double = 0.01
     let distanceToSwipe : CGFloat = 120
+    let maxRotation : Double = 90
     
     // MARK: - gestures
-    @State var dragAmount: CGSize = .zero
-    @State var startingLocation: CGPoint?
-    
+    var dragAmount: CGSize {
+        let start = startLocation?.x ?? 0
+        let end = endLocation?.x ?? 0
+        let distance = end - start
+        return CGSize(width: distance,
+                      height: 0)
+    }
+
+    @State var startLocation: CGPoint?
+    @State var endLocation: CGPoint?
+
     var dragGesture : some Gesture {
         DragGesture()
         .onChanged() { value in
-            if let startLocation = startingLocation {
-                let distance = value.location.x - startLocation.x
-                dragAmount = CGSize(width: distance * 2.0,
-                                    height: 0)
-            } else {
-                startingLocation = value.location
-            }
+            startLocation = startLocation ?? value.location
+            endLocation = value.location
         }
         .onEnded() { value in
             if dragAmount.width > distanceToSwipe {
@@ -70,76 +84,10 @@ struct GameBoardView: View {
             } else if  dragAmount.width < -distanceToSwipe {
                 viewIndex = (viewIndex - 1 + viewTypes.count) % viewTypes.count
             }
-            startingLocation = nil
-            dragAmount = .zero
+            startLocation = nil
+            endLocation = nil
         }
     }
-    
-
-//    var dragAmount: CGSize {
-//        if let startX = startingSwipePosition?.x {
-//            return CGSize(width: (endingSwipePosition?.x ?? 0 - startX),
-//                          height: 0)
-//        } else {
-//            return CGSize.zero
-//        }
-//    }
-    
-//    @State var startingSwipePosition : CGPoint?
-//    @State var endingSwipePosition : CGPoint?
-//
-//    var dragAmount: CGSize {
-//        if let startLocation = startLocation {
-//            let distance = 2 * (endLocation?.x ?? 0 - startLocation.x)
-//            return CGSize(width: distance, height: 0)
-//        } else {
-//            return CGSize.zero
-//        }
-//    }
-//
-//    @State var startLocation: CGPoint?
-//    @State var endLocation: CGPoint?
-//
-//    var dragGesture : some Gesture {
-//        DragGesture()
-//        .onChanged() { value in
-//            if startLocation != nil {
-//                endLocation = value.location
-//            } else {
-//                startLocation = value.location
-//            }
-//        }
-//        .onEnded() { value in
-//            if dragAmount.width > distanceToSwipe {
-//                viewIndex = (viewIndex + 1) % viewTypes.count
-//            } else if  dragAmount.width < -distanceToSwipe {
-//                viewIndex = (viewIndex - 1 + viewTypes.count) % viewTypes.count
-//            }
-//            startLocation = nil
-//            endLocation = nil
-//        }
-//    }
-//    var newDragGesture : some Gesture {
-//        DragGesture()
-//            .onChanged() { value in
-//                guard !longPress else { return }
-//                if startingSwipePosition != nil {
-//                    endingSwipePosition = value.location
-//                } else {
-//                    startingSwipePosition = value.location
-//                }
-//            }
-//            .onEnded() { value in
-//                guard !longPress else { return }
-//                if dragAmount.width > distanceToSwipe {
-//                    viewIndex = (viewIndex + 1) % viewTypes.count
-//                } else if  dragAmount.width < -distanceToSwipe {
-//                    viewIndex = (viewIndex - 1 + viewTypes.count) % viewTypes.count
-//                }
-//                startingSwipePosition = nil
-//                endingSwipePosition = nil
-//            }
-//    }
     
 //    let distanceForHistory: CGFloat = 10
 //
@@ -177,7 +125,6 @@ struct GameBoardView: View {
 //            .sequenced(before: dragGesture )
 //    }
 }
-
 
 struct GameBoardView_Previews: PreviewProvider {
     static var previews: some View {
