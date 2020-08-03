@@ -11,7 +11,7 @@ import SwiftUI
 struct MainGameView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
-
+    
     @State var showMenuBar = false { didSet {
         if !showMenuBar {
             isEditing = false
@@ -19,7 +19,7 @@ struct MainGameView: View {
     }}
     
     @State var isEditing = false
-        
+    
     var body: some View {
         
         ZStack {
@@ -28,7 +28,7 @@ struct MainGameView: View {
                 GameBoardView()
                     .blur(radius: blurRadius)
                     .padding()
-
+                
                 topBar
                 
                 if showMenuBar {
@@ -55,23 +55,27 @@ struct MainGameView: View {
                     }
             }
         }
-        .onTapGesture(count: 2) {
-            showMenuBar.toggle()
-            settings.updateSettings()
-        }
+        .highPriorityGesture(openEditMenu)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
     }
-
+    
+    var openEditMenu : some Gesture { TapGesture(count: 2)
+        .onEnded {
+            showMenuBar.toggle()
+            settings.updateSettings()
+        }
+    }
+    
     var blurRadius : CGFloat {
         isEditing ? 4.0 : 0.0
     }
     
     // MARK: Top Bar
     @State var showInfo: Bool = false
-
+    
     var topBar: some View {
         VStack {
             HStack {
