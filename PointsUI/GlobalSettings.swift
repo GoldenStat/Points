@@ -61,3 +61,30 @@ extension Color {
 extension CGFloat {
     static let lineWidth : Self = 1.0
 }
+
+enum UpdateTimes : Int, CaseIterable {
+    case short = 1, medium = 3, long = 5
+    var double: Double { Double(rawValue) }
+    var description: String {
+        switch self {
+        case .short: return "short"
+        case .medium: return "medium"
+        case .long: return "long"
+        }
+    }
+    init(value: Double) {
+        switch value.rounded() {
+        case 1:
+            self = .short
+        case 3:
+            self = .medium
+        case 5:
+            self = .long
+        default:
+            self = .medium
+        }
+    }
+    init(value: Int) {
+        self.init(value: Double(value))
+    }
+}

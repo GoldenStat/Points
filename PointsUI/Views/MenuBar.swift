@@ -22,8 +22,6 @@ struct MenuBar: View {
     var body: some View {
         VStack {
             Group { // visible part
-//                EditViewButton
-                
                 if (presentEditView) {
                     VStack(spacing: noSpacing){
                         
@@ -33,6 +31,7 @@ struct MenuBar: View {
                         EditView()
                             .padding()
                             .background(Color.background)
+                            .shadow(color: Color.accentColor, radius: 10, x: 5, y: 5)
                         
                         Color.background
                         
@@ -47,9 +46,6 @@ struct MenuBar: View {
                 .opacity(invisible)
                 .edgesIgnoringSafeArea(.bottom)
         }
-//        .onTapGesture {
-//            presentEditView = false
-//        }
     }
         
     // MARK: - constants
