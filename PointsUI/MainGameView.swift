@@ -12,13 +12,7 @@ struct MainGameView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
     
-    @State var showMenuBar = false { didSet {
-        if !showMenuBar {
-            isEditing = false
-        }
-    }}
-    
-    @State var isEditing = false
+    @State var showMenuBar = false
     
     var body: some View {
         
@@ -32,7 +26,7 @@ struct MainGameView: View {
                 topBar
                 
                 if showMenuBar {
-                    MenuBar(presentEditView: $isEditing)
+                    MenuBar(presentEditView: $showMenuBar)
                         .transition(
                             .move(edge: .top))
                 }
@@ -55,22 +49,36 @@ struct MainGameView: View {
                     }
             }
         }
-        .highPriorityGesture(openEditMenu)
+        .simultaneousGesture(openEditMenu)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
     }
-    
-    var openEditMenu : some Gesture { TapGesture(count: 2)
-        .onEnded {
-            showMenuBar.toggle()
-            settings.updateSettings()
-        }
+    @State var firstTouch: CGPoint?
+    let minDistanceForEditMenu : CGFloat = 40
+    var openEditMenu : some Gesture {
+        DragGesture(minimumDistance: minDistanceForEditMenu)
+            .onChanged { value in
+                if let firstTouch = firstTouch {
+                    withAnimation {
+                        if value.location.y > firstTouch.y + minDistanceForEditMenu  {
+                            showMenuBar = true
+                        } else if value.location.y + minDistanceForEditMenu < firstTouch.y {
+                            showMenuBar = false
+                        }
+                    }
+                } else {
+                    firstTouch = value.location
+                }
+            }
+            .onEnded { _ in 
+                firstTouch = nil
+            }
     }
     
     var blurRadius : CGFloat {
-        isEditing ? 4.0 : 0.0
+        showMenuBar ? 4.0 : 0.0
     }
     
     // MARK: Top Bar

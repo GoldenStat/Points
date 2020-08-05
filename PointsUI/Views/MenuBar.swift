@@ -22,34 +22,39 @@ struct MenuBar: View {
     var body: some View {
         VStack {
             Group { // visible part
-                EditViewButton
+//                EditViewButton
                 
                 if (presentEditView) {
                     VStack(spacing: noSpacing){
+                        
+                        Color.background
+                            .edgesIgnoringSafeArea(.top)
+                        
                         EditView()
                             .padding()
-                            .zIndex(1) // let it scroll down from 'behind' the menu bar
+                            .background(Color.background)
+                        
+                        Color.background
+                        
+                        LinearGradient(gradient: Gradient(colors: [.background,.background,.pointsTop]), startPoint: .top, endPoint: .bottom)
                     }
                     .transition(.move(edge: .top))
-                    .background(LinearGradient(gradient: Gradient(colors: [.background,.background,.background,.clear]), startPoint: .top, endPoint: .bottom))
+                    .frame(maxHeight: 400)
                 }
             }
             
-            Spacer() // "invisible" part
-                .background(Color.background.opacity(invisible))
+            Color.background // "invisible" part
+                .opacity(invisible)
                 .edgesIgnoringSafeArea(.bottom)
         }
-        .onTapGesture(count: 2) {
-            withAnimation {
-                presentEditView = false
-                settings.updateSettings()
-            }
-        }
+//        .onTapGesture {
+//            presentEditView = false
+//        }
     }
         
     // MARK: - constants
     let maxButtonHeight: CGFloat = 60
-    let animationDuration: Double = 2.5
+    let animationDuration: Double = 1.5
     let noSpacing: CGFloat = 0
     let littleSpacing: CGFloat = 10
     let invisible: Double = 0.01
@@ -62,9 +67,6 @@ struct MenuBar: View {
         Button() {
             withAnimation(.easeInOut(duration: animationDuration)) {
                 presentEditView.toggle()
-            }
-            if !presentEditView {
-                settings.updateSettings()
             }
         } label: {
             editViewSymbol

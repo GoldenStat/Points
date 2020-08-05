@@ -53,23 +53,20 @@ struct EditView : View {
     @EnvironmentObject var settings: GameSettings
     
     var body: some View {
-//        Form {
+        ZStack {
             VStack {
-                
-                Group {
                     GlobalSettingsView()
                     AnimationSpeedPicker()
                     NumbersOfPlayersPicker()
-                }
-                
-                Spacer()
-                    .background(Color.background.opacity(invisible))
             }
-//        }
-        .padding(.top)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color(white: 1.0, opacity: 0.5))
+            )
+        }
     }
     
-    let invisible: Double = 0.01
 }
 
 struct GlobalSettingsView: View {

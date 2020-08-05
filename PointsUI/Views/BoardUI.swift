@@ -52,7 +52,6 @@ struct BoardUI: View {
     func playerViews() -> some View {
         ForEach(objects) { player in
             PlayerView(player: player)
-//                .onAppear() { settings.$needsUpdate.toggle() }
         }
     }
 }
