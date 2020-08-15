@@ -65,7 +65,7 @@ extension CGFloat {
     static let lineWidth : Self = 1.0
 }
 
-enum UpdateTimes : Int, CaseIterable {
+enum UpdateTimes : Int, CaseIterable, StringExpressable {
     static var saveTime = 20
     case short = 1, medium = 3, long = 5
     var double: Double { Double(rawValue) }

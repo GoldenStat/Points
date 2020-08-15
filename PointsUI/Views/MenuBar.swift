@@ -31,11 +31,10 @@ struct MenuBar: View {
                         EditView()
                             .padding()
                             .background(Color.background)
-                            .shadow(color: Color.accentColor, radius: 10, x: 5, y: 5)
                         
                         Color.background
                         
-                        LinearGradient(gradient: Gradient(colors: [.background,.background,.pointsTop]), startPoint: .top, endPoint: .bottom)
+                        LinearGradient(gradient: Gradient(colors: [.background,.white]), startPoint: .top, endPoint: .bottom)
                     }
                     .transition(.move(edge: .top))
                     .frame(maxHeight: 400)

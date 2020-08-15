@@ -8,19 +8,6 @@
 
 import SwiftUI
 
-struct PointsPicker: View {
-    @EnvironmentObject var settings: GameSettings
-
-    var body: some View {
-        Picker("Puntos", selection: $settings.maxPoints) {
-            ForEach([24, 30], id: \.self) { value in
-                Text(value.description)
-            }
-        }
-        .pickerStyle(SegmentedPickerStyle())
-    }
-}
-
 protocol StringExpressable {
     var description: String { get }
 }
@@ -29,142 +16,95 @@ extension Int : StringExpressable {
     var description: String { "\(self)" }
 }
 
-
 struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashable {
     var title: String
     var binding: Binding<Value>
     var orderedSet: Array<Value>
     
     var body: some View {
-        Picker(title, selection: binding) {
-            ForEach(orderedSet, id: \.self) {
-                Text($0.description)
+        HStack {
+            Text(title)
+            
+            Picker(title, selection: binding) {
+                ForEach(orderedSet, id: \.self) {
+                    Text($0.description)
+                }
             }
+            .pickerStyle(SegmentedPickerStyle())
         }
-        .pickerStyle(SegmentedPickerStyle())
     }
 }
 
-struct AnimationSpeedPicker: View {
+struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
-
     var body: some View {
-        Picker("Animacion", selection: $settings.updateSpeed) {
-            ForEach(UpdateTimes.allCases, id: \.self) { value in
-                Text(value.description)
+        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+    }
+}
+
+struct JuegosPicker: View {
+    @EnvironmentObject var settings: GameSettings
+    var body: some View {
+        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,4,5])
+    }
+}
+
+struct AnimacionPicker: View {
+    @EnvironmentObject var settings: GameSettings
+    var body: some View {
+        PointsUIPickerBuilder<UpdateTimes>(title: "Animación", binding: $settings.updateSpeed, orderedSet: UpdateTimes.allCases)
+    }
+}
+
+struct JugadoresPicker: View {
+    @EnvironmentObject var settings: GameSettings
+    var bind: Binding<Int> { get { $settings.chosenNumberOfPlayers }
+        set { settings.chosenNumberOfPlayers = newValue.wrappedValue }
+    }
+    @State var selectedNumber: Int = 2
+    let orderedSet = [ 2, 3, 4, 6 ]
+    let title = "Jugadores"
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            
+            Picker(title, selection: binding) {
+                ForEach(orderedSet, id: \.self) {
+                    Text($0.description)
+                }
             }
+            .pickerStyle(SegmentedPickerStyle())
         }
-        .pickerStyle(SegmentedPickerStyle())
     }
 }
 
 struct EditView : View {
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var settings: GameSettings
     
     var body: some View {
         ZStack {
             VStack {
-                HStack {
-                    PointsPicker()
-                    PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,4,5])
-                }
-                    AnimationSpeedPicker()
-                    NumbersOfPlayersPicker()
+                PointsPicker()
+                JuegosPicker()
+                AnimacionPicker()
+                JugadoresPicker()
             }
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 5)
                     .fill(Color(white: 1.0, opacity: 0.5))
             )
+            .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
+
         }
     }
     
-}
-
-struct GlobalSettingsView: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    var body: some View {
-        HStack {
-            HStack {
-                Text("Puntos:")
-                Spacer()
-                TextField("Max Puntos", text: $settings.maxPointsString)
-            }
-            
-            HStack {
-                Text("Manos:")
-                Spacer()
-                TextField("Max Manos", text: $settings.maxGamesString)
-                
-            }
-        }
-        .textFieldStyle(RoundedBorderTextFieldStyle())
-        .background(Color.inactive)
-        .padding(.vertical, 5)
-        .keyboardType(.numberPad)
-    }
-}
-
-
-/// only updates global settings
-struct NumbersOfPlayersPicker: View {
-    @EnvironmentObject var settings: GameSettings
-    
-    var body: some View {
-        VStack {
-            Picker("Jugadores", selection: $settings.chosenNumberOfPlayers) {
-                ForEach(settings.availablePlayers, id:
-                            \.self) { number in
-                    Text(number.description)
-                }
-            }
-        }
-        .pickerStyle(SegmentedPickerStyle())
-        .foregroundColor(Color.text)
-    }
-    
-
-    func emojis(for count: Int) -> String {
-        [String](repeating: "👨", count: count).joined()
-    }
-    
-    func peopleSymbol(for players: Int) -> some View {
-        switch players {
-        case 2:
-            return AnyView { HStack {
-                Image(systemName: "person")
-                Image(systemName: "person.fill")
-                } }
-        case 3:
-            return AnyView { HStack {
-                Image(systemName: "person")
-                Image(systemName: "person.circle.fill")
-                Image(systemName: "person.fill")
-            } }
-        case 4:
-            return AnyView { HStack {
-                Image(systemName: "person.2")
-                Image(systemName: "person.2.fill")
-            } }
-        case 6:
-            return AnyView { HStack {
-                Image(systemName: "person.3")
-                Image(systemName: "person.3.fill")
-            } }
-        default:
-            return AnyView { HStack {
-                Image(systemName: "person.3")
-                Image(systemName: "person.3.fill")
-            } }
-        }
-    }
-
 }
 
 struct EditView_Previews: PreviewProvider {
     static var previews: some View {
         EditView()
+            .environmentObject(GameSettings())
     }
 }
