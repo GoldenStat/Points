@@ -8,11 +8,48 @@
 
 import SwiftUI
 
+struct PointsPicker: View {
+    @EnvironmentObject var settings: GameSettings
+
+    var body: some View {
+        Picker("Puntos", selection: $settings.maxPoints) {
+            ForEach([24, 30], id: \.self) { value in
+                Text(value.description)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+    }
+}
+
+protocol StringExpressable {
+    var description: String { get }
+}
+
+extension Int : StringExpressable {
+    var description: String { "\(self)" }
+}
+
+
+struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashable {
+    var title: String
+    var binding: Binding<Value>
+    var orderedSet: Array<Value>
+    
+    var body: some View {
+        Picker(title, selection: binding) {
+            ForEach(orderedSet, id: \.self) {
+                Text($0.description)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+    }
+}
+
 struct AnimationSpeedPicker: View {
     @EnvironmentObject var settings: GameSettings
 
     var body: some View {
-        Picker("animation", selection: $settings.updateSpeed) {
+        Picker("Animacion", selection: $settings.updateSpeed) {
             ForEach(UpdateTimes.allCases, id: \.self) { value in
                 Text(value.description)
             }
@@ -28,7 +65,10 @@ struct EditView : View {
     var body: some View {
         ZStack {
             VStack {
-                    GlobalSettingsView()
+                HStack {
+                    PointsPicker()
+                    PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,4,5])
+                }
                     AnimationSpeedPicker()
                     NumbersOfPlayersPicker()
             }

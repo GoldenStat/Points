@@ -66,7 +66,7 @@ struct GameBoardView: View {
     // MARK: - constants
     let almostInvisible : Double = 0.01
     let distanceToSwipe : CGFloat = 120
-    let maxRotation : Double = 90
+    let maxRotation : Double = 89
     
     // MARK: - gestures
     var dragAmount: CGSize {

@@ -56,7 +56,7 @@ struct PointsUI_Widget: Widget {
     private let kind: String = "PointsUI_Widget"
 
     public var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider(), placeholder: PlaceholderView()) { entry in
+        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             PointsUI_WidgetEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")

@@ -50,32 +50,11 @@ struct MenuBar: View {
         
     // MARK: - constants
     let maxButtonHeight: CGFloat = 60
-    let animationDuration: Double = 1.5
+    let animationDuration: Double = 0.5
     let noSpacing: CGFloat = 0
     let littleSpacing: CGFloat = 10
     let invisible: Double = 0.01
     
-    
-    // MARK: - Menu Bar symbols
-    
-    // MARK: editView button
-    var EditViewButton: some View {
-        Button() {
-            withAnimation(.easeInOut(duration: animationDuration)) {
-                presentEditView.toggle()
-            }
-        } label: {
-            editViewSymbol
-        }
-        .foregroundColor(.gray)
-        .framedClip(borderColor: .clear)
-        .emphasizeCircle(maxHeight: maxButtonHeight)
-    }
-    
-    var editViewSymbol: some View {
-        presentEditView ? Image(systemName: "arrow.up") : Image(systemName: "arrow.down")
-    }
- 
 }
 
 // MARK: - preview Views

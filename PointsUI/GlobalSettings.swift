@@ -46,6 +46,9 @@ enum GlobalSettings {
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
     static var playerNames : [String]
 
+    static let trucoArgentino = Reglas(puntos: 30, manos: 3, jugadores: 2, annotacion: [.boxes, .table])
+    static let trucoVenezolano = Reglas(puntos: 24, manos: 3, jugadores: 2, annotacion: [.splitBoxes, .table])
+    
 }
 
 extension Color {
@@ -63,6 +66,7 @@ extension CGFloat {
 }
 
 enum UpdateTimes : Int, CaseIterable {
+    static var saveTime = 20
     case short = 1, medium = 3, long = 5
     var double: Double { Double(rawValue) }
     var description: String {
