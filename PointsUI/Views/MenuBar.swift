@@ -31,6 +31,8 @@ struct MenuBar: View {
                         EditView()
                             .padding()
                             .background(Color.background)
+//                            .shadow(color: .accentColor, radius: 5, x: 5, y: 5) // shadow messes up the pickers... ??
+
                         
                         Color.background
                         
@@ -41,7 +43,7 @@ struct MenuBar: View {
                 }
             }
             
-            Color.background // "invisible" part
+            Color.background // "invisible" part, so the whole thing gets the touch event
                 .opacity(invisible)
                 .edgesIgnoringSafeArea(.bottom)
         }
