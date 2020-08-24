@@ -17,7 +17,6 @@ struct GameBoardView: View {
     var activeView: GameBoardViewType { viewTypes[viewIndex % viewTypes.count] }
     let viewTypes : [GameBoardViewType] =  [ .currentState,
                                              .diffHistory,
-//                                             .sumHistory
     ]
     
     @State var viewIndex = 0
@@ -26,10 +25,7 @@ struct GameBoardView: View {
         ZStack {
             Color.background.opacity(almostInvisible)
                 .gesture(
-//                    historyGesture
-//                            .exclusively(before:
                     dragGesture)
-//            )
 
             switch activeView {
             case .currentState:
@@ -39,14 +35,6 @@ struct GameBoardView: View {
             case .sumHistory:
                 ScoreTableView(viewMode: .total)
             }
-            
-//            if showHistorySymbols {
-//                if settings.canUndo || settings.canRedo {
-//                    HistorySymbolRow(activeSide: historySymbol, animationStateLeft: historySymbolAnimationStateLeft,
-//                                     animationStateRight: historySymbolAnimationStateRight)
-//                        .transition(.scale)
-//                }
-//            }
         }
         .environmentObject(settings)
         .offset(dragAmount)
@@ -60,9 +48,6 @@ struct GameBoardView: View {
         .animation(.default)
     }
     
-    @State var historySymbolAnimationStateLeft = OverlayHistorySymbol.initial
-    @State var historySymbolAnimationStateRight = OverlayHistorySymbol.initial
-
     // MARK: - constants
     let almostInvisible : Double = 0.01
     let distanceToSwipe : CGFloat = 120
@@ -95,49 +80,6 @@ struct GameBoardView: View {
             startLocation = nil
             endLocation = nil
         }
-    }
-    
-    let distanceForHistory: CGFloat = 10
-
-    @State var showHistorySymbols = false
-    @State var historySymbol : OverlayHistorySymbol.Side?
-    @GestureState var longPress : Bool = false
-
-    var historyGesture : some Gesture {
-        let longPress = LongPressGesture(minimumDuration: 2.0)
-            .onChanged() { value in
-                showHistorySymbols = true
-            }
-
-        let dragGesture = DragGesture(minimumDistance: 20)
-            .onChanged() { value in
-                if value.translation.width < 20 {
-                    historySymbol = .left
-                    historySymbolAnimationStateLeft = OverlayHistorySymbol.selected
-                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
-                } else if value.translation.width > 20{
-                    historySymbol = .right
-                    historySymbolAnimationStateLeft = OverlayHistorySymbol.selected
-                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
-                } else {
-                    historySymbol = nil
-                    historySymbolAnimationStateLeft = OverlayHistorySymbol.initial
-                    historySymbolAnimationStateRight = OverlayHistorySymbol.initial
-                }
-            }
-            .onEnded() { value in
-                if value.translation.width < 0 {
-                    settings.undo()
-                    historySymbolAnimationStateLeft = OverlayHistorySymbol.final
-                } else {
-                    settings.redo()
-                    historySymbolAnimationStateRight = OverlayHistorySymbol.final
-                }
-                showHistorySymbols = false
-            }
-
-        return longPress
-            .sequenced(before: dragGesture )
     }
 }
 
