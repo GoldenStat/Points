@@ -18,13 +18,9 @@ struct EditView : View {
             AnimacionPicker()
             JugadoresPicker()
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .fill(Color(white: 1.0, opacity: 0.5))
-        )
-        // pickers stop working when this is active...
+//        .compositingGroup()
 //        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
+//        .background(Color.background)
     }
 }
 

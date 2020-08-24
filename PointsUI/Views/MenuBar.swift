@@ -20,7 +20,8 @@ struct MenuBar: View {
     }
        
     var body: some View {
-        VStack {
+        VStack(spacing: noSpacing) {
+
             Group { // visible part
                 if (presentEditView) {
                     VStack(spacing: noSpacing){
@@ -28,18 +29,14 @@ struct MenuBar: View {
                         Color.background
                             .edgesIgnoringSafeArea(.top)
                         
+                        Color.background
+
                         EditView()
                             .padding()
-                            .background(Color.background)
-//                            .shadow(color: .accentColor, radius: 5, x: 5, y: 5) // shadow messes up the pickers... ??
-
                         
-                        Color.background
-                        
-                        LinearGradient(gradient: Gradient(colors: [.background,.white]), startPoint: .top, endPoint: .bottom)
+                        LinearGradient(gradient: Gradient(colors: [ .background, .background, .init(white: 1.0, opacity: invisible)]), startPoint: .top, endPoint: .bottom)
                     }
-                    .transition(.move(edge: .top))
-                    .frame(maxHeight: 400)
+                    .frame(maxHeight: 600)
                 }
             }
             
@@ -73,6 +70,9 @@ struct SampleEditView: View {
 
 struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
-        SampleEditView()
+        ZStack {
+            Color.background
+            SampleEditView()
+        }
     }
 }

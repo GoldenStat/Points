@@ -40,13 +40,13 @@ struct GameBoardView: View {
                 ScoreTableView(viewMode: .total)
             }
             
-            if showHistorySymbols {
-                if settings.canUndo || settings.canRedo {
-                    HistorySymbolRow(activeSide: historySymbol, animationStateLeft: historySymbolAnimationStateLeft,
-                                     animationStateRight: historySymbolAnimationStateRight)
-                        .transition(.scale)
-                }
-            }
+//            if showHistorySymbols {
+//                if settings.canUndo || settings.canRedo {
+//                    HistorySymbolRow(activeSide: historySymbol, animationStateLeft: historySymbolAnimationStateLeft,
+//                                     animationStateRight: historySymbolAnimationStateRight)
+//                        .transition(.scale)
+//                }
+//            }
         }
         .environmentObject(settings)
         .offset(dragAmount)
@@ -66,13 +66,13 @@ struct GameBoardView: View {
     // MARK: - constants
     let almostInvisible : Double = 0.01
     let distanceToSwipe : CGFloat = 120
-    let maxRotation : Double = 89
+    let maxRotation : Double = 80
     
     // MARK: - gestures
     var dragAmount: CGSize {
         let start = startLocation?.x ?? 0
         let end = endLocation?.x ?? 0
-        let distance = end - start
+        let distance = (end - start) * 1.5
         return CGSize(width: distance,
                       height: 0)
     }

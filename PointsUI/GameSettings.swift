@@ -118,6 +118,10 @@ class GameSettings: ObservableObject {
     func updateState() {
         playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
         playerWonGame = players.items.filter { $0.games >= maxGames }.first
+        
+        if playerWonRound != nil || playerWonGame != nil {
+            history.save(state: GameState(players: players.data))
+        }
     }
 
     func newRound() {
@@ -165,13 +169,22 @@ class GameSettings: ObservableObject {
         updatePlayersWithCurrentState()
     }
 
-    // MARK: Timer
-    private var timer : Timer?
-    var updateTimeInterval: TimeInterval { updateSpeed.double }
+    // MARK: Timers
+    private var registerPointsTimer : Timer?
+    private var countAsRoundTimer : Timer?
+
+    var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
+    var timeIntervalToCountAsRound: TimeInterval = 10
 
     func startTimer() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: updateTimeInterval,
+        registerPointsTimer?.invalidate()
+        countAsRoundTimer?.invalidate()
+        registerPointsTimer = Timer.scheduledTimer(timeInterval: updateTimeIntervalToRegisterPoints,
+                                     target: self,
+                                     selector: #selector(update),
+                                     userInfo: nil,
+                                     repeats: true)
+        countAsRoundTimer? = Timer.scheduledTimer(timeInterval: timeIntervalToCountAsRound,
                                      target: self,
                                      selector: #selector(update),
                                      userInfo: nil,
@@ -182,10 +195,14 @@ class GameSettings: ObservableObject {
     @objc private func update() {
         // send the history a signal that it should be saved
         players.saveScore() // update all scores' buffer
-        history.save(state: GameState(players: players.data))
-        timer?.invalidate()
-        
+        registerPointsTimer?.invalidate()
         updateState()
+    }
+    
+    // this function adds the changes to the history, counting it as a round.
+    @objc private func updateRound() {
+        history.save(state: GameState(players: players.data))
+        countAsRoundTimer?.invalidate()
     }
     
     /// updates the players with score from current state

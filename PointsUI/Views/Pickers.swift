@@ -58,24 +58,8 @@ struct AnimacionPicker: View {
 
 struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings
-    var binding: Binding<Int> { get { $settings.chosenNumberOfPlayers }
-        set { settings.chosenNumberOfPlayers = newValue.wrappedValue }
-    }
-    @State var selectedNumber: Int = 2
-    let orderedSet = [ 2, 3, 4, 6 ]
-    let title = "Jugadores"
-    
     var body: some View {
-        HStack {
-            Text(title)
-            
-            Picker(title, selection: binding) {
-                ForEach(orderedSet, id: \.self) {
-                    Text($0.description)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-        }
+        PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: [ 2, 3, 4, 6 ])
     }
 }
 
@@ -90,15 +74,8 @@ struct Preview : View {
                     Text($0.description)
                 }
             }
-            Picker("Sample Picker", selection: $selection) {
-                ForEach([ true, false ], id: \.self) {
-                    Text($0.description)
-                }
-            }
         }
         .pickerStyle(SegmentedPickerStyle())
-        // only firstpicker works when this is active...
-//        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
     }
 }
 

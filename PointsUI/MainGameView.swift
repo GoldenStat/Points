@@ -55,6 +55,7 @@ struct MainGameView: View {
             InfoView()
         }
     }
+    
     @State var firstTouch: CGPoint?
     let minDistanceForEditMenu : CGFloat = 40
     var openEditMenu : some Gesture {
