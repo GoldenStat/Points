@@ -18,9 +18,8 @@ struct EditView : View {
             AnimacionPicker()
             JugadoresPicker()
         }
-//        .compositingGroup()
-//        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
-//        .background(Color.background)
+        .compositingGroup()
+        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
     }
 }
 

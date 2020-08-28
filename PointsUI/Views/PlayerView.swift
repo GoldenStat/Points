@@ -41,7 +41,7 @@ struct PlayerView: View {
 
             Spacer()
         }
-//        .gesture(longPress)
+        .gesture(longPress)
         .transition(.opacity)
     }
 

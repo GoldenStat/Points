@@ -30,9 +30,12 @@ struct MenuBar: View {
                             .edgesIgnoringSafeArea(.top)
                         
                         Color.background
-
-                        EditView()
-                            .padding()
+                        
+                        ZStack {
+                            Color.background
+                            EditView()
+                                .padding()
+                        }
                         
                         LinearGradient(gradient: Gradient(colors: [ .background, .background, .init(white: 1.0, opacity: invisible)]), startPoint: .top, endPoint: .bottom)
                     }
