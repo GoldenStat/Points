@@ -175,25 +175,26 @@ class GameSettings: ObservableObject {
     private var countAsRoundTimer : Timer?
 
     var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
-    var timeIntervalToCountAsRound: TimeInterval = 10
+    var timeIntervalToCountAsRound: TimeInterval = 10 // the time we wait from last touch to register this as a round and add it to the history menu
 
     func startTimer() {
+        /// starts two timers: one to register the points and one that counts the points as rounds in the background
         registerPointsTimer?.invalidate()
         countAsRoundTimer?.invalidate()
         registerPointsTimer = Timer.scheduledTimer(timeInterval: updateTimeIntervalToRegisterPoints,
                                      target: self,
-                                     selector: #selector(update),
+                                     selector: #selector(updateRegisterPoints),
                                      userInfo: nil,
                                      repeats: true)
         countAsRoundTimer? = Timer.scheduledTimer(timeInterval: timeIntervalToCountAsRound,
                                      target: self,
-                                     selector: #selector(update),
+                                     selector: #selector(updateRound),
                                      userInfo: nil,
                                      repeats: true)
     }
     
     // when the timer fires, players need to be updated, and history saved...
-    @objc private func update() {
+    @objc private func updateRegisterPoints() {
         // send the history a signal that it should be saved
         players.saveScore() // update all scores' buffer
         registerPointsTimer?.invalidate()
