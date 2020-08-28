@@ -21,6 +21,7 @@ class GameSettings: ObservableObject {
             GlobalSettings.updateTimeInterval = updateSpeed.double
         }
     }
+    @Published var rules: Rules = .doppelkopf
 
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 

@@ -45,10 +45,6 @@ enum GlobalSettings {
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
     static var playerNames : [String]
-
-    static let trucoArgentino = Reglas(puntos: 30, manos: 3, jugadores: 2, annotacion: [.boxes, .table])
-    static let trucoVenezolano = Reglas(puntos: 24, manos: 3, jugadores: 2, annotacion: [.splitBoxes, .table])
-    static let doppelKopf = Reglas(puntos: 1000, manos: 100, jugadores: 4, annotacion: [])
 }
 
 extension Color {
