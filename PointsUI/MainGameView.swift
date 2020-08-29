@@ -19,7 +19,7 @@ struct MainGameView: View {
         ZStack {
             
             ZStack {
-                GameBoardView()
+                BoardUI()
                     .blur(radius: blurRadius)
                     .padding()
                 
@@ -29,6 +29,11 @@ struct MainGameView: View {
                     MenuBar(presentEditView: $showMenuBar)
                         .transition(
                             .move(edge: .top))
+                } else {
+                    if showHistoryOverlay {
+                        ScoreHistoryView()
+                            .background(Color.init(white: 1.0, opacity: 0.01))
+                    }
                 }
                 
             }
@@ -49,12 +54,26 @@ struct MainGameView: View {
                     }
             }
         }
-        .simultaneousGesture(openEditMenu)
+        .onTapGesture() { showHistoryOverlay = false }
+        .onLongPressGesture {
+            showHistoryOverlay = true
+        }
+        .gesture(openEditMenu)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
     }
+    
+    @State var showHistoryOverlay = false
+
+    var showHistory: some Gesture {
+        LongPressGesture(minimumDuration: 3, maximumDistance: 10)
+            .onChanged() { _ in
+                showHistoryOverlay = true
+            }
+    }
+    
     
     @State var firstTouch: CGPoint?
     let minDistanceForEditMenu : CGFloat = 40
@@ -79,7 +98,11 @@ struct MainGameView: View {
     }
     
     var blurRadius : CGFloat {
-        showMenuBar ? 4.0 : 0.0
+        blurBackground ? 4.0 : 0.0
+    }
+    
+    var blurBackground: Bool {
+        showMenuBar && showHistoryOverlay
     }
     
     // MARK: Top Bar

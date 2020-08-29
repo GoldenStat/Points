@@ -37,15 +37,15 @@ struct GameBoardView: View {
             }
         }
         .environmentObject(settings)
-        .offset(dragAmount)
-        .rotation3DEffect(
-            .degrees(min(Double(dragAmount.width)/4,maxRotation)),
-            axis: /*@START_MENU_TOKEN@*/(x: 0.0, y: 1.0, z: 0.0)/*@END_MENU_TOKEN@*/,
-            anchor: .center,
-            anchorZ: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/,
-            perspective: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/
-        )
-        .animation(.default)
+//        .offset(dragAmount)
+//        .rotation3DEffect(
+//            .degrees(min(Double(dragAmount.width)/4,maxRotation)),
+//            axis: /*@START_MENU_TOKEN@*/(x: 0.0, y: 1.0, z: 0.0)/*@END_MENU_TOKEN@*/,
+//            anchor: .center,
+//            anchorZ: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/,
+//            perspective: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/
+//        )
+//        .animation(.default)
     }
     
     // MARK: - constants
@@ -86,5 +86,6 @@ struct GameBoardView: View {
 struct GameBoardView_Previews: PreviewProvider {
     static var previews: some View {
         GameBoardView()
+            .environmentObject(GameSettings())
     }
 }
