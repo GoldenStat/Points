@@ -13,7 +13,7 @@ class GameSettings: ObservableObject {
     @Published var players : Players
     @Published var history : History
     @Published var maxGames: Int = GlobalSettings.maxGames
-    @Published var maxPoints: Int = GlobalSettings.scorePerGame
+    @Published var maxPoints: Int
     @Published var playerWonRound: Player?
     @Published var playerWonGame: Player?
     @Published var updateSpeed: UpdateTimes = UpdateTimes(value: GlobalSettings.updateTimeInterval) {
@@ -21,13 +21,30 @@ class GameSettings: ObservableObject {
             GlobalSettings.updateTimeInterval = updateSpeed.double
         }
     }
-    @Published var rules: Rules = .doppelkopf
+    
+    @Published var rule: Rules = .doppelkopf {
+        didSet { updateCurrentRule() }
+    }
+    
+    /// assigns new values from the rules to the settings
+    private func updateCurrentRule() {
+        self.maxPoints = rule.maxPoints ?? 1000
+        
+        switch rule.players {
+        case .fixed(let fixedPlayers):
+            self.availablePlayers = [ fixedPlayers ]
+        case .selection(let allowedPlayers):
+            availablePlayers = allowedPlayers
+        }
+    }
 
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
     init() {
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
+        self.maxPoints = GlobalSettings.scorePerGame
+        updateCurrentRule()
     }
     
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
@@ -43,7 +60,7 @@ class GameSettings: ObservableObject {
         
     
     // MARK: constant data for this class
-    let availablePlayers = [ 2, 3, 4, 6 ]
+    var availablePlayers = [ 2, 3, 4, 6 ]
             
     func updateSettings() {
         // if number of players changed, restart the game

@@ -20,6 +20,18 @@ class History : ObservableObject {
         }
     }
 
+    struct Sample {
+        static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villamizar" ]
+        static var points : [[Int]] { names.map { _ in
+            [ Int.random(in: 0...40),
+              Int.random(in: 0...40),
+              Int.random(in: 0...40),
+              Int.random(in: 0...40) ]
+        } }
+    }
+    
+
+
     var playerNames: [String] { currentPlayers.map {$0.name} }
     var numOfPlayers: Int { currentPlayers.count }
 
