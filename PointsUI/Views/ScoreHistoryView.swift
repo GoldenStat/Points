@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ScoreHistoryView: View {
     
-    var header: [ String ] = History.Sample.names.shuffled()
-    var points: [ [ Int ] ] = History.Sample.points
+    var header: [ String ]
+    var points: [ [ Int ] ]
     
     var sumLine: [ Int ] {
         points.map { $0.reduce(0) {$0 + $1} }
@@ -33,14 +33,14 @@ struct ScoreHistoryView: View {
                     VStack {
                         ForEach(playerScores, id: \.self) { point in
                             Text(point.description)
+                                .frame(width: 20)
                         }
                     }
                     Spacer()
                 }
             }
             
-            Rectangle()
-                .frame(height: 2)
+            BoldDivider()
             
             HStack {
                 Spacer()
@@ -57,8 +57,15 @@ struct ScoreHistoryView: View {
     }
 }
 
+struct BoldDivider: View {
+    var body: some View {
+        Rectangle()
+            .frame(height: 2)
+    }
+}
+
 struct ScoreHistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreHistoryView()
+        ScoreHistoryView(header: History.Sample.names.shuffled(), points: History.Sample.points)
     }
 }

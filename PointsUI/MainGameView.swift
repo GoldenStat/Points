@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+extension Color {
+    static let invisible = Color.init(white: 1.0, opacity: 0.01)
+}
+
 struct MainGameView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
@@ -19,6 +23,9 @@ struct MainGameView: View {
         ZStack {
             
             ZStack {
+                
+                Color.invisible
+                
                 BoardUI()
                     .blur(radius: blurRadius)
                     .padding()
@@ -31,8 +38,12 @@ struct MainGameView: View {
                             .move(edge: .top))
                 } else {
                     if showHistoryOverlay {
-                        ScoreHistoryView()
+                        ScoreHistoryView(header: settings.playerNames, points: History.Sample.points)
+                                            //settings.history.playerSumScores)
                             .background(Color.init(white: 1.0, opacity: 0.01))
+                            .frame(minHeight: 600)
+                            .emphasizeShape()
+                            .padding()
                     }
                 }
                 

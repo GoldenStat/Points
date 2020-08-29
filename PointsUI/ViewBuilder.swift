@@ -130,6 +130,7 @@ extension View {
             self
         }
     }
+    
     func emphasizeShape(maxHeight: CGFloat = 100) -> some View {
         EmphasizeShape(maxHeight: maxHeight) {
             self

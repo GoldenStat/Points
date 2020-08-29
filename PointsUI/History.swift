@@ -89,6 +89,15 @@ class History : ObservableObject {
         return list
     }
     
+    /// an array of the scores of each player
+    var playerSumScores : [[ Int ]] {
+        states.map { $0.players.map {$0.score.value} }
+    }
+    
+    var playerScores : [[ Int ]] {
+        playerSumScores.map { $0.differentialScores() }
+    }
+    
     var flatSums: [Int] {
         states.last?.scores.map { $0.value } ?? [Int].init(repeating: 0, count: numOfPlayers)
     }
@@ -112,5 +121,22 @@ class History : ObservableObject {
         }
         
         return list
+    }
+}
+
+extension Array where Element: Numeric {
+    /// takes a list of sums (as in a game when only the total is anotated) and returns the list of differentialScores
+    func differentialScores() -> Array<Element> {
+        var differentialScores = [Element]()
+
+        if let firstElement = self.first {
+            differentialScores.append(firstElement)
+            var acc = firstElement
+            for elem in self[1..<self.count] {
+                differentialScores.append(elem - acc)
+                acc += elem
+            }
+        }
+        return differentialScores
     }
 }
