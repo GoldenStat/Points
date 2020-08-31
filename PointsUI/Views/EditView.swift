@@ -19,7 +19,7 @@ struct EditView : View {
             JugadoresPicker()
         }
         .compositingGroup()
-//        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
+        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
     }
 }
 

@@ -37,14 +37,13 @@ struct MenuBar: View {
                                 .padding()
                         }
                         
-                        LinearGradient(gradient: Gradient(colors: [ .background, .background, .init(white: 1.0, opacity: invisible)]), startPoint: .top, endPoint: .bottom)
+                        LinearGradient(gradient: Gradient(colors: [ .background, .background, Color.invisible]), startPoint: .top, endPoint: .bottom)
                     }
                     .frame(maxHeight: 600)
                 }
             }
             
-            Color.background // "invisible" part, so the whole thing gets the touch event
-                .opacity(invisible)
+            Color.invisible // "invisible" part, so the whole thing gets the touch event
                 .edgesIgnoringSafeArea(.bottom)
         }
     }

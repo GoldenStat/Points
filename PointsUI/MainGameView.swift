@@ -32,6 +32,7 @@ struct MainGameView: View {
                 
                 topBar
                 
+                
                 if showMenu {
                     MenuBar(presentEditView: $showMenu)
                         .transition(
@@ -45,6 +46,13 @@ struct MainGameView: View {
                             .opacity(historyOpacity)
                 }
                 
+            }
+            .contextMenu() {
+                ForEach 
+                Text("Truco Venezolano", action: selectRule(rule: .trucoVenezolano))
+                Text("Truco Argentino", action: selectRule(rule: .trucoArgentino))
+                Text("Menu Item 2")
+                Text("Menu Item 3")
             }
             
             if settings.playerWonRound != nil {
@@ -63,7 +71,7 @@ struct MainGameView: View {
                     }
             }
         }
-        .onTapGesture() { historyOpacity = 0.0 }
+//        .onTapGesture() { historyOpacity = 0.0 }
         .onLongPressGesture {
             withAnimation(.linear(duration: 0.5)) {
                 if !showMenu {
@@ -71,11 +79,15 @@ struct MainGameView: View {
                 }
             }
         }
-        .gesture(openEditMenu)
+        .simultaneousGesture(openEditMenu)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
+    }
+    
+    func selectRule(rule: Rules) {
+        settings.rule = rule
     }
     
     var showHistoryOverlay : Bool { historyOpacity == 1.0 }
