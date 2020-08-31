@@ -35,28 +35,25 @@ struct MainGameView: View {
                 
                 if showMenu {
                     MenuBar(presentEditView: $showMenu)
-                        .transition(
-                            .move(edge: .top))
-                } else {
-                        ScoreHistoryView()
-                            .background(Color.invisible)
-                            .frame(minHeight: 600)
-                            .emphasizeShape()
-                            .padding()
-                            .opacity(historyOpacity)
+                        .emphasizeShape()
+                        .padding()
+                        .transition(.opacity)
+                    
                 }
+
+                if showHistory {
+                    ScoreHistoryView()
+                        .background(Color.invisible)
+                        .frame(minHeight: 600)
+                        .emphasizeShape()
+                        .padding()
+                        .onTapGesture() {
+                            showHistory = false
+                        }
+                        .transition(.opacity)
+                }
+                
             }
-//            .toolbar() {
-//                ToolbarItemGroup(id: "Menu Bar", placement: ToolbarItemPlacement.automatic, showsByDefault: true) {
-//                    topBar
-//                }
-//            }
-//            .toolbar() {
-//                ToolbarItemGroup(placement: ToolbarItemPlacement.bottomBar) {
-//                    NavigationLink("Juegos", destination: JuegosPicker())
-//                }
-//            }
-            
             
             if settings.playerWonRound != nil {
                 PlayerWonRound()
@@ -76,12 +73,9 @@ struct MainGameView: View {
         }
         .onLongPressGesture {
             withAnimation(.linear(duration: 0.5)) {
-                if !showMenu {
-                    historyOpacity = 1.0
-                }
+                    showHistory = true
             }
         }
-        .simultaneousGesture(openEditMenu)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
@@ -92,41 +86,13 @@ struct MainGameView: View {
         settings.rule = rule
     }
     
-    var showHistoryOverlay : Bool { historyOpacity == 1.0 }
-    // sets the opacity of the history view which is always on, but invisible unless you summon it
-    @State var historyOpacity: Double = 0.0
+    @State var showHistory: Bool = false
     
-    @State var firstTouch: CGPoint?
-    let minDistanceForEditMenu : CGFloat = 40
-    var openEditMenu : some Gesture {
-        DragGesture(minimumDistance: minDistanceForEditMenu)
-            .onChanged { value in
-                if let firstTouch = firstTouch {
-                    withAnimation {
-                        if value.location.y > firstTouch.y + minDistanceForEditMenu  {
-                            showMenu = true
-                        } else if value.location.y + minDistanceForEditMenu < firstTouch.y {
-                            showMenu = false
-                        }
-                    }
-                } else {
-                    firstTouch = value.location
-                }
-            }
-            .onEnded { _ in 
-                firstTouch = nil
-            }
-    }
     
-    var blurRadius : CGFloat {
-        blurBackground ? 4.0 : 0.0
-    }
+    var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
+    var blurBackground: Bool { showMenu && showHistory }
     
-    var blurBackground: Bool {
-        showMenu && showHistoryOverlay
-    }
-    
-    // MARK: Top Bar
+    // MARK: - Top Bar
     @State var showInfo: Bool = false
     
     var topBar: some View {
@@ -146,7 +112,7 @@ struct MainGameView: View {
         }
     }
     
-    // MARK: history buttons
+    // MARK: - history buttons
     var historyButtons: some View {
         HStack {
             Button() { settings.undo() }
@@ -168,6 +134,7 @@ struct MainGameView: View {
     var redoSymbol: some View { Image(systemName: "arrow.right")}
 }
 
+// MARK: - previews
 
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {

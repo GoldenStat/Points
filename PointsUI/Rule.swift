@@ -8,8 +8,9 @@
 
 import SwiftUI
 
-struct Rule : Hashable {
+struct Rule : Identifiable, Hashable {
 
+    var id = UUID()
     enum PlayerCount : Hashable { case fixed(Int), selection([Int])} // maybe make this global enum
     enum PlayerUIType : Hashable { case lines, numberBox, selectionBox }
     

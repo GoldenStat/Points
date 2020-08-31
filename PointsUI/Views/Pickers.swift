@@ -101,11 +101,27 @@ struct Preview : View {
     }
 }
 
+struct JuegosPreview : View {
+    @EnvironmentObject var settings: GameSettings
+    @State var selection: Rule
+    
+    var allRules: [ Rule ] { settings.possibleRules }
+    
+    var body: some View {
+        Picker("Sample", selection: $selection) {
+            ForEach(allRules) { rule in
+                Text(rule.name)
+            }
+        }
+    }
+}
+
 struct Pickers_Previews: PreviewProvider {
     
-    @State static var selection: Bool = false
+    @State static var selection: Rule = .trucoVenezolano
     
     static var previews: some View {
-        Preview()
+        JuegosPreview(selection: selection)
+            .environmentObject(GameSettings())
     }
 }
