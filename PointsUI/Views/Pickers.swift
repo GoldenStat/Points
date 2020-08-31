@@ -56,6 +56,28 @@ struct AnimacionPicker: View {
     }
 }
 
+struct RulesPicker: View {
+    @EnvironmentObject var settings: GameSettings
+    
+    var title: String
+    var binding: Binding<Rule>
+    var orderedSet: Array<Rule>
+    
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            
+            Picker(title, selection: $settings.rule) {
+                ForEach(0 ..< settings.possibleRules.count) { index in
+                    Text(settings.possibleRules[index].description)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+        }
+    }
+}
+
 struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings
     var body: some View {

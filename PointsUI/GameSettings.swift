@@ -22,7 +22,7 @@ class GameSettings: ObservableObject {
         }
     }
     
-    @Published var rule: Rules = .trucoVenezolano {
+    @Published var rule: Rule = .trucoVenezolano {
         didSet { updateCurrentRule() }
     }
     
@@ -45,6 +45,7 @@ class GameSettings: ObservableObject {
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
         self.maxPoints = GlobalSettings.scorePerGame
+        createRules()
         updateCurrentRule()
     }
     
@@ -59,6 +60,13 @@ class GameSettings: ObservableObject {
         set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
     }
         
+    var possibleRules = [Rule]()
+    
+    func createRules() {
+        possibleRules.append(Rule.trucoArgentino)
+        possibleRules.append(Rule.trucoVenezolano)
+        possibleRules.append(Rule.doppelkopf)
+    }
     
     // MARK: constant data for this class
     var availablePlayers = [ 2, 3, 4, 6 ]

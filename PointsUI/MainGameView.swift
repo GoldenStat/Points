@@ -45,15 +45,18 @@ struct MainGameView: View {
                             .padding()
                             .opacity(historyOpacity)
                 }
-                
             }
-            .contextMenu() {
-                ForEach 
-                Text("Truco Venezolano", action: selectRule(rule: .trucoVenezolano))
-                Text("Truco Argentino", action: selectRule(rule: .trucoArgentino))
-                Text("Menu Item 2")
-                Text("Menu Item 3")
-            }
+//            .toolbar() {
+//                ToolbarItemGroup(id: "Menu Bar", placement: ToolbarItemPlacement.automatic, showsByDefault: true) {
+//                    topBar
+//                }
+//            }
+//            .toolbar() {
+//                ToolbarItemGroup(placement: ToolbarItemPlacement.bottomBar) {
+//                    NavigationLink("Juegos", destination: JuegosPicker())
+//                }
+//            }
+            
             
             if settings.playerWonRound != nil {
                 PlayerWonRound()
@@ -71,7 +74,6 @@ struct MainGameView: View {
                     }
             }
         }
-//        .onTapGesture() { historyOpacity = 0.0 }
         .onLongPressGesture {
             withAnimation(.linear(duration: 0.5)) {
                 if !showMenu {
@@ -86,7 +88,7 @@ struct MainGameView: View {
         }
     }
     
-    func selectRule(rule: Rules) {
+    func selectRule(rule: Rule) {
         settings.rule = rule
     }
     
