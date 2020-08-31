@@ -94,7 +94,7 @@ class History : ObservableObject {
         states.map { $0.players.map {$0.score.value} }
     }
     
-    var playerScores : [[ Int ]] {
+    var differentialScores : [[ Int ]] {
         playerSumScores.map { $0.differentialScores() }
     }
     

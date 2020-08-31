@@ -9,9 +9,10 @@
 import SwiftUI
 
 struct ScoreHistoryView: View {
-    
-    var header: [ String ]
-    var points: [ [ Int ] ]
+    @EnvironmentObject var settings: GameSettings
+
+    var header: [ String ] { settings.playerNames }
+    var points: [ [ Int ] ] { settings.playerScores }
     
     var sumLine: [ Int ] {
         points.map { $0.reduce(0) {$0 + $1} }
@@ -20,7 +21,7 @@ struct ScoreHistoryView: View {
     var body: some View {
         VStack(alignment: HorizontalAlignment/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
             HStack {
-                ForEach(History.Sample.names, id: \.self) { text in
+                ForEach(header, id: \.self) { text in
                     Text(text)
                 }
             }
@@ -33,7 +34,7 @@ struct ScoreHistoryView: View {
                     VStack {
                         ForEach(playerScores, id: \.self) { point in
                             Text(point.description)
-                                .frame(width: 20)
+                                .frame(width: numberCellWidth)
                         }
                     }
                     Spacer()
@@ -47,14 +48,18 @@ struct ScoreHistoryView: View {
                 ForEach(sumLine, id: \.self) { sum in
                     Text(sum.description)
                         .fontWeight(.bold)
+                        .frame(width: numberCellWidth)
                     Spacer()
                 }
             }
             
             Spacer()
         }
-        .frame(maxHeight: 500)
+        .frame(maxHeight: historyViewHeight)
     }
+    
+    let numberCellWidth : CGFloat = 60.0
+    let historyViewHeight : CGFloat = 500.0
 }
 
 struct BoldDivider: View {
@@ -66,6 +71,7 @@ struct BoldDivider: View {
 
 struct ScoreHistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreHistoryView(header: History.Sample.names.shuffled(), points: History.Sample.points)
+        ScoreHistoryView()
+            .environmentObject(GameSettings())
     }
 }

@@ -16,7 +16,7 @@ struct MainGameView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
     
-    @State var showMenuBar = false
+    @State var showMenu = false
     
     var body: some View {
         
@@ -32,19 +32,17 @@ struct MainGameView: View {
                 
                 topBar
                 
-                if showMenuBar {
-                    MenuBar(presentEditView: $showMenuBar)
+                if showMenu {
+                    MenuBar(presentEditView: $showMenu)
                         .transition(
                             .move(edge: .top))
                 } else {
-                    if showHistoryOverlay {
-                        ScoreHistoryView(header: settings.playerNames, points: History.Sample.points)
-                                            //settings.history.playerSumScores)
-                            .background(Color.init(white: 1.0, opacity: 0.01))
+                        ScoreHistoryView()
+                            .background(Color.invisible)
                             .frame(minHeight: 600)
                             .emphasizeShape()
                             .padding()
-                    }
+                            .opacity(historyOpacity)
                 }
                 
             }
@@ -53,7 +51,7 @@ struct MainGameView: View {
                 PlayerWonRound()
                     .transition(.move(edge: .bottom))
                     .onAppear {
-                        showMenuBar = false
+                        showMenu = false
                     }
             }
             
@@ -61,13 +59,17 @@ struct MainGameView: View {
                 PlayerWonGame()
                     .transition(.opacity)
                     .onAppear {
-                        showMenuBar = false
+                        showMenu = false
                     }
             }
         }
-        .onTapGesture() { showHistoryOverlay = false }
+        .onTapGesture() { historyOpacity = 0.0 }
         .onLongPressGesture {
-            showHistoryOverlay = true
+            withAnimation(.linear(duration: 0.5)) {
+                if !showMenu {
+                    historyOpacity = 1.0
+                }
+            }
         }
         .gesture(openEditMenu)
         .environmentObject(settings)
@@ -76,15 +78,9 @@ struct MainGameView: View {
         }
     }
     
-    @State var showHistoryOverlay = false
-
-    var showHistory: some Gesture {
-        LongPressGesture(minimumDuration: 3, maximumDistance: 10)
-            .onChanged() { _ in
-                showHistoryOverlay = true
-            }
-    }
-    
+    var showHistoryOverlay : Bool { historyOpacity == 1.0 }
+    // sets the opacity of the history view which is always on, but invisible unless you summon it
+    @State var historyOpacity: Double = 0.0
     
     @State var firstTouch: CGPoint?
     let minDistanceForEditMenu : CGFloat = 40
@@ -94,9 +90,9 @@ struct MainGameView: View {
                 if let firstTouch = firstTouch {
                     withAnimation {
                         if value.location.y > firstTouch.y + minDistanceForEditMenu  {
-                            showMenuBar = true
+                            showMenu = true
                         } else if value.location.y + minDistanceForEditMenu < firstTouch.y {
-                            showMenuBar = false
+                            showMenu = false
                         }
                     }
                 } else {
@@ -113,7 +109,7 @@ struct MainGameView: View {
     }
     
     var blurBackground: Bool {
-        showMenuBar && showHistoryOverlay
+        showMenu && showHistoryOverlay
     }
     
     // MARK: Top Bar

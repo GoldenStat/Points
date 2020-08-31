@@ -17,11 +17,7 @@ struct PlayerView: View {
         VStack {
             
             PlayerHeadline(player: player)
-            
-            if showScore {
-                ScoreRow(player: player)
-            }
-            
+                        
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .overlay(Emphasize() {
@@ -32,6 +28,8 @@ struct PlayerView: View {
                 
                 if player.score.buffer > 0 {
                     PlayerViewCount(number: player.score.buffer)
+                } else if showScore {
+                    PlayerViewCount(number: player.score.value)
                 }
             }
             .onTapGesture(perform: {
