@@ -17,6 +17,8 @@ struct EditView : View {
             JuegosPicker()
             AnimacionPicker()
             JugadoresPicker()
+            JuegosPreview(selection: settings.rule)
+//                .pickerStyle(.default)
         }
 //        .compositingGroup()
 //        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)

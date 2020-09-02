@@ -59,10 +59,7 @@ struct AnimacionPicker: View {
 struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
-    var title: String
-    var binding: Binding<Rule>
-    var orderedSet: Array<Rule>
-    
+    var title: String = "Juegos"
     
     var body: some View {
         HStack {

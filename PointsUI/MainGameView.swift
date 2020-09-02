@@ -14,8 +14,8 @@ extension Color {
 
 struct MainGameView: View {
     
-    @StateObject var settings : GameSettings = GameSettings()
-    
+    @EnvironmentObject var settings : GameSettings
+
     @State var showMenu = false
     
     var body: some View {
@@ -26,13 +26,16 @@ struct MainGameView: View {
                 
                 Color.invisible
                 
-                BoardUI()
-                    .blur(radius: blurRadius)
-                    .padding()
+                VStack {
+                    menuBarItems
+                        .opacity(showMenu ? 0.0 : 1.0)
+                    
+                    BoardUI()
+                        .blur(radius: blurRadius)
+                        .padding()
+                }
                 
-                topBar
-                
-                
+
                 if showMenu {
                     MenuBar(presentEditView: $showMenu)
                         .emphasizeShape()
@@ -71,64 +74,103 @@ struct MainGameView: View {
                     }
             }
         }
-        .onLongPressGesture {
-            withAnimation(.linear(duration: 0.5)) {
-                    showHistory = true
-            }
-        }
+        .simultaneousGesture(showHistoryGesture)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
+//        .toolbar {
+//            ToolbarItemGroup(placement: .navigationBarLeading) {
+//                historyUndoButton
+//                historyRedoButton
+//            }
+//
+//            ToolbarItem(placement: .bottomBar) {
+//                settingsButton
+//            }
+//
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                infoButton
+//            }
+//        }
+//        .navigationBarTitle(settings.rule.name)
     }
-    
+        
     func selectRule(rule: Rule) {
         settings.rule = rule
     }
     
     @State var showHistory: Bool = false
-    
+    var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
+        .onEnded() {_ in
+            withAnimation(.linear(duration: 0.5)) {
+                showHistory = true
+            }
+        }
+    }
     
     var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
     var blurBackground: Bool { showMenu && showHistory }
     
-    // MARK: - Top Bar
+    // MARK: - Buttons
     @State var showInfo: Bool = false
     
-    var topBar: some View {
+    var menuBarItems: some View {
         VStack {
             HStack {
                 historyButtons
                 Spacer()
-                Button() {
-                    showInfo.toggle()
-                } label: {
-                    Image(systemName:
-                            "info")
-                        .padding()
-                }
+                settingsButton
+                Spacer()
+                infoButton
             }
+            .padding()
             Spacer()
+        }
+    }
+    
+    var settingsButton: some View {
+        Button() {
+            showMenu = true
+        } label: {
+            Image(systemName: "gear")
+        }
+ 
+    }
+    
+    var infoButton: some View {
+        Button() {
+            showInfo.toggle()
+        } label: {
+            Image(systemName:
+                    "info")
         }
     }
     
     // MARK: - history buttons
     var historyButtons: some View {
         HStack {
-            Button() { settings.undo() }
-                label: {
-                    undoSymbol
-                        .padding()
-                }
-                .disabled(!settings.canUndo)
-            Button() { settings.redo() }
-                label: {
-                    redoSymbol
-                        .padding()
-                }
-                .disabled(!settings.canRedo)
+            historyUndoButton
+            historyRedoButton
         }
     }
+    
+    var historyUndoButton: some View {
+        Button() { settings.redo() }
+            label: {
+                undoSymbol
+            }
+            .disabled(!settings.canRedo)
+    }
+    
+    var historyRedoButton: some View {
+        Button() { settings.redo() }
+            label: {
+                redoSymbol
+            }
+            .disabled(!settings.canRedo)
+    }
+
     
     var undoSymbol: some View { Image(systemName: "arrow.left")}
     var redoSymbol: some View { Image(systemName: "arrow.right")}
@@ -139,9 +181,10 @@ struct MainGameView: View {
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MainGameView(settings: GameSettings())
-            MainGameView(settings: GameSettings())
+            MainGameView()
+            MainGameView()
                 .preferredColorScheme(.dark)
         }
+        .environmentObject(GameSettings())
     }
 }

@@ -11,14 +11,11 @@ import SwiftUI
 struct ContentView: View {
 
     @State var gameStarted = false
+    @StateObject var settings : GameSettings = GameSettings()
 
     var body: some View {
-        let tapGesture = TapGesture()
-            .onEnded {
-                gameStarted = true
-            }
         
-        return ZStack {
+        ZStack {
             TitleView()
                 .edgesIgnoringSafeArea(.all)
             
@@ -27,6 +24,14 @@ struct ContentView: View {
             }
         }
         .simultaneousGesture(tapGesture)
+        .environmentObject(settings)
+    }
+
+    var tapGesture : some Gesture {
+        TapGesture()
+        .onEnded {
+            gameStarted = true
+        }
     }
 }
 

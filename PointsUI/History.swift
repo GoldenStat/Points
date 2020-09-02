@@ -91,7 +91,11 @@ class History : ObservableObject {
     
     /// an array of the scores of each player
     var playerSumScores : [[ Int ]] {
-        states.map { $0.players.map {$0.score.value} }
+        var scoresArray = Array(repeating: [0], count: numOfPlayers)
+        for playerNo in 0 ..< numOfPlayers {
+            _ = states.map { scoresArray[playerNo].append($0.players[playerNo].score.value) }
+        }
+        return scoresArray
     }
     
     var differentialScores : [[ Int ]] {

@@ -42,6 +42,7 @@ class GameSettings: ObservableObject {
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
     init() {
+        GlobalSettings.chosenNumberOfPlayers = 2
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
         self.maxPoints = GlobalSettings.scorePerGame

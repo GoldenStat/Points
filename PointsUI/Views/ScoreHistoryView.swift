@@ -12,10 +12,10 @@ struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
 
     var header: [ String ] { settings.playerNames }
-    var points: [ [ Int ] ] { settings.playerScores }
+    var scores: [ [ Int ] ] { settings.playerScores }
     
     var sumLine: [ Int ] {
-        points.map { $0.reduce(0) {$0 + $1} }
+        scores.map { $0.reduce(0) {$0 + $1} }
     }
     
     var body: some View {
@@ -30,10 +30,10 @@ struct ScoreHistoryView: View {
             
             HStack {
                 Spacer()
-                ForEach(points, id: \.self) { playerScores in
+                ForEach(scores, id: \.self) { playerScores in
                     VStack {
-                        ForEach(playerScores, id: \.self) { point in
-                            Text(point.description)
+                        ForEach(playerScores, id: \.self) { score in
+                            Text(score.description)
                                 .frame(width: numberCellWidth)
                         }
                     }
