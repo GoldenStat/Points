@@ -37,15 +37,27 @@ struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashab
 
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
+    @Binding var selection: Int {
+        didSet {
+            settings.maxPoints = selection
+        }
+    }
+    
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $selection, orderedSet: [24, 30])
     }
 }
 
 struct JuegosPicker: View {
     @EnvironmentObject var settings: GameSettings
+    @Binding var selection: Int {
+        didSet {
+            settings.maxGames = selection
+        }
+    }
+     
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,4,5])
+        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $selection, orderedSet: [2,3,4,5])
     }
 }
 
@@ -60,12 +72,17 @@ struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
     var title: String = "Juegos"
-    
+    @Binding var selection: Rule {
+        didSet {
+            settings.rule = selection
+        }
+    }
+
     var body: some View {
         HStack {
             Text(title)
             
-            Picker(title, selection: $settings.rule) {
+            Picker(title, selection: $selection) {
                 ForEach(0 ..< settings.possibleRules.count) { index in
                     Text(settings.possibleRules[index].description)
                 }
@@ -77,15 +94,21 @@ struct RulesPicker: View {
 
 struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings
+    @Binding var selection: Int {
+        didSet {
+            settings.chosenNumberOfPlayers = selection
+        }
+    }
+
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: [ 2, 3, 4, 6 ])
+        PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $selection, orderedSet: [ 2, 3, 4, 6 ])
     }
 }
 
 
 struct Preview : View {
     @State var selection: Bool = true
-    
+
     var body: some View {
         VStack {
             Picker("Sample Picker", selection: $selection) {
@@ -100,7 +123,7 @@ struct Preview : View {
 
 struct JuegosPreview : View {
     @EnvironmentObject var settings: GameSettings
-    @State var selection: Rule
+    @Binding var selection: Rule
     
     var allRules: [ Rule ] { settings.possibleRules }
     
@@ -118,7 +141,7 @@ struct Pickers_Previews: PreviewProvider {
     @State static var selection: Rule = .trucoVenezolano
     
     static var previews: some View {
-        JuegosPreview(selection: selection)
+        JuegosPreview(selection: .constant(GameSettings().rule))
             .environmentObject(GameSettings())
     }
 }

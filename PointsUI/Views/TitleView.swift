@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct TitleView: View {
+    
     @EnvironmentObject var settings: GameSettings
     @State private var animatedState = Params.initial
-    var title: String { settings.rule.name }
-    
+
     var body: some View {
         ZStack {
             Color.background
-            Text(PointsUIApp.name.appending("\n").appending( title))
+            Text(PointsUIApp.name)
                 
                 .font(.system(size: animatedState.fontSize))
                 .rotationEffect(.degrees(animatedState.textAngle),

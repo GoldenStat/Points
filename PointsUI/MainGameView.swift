@@ -14,7 +14,7 @@ extension Color {
 
 struct MainGameView: View {
     
-    @EnvironmentObject var settings : GameSettings
+    @Binding var settings : GameSettings
 
     @State var showMenu = false
     
@@ -37,7 +37,7 @@ struct MainGameView: View {
                 
 
                 if showMenu {
-                    MenuBar(presentEditView: $showMenu)
+                    EditView(currentRule: $settings.rule)
                         .emphasizeShape()
                         .padding()
                         .transition(.opacity)
@@ -116,17 +116,14 @@ struct MainGameView: View {
     @State var showInfo: Bool = false
     
     var menuBarItems: some View {
-        VStack {
-            HStack {
-                historyButtons
-                Spacer()
-                settingsButton
-                Spacer()
-                infoButton
-            }
-            .padding()
+        HStack {
+            historyButtons
             Spacer()
+            settingsButton
+            Spacer()
+            infoButton
         }
+        .padding()
     }
     
     var settingsButton: some View {
@@ -181,8 +178,8 @@ struct MainGameView: View {
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MainGameView()
-            MainGameView()
+            MainGameView(settings: .constant(GameSettings()))
+            MainGameView(settings: .constant(GameSettings()))
                 .preferredColorScheme(.dark)
         }
         .environmentObject(GameSettings())

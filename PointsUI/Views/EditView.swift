@@ -11,23 +11,37 @@ import SwiftUI
 struct EditView : View {
     @EnvironmentObject var settings: GameSettings
     
+    @Binding var selectedRule: Rule
+//    @Binding var selectedPoints: Int
+//    @Binding var selectedRounds: Int
+////    @State var selectedAnimationSpeed:
+//    @State var selectedNumberOfPlayers: Int
+
+    init(currentRule: Binding<Rule>) {
+        _selectedRule = currentRule
+//        self.selectedPoints = settings.maxPoints
+//        self.selectedRounds = settings.maxGames
+//        self.selectedNumberOfPlayers = settings.chosenNumberOfPlayers
+    }
+    
     var body: some View {
         VStack {
-            PointsPicker()
-            JuegosPicker()
-            AnimacionPicker()
-            JugadoresPicker()
-            JuegosPreview(selection: settings.rule)
-//                .pickerStyle(.default)
+            Text(settings.rule.name)
+                .fontWeight(.bold)
+            
+            JuegosPreview(selection: $selectedRule)
+//            PointsPicker(selection: $selectedPoints)
+//            JuegosPicker(selection: $selectedRounds)
+//            AnimacionPicker(selection: $selectedAnimationSpeed)
+//            JugadoresPicker(selection: $selectedNumberOfPlayers)
         }
-//        .compositingGroup()
-//        .shadow(color: .accentColor, radius: 5, x: 5, y: 5)
     }
 }
 
 struct EditView_Previews: PreviewProvider {
     static var previews: some View {
-        EditView()
+        EditView(currentRule: .constant(.trucoArgentino))
+            .padding()
             .environmentObject(GameSettings())
     }
 }
