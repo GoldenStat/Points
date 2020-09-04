@@ -37,27 +37,16 @@ struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashab
 
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
-    @Binding var selection: Int {
-        didSet {
-            settings.maxPoints = selection
-        }
-    }
-    
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $selection, orderedSet: [24, 30])
+        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
     }
 }
 
 struct JuegosPicker: View {
     @EnvironmentObject var settings: GameSettings
-    @Binding var selection: Int {
-        didSet {
-            settings.maxGames = selection
-        }
-    }
      
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $selection, orderedSet: [2,3,4,5])
+        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,5])
     }
 }
 
@@ -72,36 +61,57 @@ struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
     var title: String = "Juegos"
-    @Binding var selection: Rule {
-        didSet {
-            settings.rule = selection
-        }
-    }
+    
+    @State private var selection = Rule.trucoArgentino
+    
+//    enum Flavor: String, CaseIterable, Identifiable {
+//        case chocolate
+//        case vanilla
+//        case strawberry
+//
+//        var id: String { self.rawValue }
+//    }
+    
+//    @State private var selectedFlavor = Flavor.chocolate
+
 
     var body: some View {
-        HStack {
-            Text(title)
-            
-            Picker(title, selection: $selection) {
-                ForEach(0 ..< settings.possibleRules.count) { index in
-                    Text(settings.possibleRules[index].description)
+//        Form {
+//            Picker("Flavor", selection: $selectedFlavor) {
+//                Text("Chocolate").tag(Flavor.chocolate)
+//                Text("Vanilla").tag(Flavor.vanilla)
+//                Text("Strawberry").tag(Flavor.strawberry)
+//            }
+//        }
+//        Text("Selected flavor: \(selectedFlavor.rawValue)")
+//        VStack {
+//            Text(selection.name)
+//            Form {
+//
+                Picker(title, selection: $selection) {
+                    ForEach(settings.possibleRules) { rule in
+                        Text(rule.name).tag(rule)
+                    }
                 }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-        }
+//            }
+//        }
     }
 }
 
-struct JugadoresPicker: View {
+struct JugadoresSelection: View {
     @EnvironmentObject var settings: GameSettings
-    @Binding var selection: Int {
-        didSet {
-            settings.chosenNumberOfPlayers = selection
-        }
-    }
 
+    var possiblePlayers: PlayerCount { settings.rule.players }
+    
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $selection, orderedSet: [ 2, 3, 4, 6 ])
+        switch possiblePlayers {
+        case PlayerCount.fixed(let number):
+            return AnyView { Text("Players: \(number.description)") }
+        case PlayerCount.selection(let values):
+            return AnyView {
+                PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
+            }
+        }
     }
 }
 
@@ -121,27 +131,10 @@ struct Preview : View {
     }
 }
 
-struct JuegosPreview : View {
-    @EnvironmentObject var settings: GameSettings
-    @Binding var selection: Rule
-    
-    var allRules: [ Rule ] { settings.possibleRules }
-    
-    var body: some View {
-        Picker("Sample", selection: $selection) {
-            ForEach(allRules) { rule in
-                Text(rule.name)
-            }
-        }
-    }
-}
-
 struct Pickers_Previews: PreviewProvider {
-    
-    @State static var selection: Rule = .trucoVenezolano
-    
+        
     static var previews: some View {
-        JuegosPreview(selection: .constant(GameSettings().rule))
+        RulesPicker()
             .environmentObject(GameSettings())
     }
 }

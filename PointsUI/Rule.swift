@@ -8,11 +8,12 @@
 
 import SwiftUI
 
+enum PlayerCount : Hashable { case fixed(Int), selection([Int])} // maybe make this global enum
+enum PlayerUIType : Hashable { case lines, numberBox, selectionBox }
+
 struct Rule : Identifiable, Hashable {
 
     var id = UUID()
-    enum PlayerCount : Hashable { case fixed(Int), selection([Int])} // maybe make this global enum
-    enum PlayerUIType : Hashable { case lines, numberBox, selectionBox }
     
     var name: String
     private(set) var maxPoints : Int?

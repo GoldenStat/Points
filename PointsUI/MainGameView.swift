@@ -21,7 +21,7 @@ struct MainGameView: View {
     var body: some View {
         
         ZStack {
-            
+                        
             ZStack {
                 
                 Color.invisible
@@ -37,11 +37,10 @@ struct MainGameView: View {
                 
 
                 if showMenu {
-                    EditView(currentRule: $settings.rule)
-                        .emphasizeShape()
+                    EditView()
+//                        .emphasizeShape()
                         .padding()
                         .transition(.opacity)
-                    
                 }
 
                 if showHistory {
@@ -73,6 +72,10 @@ struct MainGameView: View {
                         showMenu = false
                     }
             }
+            
+            Color.blue
+            EditView()
+
         }
         .simultaneousGesture(showHistoryGesture)
         .environmentObject(settings)
