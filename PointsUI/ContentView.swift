@@ -20,7 +20,7 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(.all)
             
             if gameStarted {
-                MainGameView(settings: settings)
+                MainGameView()
             }
         }
         .simultaneousGesture(tapGesture)

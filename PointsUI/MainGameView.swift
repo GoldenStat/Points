@@ -14,7 +14,7 @@ extension Color {
 
 struct MainGameView: View {
     
-    @Binding var settings : GameSettings
+    @EnvironmentObject var settings : GameSettings
 
     @State var showMenu = false
     
@@ -178,8 +178,8 @@ struct MainGameView: View {
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MainGameView(settings: .constant(GameSettings()))
-            MainGameView(settings: .constant(GameSettings()))
+            MainGameView()
+            MainGameView()
                 .preferredColorScheme(.dark)
         }
         .environmentObject(GameSettings())
