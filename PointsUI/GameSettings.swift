@@ -88,10 +88,10 @@ class GameSettings: ObservableObject {
             
     func updateSettings() {
         // if number of players changed, restart the game
-        if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
-            players = Players(names: names(for: chosenNumberOfPlayers))
-            history.reset()
-        }
+//        if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
+//            players = Players(names: names(for: chosenNumberOfPlayers))
+//            history.reset()
+//        }
         GlobalSettings.playerNames = players.names
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints

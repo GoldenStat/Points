@@ -15,7 +15,7 @@ struct EditView : View {
     var playersCount: PlayerCount { settings.rule.players }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             
             Text(settings.rule.name)
                 .fontWeight(.bold)
@@ -23,22 +23,14 @@ struct EditView : View {
             RulesPicker()
                 .frame(height: 120)
             
-            if let points = pointsPerGame {
-                Text("MaxPoints: \(points)")
-            } else {
-                PointsPicker()
-            }
-            
+            PointsPicker()
 
             JuegosPicker()
-            switch playersCount {
-            case .fixed(let num):
-                Text("Players: \(num)")
-            case .selection(_):
-                JugadoresSelection()
-            }
+
+            JugadoresSelection()
             
             SaveButton()
+                .padding()
         }
     }
 }
@@ -57,7 +49,9 @@ struct SaveButton: View {
 
 struct EditView_Previews: PreviewProvider {
     static var previews: some View {
-        EditView()
+        NavigationView {
+            EditView()
+        }
             .padding()
             .environmentObject(GameSettings())
     }

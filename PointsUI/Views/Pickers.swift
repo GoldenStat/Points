@@ -35,10 +35,32 @@ struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashab
     }
 }
 
+struct FixedView: View {
+    var title: String
+    var value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .fontWeight(.bold)
+            Spacer()
+        }
+    }
+}
+
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
+    
+    var pointsPerGame: Int? { settings.rule.maxPoints }
+    
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+        if let points = pointsPerGame {
+            FixedView(title: "MaxPoints", value: points.description)
+        } else {
+            PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+        }
     }
 }
 
@@ -63,7 +85,7 @@ struct RulesPicker: View {
     var title: String = "Juegos"
     
     @State private var selection = Rule.trucoArgentino
-
+    
     var body: some View {
         Form {
             Picker(title, selection: $selection) {
@@ -71,9 +93,9 @@ struct RulesPicker: View {
                     Text(rule.name).tag(rule)
                 }
             }
-//            .onDisappear(perform: {
-//                settings.updateSettings()
-//            })
+            .onDisappear(perform: {
+                settings.updateSettings()
+            })
         }
     }
 }
@@ -82,17 +104,21 @@ struct JugadoresSelection: View {
     @EnvironmentObject var settings: GameSettings
 
     var playersCount: PlayerCount { settings.rule.players }
-
-    var body: some View {
+    
+    @ViewBuilder var body: some View {
         switch playersCount {
-        case .fixed(let number):
-            return AnyView { Text("Players: \(number.description)") }
-        case .selection(let values):
-            return AnyView {
-                PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
+        case .fixed(let num):
+            HStack {
+                Text("Players")
+                Spacer()
+                Text(num.description)
+                    .fontWeight(.bold)
+                Spacer()
             }
+            .padding(.vertical)
+        case .selection(let values):
+            PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
         }
-
     }
 }
 
@@ -113,10 +139,12 @@ struct Preview : View {
 }
 
 struct Pickers_Previews: PreviewProvider {
-        
+    
     static var previews: some View {
-//        RulesPicker()
-        JugadoresSelection()
-            .environmentObject(GameSettings())
+        VStack {
+            RulesPicker()
+            PointsPicker()
+        }
+        .environmentObject(GameSettings())
     }
 }
