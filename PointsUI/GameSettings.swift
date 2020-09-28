@@ -23,18 +23,29 @@ class GameSettings: ObservableObject {
     }
     
     @Published var rule: Rule {
-        didSet { updateCurrentRuleSettings() }
+        didSet { processRuleUpdate() }
     }
     
+    
     /// assigns new values from the rules to the settings
-    private func updateCurrentRuleSettings() {
-        self.maxPoints = rule.maxPoints ?? 1000
-        
+    /// should be called whenever the rules change (the game changed)
+    private func processRuleUpdate() {
+        switch rule.maxPoints {
+        case .none:
+            maxPoints = 1000
+        case .fixed(let value):
+            maxPoints = value
+        case .free(let value):
+            maxPoints = value
+        case .selection(let options):
+            maxPoints = options.randomElement()! // for now, choose a random value, options should never be empty
+        }
+
         switch rule.players {
-        case .fixed(let fixedPlayers):
-            self.availablePlayers = [ fixedPlayers ]
-        case .selection(let allowedPlayers):
-            availablePlayers = allowedPlayers
+            case .fixed(let fixedPlayers):
+                availablePlayers = [ fixedPlayers ]
+            case .selection(let allowedPlayers):
+                availablePlayers = allowedPlayers
         }
     }
 
@@ -47,7 +58,7 @@ class GameSettings: ObservableObject {
         self.maxPoints = GlobalSettings.scorePerGame
         self.rule = .doppelkopf // needs to be set to call methods
         createRules()
-        updateCurrentRuleSettings()
+        processRuleUpdate()
         restoreRule()
     }
     

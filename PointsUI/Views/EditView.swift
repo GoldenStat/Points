@@ -11,26 +11,26 @@ import SwiftUI
 struct EditView : View {
     @EnvironmentObject var settings: GameSettings
     
-    var pointsPerGame : Int? { settings.rule.maxPoints }
+    var pointsPerGame : PointsSelection { settings.rule.maxPoints }
     var playersCount: PlayerCount { settings.rule.players }
-    
+    var title: String { settings.rule.name }
     var body: some View {
-        VStack(alignment: .center) {
-            
-            Text(settings.rule.name)
-                .fontWeight(.bold)
-            
-            RulesPicker()
-                .frame(height: 120)
-            
-            PointsPicker()
-
-            JuegosPicker()
-
-            JugadoresSelection()
-            
+        VStack {
+            NavigationView {
+                Form {
+                    VStack {
+                        
+                        Text(title)
+                            .fontWeight(.bold)
+                        RulesPicker()
+                        PointsPicker()
+                        JuegosPicker()
+                        
+                        JugadoresSelection()
+                    }
+                }
+            }
             SaveButton()
-                .padding()
         }
     }
 }
@@ -38,21 +38,39 @@ struct EditView : View {
 struct SaveButton: View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var isPresented
-
+    
     var body: some View {
         Button("Save") {
-            settings.updateSettings()
             isPresented.wrappedValue.dismiss()
+            settings.updateSettings()
+        }
+    }
+}
+
+struct PreviewView : View {
+    @EnvironmentObject var settings: GameSettings
+    @State var presentView : Bool = false
+    
+    var body: some View {
+        VStack {
+            Text(settings.rule.name)
+                .font(.title)
+            
+            Button("Edit") {
+                presentView = true
+            }
+            .padding()
+        }
+        .sheet(isPresented: $presentView) {
+            EditView()
+                .environmentObject(settings)
         }
     }
 }
 
 struct EditView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            EditView()
-        }
-            .padding()
+        PreviewView()
             .environmentObject(GameSettings())
     }
 }

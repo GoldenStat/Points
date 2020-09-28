@@ -33,6 +33,7 @@ struct Rule : Identifiable, Hashable {
     
     var name: String
     private(set) var maxPoints : PointsSelection
+    
     var players: PlayerCount
     var playerUI: PlayerUIType = .lines
     

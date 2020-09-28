@@ -53,13 +53,18 @@ struct FixedView: View {
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
     
-    var pointsPerGame: Int? { settings.rule.maxPoints }
+    var pointsPerGame: PointsSelection { settings.rule.maxPoints }
     
-    var body: some View {
-        if let points = pointsPerGame {
-            FixedView(title: "MaxPoints", value: points.description)
-        } else {
-            PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+    @ViewBuilder var body: some View {
+        switch pointsPerGame {
+        case .fixed(let value):
+            FixedView(title: "MaxPoints", value: value.description)
+        case .none:
+            EmptyView()
+        case .selection(let options):
+            PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: options)
+        case .free(_):
+            EmptyView()
         }
     }
 }
@@ -79,16 +84,14 @@ struct AnimacionPicker: View {
     }
 }
 
+/// must be put into a form
 struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
     var title: String = "Juegos"
-    
-    @State private var selection = Rule.trucoArgentino
-    
+        
     var body: some View {
-        Form {
-            Picker(title, selection: $selection) {
+        Picker(title, selection: $settings.rule) {
                 ForEach(settings.possibleRules) { rule in
                     Text(rule.name).tag(rule)
                 }
@@ -96,7 +99,6 @@ struct RulesPicker: View {
             .onDisappear(perform: {
                 settings.updateSettings()
             })
-        }
     }
 }
 
@@ -115,7 +117,6 @@ struct JugadoresSelection: View {
                     .fontWeight(.bold)
                 Spacer()
             }
-            .padding(.vertical)
         case .selection(let values):
             PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
         }
@@ -141,7 +142,7 @@ struct Preview : View {
 struct Pickers_Previews: PreviewProvider {
     
     static var previews: some View {
-        VStack {
+        Form {
             RulesPicker()
             PointsPicker()
         }
