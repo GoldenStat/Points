@@ -11,7 +11,7 @@ import SwiftUI
 struct TitleView: View {
     
     @EnvironmentObject var settings: GameSettings
-    @State private var animatedState = Params.initial
+    @State var animatedState = Params.initial
 
     var body: some View {
         ZStack {
@@ -30,13 +30,13 @@ struct TitleView: View {
                     animatedState = Params.appear
                 }
         }
-        .onTapGesture {
-            animatedState = Params.background
-        }
+//        .onTapGesture {
+//            animatedState = Params.background
+//        }
     }
         
     // MARK: - Defining constant parameters used for animating states
-    private struct Params {
+    struct Params {
         
         let spring: Animation
         let offset: CGSize

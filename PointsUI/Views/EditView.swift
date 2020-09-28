@@ -25,10 +25,23 @@ struct EditView : View {
                 Text("MaxPoints: \(points)")
             }
 
-//            JuegosPicker()
-//            AnimacionPicker()
+            JuegosPicker()
             
             JugadoresSelection()
+            
+            SaveButton()
+        }
+    }
+}
+
+struct SaveButton: View {
+    @EnvironmentObject var settings: GameSettings
+    @Environment(\.presentationMode) var isPresented
+
+    var body: some View {
+        Button("Save") {
+            settings.updateSettings()
+            isPresented.wrappedValue.dismiss()
         }
     }
 }

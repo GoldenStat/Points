@@ -63,38 +63,18 @@ struct RulesPicker: View {
     var title: String = "Juegos"
     
     @State private var selection = Rule.trucoArgentino
-    
-//    enum Flavor: String, CaseIterable, Identifiable {
-//        case chocolate
-//        case vanilla
-//        case strawberry
-//
-//        var id: String { self.rawValue }
-//    }
-    
-//    @State private var selectedFlavor = Flavor.chocolate
-
 
     var body: some View {
-//        Form {
-//            Picker("Flavor", selection: $selectedFlavor) {
-//                Text("Chocolate").tag(Flavor.chocolate)
-//                Text("Vanilla").tag(Flavor.vanilla)
-//                Text("Strawberry").tag(Flavor.strawberry)
-//            }
-//        }
-//        Text("Selected flavor: \(selectedFlavor.rawValue)")
-//        VStack {
-//            Text(selection.name)
-//            Form {
-//
-                Picker(title, selection: $selection) {
-                    ForEach(settings.possibleRules) { rule in
-                        Text(rule.name).tag(rule)
-                    }
+        Form {
+            Picker(title, selection: $selection) {
+                ForEach(settings.possibleRules) { rule in
+                    Text(rule.name).tag(rule)
                 }
-//            }
-//        }
+            }
+//            .onDisappear(perform: {
+//                settings.updateSettings()
+//            })
+        }
     }
 }
 

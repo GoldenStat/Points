@@ -22,12 +22,12 @@ class GameSettings: ObservableObject {
         }
     }
     
-    @Published var rule: Rule = .trucoVenezolano {
-        didSet { updateCurrentRule() }
+    @Published var rule: Rule {
+        didSet { updateCurrentRuleSettings() }
     }
     
     /// assigns new values from the rules to the settings
-    private func updateCurrentRule() {
+    private func updateCurrentRuleSettings() {
         self.maxPoints = rule.maxPoints ?? 1000
         
         switch rule.players {
@@ -42,12 +42,22 @@ class GameSettings: ObservableObject {
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
     init() {
-        GlobalSettings.chosenNumberOfPlayers = 2
         self.players = Players(names: GlobalSettings.playerNames)
         self.history = History()
         self.maxPoints = GlobalSettings.scorePerGame
+        self.rule = .doppelkopf // needs to be set to call methods
         createRules()
-        updateCurrentRule()
+        updateCurrentRuleSettings()
+        restoreRule()
+    }
+    
+    /// defaults to not setting any new rule
+    func restoreRule() {
+        for rule in possibleRules {
+            if rule.id == GlobalSettings.ruleID {
+                self.rule = rule
+            }
+        }
     }
     
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
@@ -83,8 +93,9 @@ class GameSettings: ObservableObject {
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTimeInterval = updateSpeed.double
+        GlobalSettings.ruleID = rule.id
     }
-    
+        
     // MARK: control player data
     var numberOfPlayers: Int { players.items.count }
 
