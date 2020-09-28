@@ -63,55 +63,36 @@ struct RulesPicker: View {
     var title: String = "Juegos"
     
     @State private var selection = Rule.trucoArgentino
-    
-//    enum Flavor: String, CaseIterable, Identifiable {
-//        case chocolate
-//        case vanilla
-//        case strawberry
-//
-//        var id: String { self.rawValue }
-//    }
-    
-//    @State private var selectedFlavor = Flavor.chocolate
-
 
     var body: some View {
-//        Form {
-//            Picker("Flavor", selection: $selectedFlavor) {
-//                Text("Chocolate").tag(Flavor.chocolate)
-//                Text("Vanilla").tag(Flavor.vanilla)
-//                Text("Strawberry").tag(Flavor.strawberry)
-//            }
-//        }
-//        Text("Selected flavor: \(selectedFlavor.rawValue)")
-//        VStack {
-//            Text(selection.name)
-//            Form {
-//
-                Picker(title, selection: $selection) {
-                    ForEach(settings.possibleRules) { rule in
-                        Text(rule.name).tag(rule)
-                    }
+        Form {
+            Picker(title, selection: $selection) {
+                ForEach(settings.possibleRules) { rule in
+                    Text(rule.name).tag(rule)
                 }
-//            }
-//        }
+            }
+//            .onDisappear(perform: {
+//                settings.updateSettings()
+//            })
+        }
     }
 }
 
 struct JugadoresSelection: View {
     @EnvironmentObject var settings: GameSettings
 
-    var possiblePlayers: PlayerCount { settings.rule.players }
-    
+    var playersCount: PlayerCount { settings.rule.players }
+
     var body: some View {
-        switch possiblePlayers {
-        case PlayerCount.fixed(let number):
+        switch playersCount {
+        case .fixed(let number):
             return AnyView { Text("Players: \(number.description)") }
-        case PlayerCount.selection(let values):
+        case .selection(let values):
             return AnyView {
                 PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
             }
         }
+
     }
 }
 
@@ -134,7 +115,8 @@ struct Preview : View {
 struct Pickers_Previews: PreviewProvider {
         
     static var previews: some View {
-        RulesPicker()
+//        RulesPicker()
+        JugadoresSelection()
             .environmentObject(GameSettings())
     }
 }

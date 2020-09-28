@@ -45,6 +45,8 @@ enum GlobalSettings {
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
     @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
     static var playerNames : [String]
+    @UserDefault(key: "RuleID", defaultValue: 0) static var ruleID: Int
+    
 }
 
 extension Color {

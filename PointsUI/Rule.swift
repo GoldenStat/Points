@@ -13,7 +13,9 @@ enum PlayerUIType : Hashable { case lines, numberBox, selectionBox }
 
 struct Rule : Identifiable, Hashable {
 
-    var id = UUID()
+    var id: Int
+    
+    static var count = 0
     
     var name: String
     private(set) var maxPoints : Int?
@@ -29,6 +31,15 @@ struct Rule : Identifiable, Hashable {
     static let romme = Rule(name: "Rommé", maxPoints: 1000, players: .selection([2,3,4,5,6]), playerUI: .numberBox)
     static let scopa = Rule(name: "Scopa", maxPoints: 15, players: .selection([2,3,4]), playerUI: .lines)
 
+    init(name: String, maxPoints: Int? = nil, players: PlayerCount, playerUI: PlayerUIType) {
+        self.id = Self.count
+        Self.count += 1
+        self.name = name
+        self.maxPoints = maxPoints
+        self.players = players
+        self.playerUI = playerUI
+    }
+    
 }
 
 extension Rule : StringExpressable {

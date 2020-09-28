@@ -10,20 +10,24 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State var gameStarted = false
+    @State var gameStarted = true
     @StateObject var settings : GameSettings = GameSettings()
 
     var body: some View {
-        
         ZStack {
-            TitleView()
-                .edgesIgnoringSafeArea(.all)
             
             if gameStarted {
-                MainGameView()
+                NavigationView {
+                    MainGameView()
+                        .navigationBarHidden(true)
+                }
+            } else {
+                TitleView(animatedState: .background)
             }
+        
         }
-        .simultaneousGesture(tapGesture)
+        .edgesIgnoringSafeArea(.all)
+//        .simultaneousGesture(tapGesture)
         .environmentObject(settings)
     }
 

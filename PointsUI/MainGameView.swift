@@ -21,7 +21,6 @@ struct MainGameView: View {
     var body: some View {
         
         ZStack {
-                        
             ZStack {
                 
                 Color.invisible
@@ -30,18 +29,23 @@ struct MainGameView: View {
                     menuBarItems
                         .opacity(showMenu ? 0.0 : 1.0)
                     
+                    Spacer()
                     BoardUI()
                         .blur(radius: blurRadius)
                         .padding()
-                }
-                
+                        .sheet(isPresented: $showMenu) {
+                            Emphasize {
+                                EditView()
+                            
+                                .padding()
+                                .padding(.vertical, 20)
+                                .transition(.opacity)
+                            }
+                        }
+                    Spacer()
 
-                if showMenu {
-                    EditView()
-//                        .emphasizeShape()
-                        .padding()
-                        .transition(.opacity)
                 }
+
 
                 if showHistory {
                     ScoreHistoryView()
@@ -73,30 +77,13 @@ struct MainGameView: View {
                     }
             }
             
-            Color.blue
-            EditView()
-
         }
-        .simultaneousGesture(showHistoryGesture)
+//        .edgesIgnoringSafeArea(.all)
+//        .simultaneousGesture(showHistoryGesture)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
-//        .toolbar {
-//            ToolbarItemGroup(placement: .navigationBarLeading) {
-//                historyUndoButton
-//                historyRedoButton
-//            }
-//
-//            ToolbarItem(placement: .bottomBar) {
-//                settingsButton
-//            }
-//
-//            ToolbarItem(placement: .navigationBarTrailing) {
-//                infoButton
-//            }
-//        }
-//        .navigationBarTitle(settings.rule.name)
     }
         
     func selectRule(rule: Rule) {
@@ -107,7 +94,7 @@ struct MainGameView: View {
     var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
         .onEnded() {_ in
             withAnimation(.linear(duration: 0.5)) {
-                showHistory = true
+                showHistory = true                
             }
         }
     }

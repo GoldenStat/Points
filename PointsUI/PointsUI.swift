@@ -11,8 +11,8 @@ import SwiftUI
 
 @main
 struct PointsUIApp: App {
-//    static let name = "Truco Points"
-    static let name = "PointsUI"
+    //    static let name = "Truco Points"
+    static let name = "Points\nUI"
     
     var body: some Scene {
         WindowGroup {
@@ -20,3 +20,4 @@ struct PointsUIApp: App {
         }
     }
 }
+
