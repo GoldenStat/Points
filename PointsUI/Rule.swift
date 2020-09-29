@@ -20,10 +20,28 @@ enum PlayerCount : Hashable { case fixed(Int), selection([Int])}
 /// - *free*: any number can be set (probably changed using a textfield)
 /// - *none*: the game is freestyle and won't end automatically
 /// - *selection*: there are fixed possibilities how far the game can go
+enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([Int]) }
 
-enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection( [Int]) }
+/// how many rounds should be counted
+/// some games take a long time, so several rounds don't make sense, and maybe you want a fixed total
+/// also, maybe you want to let the user choose for certain games
+///
+/// can be:
+/// - *round*: a fixed number of points the game has, can't be changed
+/// - *rounds*: the user can choose between options
+/// - *one*: after one game the team with the most points wins.
+/// - *win*: after how many wins (e.g. 2 (out of three))
+/// - *wins*: let the user choose
+enum GamesCount: Hashable { case round(Int), rounds([Int]), one, win(Int),  wins([Int]) }
 
-enum PlayerUIType : Hashable { case lines, numberBox, selectionBox }
+/// selection for different playerUIs
+///
+/// can be:
+/// - *checkbox(Int)*: draws lines in a checkbox form... sensible values are 4 (just the box), 5 (box with a line), 6 (box with an 'x')
+/// - *numberBox*: a number that counts up (like a button)
+/// - *selectionBox*: a number where you can select points - (tbd - could have a number array with points to select)
+/// - *matches*: like counting with matches, five lines are drawn vertically and a fifth horizontally (tbd)
+enum PlayerUIType : Hashable { case checkbox(Int), numberBox, selectionBox, matches }
 
 struct Rule : Identifiable, Hashable {
 
@@ -35,24 +53,66 @@ struct Rule : Identifiable, Hashable {
     private(set) var maxPoints : PointsSelection
     
     var players: PlayerCount
-    var playerUI: PlayerUIType = .lines
+    var playerUI: PlayerUIType
+    var rounds: GamesCount
     
-    static let trucoArgentino = Rule(name: "Truco Argentino", maxPoints: .selection([15,24,30]), players: .selection([2,3,4,6]), playerUI: .lines)
-    static let trucoVenezolano = Rule(name: "Truco Venezolano", maxPoints: .fixed(24), players: .selection([2,3,4,6]), playerUI: .lines)
-    static let caida = Rule(name: "Caida", maxPoints: .fixed(24), players: .selection([2,3,4]), playerUI: .lines)
-    static let doppelkopf = Rule(name: "Doppelkopf", maxPoints: .none, players: .fixed(4), playerUI: .numberBox)
-    static let skat = Rule(name: "Skat", maxPoints: .none, players: .fixed(3), playerUI: .selectionBox)
-    static let shitzu = Rule(name: "Shitzu", maxPoints: .fixed(1001), players: .fixed(4), playerUI: .selectionBox)
-    static let romme = Rule(name: "Rommé", maxPoints: .fixed(1000), players: .selection([2,3,4,5,6]), playerUI: .numberBox)
-    static let scopa = Rule(name: "Scopa", maxPoints: .fixed(15), players: .selection([2,3,4]), playerUI: .lines)
+    static let trucoArgentino = Rule(name: "Truco Argentino",
+                                     maxPoints: .selection([15,24,30]),
+                                     players: .selection([2,3,4,6]),
+                                     playerUI: .checkbox(5),
+                                     rounds: .wins([3,5])
+    )
+    static let trucoVenezolano = Rule(name: "Truco Venezolano",
+                                      maxPoints: .fixed(24),
+                                      players: .selection([2,3,4,6]),
+                                      playerUI: .checkbox(5),
+                                      rounds: .wins([3,5])
+    )
+    static let caida = Rule(name: "Caida",
+                            maxPoints: .fixed(24),
+                            players: .selection([2,3,4]),
+                            playerUI: .checkbox(5),
+                            rounds: .rounds([3,5])
+    )
+    static let doppelkopf = Rule(name: "Doppelkopf",
+                                 maxPoints: .none,
+                                 players: .fixed(4),
+                                 playerUI: .numberBox,
+                                 rounds: .one
+    )
+    static let skat = Rule(name: "Skat",
+                           maxPoints: .none,
+                           players: .fixed(3),
+                           playerUI: .selectionBox,
+                           rounds: .one
+    )
+    static let shitzu = Rule(name: "Shitzu",
+                             maxPoints: .fixed(1001),
+                             players: .fixed(4),
+                             playerUI: .selectionBox,
+                             rounds: .wins([1,2,3])
+    )
+    static let romme = Rule(name: "Rommé",
+                            maxPoints: .fixed(1000),
+                            players: .selection([2,3,4,5,6]),
+                            playerUI: .numberBox,
+                            rounds: .rounds([1,2,3,5])
+    )
+    static let scopa = Rule(name: "Scopa",
+                            maxPoints: .fixed(15),
+                            players: .selection([2,3,4]),
+                            playerUI: .checkbox(5),
+                            rounds: .wins([1,2,3,5])
+    )
 
-    init(name: String, maxPoints: PointsSelection = .none, players: PlayerCount, playerUI: PlayerUIType) {
+    init(name: String, maxPoints: PointsSelection = .none, players: PlayerCount, playerUI: PlayerUIType, rounds: GamesCount) {
         self.id = Self.count
         Self.count += 1
         self.name = name
         self.maxPoints = maxPoints
         self.players = players
         self.playerUI = playerUI
+        self.rounds = rounds
     }
     
 }
