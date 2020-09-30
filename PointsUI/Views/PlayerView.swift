@@ -8,32 +8,56 @@
 
 import SwiftUI
 
+enum PlayerViewTitleStyle {
+    case normal, inline
+}
+
 struct PlayerView: View {
+    
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
+    
+    var titleStyle : PlayerViewTitleStyle = .inline
+    var scoreStep: Int = 1
+    
+    var playerUI: PlayerUIType = .checkbox(5)
     
     var body: some View {
         
         VStack {
             
-            PlayerHeadline(player: player)
-                        
-            ZStack {
+            if titleStyle == .normal {
+                PlayerHeadline(player: player)
+            }
+            
+            ZStack() {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .overlay(Emphasize() {
-                        ScoreBoardView(player: player)
+                        VStack {
+                            if titleStyle == .inline {
+                                PlayerHeadline(player: player)
+                                    .padding(.vertical)
+                            }
+                            
+                            if showScore {
+                                ScoreRow(player: player)
+                            } else {
+                                Spacer()
+                            }
+                        
+                            ScoreRepresentationView(
+                                score: player.score,
+                                uiType: playerUI
+                            )
+                        }
                     })
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
-                if player.score.buffer > 0 {
-                    PlayerViewCount(number: player.score.buffer)
-                } else if showScore {
-                    PlayerViewCount(number: player.score.value)
-                }
+                PlayerViewCount(score: player.score)
             }
             .onTapGesture(perform: {
-                player.add(score: 1)
+                player.add(score: scoreStep)
                 settings.startTimer()
             })
 
@@ -61,11 +85,19 @@ struct PlayerView: View {
 }
 
 struct PlayerViewCount: View {
-    var number: Int
+
+    var score: Score
+
     var body: some View {
-        Text(number.description)
-            .font(.system(size: 128, weight: .semibold, design: .rounded))
-            .opacity(0.3)
+        
+        if score.buffer > 0 {
+            Text(score.buffer.description)
+                .font(.system(size: 128, weight: .semibold, design: .rounded))
+                .opacity(0.3)
+        } else {
+            Text(score.value.description)
+                .font(.system(size: 128, weight: .semibold, design: .rounded))
+        }
     }
 }
 struct PlayerHeadline: View {
