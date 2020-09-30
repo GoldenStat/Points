@@ -11,14 +11,23 @@ import SwiftUI
 struct MatchesScoreView: View {
     var score: Score = Score(2, buffer: 2)
     var body: some View {
-        HStack {
-            ForEach (0 ..< score.value) { _ in
-                MatchView()
+        ZStack {
+            HStack {
+                ForEach (0 ..< score.value) { _ in
+                    MatchView()
+                }
+                ForEach (0 ..< score.buffer) { _ in
+                    MatchView()
+                        .opacity(0.3)
+                }
+                ForEach (0 ..< 4 - score.sum) { _ in
+                    MatchView()
+                        .opacity(0.001)
+                }
             }
-            ForEach (0 ..< score.buffer) { _ in
-                MatchView()
-                    .opacity(0.3)
-            }
+            MatchView()
+                .rotationEffect(.degrees(-70))
+                .scaleEffect(0.8)
         }
         .frame(width: 400, height: 400)
     }
@@ -48,10 +57,8 @@ struct MatchHeadShape: Shape {
         var path = Path()
    
         let centerX = rect.minX + rect.width / 2
-        let size = CGSize(width: rect.width * matchRatio.width,
-                          height: rect.height * matchRatio.height)
 
-        let circleRadius : CGFloat = size.width
+        let circleRadius : CGFloat = rect.width * matchRatio.width
         
         let circleCenter = CGPoint(x: centerX,
                                    y: circleRadius)
