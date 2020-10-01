@@ -8,10 +8,55 @@
 
 import SwiftUI
 
+
+/// the UI with a collection of Boxes and maximum score
 struct MatchesScoreView: View {
-    var score: Score = Score(0)
+    @EnvironmentObject var settings: GameSettings
+    
+    let id = UUID()
+    var score: Score
+    let maxItems = MatchBox.maxItems
+    
+    var numberOfBoxes : Int {
+        let remainder = maxScore % maxItems
+        let full = maxScore / maxItems
+        return full + (remainder > 0 ? 1 : 0)
+        }
+    
     var body: some View {
-        MatchBox(score: score)
+        FlowStack(columns: columns,
+                  numItems: numberOfBoxes) { index, colWidth in
+            matchBox(at: index)
+                .padding()
+                .frame(width: colWidth)
+                .animation(.easeInOut(duration: .lineAnimationSpeed))
+                .aspectRatio(ratio, contentMode: .fit)
+        }
+    }
+    
+    // MARK: -- constants
+    var maxScore : Int { settings.maxPoints } // depends on game settings
+    
+    private let ratio : CGFloat = 1.0
+    private let columns = 2 // make variable?
+
+    // MARK: -- calculate points for each box
+    private func matchBox(at index: Int) -> MatchBox {
+        // count points and buffer points to what should be in this box
+        
+        let start = index * MatchBox.maxItems
+        let end = start + MatchBox.maxItems
+        var thisBoxScore = Score()
+        
+        for point in start ... end {
+            if point < score.value {
+                thisBoxScore.value += 1
+            } else if point < score.sum {
+                thisBoxScore.add()
+            }
+        }
+        
+        return MatchBox(score: thisBoxScore)
     }
 }
 
@@ -19,34 +64,32 @@ struct MatchBox: View {
     
     var score: Score
     
-    let maxMatches = 5 // maximum matches is 5
+    static let maxItems = 5 // maximum matches are 5
     
     var body: some View {
         ZStack {
             HStack {
-                ForEach(1 ..< maxMatches) { count in
+                ForEach(1 ..< MatchBox.maxItems) { count in
                     MatchView()
                         .opacity(opacity(for: score, matchNumber: count))
                 }
             }
+            .padding()
+
             
-            HStack {
-                ForEach(1 ..< maxMatches - 1) { count in
+            GeometryReader { geo in
+                HStack() {
+                    Spacer()
                     MatchView()
-                        .opacity(0)
+                        .opacity(opacity(for: score, matchNumber: MatchBox.maxItems))
+                        .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
+                        .rotationEffect(.degrees(-80))
+                    
+                    Spacer()
                 }
-                MatchView()
-                    .opacity(opacity(for: score, matchNumber: 5))
-                    .position()
-                    .rotationEffect(.degrees(-70))
             }
+            
         }
-        .padding()
-        
-        Text("\(score.value) + \(score.buffer)")
-            .fontWeight(.bold)
-            .font(.system(size: 144))
-            .opacity(0.2)
     }
     
     func opacity(for score: Score, matchNumber count: Int) -> Double {
@@ -156,7 +199,9 @@ struct AnimatedMatchBox: View {
 
 struct MatchesScoreView_Previews: PreviewProvider {
     static var previews: some View {
+//        MatchesScoreView(score: Score(24))
+//            .environmentObject(GameSettings())
         AnimatedMatchBox(score: Score(5))
-            .frame(width: 400, height: 400)
+            .frame(width: 300, height: 300)
     }
 }

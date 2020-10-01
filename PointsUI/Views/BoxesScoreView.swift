@@ -17,7 +17,7 @@ struct BoxesScoreView: View {
     
     let id = UUID()
     var score: Score = Score()
-    var linesPerBox: Int = Int(Box.maxLength)
+    var linesPerBox: Int = 4 // Int(Box.maxLength)
     
     var numberOfBoxes : Int {
         let remainder = maxScore % linesPerBox
