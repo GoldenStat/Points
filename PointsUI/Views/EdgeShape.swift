@@ -94,7 +94,7 @@ struct EdgeShape: Shape {
 }
 
 // MARK: - sample views
-struct EdgeView: View {
+struct EdgeSampleView: View {
     
     @State var index : Double = 0
     
@@ -105,7 +105,7 @@ struct EdgeView: View {
             EdgeShape(totalLength: index)
                 .stroke(Color.points,
                         style: StrokeStyle(
-                            lineWidth: 5.0,
+                            lineWidth: edgeWidth,
                             lineCap:  .round,
                             lineJoin: .round))
                 .padding()
@@ -113,9 +113,8 @@ struct EdgeView: View {
             Text(index.description)
         }
         .onTapGesture {
-            if Int(self.index) + 1 > 5 {
+            if Int(self.index) + 1 > maxEdges {
                 index = 0
-                
             } else {
                 withAnimation(.easeOut(duration: 1.0)) {
                     index += 1
@@ -123,10 +122,13 @@ struct EdgeView: View {
             }
         }
     }
+    
+    private let maxEdges = 5
+    private let edgeWidth : CGFloat = 5.0
 }
 
 struct EdgeView_Previews: PreviewProvider {
     static var previews: some View {
-        EdgeView()
+        EdgeSampleView()
     }
 }

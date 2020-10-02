@@ -14,6 +14,7 @@ struct ScoreRepresentationView: View {
     var uiType: PlayerUIType
     
     var body: some View {
+        
         switch uiType {
         case .checkbox(let num):
             BoxesScoreView(score: score, linesPerBox: num)

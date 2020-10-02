@@ -20,7 +20,7 @@ struct PlayerView: View {
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
-    var playerUI: PlayerUIType = .checkbox(5)
+    var playerUI: PlayerUIType = .matches
     
     var body: some View {
         

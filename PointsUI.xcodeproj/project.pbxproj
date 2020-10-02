@@ -117,10 +117,10 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */,
 				4139A3F625239133006E713B /* SelectionScoreView.swift */,
 				4139A3F125238EDC006E713B /* MatchesScoreView.swift */,
 				411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */,
-				4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */,
 				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				4194BF1A24A29209007CDBA1 /* TitleView.swift */,
 				411DF2112360645200A37C64 /* FlowStack.swift */,

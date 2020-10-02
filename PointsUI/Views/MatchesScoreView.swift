@@ -83,14 +83,19 @@ struct MatchBox: View {
                     MatchView()
                         .opacity(opacity(for: score, matchNumber: MatchBox.maxItems))
                         .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
-                        .rotationEffect(.degrees(-80))
-                    
+                        .rotationEffect(.degrees(degrees))
+                        .onAppear() {
+                            degrees = -80
+                        }
+                        .animation(.spring(response: 0.6, dampingFraction: 0.3, blendDuration: 0.4))
+
                     Spacer()
                 }
             }
-            
         }
     }
+
+    @State var degrees : Double = 0
     
     func opacity(for score: Score, matchNumber count: Int) -> Double {
 
@@ -199,9 +204,9 @@ struct AnimatedMatchBox: View {
 
 struct MatchesScoreView_Previews: PreviewProvider {
     static var previews: some View {
-//        MatchesScoreView(score: Score(24))
-//            .environmentObject(GameSettings())
-        AnimatedMatchBox(score: Score(5))
-            .frame(width: 300, height: 300)
+        MatchesScoreView(score: Score(14))
+            .environmentObject(GameSettings())
+//        AnimatedMatchBox(score: Score(5))
+//            .frame(width: 300, height: 300)
     }
 }

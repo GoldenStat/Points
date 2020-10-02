@@ -17,11 +17,11 @@ struct BoxesScoreView: View {
     
     let id = UUID()
     var score: Score = Score()
-    var linesPerBox: Int = 4 // Int(Box.maxLength)
+    var linesPerBox: Int = Int(Box.maxLength)
     
     var numberOfBoxes : Int {
-        let remainder = maxScore % linesPerBox
-        let full = maxScore / linesPerBox
+        let remainder = maxScoreSettings % linesPerBox
+        let full = maxScoreSettings / linesPerBox
         return full + (remainder > 0 ? 1 : 0)
         }
     
@@ -37,7 +37,7 @@ struct BoxesScoreView: View {
     }
     
     // MARK: -- constants
-    var maxScore : Int { settings.maxPoints } // depends on game settings
+    var maxScoreSettings : Int { settings.maxPoints } // depends on game settings
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?
