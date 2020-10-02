@@ -21,18 +21,20 @@ extension CGPoint {
 /// a box that counts part of a score
 /// - Parameters
 /// - Parameter score: the current score the box has saved (drawn in Color.solid and Color.buffer)
-/// - Parameter maxLength: the maximum Edges that will be used from EdgeShape
+/// - Parameter edges: the maximum Edges that will be used from EdgeShape. *Must be* in range of edges aray
 struct Box: View {
     var score : Score
     
-    var cappedPoints : Double { min(Self.maxLength, Double(score.value)) }
-    var cappedTotal : Double { min(Self.maxLength, Double(score.sum)) }
+    var cappedPoints : Double { min(maxLength, Double(score.value)) }
+    var cappedTotal : Double { min(maxLength, Double(score.sum)) }
     
-    static var maxLength : Double { Double(EdgeShape.numberOfEdges) - 1.0 }
+    var edges: Int = EdgeShape.numberOfEdges - 1
+    
+    private var maxLength : Double { Double(edges) }
     
     var body: some View {
         ZStack {
-            EdgeShape(totalLength: Self.maxLength)
+            EdgeShape(totalLength: maxLength)
                 .stroke(
                     Color.inactive,
                     style: strokeStyle)

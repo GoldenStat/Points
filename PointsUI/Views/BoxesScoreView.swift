@@ -17,7 +17,7 @@ struct BoxesScoreView: View {
     
     let id = UUID()
     var score: Score = Score()
-    var linesPerBox: Int = Int(Box.maxLength)
+    var linesPerBox: Int = Int(EdgeShape.numberOfEdges)
     
     var numberOfBoxes : Int {
         let remainder = maxScoreSettings % linesPerBox
@@ -41,7 +41,6 @@ struct BoxesScoreView: View {
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?
-//    private let linesPerBox = Int(Box.maxLength) // depends on how many points a Box struct can hold
 
     // MARK: -- calculate points for each box
     private func filledBox(at index: Int) -> Box {
@@ -59,7 +58,7 @@ struct BoxesScoreView: View {
             }
         }
         
-        return Box(score: thisBoxScore)
+        return Box(score: thisBoxScore, edges: linesPerBox)
     }
 }
 
@@ -68,7 +67,7 @@ struct ScoreBoxUI_Previews: PreviewProvider {
         ZStack {
             Color.background
             
-            BoxesScoreView(score: Score(10))
+            BoxesScoreView(score: Score(20), linesPerBox: 5)
                 .environmentObject(GameSettings())
         }
     }
