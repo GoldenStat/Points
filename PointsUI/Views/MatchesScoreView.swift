@@ -100,14 +100,14 @@ struct MatchBox: View {
     func opacity(for score: Score, matchNumber count: Int) -> Double {
 
         let fullOpacity : Double = 1.0
-        let minOpacity : Double = 0.3
+        let bufferOpacity : Double = 0.3
 
         if score.value >= count {
             return fullOpacity
         } else if score.sum >= count {
-            return minOpacity
+            return bufferOpacity
         }
-        return 0
+        return 0 // invisible
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State var gameStarted = true
+    @State var gameStarted = false
     @StateObject var settings : GameSettings = GameSettings()
 
     var body: some View {
@@ -27,7 +27,7 @@ struct ContentView: View {
         
         }
         .edgesIgnoringSafeArea(.all)
-//        .simultaneousGesture(tapGesture)
+        .simultaneousGesture(tapGesture)
         .environmentObject(settings)
     }
 

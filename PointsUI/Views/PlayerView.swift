@@ -20,7 +20,7 @@ struct PlayerView: View {
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
-    var playerUI: PlayerUIType = .matches
+    var playerUI: PlayerUIType = .matches //{ settings.rule.playerUI }
     
     var body: some View {
         
@@ -33,6 +33,7 @@ struct PlayerView: View {
             ZStack() {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .overlay(Emphasize() {
+                        
                         VStack {
                             if titleStyle == .inline {
                                 PlayerHeadline(player: player)
@@ -42,19 +43,26 @@ struct PlayerView: View {
                             if showScore {
                                 ScoreRow(player: player)
                             } else {
-                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    PlayerViewCount(score: player.score)
+                                        .foregroundColor(.red)
+                                        .padding(.horizontal, 40)
+                                }
                             }
-                        
+                            
+                            Spacer()
+                            
                             ScoreRepresentationView(
                                 score: player.score,
                                 uiType: playerUI
                             )
+                            
+                            Spacer()
                         }
                     })
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
-                
-                PlayerViewCount(score: player.score)
             }
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
@@ -88,18 +96,14 @@ struct PlayerViewCount: View {
 
     var score: Score
 
+    var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
     var body: some View {
-        
-        if score.buffer > 0 {
-            Text(score.buffer.description)
-                .font(.system(size: 128, weight: .semibold, design: .rounded))
-                .opacity(0.3)
-        } else {
-            Text(score.value.description)
-                .font(.system(size: 128, weight: .semibold, design: .rounded))
-        }
+        Text(score.buffer.description)
+            .font(.system(size: 32, weight: .semibold, design: .rounded))
+            .opacity(scoreOpacity)
     }
 }
+
 struct PlayerHeadline: View {
     @ObservedObject var player : Player
 
@@ -127,7 +131,7 @@ struct ScoreRow: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(name: "Alexander")
+    static var player = Player(from: PlayerData(name: "Alexander", points: 9, games: 1))
     
     static var previews: some View {
         PlayerView(player: player)

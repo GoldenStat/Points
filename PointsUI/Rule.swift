@@ -83,13 +83,13 @@ struct Rule : Identifiable, Hashable {
     static let skat = Rule(name: "Skat",
                            maxPoints: .none,
                            players: .fixed(3),
-                           playerUI: .selectionBox([18,20,22,23,24]),
+                           playerUI: .selectionBox([9,10,11,12,23,24]), // selection with multiplier
                            rounds: .one
     )
     static let shitzu = Rule(name: "Shitzu",
                              maxPoints: .fixed(1001),
                              players: .fixed(4),
-                             playerUI: .selectionBox([5,10]),
+                             playerUI: .selectionBox([-25,5,10,25]),
                              rounds: .wins([1,2,3])
     )
     static let romme = Rule(name: "Rommé",
@@ -101,7 +101,7 @@ struct Rule : Identifiable, Hashable {
     static let scopa = Rule(name: "Scopa",
                             maxPoints: .fixed(15),
                             players: .selection([2,3,4]),
-                            playerUI: .checkbox(5),
+                            playerUI: .matches,
                             rounds: .wins([1,2,3,5])
     )
 

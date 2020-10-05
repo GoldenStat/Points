@@ -88,6 +88,10 @@ class GameSettings: ObservableObject {
         addRule(.trucoArgentino)
         addRule(.trucoVenezolano)
         addRule(.doppelkopf)
+        addRule(.caida)
+        addRule(.scopa)
+        addRule(.skat)
+        addRule(.shitzu)
     }
     
     func addRule(_ rule: Rule) {
@@ -109,6 +113,8 @@ class GameSettings: ObservableObject {
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTimeInterval = updateSpeed.double
         GlobalSettings.ruleID = rule.id
+        self.needsUpdate = true
+        
     }
         
     // MARK: control player data
