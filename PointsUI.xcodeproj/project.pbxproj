@@ -39,6 +39,7 @@
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
 		41DB1E1723E5C8C900E17CC8 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1623E5C8C900E17CC8 /* GameState.swift */; };
 		41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1823E5C8F100E17CC8 /* History.swift */; };
+		41DFDF5D252E2C550068F129 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DFDF5C252E2C550068F129 /* MatchView.swift */; };
 		41EC900024E8240100038F5C /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC8FFF24E8240100038F5C /* Rule.swift */; };
 		41EC900224EE7D9900038F5C /* Pickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC900124EE7D9900038F5C /* Pickers.swift */; };
 		41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F114A8236A073F00C6314D /* GlobalSettings.swift */; };
@@ -98,6 +99,7 @@
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		41DB1E1623E5C8C900E17CC8 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		41DB1E1823E5C8F100E17CC8 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		41DFDF5C252E2C550068F129 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		41EC8FFF24E8240100038F5C /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		41EC900124EE7D9900038F5C /* Pickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pickers.swift; sourceTree = "<group>"; };
 		41F114A8236A073F00C6314D /* GlobalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettings.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */,
 				4139A3F625239133006E713B /* SelectionScoreView.swift */,
 				4139A3F125238EDC006E713B /* MatchesScoreView.swift */,
+				41DFDF5C252E2C550068F129 /* MatchView.swift */,
 				411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */,
 				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				4194BF1A24A29209007CDBA1 /* TitleView.swift */,
@@ -305,6 +308,7 @@
 				41DB1E1723E5C8C900E17CC8 /* GameState.swift in Sources */,
 				41EC900024E8240100038F5C /* Rule.swift in Sources */,
 				419A44AC24475CE000EA91F3 /* ScoreTableView.swift in Sources */,
+				41DFDF5D252E2C550068F129 /* MatchView.swift in Sources */,
 				411DF22123607CD100A37C64 /* MainGameView.swift in Sources */,
 				4168CE2524AF922000DACD62 /* InfoView.swift in Sources */,
 				416F37972442AB1A00D9D55B /* EdgeShape.swift in Sources */,
