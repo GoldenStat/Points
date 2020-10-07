@@ -31,6 +31,6 @@ struct ScoreRepresentationView: View {
 struct ScoreRepresentationView_Previews: PreviewProvider {
     static var previews: some View {
         ScoreRepresentationView(score: Score(5, buffer: 3),
-                                uiType: .checkbox(5))
+                                uiType: .matches)
     }
 }

@@ -16,6 +16,7 @@ struct MatchesScoreView: View {
     let id = UUID()
     var score: Score
     let maxItems = MatchBox.maxItems
+    var overrideMaxScore : Int?
     
     var numberOfBoxes : Int {
         let remainder = maxScore % maxItems
@@ -35,7 +36,7 @@ struct MatchesScoreView: View {
     }
     
     // MARK: -- constants
-    var maxScore : Int { settings.maxPoints } // depends on game settings
+    var maxScore : Int { overrideMaxScore ?? settings.maxPoints } // depends on game settings
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?
@@ -44,19 +45,20 @@ struct MatchesScoreView: View {
     private func matchBox(at index: Int) -> MatchBox {
         // count points and buffer points to what should be in this box
         
-        let start = index * MatchBox.maxItems
-        let end = start + MatchBox.maxItems
-        var thisBoxScore = Score()
+//        let start = index * MatchBox.maxItems
+//        let end = start + MatchBox.maxItems
+//        var thisBoxScore = Score()
+//
+//        for point in start ... end {
+//            if point < score.value {
+//                thisBoxScore.value += 1
+//            } else if point < score.sum {
+//                thisBoxScore.add()
+//            }
+//        }
         
-        for point in start ... end {
-            if point < score.value {
-                thisBoxScore.value += 1
-            } else if point < score.sum {
-                thisBoxScore.add()
-            }
-        }
-        
-        return MatchBox(score: thisBoxScore)
+        //return MatchBox(score: thisBoxScore, boxIndex: index)
+        return MatchBox(score: score, boxIndex: index)
     }
 }
 
@@ -65,13 +67,20 @@ struct MatchBox: View {
     var score: Score
     
     static let maxItems = 5 // maximum matches are 5
+    var boxIndex = 0 // every next Box has one more, so we know how many points do deduct
+    
+    func adjustedScore(from score: Score) -> Score {
+        let newValue = max(0, score.value - boxIndex * MatchBox.maxItems)
+        let newBuffer = score.buffer - (score.value - boxIndex * MatchBox.maxItems)
+        return Score(newValue, buffer: newBuffer)
+    }
     
     var body: some View {
         ZStack {
             HStack {
                 ForEach(1 ..< MatchBox.maxItems) { count in
                     MatchView()
-                        .opacity(opacity(for: score, matchNumber: count))
+                        .opacity(opacity(for: adjustedScore(from: score), matchNumber: count))
                 }
             }
             .padding()
@@ -81,7 +90,7 @@ struct MatchBox: View {
                 HStack() {
                     Spacer()
                     MatchView()
-                        .opacity(opacity(for: score, matchNumber: MatchBox.maxItems))
+                        .opacity(opacity(for: adjustedScore(from: score), matchNumber: MatchBox.maxItems))
                         .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
                         .rotationEffect(.degrees(degrees))
                         .onAppear() {

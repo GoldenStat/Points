@@ -67,7 +67,7 @@ struct ScoreBoxUI_Previews: PreviewProvider {
         ZStack {
             Color.background
             
-            BoxesScoreView(score: Score(20), linesPerBox: 7)
+            BoxesScoreView(score: Score(20), linesPerBox: 5)
                 .environmentObject(GameSettings())
         }
     }

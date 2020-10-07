@@ -20,7 +20,7 @@ struct PlayerView: View {
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
-    var playerUI: PlayerUIType = .matches //{ settings.rule.playerUI }
+    var playerUI: PlayerUIType { settings.rule.playerUI }
     
     var body: some View {
         
@@ -108,8 +108,11 @@ struct PlayerHeadline: View {
     @ObservedObject var player : Player
 
     var body: some View {
-        Text("\(player.name)\(player.games == 0 ? "" : "(\(player.games))")")
-            .font(.title)
+        HStack {
+            Text("\(player.name)")
+                .font(.title)
+            MatchesScoreView(score: Score(player.games), overrideMaxScore: 5)
+        }
     }
 }
 
