@@ -39,11 +39,7 @@ struct PlayerView: View {
                                 PlayerHeadline(player: player)
                                     .padding(.vertical)
                             }
-                            
-                            if showScore {
-                                ScoreRow(player: player)
-                            }
-                                                                                    
+
                             ScoreRepresentationView(
                                 score: player.score,
                                 uiType: playerUI
@@ -64,22 +60,11 @@ struct PlayerView: View {
 
             Spacer()
         }
-        .gesture(longPress)
         .transition(.opacity)
     }
 
     // MARK: -- the local variables
     let scoreBoardRatio: CGFloat = 3/4
-
-    // MARK: -- show the score details
-    @GestureState var showScore = false
-    
-    var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 2)
-            .updating($showScore) { currentstate, gestureState, transaction in
-                gestureState = currentstate
-            }
-    }
 
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 16.0
