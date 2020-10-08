@@ -24,7 +24,8 @@ struct EditButton : View {
 
 struct EditView : View {
     @EnvironmentObject var settings: GameSettings
-    
+    @Environment(\.presentationMode) var isPresented
+
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }
     var playersCount: PlayerCount { settings.rule.players }
     var title: String { settings.rule.name }
@@ -43,24 +44,15 @@ struct EditView : View {
                     }
                 }
             }
-            SaveButton()
+            
+            Button("Save") {
+                isPresented.wrappedValue.dismiss()
+            }
         }
         .onDisappear(perform: {
             settings.updateSettings()
             settings.needsUpdate = true
         })
-    }
-}
-
-struct SaveButton: View {
-    @EnvironmentObject var settings: GameSettings
-    @Environment(\.presentationMode) var isPresented
-    
-    var body: some View {
-        Button("Save") {
-            isPresented.wrappedValue.dismiss()
-            settings.updateSettings()
-        }
     }
 }
 

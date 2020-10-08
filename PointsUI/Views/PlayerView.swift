@@ -16,11 +16,11 @@ struct PlayerView: View {
     
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
-    
-    var titleStyle : PlayerViewTitleStyle = .inline
+    var currentRule : Rule { settings.rule }
+    var playerUI: PlayerUIType { currentRule.playerUI }
+    var titleStyle : PlayerViewTitleStyle = .normal
     var scoreStep: Int = 1
     
-    var playerUI: PlayerUIType { settings.rule.playerUI }
     
     var body: some View {
         
@@ -42,17 +42,8 @@ struct PlayerView: View {
                             
                             if showScore {
                                 ScoreRow(player: player)
-                            } else {
-                                HStack {
-                                    Spacer()
-                                    PlayerViewCount(score: player.score)
-                                        .foregroundColor(.red)
-                                        .padding(.horizontal, 40)
-                                }
                             }
-                            
-                            Spacer()
-                            
+                                                                                    
                             ScoreRepresentationView(
                                 score: player.score,
                                 uiType: playerUI
@@ -63,6 +54,8 @@ struct PlayerView: View {
                     })
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
+                
+                PlayerViewCount(score: player.score)
             }
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
@@ -99,7 +92,7 @@ struct PlayerViewCount: View {
     var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
     var body: some View {
         Text(score.buffer.description)
-            .font(.system(size: 32, weight: .semibold, design: .rounded))
+            .font(.system(size: 144, weight: .semibold, design: .rounded))
             .opacity(scoreOpacity)
     }
 }

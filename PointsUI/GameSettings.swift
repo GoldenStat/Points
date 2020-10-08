@@ -12,7 +12,7 @@ class GameSettings: ObservableObject {
     
     @Published var players : Players
     @Published var history : History
-    @Published var maxGames: Int = GlobalSettings.maxGames
+    @Published var maxGames: Int
     @Published var maxPoints: Int
     @Published var playerWonRound: Player?
     @Published var playerWonGame: Player?
@@ -53,20 +53,24 @@ class GameSettings: ObservableObject {
     @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
 
     init() {
-        self.players = Players(names: GlobalSettings.playerNames)
-        self.history = History()
-        self.maxPoints = GlobalSettings.scorePerGame
-        self.rule = .doppelkopf // needs to be set to call methods
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+        maxPoints = GlobalSettings.scorePerGame
+        maxGames = GlobalSettings.maxGames
+        rule = .doppelkopf // needs to be set to call methods
         createRules()
         processRuleUpdate()
         restoreRule()
     }
     
-    /// defaults to not setting any new rule
+    /// defaults to not a random rule
     func restoreRule() {
+        let defaultRule = possibleRules.randomElement()
         for rule in possibleRules {
             if rule.id == GlobalSettings.ruleID {
                 self.rule = rule
+            } else {
+                self.rule = defaultRule!
             }
         }
     }

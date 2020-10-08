@@ -152,7 +152,6 @@ struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainGameView()
-//            MainGameView()
 //                .preferredColorScheme(.dark)
         }
         .environmentObject(GameSettings())
