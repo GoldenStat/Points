@@ -29,14 +29,6 @@ struct MainGameView: View {
                 BoardUI()
                     .blur(radius: blurRadius)
                     .padding()
-                    .sheet(isPresented: $showMenu) {
-                        Emphasize {
-                            EditView()
-                                .padding()
-                                .padding(.vertical, 20)
-                                .transition(.opacity)
-                        }
-                    }
                 Spacer()
                 
             }
@@ -109,20 +101,11 @@ struct MainGameView: View {
         HStack {
             historyButtons
             Spacer()
-            settingsButton
+            EditButton()
             Spacer()
             infoButton
         }
         .padding()
-    }
-    
-    var settingsButton: some View {
-        Button() {
-            showMenu = true
-        } label: {
-            Image(systemName: "gear")
-        }
-        
     }
     
     var infoButton: some View {
@@ -169,8 +152,8 @@ struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainGameView()
-            MainGameView()
-                .preferredColorScheme(.dark)
+//            MainGameView()
+//                .preferredColorScheme(.dark)
         }
         .environmentObject(GameSettings())
     }

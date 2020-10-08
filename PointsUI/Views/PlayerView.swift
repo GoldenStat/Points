@@ -111,8 +111,8 @@ struct PlayerHeadline: View {
         HStack {
             Text("\(player.name)")
                 .font(.title)
-            MatchBox(score: Score(player.games))
-                .frame(width: 120, height: 80)
+//            MatchBox(score: Score(player.games))
+//                .frame(width: 120, height: 80)
         }
     }
 }
