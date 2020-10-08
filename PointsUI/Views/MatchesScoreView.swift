@@ -68,7 +68,7 @@ struct MatchBox: View {
             HStack {
                 ForEach(1 ..< MatchBox.maxItems) { count in
                     MatchView()
-                        .opacity(opacity(for: score, matchNumber: count))
+                        .opacity(opacity(matches: count))
                 }
             }
             .padding()
@@ -78,7 +78,7 @@ struct MatchBox: View {
                 HStack() {
                         Spacer()
                         MatchView()
-                            .opacity(opacity(for: score, matchNumber: MatchBox.maxItems))
+                            .opacity(opacity(matches: MatchBox.maxItems))
                             .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
                             .rotationEffect(.degrees(degrees))
                             .onAppear() {
@@ -93,18 +93,10 @@ struct MatchBox: View {
     }
 
     @State var degrees : Double = 0
-    
-    func opacity(for score: Score, matchNumber count: Int) -> Double {
 
-        let fullOpacity : Double = 1.0
-        let bufferOpacity : Double = 0.3
-
-        if score.value >= count {
-            return fullOpacity
-        } else if score.sum >= count {
-            return bufferOpacity
-        }
-        return 0 // invisible
+    func opacity(matches: Int) -> Double {
+        return score.value >= matches ? 1.0 :
+            score.sum >= matches ? 0.3 : 0.0
     }
 }
 
@@ -134,7 +126,7 @@ struct AnimatedMatchBox: View {
 
 struct MatchesScoreView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchesScoreView(score: Score(8, buffer: 3))
+        MatchesScoreView(score: Score(8, buffer: 8))
             .environmentObject(GameSettings())
     }
 }

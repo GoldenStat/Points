@@ -112,9 +112,7 @@ class GameSettings: ObservableObject {
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTimeInterval = updateSpeed.double
-        GlobalSettings.ruleID = rule.id
-        self.needsUpdate = true
-        
+        GlobalSettings.ruleID = rule.id        
     }
         
     // MARK: control player data

@@ -111,7 +111,8 @@ struct PlayerHeadline: View {
         HStack {
             Text("\(player.name)")
                 .font(.title)
-            MatchesScoreView(score: Score(player.games), overrideMaxScore: 5)
+            MatchBox(score: Score(player.games))
+                .frame(width: 120, height: 80)
         }
     }
 }
@@ -135,9 +136,10 @@ struct ScoreRow: View {
 
 struct PlayerUI_Previews: PreviewProvider {
     static var player = Player(from: PlayerData(name: "Alexander", points: 9, games: 1))
+    static var settings = GameSettings()
     
     static var previews: some View {
         PlayerView(player: player)
-            .environmentObject(GameSettings())
+            .environmentObject(settings)
     }
 }

@@ -8,6 +8,20 @@
 
 import SwiftUI
 
+struct EditButton : View {
+    @State var toggle: Bool = false
+    var body: some View {
+        Button() {
+            toggle = true
+        } label: {
+            Image(systemName: "gear")
+        }
+        .sheet(isPresented: $toggle) {
+            EditView()
+        }
+    }
+}
+
 struct EditView : View {
     @EnvironmentObject var settings: GameSettings
     
@@ -25,13 +39,16 @@ struct EditView : View {
                         RulesPicker()
                         PointsPicker()
                         JuegosPicker()
-                        
-                        JugadoresSelection()
+                        JugadoresPicker()
                     }
                 }
             }
             SaveButton()
         }
+        .onDisappear(perform: {
+            settings.updateSettings()
+            settings.needsUpdate = true
+        })
     }
 }
 
@@ -56,14 +73,13 @@ struct PreviewView : View {
             Text(settings.rule.name)
                 .font(.title)
             
-            Button("Edit") {
-                presentView = true
-            }
-            .padding()
-        }
-        .sheet(isPresented: $presentView) {
-            EditView()
-                .environmentObject(settings)
+            Text("Players: \(settings.playerNames.count)")
+            Text("MaxPoints: \(settings.maxPoints)")
+            Text("MaxGames: \(settings.maxGames)")
+            Text("Players: \(settings.chosenNumberOfPlayers)")
+                
+            EditButton()
+                .padding()
         }
     }
 }

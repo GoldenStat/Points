@@ -96,13 +96,10 @@ struct RulesPicker: View {
                     Text(rule.name).tag(rule)
                 }
             }
-            .onDisappear(perform: {
-                settings.updateSettings()
-            })
     }
 }
 
-struct JugadoresSelection: View {
+struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings
 
     var playersCount: PlayerCount { settings.rule.players }
