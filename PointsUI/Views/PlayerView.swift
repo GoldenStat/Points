@@ -108,11 +108,17 @@ struct PlayerHeadline: View {
     @ObservedObject var player : Player
 
     var body: some View {
-        HStack {
+        ZStack {
             Text("\(player.name)")
                 .font(.title)
-//            MatchBox(score: Score(player.games))
-//                .frame(width: 120, height: 80)
+            HStack(spacing: 20) {
+                Spacer()
+                MatchBox(score: Score(player.games))
+                    .frame(width: 100, height: 60)
+            }
+            .background(Color.white
+                            .opacity(0.1)
+                            .blur(radius: /*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/))
         }
     }
 }
