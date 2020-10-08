@@ -30,7 +30,7 @@ struct DoppelkopfPlayerView: View {
                             }
                             
                             if player.score.buffer > 0 {
-                                PlayerViewCount(score: player.score)
+                                BufferView(score: player.score)
                             }
                         }
                         .padding()

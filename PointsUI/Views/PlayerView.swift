@@ -18,9 +18,8 @@ struct PlayerView: View {
     @ObservedObject var player : Player
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType { currentRule.playerUI }
-    var titleStyle : PlayerViewTitleStyle = .normal
+    var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
-    
     
     var body: some View {
         
@@ -37,7 +36,7 @@ struct PlayerView: View {
                         VStack {
                             if titleStyle == .inline {
                                 PlayerHeadline(player: player)
-                                    .padding(.vertical)
+                                    .padding(.top)
                             }
 
                             ScoreRepresentationView(
@@ -51,7 +50,7 @@ struct PlayerView: View {
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
-                PlayerViewCount(score: player.score)
+                BufferView(score: player.score)
             }
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
@@ -70,7 +69,7 @@ struct PlayerView: View {
     private let cornerRadius : CGFloat = 16.0
 }
 
-struct PlayerViewCount: View {
+struct BufferView: View {
 
     var score: Score
 

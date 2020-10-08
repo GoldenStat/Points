@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */; };
 		411DF22123607CD100A37C64 /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF22023607CD100A37C64 /* MainGameView.swift */; };
 		411DF22323607CDA00A37C64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411DF22223607CDA00A37C64 /* Assets.xcassets */; };
 		411DF22623607CDA00A37C64 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411DF22523607CDA00A37C64 /* Preview Assets.xcassets */; };
@@ -59,6 +60,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonScoreView.swift; sourceTree = "<group>"; };
 		411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxesScoreView.swift; sourceTree = "<group>"; };
 		411DF202235B56D400A37C64 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		411DF204235C84B600A37C64 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				416F37962442AB1A00D9D55B /* EdgeShape.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
 				411DF204235C84B600A37C64 /* PlayerView.swift */,
+				4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */,
 				416E83E124F9314E00609A87 /* DoppelkopfPlayerView.swift */,
 				416E83DF24F92EEE00609A87 /* DoppelkopfBoxView.swift */,
 				411DF206235C918200A37C64 /* BoardUI.swift */,
@@ -331,6 +334,7 @@
 				41EC900224EE7D9900038F5C /* Pickers.swift in Sources */,
 				4173575E24A4B676002C10B2 /* Score.swift in Sources */,
 				411DF2312360824900A37C64 /* PlayerView.swift in Sources */,
+				4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

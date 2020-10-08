@@ -35,6 +35,7 @@ struct MainGameView: View {
             
             
             if showHistory {
+                
                 ScoreHistoryView()
                     .background(Color.invisible)
                     .frame(minHeight: 600)
@@ -45,8 +46,6 @@ struct MainGameView: View {
                     }
                     .transition(.opacity)
             }
-            
-            
             
             if settings.playerWonRound != nil {
                 PlayerWonRound()
