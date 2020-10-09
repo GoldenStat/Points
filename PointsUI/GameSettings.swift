@@ -44,15 +44,22 @@ class GameSettings: ObservableObject {
         switch rule.players {
             case .fixed(let fixedPlayers):
                 availablePlayers = [ fixedPlayers ]
+                chosenNumberOfPlayers = fixedPlayers
             case .selection(let allowedPlayers):
                 availablePlayers = allowedPlayers
         }
     }
 
     var playerScores : [ [ Int ] ] { history.differentialScores }
-    @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
+    @Published var chosenNumberOfPlayers : Int {
+        didSet {
+            players = Players(names: names(for: chosenNumberOfPlayers))
+            history.reset()
+        }
+    }
 
     init() {
+        chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
         history = History()
         maxPoints = GlobalSettings.scorePerGame
@@ -105,10 +112,6 @@ class GameSettings: ObservableObject {
             
     func updateSettings() {
         // if number of players changed, restart the game
-        if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
-            players = Players(names: names(for: chosenNumberOfPlayers))
-            history.reset()
-        }
         GlobalSettings.playerNames = players.names
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints
