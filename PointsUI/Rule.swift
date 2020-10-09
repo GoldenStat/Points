@@ -12,7 +12,21 @@ import SwiftUI
 /// can be:
 /// - *fixed*: a fixed number of points the game has, can't be changed
 /// - *selection*: there are fixed possibilities how far the game can go
-enum PlayerCount : Hashable { case fixed(Int), selection([Int])}
+enum PlayerCount : Hashable { case fixed(Int), selection([Int])
+    /// maximum number of Points you can have, depending on which selection mechanism is used
+    var maximumSelectable : Int {
+        switch self {
+        case .selection(let array):
+            return array.count
+        case .fixed(let number):
+            return number
+        }
+    }
+}
+
+extension Int {
+    static let highestGamePointsEverPossilbe = 1001
+}
 
 /// possible points for a game
 /// can be:
@@ -20,7 +34,22 @@ enum PlayerCount : Hashable { case fixed(Int), selection([Int])}
 /// - *free*: any number can be set (probably changed using a textfield)
 /// - *none*: the game is freestyle and won't end automatically
 /// - *selection*: there are fixed possibilities how far the game can go
-enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([Int]) }
+enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([Int])
+    
+    /// maximum number of Points you can have, depending on which selection mechanism is used
+    var maximumSelectable : Int {
+        switch self {
+        case .selection(let array):
+            return array.count
+        case .fixed(let number):
+            return number
+        case .none:
+            return Int.highestGamePointsEverPossilbe
+        case .free(let value):
+            return value
+        }
+    }
+}
 
 /// how many rounds should be counted
 /// some games take a long time, so several rounds don't make sense, and maybe you want a fixed total
@@ -55,7 +84,7 @@ struct Rule : Identifiable, Hashable {
     var players: PlayerCount
     var playerUI: PlayerUIType
     var rounds: GamesCount
-    
+    var maxPlayers: Int { players.maximumSelectable }
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([15,24,30]),
                                      players: .selection([2,3,4,6]),

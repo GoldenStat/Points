@@ -53,7 +53,7 @@ class GameSettings: ObservableObject {
     var playerScores : [ [ Int ] ] { history.differentialScores }
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-            players = Players(names: names(for: chosenNumberOfPlayers))
+//            players = Players(names: names(for: chosenNumberOfPlayers))
             history.reset()
         }
     }
@@ -123,25 +123,25 @@ class GameSettings: ObservableObject {
     // MARK: control player data
     var numberOfPlayers: Int { players.items.count }
 
-    func names(for numberOfPlayers: Int) -> [String] {
-        guard availablePlayers.contains(numberOfPlayers) else { return [] }
-        
-        let singlePlayers = [ "Yo", "Tu", "El" ]
-        let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
-        
-        switch numberOfPlayers {
-        case 2:
-            return [ singlePlayers[0], singlePlayers[1] ]
-        case 3:
-            return [ singlePlayers[0], singlePlayers[1], singlePlayers[2] ]
-        case 4:
-            return [ pairedPlayers[0], pairedPlayers[1] ]
-        case 6:
-            return [ pairedPlayers[0], pairedPlayers[1] ]
-        default:
-            return []
-        }
-    }
+//    func names(for numberOfPlayers: Int) -> [String] {
+//        guard availablePlayers.contains(numberOfPlayers) else { return [] }
+//
+//        let singlePlayers = [ "Yo", "Tu", "El" ]
+//        let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
+//
+//        switch numberOfPlayers {
+//        case 2:
+//            return [ singlePlayers[0], singlePlayers[1] ]
+//        case 3:
+//            return [ singlePlayers[0], singlePlayers[1], singlePlayers[2] ]
+//        case 4:
+//            return [ pairedPlayers[0], pairedPlayers[1] ]
+//        case 6:
+//            return [ pairedPlayers[0], pairedPlayers[1] ]
+//        default:
+//            return []
+//        }
+//    }
 
     var playerNames: [ String ] { players.names }
     
