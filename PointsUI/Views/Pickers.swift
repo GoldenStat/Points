@@ -50,6 +50,20 @@ struct FixedView: View {
     }
 }
 
+struct EditableView: View {
+    var title: String
+    @Binding var value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            TextField("\(value)", text: $value)
+            Spacer()
+        }
+    }
+}
+
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
     
@@ -63,8 +77,8 @@ struct PointsPicker: View {
             EmptyView()
         case .selection(let options):
             PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: options)
-        case .free(_):
-            EmptyView()
+        case .free(let value):
+            EditableView(title: "\(value)", value: $settings.maxPointsString)
         }
     }
 }
