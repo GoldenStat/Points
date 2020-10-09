@@ -30,12 +30,10 @@ struct MainGameView: View {
                     .blur(radius: blurRadius)
                     .padding()
                 Spacer()
-                
             }
             
             
             if showHistory {
-                
                 ScoreHistoryView()
                     .background(Color.invisible)
                     .frame(minHeight: 600)
@@ -96,7 +94,7 @@ struct MainGameView: View {
     // MARK: - Buttons
     @State var showInfo: Bool = false
     
-    var menuBarItems: some View {
+    @ViewBuilder var menuBarItems: some View {
         HStack {
             historyButtons
             Spacer()
@@ -149,10 +147,7 @@ struct MainGameView: View {
 
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            MainGameView()
-//                .preferredColorScheme(.dark)
-        }
-        .environmentObject(GameSettings())
+        MainGameView()
+            .environmentObject(GameSettings())
     }
 }

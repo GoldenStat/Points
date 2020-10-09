@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */; };
+		4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFFA252F8F7B00043ACE /* BufferView.swift */; };
 		411DF22123607CD100A37C64 /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF22023607CD100A37C64 /* MainGameView.swift */; };
 		411DF22323607CDA00A37C64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411DF22223607CDA00A37C64 /* Assets.xcassets */; };
 		411DF22623607CDA00A37C64 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411DF22523607CDA00A37C64 /* Preview Assets.xcassets */; };
@@ -61,6 +62,7 @@
 
 /* Begin PBXFileReference section */
 		4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonScoreView.swift; sourceTree = "<group>"; };
+		4103BFFA252F8F7B00043ACE /* BufferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferView.swift; sourceTree = "<group>"; };
 		411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxesScoreView.swift; sourceTree = "<group>"; };
 		411DF202235B56D400A37C64 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		411DF204235C84B600A37C64 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				411DF2112360645200A37C64 /* FlowStack.swift */,
 				416F37962442AB1A00D9D55B /* EdgeShape.swift */,
 				411DF202235B56D400A37C64 /* Box.swift */,
+				4103BFFA252F8F7B00043ACE /* BufferView.swift */,
 				411DF204235C84B600A37C64 /* PlayerView.swift */,
 				4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */,
 				416E83E124F9314E00609A87 /* DoppelkopfPlayerView.swift */,
@@ -323,6 +326,7 @@
 				4177075824D6A18F00FD851A /* HistorySymbolRow.swift in Sources */,
 				416E83E224F9314E00609A87 /* DoppelkopfPlayerView.swift in Sources */,
 				41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */,
+				4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */,
 				416E83E024F92EEE00609A87 /* DoppelkopfBoxView.swift in Sources */,
 				4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */,
 				41C12BDA24CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */,

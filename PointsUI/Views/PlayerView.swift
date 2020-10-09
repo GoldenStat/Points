@@ -50,7 +50,6 @@ struct PlayerView: View {
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
-                BufferView(score: player.score)
             }
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
@@ -67,18 +66,6 @@ struct PlayerView: View {
 
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 16.0
-}
-
-struct BufferView: View {
-
-    var score: Score
-
-    var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
-    var body: some View {
-        Text(score.buffer.description)
-            .font(.system(size: 144, weight: .semibold, design: .rounded))
-            .opacity(scoreOpacity)
-    }
 }
 
 struct PlayerHeadline: View {

@@ -59,20 +59,18 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .doppelkopf // needs to be set to call methods
         createRules()
+        rule = rule(id: GlobalSettings.ruleID)
         processRuleUpdate()
-        restoreRule()
     }
     
-    /// defaults to not a random rule
-    func restoreRule() {
+    func rule(id: Int) -> Rule {
         let defaultRule = possibleRules.randomElement()
         for rule in possibleRules {
-            if rule.id == GlobalSettings.ruleID {
-                self.rule = rule
-            } else {
-                self.rule = defaultRule!
+            if rule.id == id {
+                return rule
             }
         }
+        return defaultRule!
     }
     
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions

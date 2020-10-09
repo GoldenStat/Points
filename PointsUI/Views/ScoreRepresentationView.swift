@@ -14,16 +14,23 @@ struct ScoreRepresentationView: View {
     var uiType: PlayerUIType = .numberBox
     
     var body: some View {
-        
         switch uiType {
         case .checkbox(let num):
-            BoxesScoreView(score: score, linesPerBox: num)
+            ZStack {
+                BoxesScoreView(score: score, linesPerBox: num)
+                BufferView(score: score)
+            }
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
+                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
         case .matches:
-            MatchesScoreView(score: score)
+            ZStack {
+                MatchesScoreView(score: score)
+                BufferView(score: score)
+            }
         case .selectionBox(let values):
             SelectionScoreView(score: score, selection: values)
+
         }
     }
 }
