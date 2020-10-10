@@ -42,7 +42,7 @@ struct MatchesScoreView: View {
     private let columns = 2 // make variable?
 
     // MARK: -- calculate points for each box
-    private func matchBox(at index: Int) -> MatchBox {
+    private func matchBox(at index: Int) -> some View {
         // count points and buffer points to what should be in this box
         func adjustedScore(from score: Score, at index: Int) -> Score {
             let thisBoxStartsAt = index * MatchBox.maxItems
@@ -53,6 +53,7 @@ struct MatchesScoreView: View {
         }
 
         return MatchBox(score: adjustedScore(from: score, at: index))
+            .frame(minHeight: 90)
     }
 }
 
@@ -64,23 +65,27 @@ struct MatchBox: View {
         
     var body: some View {
         ZStack {
-            /// vertical matches
-            HStack {
-                ForEach(1 ..< MatchBox.maxItems) { count in
-                    MatchView()
-                        .opacity(opacity(matches: count))
-                }
-            }
-            .padding()
-            
-            /// horizontal match (last one)
             GeometryReader { geo in
+
+                /// vertical matches
+                HStack(spacing: 0) {
+                    ForEach(1 ..< MatchBox.maxItems) { count in
+                        MatchView()
+                            .opacity(opacity(forMatch: count))
+                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
+                    }
+                }
+                
+                
+                /// horizontal match (last one)
                 HStack() {
                         Spacer()
                         MatchView()
-                            .opacity(opacity(matches: MatchBox.maxItems))
-                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
-                            .rotationEffect(.degrees(degrees))
+                            .opacity(opacity(forMatch: MatchBox.maxItems))
+                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems),
+                                   height: geo.size.height * 1.5)
+                            .rotationEffect(.degrees(degrees), anchor: UnitPoint(x: 0.5, y: 0.3))
+                            .offset(x: -geo.size.width * CGFloat(0.25))
                             .onAppear() {
                                 degrees = -80
                             }
@@ -94,9 +99,15 @@ struct MatchBox: View {
 
     @State var degrees : Double = 0
 
-    func opacity(matches: Int) -> Double {
-        return score.value >= matches ? 1.0 :
-            score.sum >= matches ? 0.3 : 0.0
+    func opacity(forMatch match: Int) -> Double {
+        return score.value >= match ? 1.0 :
+            score.sum >= match ? 0.3 : 0.0
+    }
+    
+    func offset(forMatch match: Int, with size: CGSize) -> CGSize {
+        let deltaX = size.width / CGFloat(MatchBox.maxItems*2)
+        return CGSize(width: -size.width / CGFloat(2) + deltaX * CGFloat(match),
+                      height: 0)
     }
 }
 

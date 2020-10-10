@@ -24,13 +24,9 @@ struct MainGameView: View {
             
             Color.invisible
             
-            VStack {
-                Spacer()
-                BoardUI()
-                    .blur(radius: blurRadius)
-                    .padding()
-                Spacer()
-            }
+            BoardUI()
+                .blur(radius: blurRadius)
+                .padding()
             
             
             if showHistory {
@@ -62,8 +58,7 @@ struct MainGameView: View {
             }
             
         }
-        .edgesIgnoringSafeArea(.all)
-        .simultaneousGesture(showHistoryGesture)
+        .gesture(showHistoryGesture)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
@@ -145,9 +140,9 @@ struct MainGameView: View {
 
 // MARK: - previews
 
-struct MainGameView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainGameView()
-            .environmentObject(GameSettings())
-    }
-}
+//struct MainGameView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MainGameView()
+//            .environmentObject(GameSettings())
+//    }
+//}

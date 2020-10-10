@@ -20,12 +20,10 @@ struct ScoreRepresentationView: View {
                 BoxesScoreView(score: score, linesPerBox: num)
                 BufferView(score: score)
             }
-            .aspectRatio(scoreBoardRatio, contentMode: .fit)
 
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
                 .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
-                .aspectRatio(scoreBoardRatio, contentMode: .fit)
 
         case .matches:
             ZStack {
@@ -35,13 +33,9 @@ struct ScoreRepresentationView: View {
 
         case .selectionBox(let values):
             SelectionScoreView(score: score, selection: values)
-                .aspectRatio(scoreBoardRatio, contentMode: .fit)
         }
         
     }
-
-    // MARK: -- the local variables
-    let scoreBoardRatio: CGFloat = 3/4
 
 }
 

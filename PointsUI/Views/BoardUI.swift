@@ -16,9 +16,10 @@ struct BoardUI: View {
     let minAmount: CGFloat = 300
     let maxAmount: CGFloat = 400
     
+    var oneColumn : [GridItem]  {
+        [ GridItem(.adaptive(minimum: minAmount)) ]
+    }
     
-    var oneColumn : [GridItem]  { [                 GridItem(.adaptive(minimum: minAmount)),
-    ] }
     var twoColumns : [GridItem]  { [
         GridItem(.adaptive(minimum: minAmount)),
         GridItem(.adaptive(minimum: minAmount)),
@@ -28,7 +29,7 @@ struct BoardUI: View {
         objects.count == 2 ? oneColumn : twoColumns
     }
     
-    @ViewBuilder var body: some View {
+    var body: some View {
         if UIDevice.current.orientation.isLandscape {
             // in landscape we always put all players in a row -- there is always enough space
             HStack(alignment: .center) {

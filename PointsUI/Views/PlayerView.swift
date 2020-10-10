@@ -16,6 +16,7 @@ struct PlayerView: View {
     
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
+    
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
@@ -29,43 +30,44 @@ struct PlayerView: View {
                 PlayerHeadline(player: player)
             }
             
-            ZStack() {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .overlay(Emphasize() {
-                        VStack {
-                            Spacer()
-                            
-                            if titleStyle == .inline {
-                                PlayerHeadline(player: player)
-                                    .padding(.top)
-                            }
-
-                            ScoreRepresentationView(
-                                score: player.score,
-                                uiType: playerUI
-                            )
-                        }
-                    })
-                    .padding(.horizontal)
-                
+            Emphasize() {
+                VStack {
+                    
+                    if titleStyle == .inline {
+                        PlayerHeadline(player: player)
+                            .padding(.top)
+                    }
+                    
+                    Spacer()
+                    
+                    ScoreRepresentationView(
+                        score: player.score,
+                        uiType: playerUI
+                    )
+                    
+                    Spacer()
+                }
             }
+            .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: 0.5))
+            .padding(.horizontal)
+            .aspectRatio(3/4, contentMode: .fit)
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
                 settings.startTimer()
             })
-
-            Spacer()
         }
         .transition(.opacity)
     }
-
+    
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 16.0
+    private let scoreBoardRatio: CGFloat = 3/4
+    
 }
 
 struct PlayerHeadline: View {
     @ObservedObject var player : Player
-
+    
     var body: some View {
         ZStack {
             Text("\(player.name)")
@@ -84,7 +86,7 @@ struct PlayerHeadline: View {
 
 struct ScoreRow: View {
     @State var editMode: EditMode = .inactive
-
+    
     let player: Player
     var score: Score { player.score }
     

@@ -136,6 +136,7 @@ struct JugadoresPicker: View {
                     .fontWeight(.bold)
                 Spacer()
             }
+            .padding(.vertical)
         case .selection(let values):
             PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
         }

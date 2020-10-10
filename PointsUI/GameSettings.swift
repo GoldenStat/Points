@@ -61,6 +61,7 @@ class GameSettings: ObservableObject {
             history.reset()
         }
     }
+    
 
     init() {
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
