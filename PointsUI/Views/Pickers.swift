@@ -60,6 +60,7 @@ struct EditableView: View {
             
             Spacer()
             TextField("\(value)", text: $value)
+                .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .multilineTextAlignment(.trailing)
                 .padding(2)
