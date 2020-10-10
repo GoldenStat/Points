@@ -37,9 +37,20 @@ struct EdgeShape: Shape {
         (start: (0.0, 1.0), end: (1.0, 1.0)),
         (start: (1.0, 1.0), end: (1.0, 0.0)),
         (start: (0.0, 0.0), end: (1.0, 1.0)),
-        (start: (0.0, 1.0), end: (1.0, 0.0))
+        (start: (0.0, 1.0), end: (1.0, 0.0)),
     ]
     
+//    private static let HouseEdges : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
+//        (start: (0.0, 0.3), end: (0.0, 1.0)),
+//        (start: (0.0, 0.3), end: (1.0, 0.3)),
+//        (start: (0.0, 1.0), end: (1.0, 1.0)),
+//        (start: (1.0, 1.0), end: (1.0, 0.3)),
+//        (start: (0.0, 0.3), end: (1.0, 1.0)),
+//        (start: (0.0, 1.0), end: (1.0, 0.3)),
+//        (start: (0.0, 0.3), end: (0.5, 0.0)),
+//        (start: (0.5, 0.0), end: (1.0, 0.3))
+//    ]
+
     static var numberOfEdges : Int { edges.count }
     
     /// translate a relative Point from our corners to a CGPoint in our View
@@ -94,28 +105,27 @@ struct EdgeShape: Shape {
 }
 
 // MARK: - sample views
-struct EdgeView: View {
+struct EdgeSampleView: View {
     
-    @State var index : Double = 0
+    @State var index : Double = 6
     
     var body: some View {
         ZStack {
-            Background()
+            Color.background
             
             EdgeShape(totalLength: index)
                 .stroke(Color.points,
                         style: StrokeStyle(
-                            lineWidth: 5.0,
+                            lineWidth: edgeWidth,
                             lineCap:  .round,
                             lineJoin: .round))
                 .padding()
             
-            Text(index.description)
+//            Text(index.description)
         }
         .onTapGesture {
-            if Int(self.index) + 1 > 5 {
+            if Int(self.index) + 1 > maxEdges {
                 index = 0
-                
             } else {
                 withAnimation(.easeOut(duration: 1.0)) {
                     index += 1
@@ -123,10 +133,13 @@ struct EdgeView: View {
             }
         }
     }
+    
+    private let maxEdges = 8
+    private let edgeWidth : CGFloat = 5.0
 }
 
 struct EdgeView_Previews: PreviewProvider {
     static var previews: some View {
-        EdgeView()
+        EdgeSampleView()
     }
 }

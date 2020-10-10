@@ -8,72 +8,82 @@
 
 import SwiftUI
 
+enum PlayerViewTitleStyle {
+    case normal, inline
+}
+
 struct PlayerView: View {
+    
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
+    var currentRule : Rule { settings.rule }
+    var playerUI: PlayerUIType { currentRule.playerUI }
+    var titleStyle : PlayerViewTitleStyle = .inline
+    var scoreStep: Int = 1
     
     var body: some View {
         
         VStack {
             
-            PlayerHeadline(player: player)
-                        
-            ZStack {
+            if titleStyle == .normal {
+                PlayerHeadline(player: player)
+            }
+            
+            ZStack() {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .overlay(Emphasize() {
-                        ScoreBoardView(player: player)
+                        
+                        VStack {
+                            if titleStyle == .inline {
+                                PlayerHeadline(player: player)
+                                    .padding(.top)
+                            }
+
+                            ScoreRepresentationView(
+                                score: player.score,
+                                uiType: playerUI
+                            )
+                            
+                            Spacer()
+                        }
                     })
                     .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
-                if player.score.buffer > 0 {
-                    PlayerViewCount(number: player.score.buffer)
-                } else if showScore {
-                    PlayerViewCount(number: player.score.value)
-                }
             }
             .onTapGesture(perform: {
-                player.add(score: 1)
+                player.add(score: scoreStep)
                 settings.startTimer()
             })
 
             Spacer()
         }
-        .gesture(longPress)
         .transition(.opacity)
     }
 
     // MARK: -- the local variables
     let scoreBoardRatio: CGFloat = 3/4
 
-    // MARK: -- show the score details
-    @GestureState var showScore = false
-    
-    var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 2)
-            .updating($showScore) { currentstate, gestureState, transaction in
-                gestureState = currentstate
-            }
-    }
-
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 16.0
 }
 
-struct PlayerViewCount: View {
-    var number: Int
-    var body: some View {
-        Text(number.description)
-            .font(.system(size: 128, weight: .semibold, design: .rounded))
-            .opacity(0.3)
-    }
-}
 struct PlayerHeadline: View {
     @ObservedObject var player : Player
 
     var body: some View {
-        Text("\(player.name)\(player.games == 0 ? "" : "(\(player.games))")")
-            .font(.title)
+        ZStack {
+            Text("\(player.name)")
+                .font(.title)
+            HStack(spacing: 20) {
+                Spacer()
+                MatchBox(score: Score(player.games))
+                    .frame(width: 100, height: 60)
+            }
+            .background(Color.white
+                            .opacity(0.1)
+                            .blur(radius: /*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/))
+        }
     }
 }
 
@@ -95,10 +105,11 @@ struct ScoreRow: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(name: "Alexander")
+    static var player = Player(from: PlayerData(name: "Alexander", points: 9, games: 1))
+    static var settings = GameSettings()
     
     static var previews: some View {
         PlayerView(player: player)
-            .environmentObject(GameSettings())
+            .environmentObject(settings)
     }
 }

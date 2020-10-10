@@ -12,7 +12,7 @@ class GameSettings: ObservableObject {
     
     @Published var players : Players
     @Published var history : History
-    @Published var maxGames: Int = GlobalSettings.maxGames
+    @Published var maxGames: Int
     @Published var maxPoints: Int
     @Published var playerWonRound: Player?
     @Published var playerWonGame: Player?
@@ -23,41 +23,61 @@ class GameSettings: ObservableObject {
     }
     
     @Published var rule: Rule {
-        didSet { updateCurrentRuleSettings() }
+        didSet { processRuleUpdate() }
     }
     
+    
     /// assigns new values from the rules to the settings
-    private func updateCurrentRuleSettings() {
-        self.maxPoints = rule.maxPoints ?? 1000
-        
+    /// should be called whenever the rules change (the game changed)
+    private func processRuleUpdate() {
+        switch rule.maxPoints {
+        case .none:
+            maxPoints = 1000
+        case .fixed(let value):
+            maxPoints = value
+        case .free(let value):
+            maxPoints = value
+        case .selection(let options):
+            maxPoints = options.randomElement()! // for now, choose a random value, options should never be empty
+        }
+
         switch rule.players {
-        case .fixed(let fixedPlayers):
-            self.availablePlayers = [ fixedPlayers ]
-        case .selection(let allowedPlayers):
-            availablePlayers = allowedPlayers
+            case .fixed(let fixedPlayers):
+                availablePlayers = [ fixedPlayers ]
+                chosenNumberOfPlayers = fixedPlayers
+            case .selection(let allowedPlayers):
+                availablePlayers = allowedPlayers
         }
     }
 
     var playerScores : [ [ Int ] ] { history.differentialScores }
-    @Published var chosenNumberOfPlayers : Int = GlobalSettings.chosenNumberOfPlayers
+    @Published var chosenNumberOfPlayers : Int {
+        didSet {
+//            players = Players(names: names(for: chosenNumberOfPlayers))
+            history.reset()
+        }
+    }
 
     init() {
-        self.players = Players(names: GlobalSettings.playerNames)
-        self.history = History()
-        self.maxPoints = GlobalSettings.scorePerGame
-        self.rule = .doppelkopf // needs to be set to call methods
+        chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+        maxPoints = GlobalSettings.scorePerGame
+        maxGames = GlobalSettings.maxGames
+        rule = .doppelkopf // needs to be set to call methods
         createRules()
-        updateCurrentRuleSettings()
-        restoreRule()
+        rule = rule(id: GlobalSettings.ruleID)
+        processRuleUpdate()
     }
     
-    /// defaults to not setting any new rule
-    func restoreRule() {
+    func rule(id: Int) -> Rule {
+        let defaultRule = possibleRules.randomElement()
         for rule in possibleRules {
-            if rule.id == GlobalSettings.ruleID {
-                self.rule = rule
+            if rule.id == id {
+                return rule
             }
         }
+        return defaultRule!
     }
     
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
@@ -74,9 +94,17 @@ class GameSettings: ObservableObject {
     var possibleRules = [Rule]()
     
     func createRules() {
-        possibleRules.append(Rule.trucoArgentino)
-        possibleRules.append(Rule.trucoVenezolano)
-        possibleRules.append(Rule.doppelkopf)
+        addRule(.trucoArgentino)
+        addRule(.trucoVenezolano)
+        addRule(.doppelkopf)
+        addRule(.caida)
+        addRule(.scopa)
+        addRule(.skat)
+        addRule(.shitzu)
+    }
+    
+    func addRule(_ rule: Rule) {
+        possibleRules.append(rule)
     }
     
     // MARK: constant data for this class
@@ -84,40 +112,36 @@ class GameSettings: ObservableObject {
             
     func updateSettings() {
         // if number of players changed, restart the game
-        if (chosenNumberOfPlayers != GlobalSettings.chosenNumberOfPlayers) {
-            players = Players(names: names(for: chosenNumberOfPlayers))
-            history.reset()
-        }
         GlobalSettings.playerNames = players.names
         GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
         GlobalSettings.scorePerGame = maxPoints
         GlobalSettings.maxGames = maxGames
         GlobalSettings.updateTimeInterval = updateSpeed.double
-        GlobalSettings.ruleID = rule.id
+        GlobalSettings.ruleID = rule.id        
     }
         
     // MARK: control player data
     var numberOfPlayers: Int { players.items.count }
 
-    func names(for numberOfPlayers: Int) -> [String] {
-        guard availablePlayers.contains(numberOfPlayers) else { return [] }
-        
-        let singlePlayers = [ "Yo", "Tu", "El" ]
-        let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
-        
-        switch numberOfPlayers {
-        case 2:
-            return [ singlePlayers[0], singlePlayers[1] ]
-        case 3:
-            return [ singlePlayers[0], singlePlayers[1], singlePlayers[2] ]
-        case 4:
-            return [ pairedPlayers[0], pairedPlayers[1] ]
-        case 6:
-            return [ pairedPlayers[0], pairedPlayers[1] ]
-        default:
-            return []
-        }
-    }
+//    func names(for numberOfPlayers: Int) -> [String] {
+//        guard availablePlayers.contains(numberOfPlayers) else { return [] }
+//
+//        let singlePlayers = [ "Yo", "Tu", "El" ]
+//        let pairedPlayers = [ "Nosotros", "Ustedes", "Ellos" ]
+//
+//        switch numberOfPlayers {
+//        case 2:
+//            return [ singlePlayers[0], singlePlayers[1] ]
+//        case 3:
+//            return [ singlePlayers[0], singlePlayers[1], singlePlayers[2] ]
+//        case 4:
+//            return [ pairedPlayers[0], pairedPlayers[1] ]
+//        case 6:
+//            return [ pairedPlayers[0], pairedPlayers[1] ]
+//        default:
+//            return []
+//        }
+//    }
 
     var playerNames: [ String ] { players.names }
     

@@ -15,50 +15,34 @@ extension Color {
 struct MainGameView: View {
     
     @EnvironmentObject var settings : GameSettings
-
+    
     @State var showMenu = false
     
     var body: some View {
         
         ZStack {
-            ZStack {
-                
-                Color.invisible
-                
-                VStack {
-                    menuBarItems
-                        .opacity(showMenu ? 0.0 : 1.0)
-                    
-                    Spacer()
-                    BoardUI()
-                        .blur(radius: blurRadius)
-                        .padding()
-                        .sheet(isPresented: $showMenu) {
-                            Emphasize {
-                                EditView()
-                            
-                                .padding()
-                                .padding(.vertical, 20)
-                                .transition(.opacity)
-                            }
-                        }
-                    Spacer()
-
-                }
-
-
-                if showHistory {
-                    ScoreHistoryView()
-                        .background(Color.invisible)
-                        .frame(minHeight: 600)
-                        .emphasizeShape()
-                        .padding()
-                        .onTapGesture() {
-                            showHistory = false
-                        }
-                        .transition(.opacity)
-                }
-                
+            
+            Color.invisible
+            
+            VStack {
+                Spacer()
+                BoardUI()
+                    .blur(radius: blurRadius)
+                    .padding()
+                Spacer()
+            }
+            
+            
+            if showHistory {
+                ScoreHistoryView()
+                    .background(Color.invisible)
+                    .frame(minHeight: 600)
+                    .emphasizeShape()
+                    .padding()
+                    .onTapGesture() {
+                        showHistory = false
+                    }
+                    .transition(.opacity)
             }
             
             if settings.playerWonRound != nil {
@@ -78,14 +62,19 @@ struct MainGameView: View {
             }
             
         }
-//        .edgesIgnoringSafeArea(.all)
-//        .simultaneousGesture(showHistoryGesture)
+        .edgesIgnoringSafeArea(.all)
+        .simultaneousGesture(showHistoryGesture)
         .environmentObject(settings)
         .popover(isPresented: $showInfo) {
             InfoView()
         }
+        .toolbar() {
+            ToolbarItem(placement: .bottomBar) {
+                menuBarItems
+            }
+        }
     }
-        
+    
     func selectRule(rule: Rule) {
         settings.rule = rule
     }
@@ -105,24 +94,15 @@ struct MainGameView: View {
     // MARK: - Buttons
     @State var showInfo: Bool = false
     
-    var menuBarItems: some View {
+    @ViewBuilder var menuBarItems: some View {
         HStack {
             historyButtons
             Spacer()
-            settingsButton
+            EditButton()
             Spacer()
             infoButton
         }
         .padding()
-    }
-    
-    var settingsButton: some View {
-        Button() {
-            showMenu = true
-        } label: {
-            Image(systemName: "gear")
-        }
- 
     }
     
     var infoButton: some View {
@@ -157,7 +137,7 @@ struct MainGameView: View {
             }
             .disabled(!settings.canRedo)
     }
-
+    
     
     var undoSymbol: some View { Image(systemName: "arrow.left")}
     var redoSymbol: some View { Image(systemName: "arrow.right")}
@@ -167,11 +147,7 @@ struct MainGameView: View {
 
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            MainGameView()
-            MainGameView()
-                .preferredColorScheme(.dark)
-        }
-        .environmentObject(GameSettings())
+        MainGameView()
+            .environmentObject(GameSettings())
     }
 }

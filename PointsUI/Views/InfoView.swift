@@ -12,7 +12,7 @@ import SwiftUI
 struct InfoView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    let description = "Count your points with this app."
+    let description = "Count your game points with this app."
     
     let paragraph = """
     You have several views: the one typically used for Truco which is lined boxes. But, in case you want to check in which round you made how many points, there are two other views available. Just swipe through the views.
@@ -22,6 +22,11 @@ struct InfoView: View {
     Also, if you click on the little arrow on the top you get to set things like how long it takes to make the noted points permanent, the number of players - pretty limited in Truco - or the amount of points per game, as there are various variants (usually 24 or 30, but I made this configurable)
 
     Note that you loose tracking points for the game if you change the number of players.
+
+    Please let me know if you have any suggestions, new rules you want to apply, etc.
+
+    I am planning to add a 'new rule' option, so that you can design your own games.
+
 """
     
     var body: some View {

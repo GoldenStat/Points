@@ -12,16 +12,16 @@ extension Double { static var lineAnimationSpeed = 1.0 }
 
 
 /// the UI with a collection of Boxes and maximum score
-struct ScoreBoardView: View {
+struct BoxesScoreView: View {
     @EnvironmentObject var settings: GameSettings
     
     let id = UUID()
-    let player: Player
-    var score: Score { player.score }
-        
+    var score: Score = Score()
+    var linesPerBox: Int = Int(EdgeShape.numberOfEdges)
+    
     var numberOfBoxes : Int {
-        let remainder = maxScore % linesPerBox
-        let full = maxScore / linesPerBox
+        let remainder = maxScoreSettings % linesPerBox
+        let full = maxScoreSettings / linesPerBox
         return full + (remainder > 0 ? 1 : 0)
         }
     
@@ -37,11 +37,10 @@ struct ScoreBoardView: View {
     }
     
     // MARK: -- constants
-    var maxScore : Int { settings.maxPoints } // depends on game settings
+    var maxScoreSettings : Int { settings.maxPoints } // depends on game settings
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?
-    private let linesPerBox = Int(Box.maxLength) // depends on how many points a Box struct can hold
 
     // MARK: -- calculate points for each box
     private func filledBox(at index: Int) -> Box {
@@ -59,7 +58,7 @@ struct ScoreBoardView: View {
             }
         }
         
-        return Box(score: thisBoxScore)
+        return Box(score: thisBoxScore, edges: linesPerBox)
     }
 }
 
@@ -68,7 +67,7 @@ struct ScoreBoxUI_Previews: PreviewProvider {
         ZStack {
             Color.background
             
-            ScoreBoardView(player: Player(name: "Alexander"))
+            BoxesScoreView(score: Score(20), linesPerBox: 5)
                 .environmentObject(GameSettings())
         }
     }

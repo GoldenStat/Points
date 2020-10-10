@@ -35,10 +35,51 @@ struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashab
     }
 }
 
+struct FixedView: View {
+    var title: String
+    var value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .fontWeight(.bold)
+            Spacer()
+        }
+    }
+}
+
+struct EditableView: View {
+    var title: String
+    @Binding var value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            TextField("\(value)", text: $value)
+            Spacer()
+        }
+    }
+}
+
 struct PointsPicker: View {
     @EnvironmentObject var settings: GameSettings
-    var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: [24, 30])
+    
+    var pointsPerGame: PointsSelection { settings.rule.maxPoints }
+    
+    @ViewBuilder var body: some View {
+        switch pointsPerGame {
+        case .fixed(let value):
+            FixedView(title: "MaxPoints", value: value.description)
+        case .none:
+            EmptyView()
+        case .selection(let options):
+            PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: options)
+        case .free(let value):
+            EditableView(title: "\(value)", value: $settings.maxPointsString)
+        }
     }
 }
 
@@ -57,16 +98,14 @@ struct AnimacionPicker: View {
     }
 }
 
+/// must be put into a form
 struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
     var title: String = "Juegos"
-    
-    @State private var selection = Rule.trucoArgentino
-
+        
     var body: some View {
-        Form {
-            Picker(title, selection: $selection) {
+        Picker(title, selection: $settings.rule) {
                 ForEach(settings.possibleRules) { rule in
                     Text(rule.name).tag(rule)
                 }
@@ -78,19 +117,23 @@ struct RulesPicker: View {
     }
 }
 
-struct JugadoresSelection: View {
+struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings
 
-    var possiblePlayers: PlayerCount { settings.rule.players }
+    var playersCount: PlayerCount { settings.rule.players }
     
-    var body: some View {
-        switch possiblePlayers {
-        case PlayerCount.fixed(let number):
-            return AnyView { Text("Players: \(number.description)") }
-        case PlayerCount.selection(let values):
-            return AnyView {
-                PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
+    @ViewBuilder var body: some View {
+        switch playersCount {
+        case .fixed(let num):
+            HStack {
+                Text("Players")
+                Spacer()
+                Text(num.description)
+                    .fontWeight(.bold)
+                Spacer()
             }
+        case .selection(let values):
+            PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
         }
     }
 }
@@ -112,9 +155,12 @@ struct Preview : View {
 }
 
 struct Pickers_Previews: PreviewProvider {
-        
+    
     static var previews: some View {
-        RulesPicker()
-            .environmentObject(GameSettings())
+        Form {
+            RulesPicker()
+            PointsPicker()
+        }
+        .environmentObject(GameSettings())
     }
 }
