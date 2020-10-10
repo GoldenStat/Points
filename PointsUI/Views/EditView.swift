@@ -41,6 +41,8 @@ struct EditView : View {
                         PointsPicker()
                         JuegosPicker()
                         JugadoresPicker()
+                        
+                        EditPlayerNames(players: $settings.players)
                     }
                 }
             }
