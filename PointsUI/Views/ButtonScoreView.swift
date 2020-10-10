@@ -11,12 +11,13 @@ import SwiftUI
 struct ButtonScoreView: View {
     
     var score: Score
-    var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
+    var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 1.0 }
     
-    @State var scaleFactor: CGFloat = 0.1
+    @State var scaleFactor: CGFloat = 1.0
+    @State var offset: CGSize = .zero
     
     var body: some View {
-        VStack {
+        ZStack {
             Text(score.value.description)
                 .font(.system(size: 144, weight: .semibold, design: .rounded))
             BufferView(score: score)
@@ -24,7 +25,8 @@ struct ButtonScoreView: View {
         }
         .onAppear() {
             withAnimation() {
-                scaleFactor = 1.0
+                scaleFactor = 0.5
+                offset = CGSize(width: 50, height: 50)
             }
         }
     }
@@ -47,6 +49,6 @@ struct ButtonScorePreviewView: View {
 struct ButtonScoreView_Previews: PreviewProvider {
     
     static var previews: some View {
-        ButtonScoreView(score: Score(10))
+        ButtonScorePreviewView(score: Score(10, buffer: 3))
     }
 }

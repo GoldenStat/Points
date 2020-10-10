@@ -57,9 +57,15 @@ struct EditableView: View {
     var body: some View {
         HStack {
             Text(title)
+            
             Spacer()
             TextField("\(value)", text: $value)
-            Spacer()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .multilineTextAlignment(.trailing)
+                .padding(2)
+                .background(Color.blue.opacity(0.3))
+                .frame(maxWidth: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 5))
         }
     }
 }
@@ -77,8 +83,8 @@ struct PointsPicker: View {
             EmptyView()
         case .selection(let options):
             PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: options)
-        case .free(let value):
-            EditableView(title: "\(value)", value: $settings.maxPointsString)
+        case .free(_):
+            EditableView(title: "Max Points: ", value: $settings.maxPointsString)
         }
     }
 }
@@ -110,9 +116,6 @@ struct RulesPicker: View {
                     Text(rule.name).tag(rule)
                 }
             }
-//            .onDisappear(perform: {
-//                settings.updateSettings()
-//            })
         }
     }
 

@@ -32,8 +32,9 @@ struct PlayerView: View {
             ZStack() {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .overlay(Emphasize() {
-                        
                         VStack {
+                            Spacer()
+                            
                             if titleStyle == .inline {
                                 PlayerHeadline(player: player)
                                     .padding(.top)
@@ -43,11 +44,8 @@ struct PlayerView: View {
                                 score: player.score,
                                 uiType: playerUI
                             )
-                            
-                            Spacer()
                         }
                     })
-                    .aspectRatio(scoreBoardRatio, contentMode: .fit)
                     .padding(.horizontal)
                 
             }
@@ -60,9 +58,6 @@ struct PlayerView: View {
         }
         .transition(.opacity)
     }
-
-    // MARK: -- the local variables
-    let scoreBoardRatio: CGFloat = 3/4
 
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 16.0
