@@ -14,13 +14,11 @@ struct PlayerWonRound: View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var presentationMode
     @State var isShowing = true
-    
+    var names : [String] { settings.players.names }
     var state: WinState {
         switch player.name {
-        case "Yo", "Nosotros": return .won
-        case "Tu", "Ustedes": return .lost
-        case "Ellos", "El", "Ella": return .theyWon
-        default: return .theyWon
+        case names[0]: return .won
+        default: return .lost
         }
     }
     
@@ -89,18 +87,17 @@ struct PlayerWonGame: View {
     @State var isShowing = true
     var player : Player { settings.playerWonGame ?? Player(name: "Wrong Player")}
     
+    var names : [String] { settings.players.names }
     var state: WinState {
         switch player.name {
-        case "Yo", "Nosotros": return .won
-        case "Tu", "Ustedes": return .lost
-        case "Ellos", "El", "Ella": return .theyWon
-        default: return .theyWon
+        case names[0]: return .won
+        default: return .lost
         }
     }
-    
+
     var message: String {
         switch state {
-        case .won: return "Ganaste toda las manos, chamo!!"
+        case .won: return "Ganaste toda las manos!!"
         case .lost: return "Ay, Perdimos!!"
         case .theyWon: return "Nos ganaron!"
         }
@@ -122,11 +119,3 @@ struct PlayerWonGame: View {
     }
 }
 
-//struct PlayerWon_Previews: PreviewProvider {
-//    static var previews: some View {
-//        VStack {
-//            PlayerWonRound()
-//            PlayerWonGame()
-//        }
-//    }
-//}
