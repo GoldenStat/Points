@@ -104,13 +104,13 @@ struct Rule : Identifiable, Hashable {
                             rounds: .rounds([3,5])
     )
     static let doppelkopf = Rule(name: "Doppelkopf",
-                                 maxPoints: .none,
+                                 maxPoints: .free(100),
                                  players: .fixed(4),
                                  playerUI: .numberBox,
                                  rounds: .one
     )
     static let skat = Rule(name: "Skat",
-                           maxPoints: .none,
+                           maxPoints: .free(501),
                            players: .fixed(3),
                            playerUI: .selectionBox([9,10,11,12,23,24]), // selection with multiplier? keypad?
                            rounds: .one
@@ -122,7 +122,7 @@ struct Rule : Identifiable, Hashable {
                              rounds: .wins([1,2,3])
     )
     static let romme = Rule(name: "Rommé",
-                            maxPoints: .fixed(1000),
+                            maxPoints: .fixed(501),
                             players: .selection([2,3,4,5,6]),
                             playerUI: .numberBox,
                             rounds: .rounds([1,2,3,5])
