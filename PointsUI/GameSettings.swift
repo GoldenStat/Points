@@ -26,7 +26,9 @@ class GameSettings: ObservableObject {
         didSet { processRuleUpdate() }
     }
     
-    
+    /// players that can be chosen. Will be set by rules
+    var availablePlayers = [ 2, 3, 4, 6 ]
+
     /// assigns new values from the rules to the settings
     /// should be called whenever the rules change (the game changed)
     private func processRuleUpdate() {
@@ -48,9 +50,11 @@ class GameSettings: ObservableObject {
             case .selection(let allowedPlayers):
                 availablePlayers = allowedPlayers
         }
+        
     }
 
     var playerScores : [ [ Int ] ] { history.differentialScores }
+    
     @Published var chosenNumberOfPlayers : Int {
         didSet {
 //            players = Players(names: names(for: chosenNumberOfPlayers))
@@ -106,10 +110,7 @@ class GameSettings: ObservableObject {
     func addRule(_ rule: Rule) {
         possibleRules.append(rule)
     }
-    
-    // MARK: constant data for this class
-    var availablePlayers = [ 2, 3, 4, 6 ]
-            
+                
     func updateSettings() {
         // if number of players changed, restart the game
         GlobalSettings.playerNames = players.names
