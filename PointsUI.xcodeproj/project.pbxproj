@@ -37,7 +37,6 @@
 		4194BF1B24A29209007CDBA1 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* TitleView.swift */; };
 		4196485524D2CF09002FD363 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4196485424D2CF09002FD363 /* ContentView.swift */; };
 		419A44AC24475CE000EA91F3 /* ScoreTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 419A44AB24475CE000EA91F3 /* ScoreTableView.swift */; };
-		41C12BDA24CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */; };
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
 		41DB1E1723E5C8C900E17CC8 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1623E5C8C900E17CC8 /* GameState.swift */; };
 		41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1823E5C8F100E17CC8 /* History.swift */; };
@@ -96,10 +95,6 @@
 		419A44AB24475CE000EA91F3 /* ScoreTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreTableView.swift; sourceTree = "<group>"; };
 		41C12BCE24CB1D460043EEE1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		41C12BD024CB1D460043EEE1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		41C12BD324CB1D460043EEE1 /* PointsUI_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsUI_Widget.swift; sourceTree = "<group>"; };
-		41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PointsUI_Widget.intentdefinition; sourceTree = "<group>"; };
-		41C12BD624CB1D4A0043EEE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		41C12BD824CB1D4A0043EEE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		41DB1E1623E5C8C900E17CC8 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		41DB1E1823E5C8F100E17CC8 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
@@ -190,22 +185,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		41C12BD224CB1D460043EEE1 /* PointsUI Widget */ = {
-			isa = PBXGroup;
-			children = (
-				41C12BD324CB1D460043EEE1 /* PointsUI_Widget.swift */,
-				41C12BD524CB1D460043EEE1 /* PointsUI_Widget.intentdefinition */,
-				41C12BD624CB1D4A0043EEE1 /* Assets.xcassets */,
-				41C12BD824CB1D4A0043EEE1 /* Info.plist */,
-			);
-			path = "PointsUI Widget";
-			sourceTree = "<group>";
-		};
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
 				411DF21B23607CD100A37C64 /* PointsUI */,
-				41C12BD224CB1D460043EEE1 /* PointsUI Widget */,
 				41C12BCD24CB1D460043EEE1 /* Frameworks */,
 				41ED4F3522AD799000A46C19 /* Products */,
 			);
@@ -329,7 +312,6 @@
 				4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */,
 				416E83E024F92EEE00609A87 /* DoppelkopfBoxView.swift in Sources */,
 				4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */,
-				41C12BDA24CB1D4A0043EEE1 /* PointsUI_Widget.intentdefinition in Sources */,
 				411DF2352360824900A37C64 /* FlowStack.swift in Sources */,
 				411DF2322360824900A37C64 /* BoxesScoreView.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
