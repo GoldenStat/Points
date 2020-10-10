@@ -115,7 +115,7 @@ struct RulesPicker: View {
 //            })
         }
     }
-}
+
 
 struct JugadoresPicker: View {
     @EnvironmentObject var settings: GameSettings

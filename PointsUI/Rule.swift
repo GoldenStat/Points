@@ -61,7 +61,13 @@ enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([In
 /// - *one*: after one game the team with the most points wins.
 /// - *win*: after how many wins (e.g. 2 (out of three))
 /// - *wins*: let the user choose
-enum GamesCount: Hashable { case round(Int), rounds([Int]), one, win(Int),  wins([Int]) }
+enum GamesCount: Hashable {
+    case round(Int),
+         rounds([Int]),
+         one,
+         win(Int),
+         wins([Int])
+}
 
 /// selection for different playerUIs
 ///
@@ -144,23 +150,6 @@ struct Rule : Identifiable, Hashable {
         self.rounds = rounds
     }
     
-    static let trucoArgentino = Rule(name: "Truco Argentino", maxPoints: 30, players: .selection([2,3,4,6]), playerUI: .lines)
-    static let trucoVenezolano = Rule(name: "Truco Venezolano", maxPoints: 24, players: .selection([2,3,4,6]), playerUI: .lines)
-    static let caida = Rule(name: "Caida", maxPoints: 24, players: .selection([2,3,4]), playerUI: .lines)
-    static let doppelkopf = Rule(name: "Doppelkopf", players: .fixed(4), playerUI: .numberBox)
-    static let skat = Rule(name: "Skat", players: .fixed(3), playerUI: .selectionBox)
-    static let shitzu = Rule(name: "Shitzu", maxPoints: 1001, players: .fixed(4), playerUI: .selectionBox)
-    static let romme = Rule(name: "Rommé", maxPoints: 1000, players: .selection([2,3,4,5,6]), playerUI: .numberBox)
-    static let scopa = Rule(name: "Scopa", maxPoints: 15, players: .selection([2,3,4]), playerUI: .lines)
-
-    init(name: String, maxPoints: Int? = nil, players: PlayerCount, playerUI: PlayerUIType) {
-        self.id = Self.count
-        Self.count += 1
-        self.name = name
-        self.maxPoints = maxPoints
-        self.players = players
-        self.playerUI = playerUI
-    }
 }
 
 extension Rule : StringExpressable {
