@@ -82,7 +82,7 @@ class History : ObservableObject {
         var list = [Int]()
         
         for state in states {
-            let points : [ Int ] = state.players.map({$0.score.value})
+            let points : [ Int ] = state.players.map() {$0.score.value}
             list.append(contentsOf: points)
         }
         

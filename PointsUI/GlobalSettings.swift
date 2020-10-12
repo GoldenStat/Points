@@ -43,7 +43,7 @@ enum GlobalSettings {
     @UserDefault(key: "MaxGames", defaultValue: 3) static var maxGames: Int
     @UserDefault(key: "MaxScore", defaultValue: 1000) static var scorePerGame: Int
     @UserDefault(key: "PlayerNumber", defaultValue: 2) static var chosenNumberOfPlayers: Int
-    @UserDefault(key: "PlayerNames", defaultValue: [ "Nosotros", "Ustedes", "Ellos" ])
+    @UserDefault(key: "PlayerNames", defaultValue: [ "Yo", "Tu" ])
     static var playerNames : [String]
     @UserDefault(key: "RuleID", defaultValue: 0) static var ruleID: Int
     

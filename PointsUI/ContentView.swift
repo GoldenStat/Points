@@ -18,8 +18,7 @@ struct ContentView: View {
             
             if gameStarted {
                 NavigationView {
-//                    MainGameView()
-                        BoardUI()
+                    MainGameView()
                         .navigationBarHidden(true)
                 }
             } else {

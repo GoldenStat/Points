@@ -64,8 +64,17 @@ struct MainGameView: View {
             InfoView()
         }
         .toolbar() {
-            ToolbarItem(placement: .bottomBar) {
-                menuBarItems
+            ToolbarItemGroup(placement: .automatic) {
+                HStack {
+                    historyButtons
+                    EditButton()
+                    Button() {
+                        showInfo.toggle()
+                    } label: {
+                        Image(systemName:
+                                "info")
+                    }
+                }
             }
         }
     }
@@ -89,18 +98,7 @@ struct MainGameView: View {
     // MARK: - Buttons
     @State var showInfo: Bool = false
     
-    @ViewBuilder var menuBarItems: some View {
-        HStack {
-            historyButtons
-            Spacer()
-            EditButton()
-            Spacer()
-            infoButton
-        }
-        .padding()
-    }
-    
-    var infoButton: some View {
+    @ViewBuilder var infoButton: some View {
         Button() {
             showInfo.toggle()
         } label: {
@@ -110,14 +108,14 @@ struct MainGameView: View {
     }
     
     // MARK: - history buttons
-    var historyButtons: some View {
+    @ViewBuilder var historyButtons: some View {
         HStack {
             historyUndoButton
             historyRedoButton
         }
     }
     
-    var historyUndoButton: some View {
+    @ViewBuilder var historyUndoButton: some View {
         Button() { settings.redo() }
             label: {
                 undoSymbol
@@ -125,7 +123,7 @@ struct MainGameView: View {
             .disabled(!settings.canRedo)
     }
     
-    var historyRedoButton: some View {
+    @ViewBuilder var historyRedoButton: some View {
         Button() { settings.redo() }
             label: {
                 redoSymbol
