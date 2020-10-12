@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State var gameStarted = false
+    @State var gameStarted : Bool
     @StateObject var settings : GameSettings = GameSettings()
 
     var body: some View {
@@ -18,7 +18,8 @@ struct ContentView: View {
             
             if gameStarted {
                 NavigationView {
-                    MainGameView()
+//                    MainGameView()
+                        BoardUI()
                         .navigationBarHidden(true)
                 }
             } else {
@@ -42,6 +43,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(gameStarted: true)
     }
 }

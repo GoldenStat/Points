@@ -31,7 +31,7 @@ struct BoardUI: View {
     
     var body: some View {
         if UIDevice.current.orientation.isLandscape {
-            // in landscape we always put all players in a row -- there is always enough space
+            // in landscape we put all players in a row -- there is always enough space
             HStack(alignment: .center) {
                 playerViews()
             }

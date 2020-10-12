@@ -27,7 +27,7 @@ class GameSettings: ObservableObject {
     }
     
     /// players that can be chosen. Will be set by rules
-    var availablePlayers = [ 2, 3, 4, 6 ]
+    var availablePlayers : [Int] = []
 
     /// assigns new values from the rules to the settings
     /// should be called whenever the rules change (the game changed)
@@ -57,7 +57,6 @@ class GameSettings: ObservableObject {
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-//            players = Players(names: names(for: chosenNumberOfPlayers))
             history.reset()
         }
     }
@@ -70,6 +69,7 @@ class GameSettings: ObservableObject {
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = .doppelkopf // needs to be set to call methods
+        
         createRules()
         rule = rule(id: GlobalSettings.ruleID)
         processRuleUpdate()

@@ -29,7 +29,7 @@ class Player: ObservableObject, Identifiable {
     var id = UUID()
     @Published var name: String
     @Published var games: Int = 0
-    @Published var score = Score(0) // this is why this needs to be a class
+    @Published var score = Score(0)
     
     func saveScore() {
         score.save()
