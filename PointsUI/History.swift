@@ -80,6 +80,7 @@ class History : ObservableObject {
             redoStack = []
             states.append(state)
         }
+        objectWillChange.send()
     }
     
     /// stores given state in buffer, temporarily

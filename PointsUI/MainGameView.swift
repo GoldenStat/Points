@@ -36,7 +36,9 @@ struct MainGameView: View {
                     .emphasizeShape()
                     .padding()
                     .onTapGesture() {
-                        showHistory = false
+                        withAnimation() {
+                            showHistory = false
+                        }
                     }
                     .transition(.opacity)
             }

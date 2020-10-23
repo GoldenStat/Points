@@ -11,7 +11,8 @@ import SwiftUI
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     
-    private var header: [ String ] { settings.playerNames }
+//    private var header: [ String ] { settings.playerNames }
+    private var header: [ String ] { ["Alexander", "Alexander" ] }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
     
@@ -70,11 +71,13 @@ struct ScoreHistoryView: View {
         showSums ? scoresInIndividualMode : scoresInSumMode
     }
 
-    private var isHistoryEmpty: Bool { history.states.isEmpty }
+    private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
+    
     @State var showSums = false
     
     var body: some View {
-        VStack(alignment: HorizontalAlignment/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+        VStack() {
+            
             HStack {
                 Spacer()
             
@@ -96,17 +99,14 @@ struct ScoreHistoryView: View {
                 HistoryTableRowView(content: [String](repeating: "0", count: numberOfColumns))
                 
             } else {
-                VStack {
+                ScrollView(.vertical) {
                     ForEach(scoresForHistory, id: \.self) { scores in
                         HistoryTableRowView(content: scores.map {$0.description})
-                    }
-                    if let scores = history.buffer?.scores {
-                        HistoryTableRowView(content: scores.map { $0.description })
-                            .foregroundColor(.gray)
                     }
                 }
                 
                 if showSums {
+                    
                     BoldDivider()
                     
                     HStack {
@@ -115,17 +115,24 @@ struct ScoreHistoryView: View {
                         }
                         .foregroundColor(history.buffer == nil ? .black : .blue)
                     }
+                    
+                } else if let scores = history.buffer?.scores {
+                    ForEach(0 ..< 1) { _ in
+                        HistoryTableRowView(content: scores.map { $0.description })
+                            .foregroundColor(.gray)
+                    }
                 }
-                
-                Spacer()
             }
-            Spacer()
+            
+//            Spacer()
+
         }
-        .frame(maxHeight: historyViewHeight)
+//        .frame(maxHeight: historyViewHeight)
+
     }
     
     // MARK: - private constants
-    private let historyViewHeight : CGFloat = 500.0
+    private let historyViewHeight : CGFloat = 800.0
 }
 
 // MARK: - private views
@@ -136,9 +143,11 @@ fileprivate struct HistoryTableRowView: View {
     let content: [TableCellContent]
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center, spacing: 20) {
+            Spacer()
             ForEach(content, id: \.self) { cell in
                 HistoryTableCellView(content: cell)
+                Spacer()
             }
         }
     }
@@ -153,6 +162,7 @@ fileprivate struct HistoryTableCellView: View {
     var body: some View {
         Text(content)
             .fontWeight(bold ? .bold : .none)
+            .fixedSize()
             .frame(width: numberCellWidth)
     }
 }
@@ -198,7 +208,6 @@ fileprivate struct HistorySampleView : View {
         }
         
         settings.history.store(state: GameState(players: players.data))
-        settings.history.objectWillChange.send()
         settings.objectWillChange.send()
     }
 }

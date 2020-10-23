@@ -209,8 +209,8 @@ class GameSettings: ObservableObject {
     }
 
     // MARK: Timers
-    private var registerPointsTimer : Timer?
-    private var countAsRoundTimer : Timer?
+    private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
+    private var countAsRoundTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
 
     var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
     var timeIntervalToCountAsRound: TimeInterval = 10 // the time we wait from last touch to register this as a round and add it to the history menu
