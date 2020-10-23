@@ -15,7 +15,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            
+
             if gameStarted {
                 NavigationView {
                     MainGameView()
@@ -24,7 +24,7 @@ struct ContentView: View {
             } else {
                 TitleView(animatedState: .background)
             }
-        
+
         }
         .edgesIgnoringSafeArea(.all)
         .gesture(tapGesture)

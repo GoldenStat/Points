@@ -52,8 +52,6 @@ class GameSettings: ObservableObject {
         }
         
     }
-
-    var playerScores : [ [ Int ] ] { history.differentialScores }
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
@@ -65,7 +63,7 @@ class GameSettings: ObservableObject {
     init() {
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
-        history = History()
+        history = History(names: GlobalSettings.playerNames)
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = .doppelkopf // needs to be set to call methods
@@ -236,15 +234,30 @@ class GameSettings: ObservableObject {
     
     // when the timer fires, players need to be updated, and history saved...
     @objc private func updateRegisterPoints() {
-        // send the history a signal that it should be saved
-        players.saveScore() // update all scores' buffer
+        storeBuffer(from: players)
+        players.saveScore() // reset all player scores' buffers, updates values
         updateState()
         registerPointsTimer?.invalidate()
     }
     
+    func storeBuffer(from players: Players) {
+        // add to  buffers
+        if buffer != nil {
+            for (index,playerBuffer) in players.scores.map({ $0.buffer } ).enumerated() {
+                buffer![index] += playerBuffer
+            }
+        } else {
+            buffer = players.scores.map { $0.buffer }
+        }
+    }
+    
+    var buffer: [Int]?
+    
     // this function adds the changes to the history, counting it as a round.
     @objc private func updateRound() {
         history.save(state: GameState(players: players.data))
+//        history.save(state: GameState(buffer: buffer))
+        buffer = nil
         countAsRoundTimer?.invalidate()
     }
     

@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+/// can be expressed as a String
+/// used to use Integers and Strings with Text($0) expressions alike
 protocol StringExpressable {
     var description: String { get }
 }

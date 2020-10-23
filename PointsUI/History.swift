@@ -7,9 +7,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// a list of game States
 /// used to record the progression of the entries
+/// every state has the individual score of that round
+/// e.g. History.states[0] is the first round, History.state[5] are the scores of round 5
 class History : ObservableObject {
     
     // only varialbe, get all information from here
@@ -19,7 +22,7 @@ class History : ObservableObject {
             canRedo = redoStack.count > 0
         }
     }
-
+    
     struct Sample {
         static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villamizar" ]
         static var points : [[Int]] { names.map { _ in
@@ -30,11 +33,13 @@ class History : ObservableObject {
         } }
     }
     
-
-
-    var playerNames: [String] { currentPlayers.map {$0.name} }
+    var playerNames: [String]
     var numOfPlayers: Int { currentPlayers.count }
-
+    
+    init(names: [String]) {
+        playerNames = names
+    }
+    
     var redoStack : [GameState] = []
     
     func reset() {
@@ -43,10 +48,7 @@ class History : ObservableObject {
     
     /// returns last Entry of game states
     var currentPlayers : [PlayerData] {
-        if let lastState = states.last {
-            return lastState.players
-        }
-        return []
+        return playerNames.map { PlayerData(name: $0, points: 0, games: 0)}
     }
         
     /// go back one step, if there is one
@@ -82,28 +84,36 @@ class History : ObservableObject {
         var list = [Int]()
         
         for state in states {
-            let points : [ Int ] = state.players.map() {$0.score.value}
-            list.append(contentsOf: points)
+            list.append(contentsOf: state.scores)
         }
         
         return list
     }
     
-    /// an array of the scores of each player
     var playerSumScores : [[ Int ]] {
-        var scoresArray = Array(repeating: [0], count: numOfPlayers)
-        for playerNo in 0 ..< numOfPlayers {
-            _ = states.map { scoresArray[playerNo].append($0.players[playerNo].score.value) }
+        var scoresArray = [[Int]]()
+        
+        for state in states {
+            let thisRoundScores = state.scores
+            if let lastRoundScores = scoresArray.last {
+                var newRow : [Int] = []
+                for index in 0 ..< state.scores.count {
+                    newRow.append(lastRoundScores[index] + state.scores[index])
+                }
+                scoresArray.append(newRow)
+            } else {
+                scoresArray.append(thisRoundScores)
+            }
         }
         return scoresArray
     }
     
     var differentialScores : [[ Int ]] {
-        playerSumScores.map { $0.differentialScores() }
+        return states.map { $0.scores }
     }
     
     var flatSums: [Int] {
-        states.last?.scores.map { $0.value } ?? [Int].init(repeating: 0, count: numOfPlayers)
+        states.last?.scores.map { $0 } ?? [Int].init(repeating: 0, count: numOfPlayers)
     }
 
     var risingScores: [Int] {
@@ -111,7 +121,7 @@ class History : ObservableObject {
         var lastScore: [Int]?
         
         for state in states {
-            let currentScore : [Int] = state.players.map({$0.score.value})
+            let currentScore : [Int] = state.scores
             if let lastScore = lastScore {
                 var diffScore = [Int]()
                 for index in 0 ..< lastScore.count {
@@ -128,19 +138,3 @@ class History : ObservableObject {
     }
 }
 
-extension Array where Element: Numeric {
-    /// takes a list of sums (as in a game when only the total is anotated) and returns the list of differentialScores
-    func differentialScores() -> Array<Element> {
-        var differentialScores = [Element]()
-
-        if let firstElement = self.first {
-            differentialScores.append(firstElement)
-            var acc = firstElement
-            for elem in self[1..<self.count] {
-                differentialScores.append(elem - acc)
-                acc += elem
-            }
-        }
-        return differentialScores
-    }
-}
