@@ -20,8 +20,11 @@ class History : ObservableObject {
         didSet {
             canUndo = states.count > 0
             canRedo = redoStack.count > 0
+            self.objectWillChange.send()
         }
     }
+    
+    @Published var buffer: GameState?
     
     struct Sample {
         static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villamizar" ]
@@ -77,6 +80,22 @@ class History : ObservableObject {
             redoStack = []
             states.append(state)
         }
+    }
+    
+    /// stores given state in buffer, temporarily
+    /// if buffer is not empty, save current buffer, first
+    /// call save() to store in states
+    func store(state: GameState) {
+        save()
+        buffer = state
+    }
+    
+    /// save game state that was buffered, if any
+    /// returns quietly if buffer is not set
+    func save() {
+        guard let buffer = buffer else { return }
+        save(state: buffer)
+        self.buffer = nil
     }
     
     /// a computed var that transfers all history states into a list

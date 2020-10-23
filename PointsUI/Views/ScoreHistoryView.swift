@@ -82,6 +82,10 @@ struct ScoreHistoryView: View {
                     ForEach(scoresForHistory, id: \.self) { scores in
                         HistoryTableRowView(content: scores.map {$0.description})
                     }
+                    if let scores = history.buffer?.scores {
+                        HistoryTableRowView(content: scores.map { $0.description })
+                            .foregroundColor(.gray)
+                    }
                 }
                 
                 if showSums {
@@ -145,13 +149,24 @@ struct HistorySampleView : View {
     var body: some View {
         VStack {
             ScoreHistoryView()
-            Button("Add New Round") {
+            Spacer()
+            Button() {
                 addScoresToHistory()
+            } label: {
+                Text("Add New Round")
+                    .fontWeight(.bold)
             }
+            .padding()
+            .background(Color(red: 180/255, green: 180/255, blue: 200/255, opacity: 0.8)
+                            .cornerRadius(20)
+            )
+            .padding()
         }
+        .emphasize(maxHeight: 600)
     }
     
     func addScoresToHistory() {
+        
         for player in settings.players.items {
             let sampleScore = Int.random(in: 0 ... 6)
             print ("Adding score \(sampleScore) to Player <\(player.name)>")
