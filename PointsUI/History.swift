@@ -70,7 +70,7 @@ class History : ObservableObject {
 
     /// add game state to the history
     /// only save if the state is different from the last saved state
-    func save(state: GameState) {
+    private func save(state: GameState) {
         if let lastState = states.last {
             if lastState != state {
                 redoStack = []

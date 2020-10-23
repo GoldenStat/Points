@@ -240,6 +240,7 @@ class GameSettings: ObservableObject {
         registerPointsTimer?.invalidate()
     }
     
+    /// register player's points from this round into history's buffer
     func storeBuffer(from players: Players) {
         // add to  buffers
         if buffer != nil {
@@ -249,14 +250,15 @@ class GameSettings: ObservableObject {
         } else {
             buffer = players.scores.map { $0.buffer }
         }
+        history.store(state: GameState(players: players.data))
     }
     
     var buffer: [Int]?
     
-    // this function adds the changes to the history, counting it as a round.
+    /// this function adds the changes to the history, counting it as a round.
+    /// history adds hist buffer to it's states
     @objc private func updateRound() {
-        history.save(state: GameState(players: players.data))
-//        history.save(state: GameState(buffer: buffer))
+        history.save()
         buffer = nil
         countAsRoundTimer?.invalidate()
     }
