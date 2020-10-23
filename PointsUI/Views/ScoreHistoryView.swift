@@ -8,11 +8,17 @@
 
 import SwiftUI
 
+extension Array where Element: StringExpressable {
+    func stringElements() -> Array<String> {
+        self.map { $0.description }
+    }
+}
+
+
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     
-//    private var header: [ String ] { settings.playerNames }
-    private var header: [ String ] { ["Alexander", "Alexander" ] }
+    private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
     
@@ -101,7 +107,7 @@ struct ScoreHistoryView: View {
             } else {
                 ScrollView(.vertical) {
                     ForEach(scoresForHistory, id: \.self) { scores in
-                        HistoryTableRowView(content: scores.map {$0.description})
+                        HistoryTableRowView(content: scores.stringElements())
                     }
                 }
                 
@@ -110,25 +116,18 @@ struct ScoreHistoryView: View {
                     BoldDivider()
                     
                     HStack {
-                        ForEach(sumLine, id: \.self) { sum in
-                            HistoryTableCellView(content: sum.description, bold: true)
-                        }
+                        HistoryTableRowView(content: sumLine.stringElements(), bold: true)
                         .foregroundColor(history.buffer == nil ? .black : .blue)
                     }
                     
                 } else if let scores = history.buffer?.scores {
                     ForEach(0 ..< 1) { _ in
-                        HistoryTableRowView(content: scores.map { $0.description })
+                        HistoryTableRowView(content: scores.stringElements())
                             .foregroundColor(.gray)
                     }
                 }
             }
-            
-//            Spacer()
-
         }
-//        .frame(maxHeight: historyViewHeight)
-
     }
     
     // MARK: - private constants
@@ -141,12 +140,12 @@ typealias TableCellContent = String
 fileprivate struct HistoryTableRowView: View {
 
     let content: [TableCellContent]
-    
+    var bold: Bool = false
     var body: some View {
         HStack(alignment: .center, spacing: 20) {
             Spacer()
             ForEach(content, id: \.self) { cell in
-                HistoryTableCellView(content: cell)
+                HistoryTableCellView(content: cell, bold: bold)
                 Spacer()
             }
         }

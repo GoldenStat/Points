@@ -238,6 +238,7 @@ class GameSettings: ObservableObject {
         players.saveScore() // reset all player scores' buffers, updates values
         updateState()
         registerPointsTimer?.invalidate()
+        registerPointsTimer = nil
     }
     
     /// register player's points from this round into history's buffer
@@ -261,6 +262,7 @@ class GameSettings: ObservableObject {
         history.save()
         buffer = nil
         countAsRoundTimer?.invalidate()
+        countAsRoundTimer = nil
     }
     
     /// updates the players with score from current state

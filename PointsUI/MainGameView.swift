@@ -66,7 +66,7 @@ struct MainGameView: View {
             InfoView()
         }
         .toolbar() {
-            ToolbarItemGroup(placement: .automatic) {
+            ToolbarItemGroup(placement: .bottomBar) {
                 HStack {
                     historyButtons
                     EditButton()
@@ -140,15 +140,10 @@ struct MainGameView: View {
 
 // MARK: - previews
 
-//struct MainGameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        MainGameView()
-//            .environmentObject(GameSettings())
-//    }
-//}
-
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
-        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+        MainGameView()
+            .environmentObject(GameSettings())
     }
 }
+
