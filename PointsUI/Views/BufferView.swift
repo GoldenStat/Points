@@ -11,14 +11,16 @@ import SwiftUI
 struct BufferView: View {
     
     var score: Score
-    @State var scoreSize: CGFloat = 8
+    let scoreSize: CGFloat = 144
     var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
+    @State var scaling: CGFloat = 0.2
+    
     var body: some View {
         Text(score.buffer.description)
             .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
             .opacity(scoreOpacity)
             .onAppear() {
-                scoreSize = 144
+                scaling = 1.0
             }
             .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
     }

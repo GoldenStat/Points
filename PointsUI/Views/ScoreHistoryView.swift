@@ -23,64 +23,12 @@ struct ScoreHistoryView: View {
     private var history: History { settings.history }
     
     private var sumLine: [ Int ] {
-        history.buffer?.scores ??
-        history.states.last?.scores ?? [Int](repeating: 0, count: settings.numberOfPlayers)
+        sumScores.last ?? zeroValues
     }
-
-    /// reduce all scores in history states to simple scores
-    /// just extract the scores from the state as they are already the sums
-    private var scoresInSumMode: [[ Int ]] {
-        var allScores: [[Int]] = [[]]
-        
-        for state in history.states {
-            var scores: [Int] = []
-            for score in state.scores {
-                scores.append(score)
-            }
-            allScores.append(scores)
-        }
-        
-        return allScores
-    }
-
-    private var allStates: [GameState] {
-        var copyOfHistoryState: [GameState] = history.states
-        
-        if let buffer = history.buffer {
-            copyOfHistoryState.append(buffer)
-        }
-        
-        return copyOfHistoryState
-    }
-    
-    private var nullValues : [ Int ] { [Int](repeating: 0, count: numberOfColumns) }
-    
-    /// reduce all scores in history states to how score differences
-    private var scoresInIndividualMode: [[ Int ]] {
-        var allScores: [[Int]] = [[]]
-        var scoresSoFar = nullValues
-        
-        for state in allStates {
-            var scores: [Int] = []
-            for index in 0 ..< numberOfColumns {
-                let diffScore = state.scores[index] - scoresSoFar[index]
-                scores.append(diffScore)
-            }
-            allScores.append(scores)
-            scoresSoFar = state.scores
-        }
-        
-        return allScores
-    }
-    
-    private var scoresForHistory: [[ Int ]] {
-        showSums ? scoresInIndividualMode : scoresInSumMode
-    }
-
-    private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
-    
+   
     @State var showSums = false
-    
+    @State var showIndices = false
+
     var body: some View {
         VStack() {
             
@@ -106,32 +54,74 @@ struct ScoreHistoryView: View {
                 
             } else {
                 ScrollView(.vertical) {
-                    ForEach(scoresForHistory, id: \.self) { scores in
-                        HistoryTableRowView(content: scores.stringElements())
-                    }
-                }
-                
-                if showSums {
-                    
-                    BoldDivider()
-                    
-                    HStack {
-                        HistoryTableRowView(content: sumLine.stringElements(), bold: true)
-                        .foregroundColor(history.buffer == nil ? .black : .blue)
+                    ForEach(0 ..< scoresForHistory.count) { index in
+                        ForEach(scoresForHistory, id: \.self) { scores in
+                            HistoryTableRowView(content: scores.stringElements())
+                        }
+//                        if showIndices {
+//                            HistoryTableRowView(content: scoresForHistory[index].stringElements(), index: index + 1)
+//                        } else {
+//                            HistoryTableRowView(content: scoresForHistory[index].stringElements())
+//                        }
                     }
                     
-                } else if let scores = history.buffer?.scores {
-                    ForEach(0 ..< 1) { _ in
-                        HistoryTableRowView(content: scores.stringElements())
-                            .foregroundColor(.gray)
+                    if showSums {
+                        
+                        BoldDivider()
+                        
+                        HStack {
+                            HistoryTableRowView(content: sumLine.stringElements(), bold: true)
+                                .foregroundColor(history.buffer == nil ? .black : .blue)
+                        }
+                        
+                    } else if let scores = history.buffer?.scores {
+                        ForEach(0 ..< 1) { _ in
+                            HistoryTableRowView(content: scores.stringElements().map {"+\($0)"})
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
             }
+            Spacer()
         }
+        .padding(.bottom)
+    }
+            
+    
+    // MARK: - scores' calculations
+    
+    /// all states' scores that are recorded for every round
+    private var simpleScores: [[ Int ]] {
+        var historyScores = history.states.map { $0.scores }
+        if let buffer = history.buffer {
+            historyScores.append(buffer.scores)
+        }
+        return historyScores
     }
     
-    // MARK: - private constants
-    private let historyViewHeight : CGFloat = 800.0
+    private var sumScores: [[ Int ]] {
+        var sumScores: [[Int]] = [[]]
+        var previousScores = zeroValues
+        
+        for state in history.states {
+            var scoresSum: [Int] = previousScores
+            for playerIndex in 0 ..< numberOfColumns {
+                scoresSum[playerIndex] += state.scores[playerIndex]
+            }
+            sumScores.append(scoresSum)
+            previousScores = scoresSum
+        }
+        return sumScores
+    }
+    
+    private var scoresForHistory: [[ Int ]] {
+        showSums ? simpleScores : sumScores
+    }
+
+    private var zeroValues : [ Int ] { [Int](repeating: 0, count: numberOfColumns) }
+
+    private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
+ 
 }
 
 // MARK: - private views
@@ -141,15 +131,29 @@ fileprivate struct HistoryTableRowView: View {
 
     let content: [TableCellContent]
     var bold: Bool = false
+    var index: Int?
+    
     var body: some View {
+        ZStack {
         HStack(alignment: .center, spacing: 20) {
-            Spacer()
-            ForEach(content, id: \.self) { cell in
-                HistoryTableCellView(content: cell, bold: bold)
+                if let index = index {
+                    HStack {
+                        HistoryTableCellView(content: index.description, bold: true)
+                            .scaleEffect(scale)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                }
                 Spacer()
+                ForEach(content, id: \.self) { cell in
+                    HistoryTableCellView(content: cell, bold: bold)
+                    Spacer()
+                }
             }
         }
     }
+    
+    let scale : CGFloat = 0.6
 }
 
 fileprivate struct HistoryTableCellView: View {
@@ -160,6 +164,7 @@ fileprivate struct HistoryTableCellView: View {
     
     var body: some View {
         Text(content)
+            .font(.system(size: 24))
             .fontWeight(bold ? .bold : .none)
             .fixedSize()
             .frame(width: numberCellWidth)
@@ -173,26 +178,20 @@ fileprivate struct BoldDivider: View {
     }
 }
 
-fileprivate struct HistorySampleView : View {
+fileprivate struct SampleButton: View {
     @EnvironmentObject var settings: GameSettings
-    
     var body: some View {
-        VStack {
-            ScoreHistoryView()
-            Spacer()
-            Button() {
-                addScoresToHistory()
-            } label: {
-                Text("Add New Round")
-                    .fontWeight(.bold)
-            }
-            .padding()
-            .background(Color(red: 180/255, green: 180/255, blue: 200/255, opacity: 0.8)
-                            .cornerRadius(20)
-            )
-            .padding()
+        Button() {
+            addScoresToHistory()
+        } label: {
+            Text("Add New Round")
+                .fontWeight(.bold)
         }
-        .emphasize(maxHeight: 800)
+        .padding()
+        .background(Color(red: 180/255, green: 180/255, blue: 200/255, opacity: 0.8)
+                        .cornerRadius(20)
+        )
+        .padding()
     }
     
     private func addScoresToHistory() {
@@ -206,8 +205,23 @@ fileprivate struct HistorySampleView : View {
             player.saveScore()
         }
         
-        settings.history.store(state: GameState(players: players.data))
+        if settings.history.buffer != nil {
+            settings.history.save()
+        } else {
+            settings.history.store(state: GameState(players: players.data))
+        }
         settings.objectWillChange.send()
+    }
+}
+
+fileprivate struct HistorySampleView : View {
+    
+    var body: some View {
+        ZStack {
+            SampleButton()
+                .position(x: 200, y: 10)
+            ScoreHistoryView()
+        }
     }
 }
 

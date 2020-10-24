@@ -55,7 +55,7 @@ class GameSettings: ObservableObject {
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-            history.reset()
+            resetPlayers()
         }
     }
     
@@ -216,6 +216,7 @@ class GameSettings: ObservableObject {
     var timeIntervalToCountAsRound: TimeInterval = 10 // the time we wait from last touch to register this as a round and add it to the history menu
 
     func startTimer() {
+        
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         registerPointsTimer?.invalidate()
         registerPointsTimer = Timer.scheduledTimer(timeInterval: updateTimeIntervalToRegisterPoints,
@@ -232,35 +233,43 @@ class GameSettings: ObservableObject {
                                      repeats: false)
     }
     
-    // when the timer fires, players need to be updated, and history saved...
+    // when the timer fires, players need to be updated, and history buffer updated...
     @objc private func updateRegisterPoints() {
-        storeBuffer(from: players)
-        players.saveScore() // reset all player scores' buffers, updates values
+        // add to bufferForHistory
+        updateHistoryBuffer(from: players.scores) // add player's score buffer to bufferForHistoryStore
+        players.saveScore() // reset all player scores' buffers, updates values, reflects visually
         updateState()
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
     }
+
+    /// a points buffer for history
+    var bufferForHistoryStore: [Int]?
     
     /// register player's points from this round into history's buffer
-    func storeBuffer(from players: Players) {
+    func updateHistoryBuffer(from scores: [Score]) {
         // add to  buffers
-        if buffer != nil {
-            for (index,playerBuffer) in players.scores.map({ $0.buffer } ).enumerated() {
-                buffer![index] += playerBuffer
+        if bufferForHistoryStore != nil {
+            for (index,scoreBuffer) in scores.map({ $0.buffer } ).enumerated() {
+                // as long as the round is not over
+                bufferForHistoryStore![index] += scoreBuffer
             }
         } else {
-            buffer = players.scores.map { $0.buffer }
+            bufferForHistoryStore = scores.map { $0.buffer }
         }
-        history.store(state: GameState(players: players.data))
+        
+        // overwirte history store
+//        history.store(state: GameState(buffer: players.scores.map {$0.buffer}))
+        history.store(state: GameState(buffer: bufferForHistoryStore))
     }
-    
-    var buffer: [Int]?
-    
+        
     /// this function adds the changes to the history, counting it as a round.
     /// history adds hist buffer to it's states
     @objc private func updateRound() {
-        history.save()
-        buffer = nil
+//        history.save()
+//        history.sumBufferToState()
+        history.addBuffer()
+        bufferForHistoryStore = nil
         countAsRoundTimer?.invalidate()
         countAsRoundTimer = nil
     }

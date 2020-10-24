@@ -72,22 +72,53 @@ class History : ObservableObject {
     /// only save if the state is different from the last saved state
     private func save(state: GameState) {
         if let lastState = states.last {
-            if lastState != state {
+            if lastState != state // if it's a new state
+            {
                 redoStack = []
                 states.append(state)
             }
         } else {
             redoStack = []
-            states.append(state)
+            states = [state]
         }
         objectWillChange.send()
     }
     
+    /// add the buffer to the last state's scores
+    /// reset the buffer
+    func sumBufferToState() {
+        guard let buffer = buffer else { return }
+        if states.count > 0 {
+            let lastState = states.removeLast()
+            for index in 0 ..< lastState.scores.count {
+                let sumState = GameState(buffer: [ lastState.scores[index] + buffer.scores[index] ] )
+                states.append(sumState)
+            }
+        } else {
+            states = [buffer]
+            redoStack = []
+        }
+        self.buffer = nil
+        objectWillChange.send()
+    }
+    
+    func addBuffer() {
+        if let buffer = buffer {
+            if buffer != states.last {
+                states.append(buffer)
+            }
+        }
+        
+        redoStack = []
+        buffer = nil
+        
+        objectWillChange.send()
+    }
+    
     /// stores given state in buffer, temporarily
-    /// if buffer is not empty, save current buffer, first
+    /// if buffer is not empty, overwrite
     /// call save() to store in states
     func store(state: GameState) {
-        save()
         buffer = state
     }
     
@@ -95,8 +126,19 @@ class History : ObservableObject {
     /// returns quietly if buffer is not set
     func save() {
         guard let buffer = buffer else { return }
-        save(state: buffer)
+        if let lastState = states.last {
+            if lastState != buffer // if it's a new state
+            {
+                redoStack = []
+                states.append(buffer)
+            }
+        } else {
+            redoStack = []
+            states = [buffer]
+        }
         self.buffer = nil
+
+        objectWillChange.send()
     }
     
     /// a computed var that transfers all history states into a list

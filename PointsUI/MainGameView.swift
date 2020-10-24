@@ -16,10 +16,11 @@ struct MainGameView: View {
     
     @EnvironmentObject var settings : GameSettings
     
-    @State var showMenu = false
-    
+    @State private var showMenu = false
+    @State private var showHistory: Bool = true
+
     var body: some View {
-        
+        GeometryReader { geo in
         ZStack {
             
             Color.invisible
@@ -31,9 +32,9 @@ struct MainGameView: View {
             
             if showHistory {
                 ScoreHistoryView()
-                    .background(Color.invisible)
-                    .frame(minHeight: 600)
+                    .frame(minHeight: geo.size.height * 0.9)
                     .emphasizeShape()
+                    .environmentObject(settings)
                     .padding()
                     .onTapGesture() {
                         withAnimation() {
@@ -41,6 +42,8 @@ struct MainGameView: View {
                         }
                     }
                     .transition(.opacity)
+                    .padding()
+
             }
             
             if settings.playerWonRound != nil {
@@ -79,13 +82,13 @@ struct MainGameView: View {
                 }
             }
         }
+        }
     }
     
     func selectRule(rule: Rule) {
         settings.rule = rule
     }
     
-    @State var showHistory: Bool = false
     var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
         .onEnded() {_ in
             withAnimation(.linear(duration: 0.5)) {

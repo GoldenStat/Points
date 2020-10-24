@@ -29,7 +29,7 @@ struct ButtonScoreView: View {
         .onAppear() {
             withAnimation(.linear(duration: 1.0)) {
                 scaleFactor = 0.5
-                offset = CGSize(width: 80, height: -80)
+                offset = CGSize(width: 60, height: -80)
             }
         }
     }
