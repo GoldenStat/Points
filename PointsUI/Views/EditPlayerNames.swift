@@ -16,6 +16,7 @@ struct EditPlayerNames: View {
         VStack {
             ForEach(0 ..< players.items.count, id: \.self) { id in
                 EditableView(title: "Player \(id)", value: $players.items[id].name)
+                    .keyboardType(.default)
             }
         }
     }

@@ -14,6 +14,14 @@ extension Array where Element: StringExpressable {
     }
 }
 
+func +<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> where Element: Numeric {
+    guard lhs.count == rhs.count else { return lhs }
+    var sum : Array<Element> = lhs
+    for index in (0 ..< lhs.count) {
+        sum[index] += rhs[index]
+    }
+    return sum
+}
 
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
@@ -23,7 +31,11 @@ struct ScoreHistoryView: View {
     private var history: History { settings.history }
     
     private var sumLine: [ Int ] {
-        sumScores.last ?? zeroValues
+        if let buffer = history.buffer {
+            return (sumScores.last ?? zeroValues) + buffer.scores
+        } else {
+            return sumScores.last ?? zeroValues
+        }
     }
    
     @State var showSums = false
@@ -54,16 +66,16 @@ struct ScoreHistoryView: View {
                 
             } else {
                 ScrollView(.vertical) {
-                    ForEach(0 ..< scoresForHistory.count) { index in
                         ForEach(scoresForHistory, id: \.self) { scores in
                             HistoryTableRowView(content: scores.stringElements())
                         }
+//                    ForEach(0 ..< scoresForHistory.count) { index in
 //                        if showIndices {
 //                            HistoryTableRowView(content: scoresForHistory[index].stringElements(), index: index + 1)
 //                        } else {
 //                            HistoryTableRowView(content: scoresForHistory[index].stringElements())
 //                        }
-                    }
+//                    }
                     
                     if showSums {
                         

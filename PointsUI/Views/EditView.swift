@@ -47,14 +47,17 @@ struct EditView : View {
                 }
             }
             
-            Button("Save") {
-                isPresented.wrappedValue.dismiss()
+            HStack {
+                Button("Save") {
+                    isPresented.wrappedValue.dismiss()
+                    settings.updateSettings()
+                    settings.needsUpdate = true
+                }
+                Button("Cancel") {
+                    isPresented.wrappedValue.dismiss()
+                }
             }
         }
-        .onDisappear(perform: {
-            settings.updateSettings()
-            settings.needsUpdate = true
-        })
     }
 }
 

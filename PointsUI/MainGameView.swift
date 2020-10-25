@@ -17,73 +17,80 @@ struct MainGameView: View {
     @EnvironmentObject var settings : GameSettings
     
     @State private var showMenu = false
-    @State private var showHistory: Bool = true
-
+    @State private var showHistory: Bool = false
+    
     var body: some View {
         GeometryReader { geo in
-        ZStack {
-            
-            Color.invisible
-            
-            BoardUI()
-                .blur(radius: blurRadius)
-                .padding()
-            
-            
-            if showHistory {
-                ScoreHistoryView()
-                    .frame(minHeight: geo.size.height * 0.9)
-                    .emphasizeShape()
-                    .environmentObject(settings)
+            ZStack {
+                
+                Color.invisible
+                
+                BoardUI()
+                    .blur(radius: blurRadius)
                     .padding()
-                    .onTapGesture() {
-                        withAnimation() {
-                            showHistory = false
+                
+                
+                if showHistory {
+                    ScoreHistoryView()
+                        .frame(minHeight: geo.size.height * 0.9)
+                        .emphasizeShape()
+                        .environmentObject(settings)
+                        .padding()
+                        .onTapGesture() {
+                            withAnimation() {
+                                showHistory = false
+                            }
                         }
-                    }
-                    .transition(.opacity)
-                    .padding()
-
+                        .transition(.opacity)
+                        .padding()
+                    
+                }
+                
+                if settings.playerWonRound != nil {
+                    PlayerWonRound()
+                        .transition(.move(edge: .bottom))
+                        .onAppear {
+                            showMenu = false
+                        }
+                }
+                
+                if settings.playerWonGame != nil {
+                    PlayerWonGame()
+                        .transition(.opacity)
+                        .onAppear {
+                            showMenu = false
+                        }
+                }
+                
             }
-            
-            if settings.playerWonRound != nil {
-                PlayerWonRound()
-                    .transition(.move(edge: .bottom))
-                    .onAppear {
-                        showMenu = false
-                    }
+            .gesture(showHistoryGesture)
+            .environmentObject(settings)
+            .popover(isPresented: $showInfo) {
+                InfoView()
             }
-            
-            if settings.playerWonGame != nil {
-                PlayerWonGame()
-                    .transition(.opacity)
-                    .onAppear {
-                        showMenu = false
-                    }
-            }
-            
-        }
-        .gesture(showHistoryGesture)
-        .environmentObject(settings)
-        .popover(isPresented: $showInfo) {
-            InfoView()
-        }
-        .toolbar() {
-            ToolbarItemGroup(placement: .bottomBar) {
-                HStack {
-                    historyButtons
-                    EditButton()
-                    Button() {
-                        showInfo.toggle()
-                    } label: {
-                        Image(systemName:
-                                "info")
+            .toolbar() {
+//                ToolbarItem() {
+//                    historyButtons
+//                }
+//                ToolbarItem() {
+//                    EditButton()
+//                }
+//                ToolbarItem() {
+//                }                
+                ToolbarItemGroup(placement: .bottomBar) {
+                    HStack {
+                        historyButtons
+                        Spacer()
+                        EditButton()
+                        Spacer()
+                        InfoButton(showInfo: $showInfo)
                     }
                 }
             }
         }
-        }
     }
+    
+    @State var showToolbar = true
     
     func selectRule(rule: Rule) {
         settings.rule = rule
@@ -139,6 +146,18 @@ struct MainGameView: View {
     
     var undoSymbol: some View { Image(systemName: "arrow.left")}
     var redoSymbol: some View { Image(systemName: "arrow.right")}
+}
+
+struct InfoButton: View {
+    @Binding var showInfo: Bool
+    var body: some View {
+        Button() {
+            showInfo.toggle()
+        } label: {
+            Image(systemName:
+                    "info")
+        }
+    }
 }
 
 // MARK: - previews
