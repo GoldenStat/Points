@@ -62,8 +62,7 @@ class GameSettings: ObservableObject {
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-            resetPlayer(for: chosenNumberOfPlayers)
-
+            resetPlayers(for: chosenNumberOfPlayers)
         }
     }
     
@@ -154,7 +153,7 @@ class GameSettings: ObservableObject {
     }
     
     // handle Player changed! (as in settings were edited)
-    func resetPlayer(for newPlayers: Int) {
+    func resetPlayers(for newPlayers: Int) {
         if newPlayers > players.items.count {
             // add random names
             for additionalPlayer in newPlayers - players.items.count + 1 ... newPlayers {
@@ -166,16 +165,6 @@ class GameSettings: ObservableObject {
             // don't do anything if the number of players is the same as before
             return
         }
-    }
-    
-    func removeLastPlayer() {
-        guard !GlobalSettings.playerNames.isEmpty else { return }
-        _ = GlobalSettings.playerNames.removeLast()
-        resetPlayers()    }
-    
-    func removePlayer(named name: String) {
-        GlobalSettings.playerNames = GlobalSettings.playerNames.filter {$0 == name}
-        resetPlayers()
     }
     
     func updateState() {
