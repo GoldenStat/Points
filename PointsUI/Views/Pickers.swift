@@ -62,7 +62,6 @@ struct EditableView: View {
             
             Spacer()
             TextField("\(value)", text: $value)
-                .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .multilineTextAlignment(.trailing)
                 .padding(2)
@@ -88,6 +87,7 @@ struct PointsPicker: View {
             PointsUIPickerBuilder<Int>(title: "Puntos", binding: $settings.maxPoints, orderedSet: options)
         case .free(_):
             EditableView(title: "Max Points: ", value: $settings.maxPointsString)
+                .keyboardType(.numberPad)
         }
     }
 }

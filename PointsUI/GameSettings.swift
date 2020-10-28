@@ -47,15 +47,23 @@ class GameSettings: ObservableObject {
             case .fixed(let fixedPlayers):
                 availablePlayers = [ fixedPlayers ]
                 chosenNumberOfPlayers = fixedPlayers
-            case .selection(let allowedPlayers):
+            case .selection(let allowedPlayers): // only change chosenNumberOfPlayers if new selection does not include
                 availablePlayers = allowedPlayers
+                if !allowedPlayers.contains(chosenNumberOfPlayers) {
+                    if let randomPlayerCount = allowedPlayers.randomElement() {
+                        chosenNumberOfPlayers = randomPlayerCount
+                    } else {
+                        assertionFailure("allowedPlayers must not be empty. Check rule <\(rule.name)>")
+                    }
+                }
         }
         
     }
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-            resetPlayers()
+            resetPlayer(for: chosenNumberOfPlayers)
+
         }
     }
     
@@ -134,18 +142,30 @@ class GameSettings: ObservableObject {
             player.name = newName
         }
     }
-
-    func addPlayer(named name: String) {
-        GlobalSettings.playerNames.append(name)
-        resetPlayers()
-    }
     
+    /// initialize players, again. Doesn't change anything
     func resetPlayers() {
         // create new players
         // also resets the wonGames!
-        // history needs reset, when players reset
         players = Players(names: GlobalSettings.playerNames)
+        
+        // history needs reset, when players reset
         history.reset()
+    }
+    
+    // handle Player changed! (as in settings were edited)
+    func resetPlayer(for newPlayers: Int) {
+        if newPlayers > players.items.count {
+            // add random names
+            for additionalPlayer in newPlayers - players.items.count + 1 ... newPlayers {
+                players.items.append(Player(name: "Player \(additionalPlayer)"))
+            }
+        } else if newPlayers < players.items.count {
+            players.items.removeLast(players.items.count - newPlayers)
+        } else {
+            // don't do anything if the number of players is the same as before
+            return
+        }
     }
     
     func removeLastPlayer() {
@@ -162,7 +182,7 @@ class GameSettings: ObservableObject {
         playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
         playerWonGame = players.items.filter { $0.games >= maxGames }.first
     }
-
+    
     func newRound() {
         if let playerWon = playerWonRound {
             playerWon.games += 1
@@ -172,7 +192,7 @@ class GameSettings: ObservableObject {
         _ = players.items.map { $0.score = Score(0) }
         history.reset()
     }
-
+    
     func newGame() {
         resetPlayers()
         history.reset()
@@ -207,7 +227,7 @@ class GameSettings: ObservableObject {
         history.redo()
         updatePlayersWithCurrentState()
     }
-
+    
     // MARK: Timers
     private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
     private var countAsRoundTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
@@ -259,7 +279,6 @@ class GameSettings: ObservableObject {
         }
         
         // overwirte history store
-//        history.store(state: GameState(buffer: players.scores.map {$0.buffer}))
         history.store(state: GameState(buffer: bufferForHistoryStore))
     }
         
