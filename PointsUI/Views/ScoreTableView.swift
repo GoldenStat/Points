@@ -22,6 +22,8 @@ struct ScoreTableView: View {
             namesView.flow(withColumns: numberOfColumms)
                 .font(.headline)
                 .frame(maxHeight: sumHeight)
+
+            Divider()
             
             ScrollView {
                 tableMatrix.flow(withColumns: numberOfColumms)
@@ -30,31 +32,25 @@ struct ScoreTableView: View {
             if viewMode == .diff {
                 Divider()
                 sumView.flow(withColumns: numberOfColumms)
+                    .font(.headline)
                     .frame(maxHeight: sumHeight)
             }
+            
         }
     }
 
     // MARK: function to display nicely in a stack... change?
     private var tableMatrix: [ Text ] {
-        var matrix: [Text] = []
-        
         if history.states.isEmpty { // return lines with only zeroes in case we don't have any states
-            return(Array<Text>.init(repeating: Text("0").font(.title), count: numberOfColumms))
+            return(Array<Text>.init(repeating: Text("0"), count: numberOfColumms))
         }
         
         switch viewMode {
         case .diff:
-            for num in history.risingScores {
-                matrix.append(Text("\(num)").font(.title)
-                )
-            }
+            return history.risingScores.map { Text($0.description) }
         case .total:
-            for num in history.flatScores {
-                matrix.append(Text("\(num)").font(.title))
-            }
+            return history.flatScores.map { Text($0.description) }
         }
-        return matrix
     }
     
     // MARK: private variables
@@ -65,7 +61,7 @@ struct ScoreTableView: View {
     private var playerNames : [ String ] { players.names }
     private var namesView: [ Text ] {
         players.items.map {
-            Text("\($0.name)" + string(for: $0.games)).font(.largeTitle)
+            Text("\($0.name)" + string(for: $0.games))
         }
     }
     
@@ -73,7 +69,7 @@ struct ScoreTableView: View {
         games > 1 ? " - \(games)" : ""
     }
 
-    private var sumView: [ Text ] { history.flatSums.map { Text("\($0)").font(.title).fontWeight(.bold) } }
+    private var sumView: [ Text ] { history.flatSums.map { Text("\($0)") } }
 
 }
 

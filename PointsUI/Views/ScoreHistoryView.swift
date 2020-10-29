@@ -14,6 +14,89 @@ extension Array where Element: StringExpressable {
     }
 }
 
+struct CellData: Identifiable {
+    var id = UUID()
+    var value: Int
+}
+
+func += ( lhs: inout CellData, rhs: CellData) {
+    lhs.value += rhs.value
+}
+
+func += ( lhs: inout CellData, rhs: Int) {
+    lhs.value += rhs
+}
+
+/// store Values for the table in a row
+/// being identifiable it's easier to use them in a ForEach
+struct ScoreRowData : Identifiable {
+    var id = UUID()
+    var scores: [CellData] = []
+    
+    static var columns: Int = 4
+    static var zero: ScoreRowData {
+        ScoreRowData(scores: [CellData](repeating: CellData(value:0),
+                                        count: Self.columns))
+    }
+    
+    init(scores: [CellData]) {
+        self.scores = scores
+    }
+    
+    init(values: [Int]) {
+        scores = values.map { CellData(value: $0) }
+    }
+    
+    /// add values to this row
+    mutating func changeRow(addValues values: [CellData]) {
+        for index in 0 ..< scores.count {
+            scores[index] += values[index]
+        }
+    }
+}
+
+/// store all Values for the table in another table
+struct HistoryScoreTableData : Identifiable {
+    var id = UUID()
+    var data: [ScoreRowData] = []
+
+    var buffer: ScoreRowData?
+
+    init(from history: History) {
+        for historyState in history.states {
+            data.append(ScoreRowData(values: historyState.scores))
+            ScoreRowData.columns = historyState.scores.count
+        }
+        
+        if let historyBuffer = history.buffer {
+            self.buffer = ScoreRowData(values: historyBuffer.scores)
+        }
+    }
+    
+    var incrementingData: [ ScoreRowData ] {
+        var sums: [ScoreRowData] = []
+        var previousScores: ScoreRowData?
+        
+        for row in data {
+            if var buffer = previousScores {
+                buffer.changeRow(addValues: row.scores)
+                previousScores = buffer
+                sums.append(buffer)
+            } else {
+                previousScores = row
+                sums.append(row)
+            }
+        }
+        return sums
+    }
+    
+    var sumRow: ScoreRowData {
+        incrementingData.last ?? ScoreRowData.zero
+    }
+
+}
+
+
 func +<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> where Element: Numeric {
     guard lhs.count == rhs.count else { return lhs }
     var sum : Array<Element> = lhs
@@ -26,24 +109,23 @@ func +<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> whe
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     
+    @State var showSums = false
+    @State var showIndices = false
+
     private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
     
-    private var sumLine: [ Int ] {
-        if let buffer = history.buffer {
-            return (sumScores.last ?? zeroValues) + buffer.scores
-        } else {
-            return sumScores.last ?? zeroValues
-        }
+    private var sumLine: ScoreRowData {
+        historyData.sumRow
     }
    
-    @State var showSums = false
-    @State var showIndices = false
-
+    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
+    
     var body: some View {
         VStack() {
             
+            // Sum toggle button
             HStack {
                 Spacer()
             
@@ -56,40 +138,66 @@ struct ScoreHistoryView: View {
             }
             .padding()
 
-            HistoryTableRowView(content: header)
+            // headline row
+            LazyVGrid(columns: gridColumns) {
+                ForEach(settings.playerNames, id: \.self) { name in
+                    Text(name)
+                }
+            }
             
             Divider()
             
             if isHistoryEmpty {
-                
-                HistoryTableRowView(content: [String](repeating: "0", count: numberOfColumns))
-                
+
+                LazyVGrid(columns: gridColumns) {
+                    ForEach(0 ..< numberOfColumns) { _ in
+                        Text("0")
+                    }
+                }
+
             } else {
+                
+                
                 ScrollView(.vertical) {
-                        ForEach(scoresForHistory, id: \.self) { scores in
-                            HistoryTableRowView(content: scores.stringElements())
+                    
+                    // all scores
+                    VStack {
+                        ForEach(scoresForHistory) { dataRow in
+                            
+                            // one row of scores for one round
+                            LazyVGrid(columns: gridColumns) {
+                                ForEach(dataRow.scores) { score in
+                                    Text(score.value.description)
+                                }
+                            }
                         }
-//                    ForEach(0 ..< scoresForHistory.count) { index in
-//                        if showIndices {
-//                            HistoryTableRowView(content: scoresForHistory[index].stringElements(), index: index + 1)
-//                        } else {
-//                            HistoryTableRowView(content: scoresForHistory[index].stringElements())
-//                        }
-//                    }
+                    }
                     
                     if showSums {
                         
                         BoldDivider()
                         
-                        HStack {
-                            HistoryTableRowView(content: sumLine.stringElements(), bold: true)
-                                .foregroundColor(history.buffer == nil ? .black : .blue)
+                        LazyVGrid(columns: gridColumns) {
+                            ForEach(historyData.sumRow.scores) { score in
+                                Text(score.value.description)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(history.buffer == nil ? .black : .blue)
+                            }
                         }
                         
-                    } else if let scores = history.buffer?.scores {
-                        ForEach(0 ..< 1) { _ in
-                            HistoryTableRowView(content: scores.stringElements().map {"+\($0)"})
-                                .foregroundColor(.gray)
+                    } else if let buffer = historyData.buffer {
+
+                        // Buffer Row
+                        LazyVGrid(columns: gridColumns) {
+                            ForEach(buffer.scores) { cellData in
+                                if cellData.value > 0 {
+                                    Text("+\(cellData.value)")
+                                } else {
+                                    // for negative numbers and 0
+                                    Text("\(cellData.value)")
+                                }
+                            }
+                            .foregroundColor(.gray)
                         }
                     }
                 }
@@ -98,90 +206,34 @@ struct ScoreHistoryView: View {
         }
         .padding(.bottom)
     }
-            
-    
-    // MARK: - scores' calculations
     
     /// all states' scores that are recorded for every round
-    private var simpleScores: [[ Int ]] {
+    private var simpleScores: [ ScoreRowData ] {
         var historyScores = history.states.map { $0.scores }
         if let buffer = history.buffer {
             historyScores.append(buffer.scores)
         }
-        return historyScores
+        return historyScores.map { ScoreRowData(values: $0) }
+    }
+            
+    private var historyData: HistoryScoreTableData {
+        HistoryScoreTableData(from: settings.history)
     }
     
-    private var sumScores: [[ Int ]] {
-        var sumScores: [[Int]] = [[]]
-        var previousScores = zeroValues
-        
-        for state in history.states {
-            var scoresSum: [Int] = previousScores
-            for playerIndex in 0 ..< numberOfColumns {
-                scoresSum[playerIndex] += state.scores[playerIndex]
-            }
-            sumScores.append(scoresSum)
-            previousScores = scoresSum
-        }
-        return sumScores
-    }
-    
-    private var scoresForHistory: [[ Int ]] {
-        showSums ? simpleScores : sumScores
+    private var scoresForHistory: [ ScoreRowData ] {
+        showSums ? historyData.data : historyData.incrementingData
     }
 
-    private var zeroValues : [ Int ] { [Int](repeating: 0, count: numberOfColumns) }
+    /// all Values in this Row are Zero
+    private var zeroRow : ScoreRowData {
+        ScoreRowData.zero
+    }
 
     private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
  
+
 }
 
-// MARK: - private views
-typealias TableCellContent = String
-
-fileprivate struct HistoryTableRowView: View {
-
-    let content: [TableCellContent]
-    var bold: Bool = false
-    var index: Int?
-    
-    var body: some View {
-        ZStack {
-        HStack(alignment: .center, spacing: 20) {
-                if let index = index {
-                    HStack {
-                        HistoryTableCellView(content: index.description, bold: true)
-                            .scaleEffect(scale)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                }
-                Spacer()
-                ForEach(content, id: \.self) { cell in
-                    HistoryTableCellView(content: cell, bold: bold)
-                    Spacer()
-                }
-            }
-        }
-    }
-    
-    let scale : CGFloat = 0.6
-}
-
-fileprivate struct HistoryTableCellView: View {
-    private let numberCellWidth : CGFloat = 60.0
-
-    let content: TableCellContent
-    var bold: Bool = false
-    
-    var body: some View {
-        Text(content)
-            .font(.system(size: 24))
-            .fontWeight(bold ? .bold : .none)
-            .fixedSize()
-            .frame(width: numberCellWidth)
-    }
-}
 
 fileprivate struct BoldDivider: View {
     var body: some View {

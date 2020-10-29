@@ -17,7 +17,15 @@ struct MainGameView: View {
     @EnvironmentObject var settings : GameSettings
     
     @State private var showMenu = false
-    @State private var showHistory: Bool = false
+    @State private var showHistory: Bool = true
+    
+    func historyFrame(for size: CGSize) -> CGSize {
+        let widthFactor: CGFloat = 0.9
+        let heightFactor: CGFloat = 0.95
+        
+        return CGSize(width: size.width * widthFactor,
+                      height: size.height * heightFactor)
+    }
     
     var body: some View {
         GeometryReader { geo in
@@ -32,10 +40,10 @@ struct MainGameView: View {
                 
                 if showHistory {
                     ScoreHistoryView()
-                        .frame(minHeight: geo.size.height * 0.9)
+                        .frame(width: historyFrame(for: geo.size).width,
+                               height: historyFrame(for: geo.size).height)
                         .emphasizeShape()
                         .environmentObject(settings)
-                        .padding()
                         .onTapGesture() {
                             withAnimation() {
                                 showHistory = false
