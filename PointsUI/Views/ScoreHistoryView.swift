@@ -17,7 +17,10 @@ extension Array where Element: StringExpressable {
 struct CellData: Identifiable {
     var id = UUID()
     var value: Int
+    var description: String { value.description }
+    var prefix: String { value > 0 ? "+"  : "" }
 }
+
 
 func += ( lhs: inout CellData, rhs: CellData) {
     lhs.value += rhs.value
@@ -41,15 +44,23 @@ struct ScoreRowData : Identifiable {
     
     init(scores: [CellData]) {
         self.scores = scores
+        Self.columns = scores.count
     }
     
     init(values: [Int]) {
         scores = values.map { CellData(value: $0) }
+        Self.columns = values.count
     }
     
     /// add values to this row
     mutating func changeRow(addValues values: [CellData]) {
-        for index in 0 ..< scores.count {
+        
+        guard values.count == scores.count else {
+            assertionFailure("You can only add rows with equal columns")
+            return
+        }
+        
+        for index in 0 ..< values.count {
             scores[index] += values[index]
         }
     }
@@ -62,17 +73,18 @@ struct HistoryScoreTableData : Identifiable {
 
     var buffer: ScoreRowData?
 
+    
     init(from history: History) {
-        for historyState in history.states {
-            data.append(ScoreRowData(values: historyState.scores))
-            ScoreRowData.columns = historyState.scores.count
-        }
+        // just convert history states into data
+        // which should be the individual scores of that round?
+        data = history.states.map { ScoreRowData(values: $0.scores) }
         
         if let historyBuffer = history.buffer {
             self.buffer = ScoreRowData(values: historyBuffer.scores)
         }
     }
     
+    /// add up the score
     var incrementingData: [ ScoreRowData ] {
         var sums: [ScoreRowData] = []
         var previousScores: ScoreRowData?
@@ -80,13 +92,14 @@ struct HistoryScoreTableData : Identifiable {
         for row in data {
             if var buffer = previousScores {
                 buffer.changeRow(addValues: row.scores)
-                previousScores = buffer
+                previousScores = ScoreRowData(scores: buffer.scores)
                 sums.append(buffer)
             } else {
-                previousScores = row
+                previousScores = ScoreRowData(scores: row.scores)
                 sums.append(row)
             }
         }
+        
         return sums
     }
     
@@ -121,22 +134,14 @@ struct ScoreHistoryView: View {
     }
    
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
-    
+        
     var body: some View {
         VStack() {
             
             // Sum toggle button
-            HStack {
-                Spacer()
-            
-                Button() {
-                    showSums.toggle()
-                } label: {
-                    Image(systemName: "sum")
-                }
-                .disabled(isHistoryEmpty)
-            }
-            .padding()
+            SumButton(toggle: $showSums)
+                .disabled(history.states.isEmpty)
+                .padding()
 
             // headline row
             LazyVGrid(columns: gridColumns) {
@@ -157,7 +162,6 @@ struct ScoreHistoryView: View {
 
             } else {
                 
-                
                 ScrollView(.vertical) {
                     
                     // all scores
@@ -171,6 +175,15 @@ struct ScoreHistoryView: View {
                                 }
                             }
                         }
+                        
+                        if let buffer = historyData.buffer {
+                            LazyVGrid(columns: gridColumns) {
+                                ForEach(buffer.scores) { score in
+                                    Text(score.prefix + score.description)
+                                }
+                                .foregroundColor(.gray)
+                            }
+                        }
                     }
                     
                     if showSums {
@@ -181,24 +194,9 @@ struct ScoreHistoryView: View {
                             ForEach(historyData.sumRow.scores) { score in
                                 Text(score.value.description)
                                     .fontWeight(.bold)
-                                    .foregroundColor(history.buffer == nil ? .black : .blue)
                             }
                         }
                         
-                    } else if let buffer = historyData.buffer {
-
-                        // Buffer Row
-                        LazyVGrid(columns: gridColumns) {
-                            ForEach(buffer.scores) { cellData in
-                                if cellData.value > 0 {
-                                    Text("+\(cellData.value)")
-                                } else {
-                                    // for negative numbers and 0
-                                    Text("\(cellData.value)")
-                                }
-                            }
-                            .foregroundColor(.gray)
-                        }
                     }
                 }
             }
@@ -206,16 +204,7 @@ struct ScoreHistoryView: View {
         }
         .padding(.bottom)
     }
-    
-    /// all states' scores that are recorded for every round
-    private var simpleScores: [ ScoreRowData ] {
-        var historyScores = history.states.map { $0.scores }
-        if let buffer = history.buffer {
-            historyScores.append(buffer.scores)
-        }
-        return historyScores.map { ScoreRowData(values: $0) }
-    }
-            
+                
     private var historyData: HistoryScoreTableData {
         HistoryScoreTableData(from: settings.history)
     }
@@ -230,7 +219,6 @@ struct ScoreHistoryView: View {
     }
 
     private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
- 
 
 }
 
@@ -263,8 +251,7 @@ fileprivate struct SampleButton: View {
         let players = settings.players
         
         for player in players.items {
-            let sampleScore = Int.random(in: 0 ... 6)
-            print ("Adding score \(sampleScore) to Player <\(player.name)>")
+            let sampleScore = Int.random(in: -6 ... 6)
             player.add(score: sampleScore)
             player.saveScore()
         }
@@ -285,6 +272,24 @@ fileprivate struct HistorySampleView : View {
             SampleButton()
                 .position(x: 200, y: 10)
             ScoreHistoryView()
+        }
+    }
+}
+
+struct SumButton: View {
+    
+    @Binding var toggle: Bool
+    
+    var body: some View {
+        
+        HStack {
+            Spacer()
+            
+            Button() {
+                toggle.toggle()
+            } label: {
+                Image(systemName: "sum")
+            }
         }
     }
 }
