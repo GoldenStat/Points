@@ -274,9 +274,7 @@ class GameSettings: ObservableObject {
     /// this function adds the changes to the history, counting it as a round.
     /// history adds hist buffer to it's states
     @objc private func updateRound() {
-//        history.save()
-//        history.sumBufferToState()
-        history.addBuffer()
+        history.save() 
         bufferForHistoryStore = nil
         countAsRoundTimer?.invalidate()
         countAsRoundTimer = nil

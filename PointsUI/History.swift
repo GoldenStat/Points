@@ -67,52 +67,12 @@ class History : ObservableObject {
         guard canRedo else { return }
         states.append(redoStack.removeLast())
     }
+  
 
-    /// add game state to the history
-    /// only save if the state is different from the last saved state
-    private func save(state: GameState) {
-        if let lastState = states.last {
-            if lastState != state // if it's a new state
-            {
-                redoStack = []
-                states.append(state)
-            }
-        } else {
-            redoStack = []
-            states = [state]
-        }
-        objectWillChange.send()
-    }
-    
-    /// add the buffer to the last state's scores
-    /// reset the buffer
-    func sumBufferToState() {
-        guard let buffer = buffer else { return }
-        if states.count > 0 {
-            let lastState = states.removeLast()
-            for index in 0 ..< lastState.scores.count {
-                let sumState = GameState(buffer: [ lastState.scores[index] + buffer.scores[index] ] )
-                states.append(sumState)
-            }
-        } else {
-            states = [buffer]
-            redoStack = []
-        }
-        self.buffer = nil
-        objectWillChange.send()
-    }
-    
-    func addBuffer() {
-        if let buffer = buffer {
-            if buffer != states.last {
-                states.append(buffer)
-            }
-        }
-        
-        redoStack = []
+    /// clear the buffer
+    /// use if actions get's interupted (e.g. we have some action stored, and we undo)
+    func clearBuffer() {
         buffer = nil
-        
-        objectWillChange.send()
     }
     
     /// stores given state in buffer, temporarily
@@ -121,26 +81,20 @@ class History : ObservableObject {
     func store(state: GameState) {
         buffer = state
     }
-    
-    /// save game state that was buffered, if any
-    /// returns quietly if buffer is not set
+     
+    /// after using 'store' to put a game state into the buffer we can use this function
+    /// to make the change permanent and add it to the history's states
     func save() {
         guard let buffer = buffer else { return }
-        if let lastState = states.last {
-            if lastState != buffer // if it's a new state
-            {
-                redoStack = []
-                states.append(buffer)
-            }
-        } else {
-            redoStack = []
-            states = [buffer]
-        }
-        self.buffer = nil
+        
+        states.append(buffer)
+        redoStack = []
 
+        clearBuffer()
+        
         objectWillChange.send()
     }
-    
+
     /// a computed var that transfers all history states into a list
     var flatScores : [Int] {
         var list = [Int]()
