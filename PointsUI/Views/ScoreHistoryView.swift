@@ -70,9 +70,9 @@ struct ScoreRowData : Identifiable {
 struct HistoryScoreTableData : Identifiable {
     var id = UUID()
     var data: [ScoreRowData] = []
-
+    
     var buffer: ScoreRowData?
-
+    
     
     init(from history: History) {
         // just convert history states into data
@@ -106,7 +106,7 @@ struct HistoryScoreTableData : Identifiable {
     var sumRow: ScoreRowData {
         incrementingData.last ?? ScoreRowData.zero
     }
-
+    
 }
 
 
@@ -124,7 +124,7 @@ struct ScoreHistoryView: View {
     
     @State var showSums = false
     @State var showIndices = false
-
+    
     private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
@@ -132,9 +132,9 @@ struct ScoreHistoryView: View {
     private var sumLine: ScoreRowData {
         historyData.sumRow
     }
-   
+    
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
-        
+    
     var body: some View {
         VStack() {
             
@@ -142,7 +142,7 @@ struct ScoreHistoryView: View {
             SumButton(toggle: $showSums)
                 .disabled(history.states.isEmpty)
                 .padding()
-
+            
             // headline row
             LazyVGrid(columns: gridColumns) {
                 ForEach(settings.playerNames, id: \.self) { name in
@@ -153,13 +153,13 @@ struct ScoreHistoryView: View {
             Divider()
             
             if isHistoryEmpty {
-
+                
                 LazyVGrid(columns: gridColumns) {
                     ForEach(0 ..< numberOfColumns) { _ in
                         Text("0")
                     }
                 }
-
+                
             } else {
                 
                 ScrollView(.vertical) {
@@ -207,7 +207,7 @@ struct ScoreHistoryView: View {
         .background(Color.boardbgColor)
         .padding(.bottom)
     }
-                
+    
     private var sumColor: Color {
         history.buffer != nil ?
             Color.pointbuffer :
@@ -221,14 +221,14 @@ struct ScoreHistoryView: View {
     private var scoresForHistory: [ ScoreRowData ] {
         showSums ? historyData.data : historyData.incrementingData
     }
-
+    
     /// all Values in this Row are Zero
     private var zeroRow : ScoreRowData {
         ScoreRowData.zero
     }
-
+    
     private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
-
+    
 }
 
 
@@ -279,11 +279,11 @@ fileprivate struct HistorySampleView : View {
     
     var body: some View {
         GeometryReader { geo in
-        ZStack {
-            ScoreHistoryView()
-            SampleButton()
-                .position(x: geo.size.width / 4, y: 28)
-        }
+            ZStack {
+                ScoreHistoryView()
+                SampleButton()
+                    .position(x: geo.size.width / 4, y: 28)
+            }
         }
     }
 }

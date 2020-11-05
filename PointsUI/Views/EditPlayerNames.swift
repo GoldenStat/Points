@@ -40,22 +40,22 @@ struct EditPlayerNames: View {
     
     var players: Players { settings.players}
     
-    @State private var editMode = EditMode.inactive
+    @State var editMode : EditMode = .inactive
+    
     @State var newName: String = "Player 1"
     
     var body: some View {
-        NavigationView {
-            List(players.items) { player in
-                switch editMode {
-                case EditMode.active:
-                    TextField("Player Name", text: $newName)
-                default:
-                    Text(player.name)
-                }
+//        NavigationView {
+            List(settings.players.items) { player in
+                TextField("Player Name", text: binding(for: player))
             }
-            .navigationBarItems(leading: EditButton())
+//            .navigationBarItems(leading: EditButton())
             .environment(\.editMode, $editMode)
-        }
+//        }
+    }
+    
+    func binding(for player: Player) -> Binding<String> {
+        $settings.players.items[players.items.firstIndex(where: { $0.id == player.id } )!].name
     }
 }
 

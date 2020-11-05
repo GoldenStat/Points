@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct EditButton : View {
+struct MyEditButton : View {
     @State var toggle: Bool = false
     var body: some View {
         Button() {
@@ -42,11 +42,12 @@ struct EditView : View {
                         JuegosPicker()
                         JugadoresPicker()
                         
-                        EditPlayerNames()//(players: $settings.players)
+                        EditPlayerNames()
                     }
                 }
             }
-            
+
+
             HStack {
                 Button("Save") {
                     isPresented.wrappedValue.dismiss()
@@ -74,8 +75,15 @@ struct PreviewView : View {
             Text("MaxPoints: \(settings.maxPoints)")
             Text("MaxGames: \(settings.maxGames)")
             Text("Players: \(settings.chosenNumberOfPlayers)")
+            
+            HStack {
+                Text("Names:")
+                ForEach(settings.players.items, id: \.self.id) { player in
+                    Text(player.name)
+                }
+            }
                 
-            EditButton()
+            MyEditButton()
                 .padding()
         }
     }
