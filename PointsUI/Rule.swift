@@ -93,19 +93,19 @@ struct Rule : Identifiable, Hashable {
     var maxPlayers: Int { players.maximumSelectable }
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([15,24,30]),
-                                     players: .selection([2,3,4,6]),
+                                     players: .selection([2,3]),
                                      playerUI: .checkbox(5),
                                      rounds: .wins([3,5])
     )
     static let trucoVenezolano = Rule(name: "Truco Venezolano",
                                       maxPoints: .fixed(24),
-                                      players: .selection([2,3,4,6]),
+                                      players: .selection([2,3]),
                                       playerUI: .checkbox(5),
                                       rounds: .wins([3,5])
     )
     static let caida = Rule(name: "Caida",
                             maxPoints: .fixed(24),
-                            players: .selection([2,3,4]),
+                            players: .selection([2,3]),
                             playerUI: .checkbox(5),
                             rounds: .rounds([3,5])
     )

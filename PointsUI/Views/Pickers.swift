@@ -58,8 +58,7 @@ struct EditableView: View {
     
     var body: some View {
         HStack {
-            Text(title)
-            
+            Text(title)            
             Spacer()
             TextField("\(value)", text: $value)
                 .textFieldStyle(RoundedBorderTextFieldStyle())

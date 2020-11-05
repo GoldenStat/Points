@@ -42,7 +42,7 @@ struct EditView : View {
                         JuegosPicker()
                         JugadoresPicker()
                         
-                        EditPlayerNames(players: $settings.players)
+                        EditPlayerNames()//(players: $settings.players)
                     }
                 }
             }

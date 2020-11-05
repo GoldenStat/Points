@@ -63,7 +63,32 @@ class Players: ObservableObject {
     /// - Parameters:
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
-    var items : [Player] = []
+    @Published var items : [Player] = []
+    
+    func add(name: String) {
+        let player = Player(name: name)
+        items.append(player)
+        objectWillChange.send()
+        player.objectWillChange.send()
+    }
+    
+    func remove(name: String) -> Player? {
+        var removedPlayer: Player?
+        if let firstIndex = items.firstIndex(where: {$0.name == name} ) {
+            let set = IndexSet(integer: firstIndex)
+            removedPlayer = items[firstIndex]
+            items.remove(atOffsets: set)
+            removedPlayer?.objectWillChange.send()
+        }
+        objectWillChange.send()
+        return removedPlayer
+    }
+    
+    func removeLast() -> Player {
+        let oldPlayer = items.removeLast()
+        objectWillChange.send()
+        return oldPlayer
+    }
     
     /// TODO: implement Property wrappers to simplify this
     var names: [String] { items.map {$0.name} }

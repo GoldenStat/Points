@@ -194,6 +194,7 @@ struct ScoreHistoryView: View {
                             ForEach(historyData.sumRow.scores) { score in
                                 Text(score.value.description)
                                     .fontWeight(.bold)
+                                    .foregroundColor(sumColor)
                             }
                         }
                         
@@ -202,9 +203,17 @@ struct ScoreHistoryView: View {
             }
             Spacer()
         }
+        .foregroundColor(.text)
+        .background(Color.boardbgColor)
         .padding(.bottom)
     }
                 
+    private var sumColor: Color {
+        history.buffer != nil ?
+            Color.pointbuffer :
+            Color.text
+    }
+    
     private var historyData: HistoryScoreTableData {
         HistoryScoreTableData(from: settings.history)
     }
@@ -238,9 +247,10 @@ fileprivate struct SampleButton: View {
         } label: {
             Text("Add New Round")
                 .fontWeight(.bold)
+                .foregroundColor(.text)
         }
         .padding()
-        .background(Color(red: 180/255, green: 180/255, blue: 200/255, opacity: 0.8)
+        .background(Color.boardbgColor
                         .cornerRadius(20)
         )
         .padding()
@@ -268,10 +278,12 @@ fileprivate struct SampleButton: View {
 fileprivate struct HistorySampleView : View {
     
     var body: some View {
+        GeometryReader { geo in
         ZStack {
-            SampleButton()
-                .position(x: 200, y: 10)
             ScoreHistoryView()
+            SampleButton()
+                .position(x: geo.size.width / 4, y: 28)
+        }
         }
     }
 }
@@ -299,5 +311,6 @@ struct ScoreHistoryView_Previews: PreviewProvider {
         HistorySampleView()
             .padding()
             .environmentObject(GameSettings())
+            .colorScheme(.dark)
     }
 }
