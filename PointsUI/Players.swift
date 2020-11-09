@@ -6,7 +6,7 @@
 //  Copyright © 2020 Alexander Völz. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 /// Data representation of a player as a struct
 struct PlayerData: Codable, Identifiable, Equatable {
@@ -24,7 +24,12 @@ struct PlayerData: Codable, Identifiable, Equatable {
     }
 }
 
-class Player: ObservableObject, Identifiable {
+func == (lhs: Player?, rhs: Player?) -> Bool {
+    guard let lhs = lhs, let rhs = rhs else { return false }
+    return lhs.id == rhs.id
+}
+
+class Player: ObservableObject, Identifiable, Equatable {
 
     var id = UUID()
     @Published var name: String
@@ -71,7 +76,7 @@ class Players: ObservableObject {
         objectWillChange.send()
         player.objectWillChange.send()
     }
-    
+
     func remove(name: String) -> Player? {
         var removedPlayer: Player?
         if let firstIndex = items.firstIndex(where: {$0.name == name} ) {
