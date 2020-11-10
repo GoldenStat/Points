@@ -177,10 +177,10 @@ class GameSettings: ObservableObject {
     }
     
     /// checks the current rules if they have flexible player amounts
-    var canAddPlayers: Bool { rule.players >= players.count}
+    var canAddPlayers: Bool { rule.players > players.count + 1}
     
     /// checks the current rules if they have flexible player amounts
-    var canRemovePlayer: Bool { rule.players <= players.count }
+    var canRemovePlayer: Bool { rule.players < players.count - 1}
     
     func addRandomPlayer() {
         guard canAddPlayers else { return }

@@ -8,6 +8,16 @@
 
 import SwiftUI
 
+protocol SelectableEnum: Hashable {
+    var maxValue: Int { get }
+    var minValue: Int { get }
+}
+
+extension Int {
+    static let highestGamePointsEverPossilbe = 1001
+}
+
+
 /// possible number of players for a game
 /// can be:
 /// - *fixed*: a fixed number of points the game has, can't be changed
@@ -16,7 +26,7 @@ enum PlayerCount : SelectableEnum {
     
     case fixed(Int), selection([Int])
     /// maximum number of Points you can have, depending on which selection mechanism is used
-    var max : Int {
+    var maxValue : Int {
         switch self {
         case .selection(let array):
             return array.max()!
@@ -24,7 +34,7 @@ enum PlayerCount : SelectableEnum {
             return number
         }
     }
-    var min : Int {
+    var minValue : Int {
         switch self {
         case .selection(let array):
             return array.min()!
@@ -34,26 +44,14 @@ enum PlayerCount : SelectableEnum {
     }
 }
 
-protocol SelectableEnum: Hashable {
-    var maxValue: Int { get }
-    var minValue: Int { get }
-}
-
-extension Int {
-    static let highestGamePointsEverPossilbe = 1001
-}
 /// MARK: - Player Count arithmetic
-func >(lhs: Int, rhs: PlayerCount) -> Bool {
-    switch rhs {
-    case .fixed(let value):
-        return lhs > value
-    case .selection(let values):
-        return lhs > values.max()!
-    }
-}
-
+func >(lhs: Int, rhs: PlayerCount) -> Bool { lhs > rhs.maxValue }
 func >(lhs: PlayerCount, rhs: Int) -> Bool { !(rhs > lhs) }
 func <(lhs: PlayerCount, rhs: Int) -> Bool { rhs > lhs }
+
+func >(lhs: Int, rhs: PointsSelection) -> Bool { lhs > rhs.maxValue }
+func >(lhs: PointsSelection, rhs: Int) -> Bool { !(rhs > lhs) }
+func <(lhs: PointsSelection, rhs: Int) -> Bool { rhs > lhs }
 
 
 
@@ -63,12 +61,24 @@ func <(lhs: PlayerCount, rhs: Int) -> Bool { rhs > lhs }
 /// - *free*: any number can be set (probably changed using a textfield)
 /// - *none*: the game is freestyle and won't end automatically
 /// - *selection*: there are fixed possibilities how far the game can go
-enum PointsSelection: Hashable {
+enum PointsSelection: SelectableEnum {
     
     case fixed(Int), none, free(Int), selection([Int])
     
     /// maximum number of Points you can have, depending on which selection mechanism is used
-    var maximumSelectable : Int {
+    var maxValue : Int {
+        switch self {
+        case .selection(let array):
+            return array.max()!
+        case .fixed(let number):
+            return number
+        case .none:
+            return Int.highestGamePointsEverPossilbe
+        case .free(let value):
+            return value
+        }
+    }
+    var minValue : Int {
         switch self {
         case .selection(let array):
             return array.count
@@ -81,24 +91,6 @@ enum PointsSelection: Hashable {
         }
     }
 }
-
-/// MARK: - Points Selection arithmetic
-func >(lhs: Int, rhs: PointsSelection) -> Bool {
-    switch rhs {
-    case .fixed(let value):
-        fallthrough
-    case .free(let value):
-        return lhs > value
-    case .selection(let values):
-        return lhs > values.max()!
-    case .none:
-        return false
-    }
-}
-
-func >(lhs: PointsSelection, rhs: Int) -> Bool { !(rhs > lhs) }
-func <(lhs: PointsSelection, rhs: Int) -> Bool { rhs > lhs }
-
 
 /// how many rounds should be counted
 /// some games take a long time, so several rounds don't make sense, and maybe you want a fixed total
@@ -139,7 +131,7 @@ struct Rule : Identifiable, Hashable {
     var players: PlayerCount
     var playerUI: PlayerUIType
     var rounds: GamesCount
-    var maxPlayers: Int { players.maximumSelectable }
+    var maxPlayers: Int { players.maxValue }
     
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([15,24,30]),
