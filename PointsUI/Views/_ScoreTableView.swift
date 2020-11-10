@@ -57,7 +57,7 @@ struct ScoreTableView: View {
     private let sumHeight: CGFloat = 32
     private let tableHeight: CGFloat = 200
     
-    var numberOfColumms: Int { players.items.count }
+    var numberOfColumms: Int { players.count }
     private var playerNames : [ String ] { players.names }
     private var namesView: [ Text ] {
         players.items.map {

@@ -65,8 +65,18 @@ class GameSettings: ObservableObject {
             resetPlayers(for: chosenNumberOfPlayers)
         }
     }
-    
 
+    /// reset the settings to get a defined default
+    func resetToFactorySettings() {
+        players = Players.sample
+        chosenNumberOfPlayers = players.names.count
+        history = History(names: players.names)
+        maxPoints = 0
+        maxGames = 2
+        rule = .maumau
+        createRules()
+    }
+    
     init() {
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
@@ -78,6 +88,8 @@ class GameSettings: ObservableObject {
         createRules()
         rule = rule(id: GlobalSettings.ruleID)
         processRuleUpdate()
+
+        resetToFactorySettings()
     }
     
     func rule(id: Int) -> Rule {
@@ -111,6 +123,7 @@ class GameSettings: ObservableObject {
         addRule(.scopa)
         addRule(.skat)
         addRule(.shitzu)
+        addRule(.maumau)
     }
     
     func addRule(_ rule: Rule) {
@@ -128,7 +141,7 @@ class GameSettings: ObservableObject {
     }
         
     // MARK: control player data
-    var numberOfPlayers: Int { players.items.count }
+    var numberOfPlayers: Int { players.count }
     
     var playerNames: [ String ] { players.names }
     
@@ -154,18 +167,50 @@ class GameSettings: ObservableObject {
     
     // handle Player changed! (as in settings were edited)
     func resetPlayers(for newPlayers: Int) {
-        if newPlayers > players.items.count {
+        if newPlayers > players.count {
             // add random names
-            for additionalPlayer in newPlayers - players.items.count + 1 ... newPlayers {
+            for additionalPlayer in newPlayers - players.count + 1 ... newPlayers {
                 players.items.append(Player(name: "Player \(additionalPlayer)"))
             }
-        } else if newPlayers < players.items.count {
-            players.items.removeLast(players.items.count - newPlayers)
+        } else if newPlayers < players.count {
+            players.items.removeLast(players.count - newPlayers)
         } else {
             // don't do anything if the number of players is the same as before
             return
         }
     }
+    
+    var canAddPlayers: Bool {
+        switch (rule.players) {
+        case .selection(let array):
+            return array.last! > players.count
+        default:
+            return false
+        }
+    }
+    
+    var canRemovePlayer: Bool {
+        switch (rule.players) {
+        case .selection(let array):
+            return array.min()! < players.count
+        default:
+            return false
+        }
+    }
+    
+    func addRandomPlayer() {
+        guard canAddPlayers else { return }
+        players.add(name: "Player \(players.count)")
+    }
+    
+    func removeLastPlayer() {
+        guard canRemovePlayer else { return }
+        _ = players.removeLast()
+    }
+
+
+    
+    // MARK: - control game State
     
     func updateState() {
         playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
@@ -192,6 +237,7 @@ class GameSettings: ObservableObject {
     
     // a hack to send an event to all observers when the history functions are used
     @Published var needsUpdate = false
+    
     var canUndo: Bool { history.canUndo }
     var canRedo: Bool { history.canRedo }
     

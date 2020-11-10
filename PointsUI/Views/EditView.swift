@@ -8,22 +8,10 @@
 
 import SwiftUI
 
-struct MyEditButton : View {
-    @State var toggle: Bool = false
-    var body: some View {
-        Button() {
-            toggle = true
-        } label: {
-            Image(systemName: "gear")
-        }
-        .sheet(isPresented: $toggle) {
-            EditView()
-        }
-    }
-}
 
 struct EditView : View {
     @EnvironmentObject var settings: GameSettings
+//    var settings = GameSettings()
     @Environment(\.presentationMode) var isPresented
 
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }
@@ -64,7 +52,7 @@ struct EditView : View {
 
 struct PreviewView : View {
     @EnvironmentObject var settings: GameSettings
-    @State var presentView : Bool = false
+    @State private var presentView : Bool = true
     
     var body: some View {
         VStack {
@@ -83,8 +71,15 @@ struct PreviewView : View {
                 }
             }
                 
-            MyEditButton()
-                .padding()
+            Button() {
+                presentView.toggle()
+            } label: {
+                Image(systemName: "gear")
+            }
+            .padding()
+        }
+        .sheet(isPresented: $presentView) {
+            EditView()
         }
     }
 }

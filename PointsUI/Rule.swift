@@ -91,6 +91,7 @@ struct Rule : Identifiable, Hashable {
     var playerUI: PlayerUIType
     var rounds: GamesCount
     var maxPlayers: Int { players.maximumSelectable }
+    
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([15,24,30]),
                                      players: .selection([2,3]),
@@ -110,7 +111,7 @@ struct Rule : Identifiable, Hashable {
                             rounds: .rounds([3,5])
     )
     static let doppelkopf = Rule(name: "Doppelkopf",
-                                 maxPoints: .free(100),
+                                 maxPoints: .none,
                                  players: .fixed(4),
                                  playerUI: .numberBox,
                                  rounds: .one
@@ -136,6 +137,12 @@ struct Rule : Identifiable, Hashable {
     static let scopa = Rule(name: "Scopa",
                             maxPoints: .fixed(15),
                             players: .selection([2,3,4]),
+                            playerUI: .matches,
+                            rounds: .wins([1,2,3,5])
+    )
+    static let maumau = Rule(name: "Mau Mau",
+                            maxPoints: .none,
+                            players: .selection([2,3,4,5,6]),
                             playerUI: .matches,
                             rounds: .wins([1,2,3,5])
     )

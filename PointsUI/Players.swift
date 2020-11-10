@@ -8,6 +8,9 @@
 
 import SwiftUI
 
+
+// MARK: - single Player
+
 /// Data representation of a player as a struct
 struct PlayerData: Codable, Identifiable, Equatable {
     
@@ -62,6 +65,7 @@ class Player: ObservableObject, Identifiable, Equatable {
     
 }
 
+// MARK: - Players - a collection of players
 /// the observable object to de- and encode the `Player` struct
 class Players: ObservableObject {
     
@@ -69,6 +73,10 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     @Published var items : [Player] = []
+    
+    var count: Int { items.count }
+    
+    static var sample = Players(names: ["Alexander", "Lili"])
     
     func add(name: String) {
         let player = Player(name: name)
@@ -126,7 +134,6 @@ class Players: ObservableObject {
             items.append(Player(name: name))
         }
     }
-        
     public func clearBuffers() -> Bool {
         let playersWithBuffer = items.filter { $0.score.buffer > 0 }
         _ = playersWithBuffer.map { $0.score.buffer = 0 }

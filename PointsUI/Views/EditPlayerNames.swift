@@ -57,14 +57,11 @@ struct EditPlayerNames: View {
     }
     
     var body: some View {
-        VStack {
-            List(settings.players.items) { player in
-                EditableTextField(binding: binding(for: player), placeholder: placeholder(for: player))
-                    .onTapGesture() {
-                        selectedPlayer = player
-                    }
-            }
-            Text(selectionText)
+        List(settings.players.items) { player in
+            EditableTextField(binding: binding(for: player), placeholder: placeholder(for: player))
+                .onTapGesture() {
+                    selectedPlayer = player
+                }
         }
     }
 
@@ -74,6 +71,34 @@ struct EditPlayerNames: View {
     func binding(for player: Player) -> Binding<String> {
         $settings.players.items[players.items.firstIndex(where: { $0.id == player.id } )!].name
     }
+}
+
+struct TestEditing: View {
+    @State private var settings = GameSettings()
+        
+    private var players : Players { settings.players }
+    
+    var body: some View {
+        
+        VStack {
+            EditPlayerNames()
+            
+            Button() {
+                settings.addRandomPlayer()
+            } label: {
+                Image(systemName: "plus.circle")
+            }
+            .disabled(!settings.canAddPlayers)
+            Button() {
+                settings.removeLastPlayer()
+            } label: {
+                Image(systemName: "minus.circle")
+            }
+            .disabled(!settings.canRemovePlayer)
+        }
+    }
+    
+    
 }
 
 struct EditPlayerNames_Previews: PreviewProvider {
