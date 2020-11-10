@@ -62,7 +62,7 @@ class GameSettings: ObservableObject {
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
-            resetPlayers(for: chosenNumberOfPlayers)
+            handlePlayerChange(to: chosenNumberOfPlayers)
         }
     }
 
@@ -155,7 +155,7 @@ class GameSettings: ObservableObject {
         }
     }
     
-    /// initialize players, again. Doesn't change anything
+    /// reset the players. Only changes scores and resets history
     func resetPlayers() {
         // create new players
         // also resets the wonGames!
@@ -165,42 +165,27 @@ class GameSettings: ObservableObject {
         history.reset()
     }
     
-    // handle Player changed! (as in settings were edited)
-    func resetPlayers(for newPlayers: Int) {
-        if newPlayers > players.count {
+    // add or remove players appropriately
+    func handlePlayerChange(to newPlayers: Int) {
+        while newPlayers > players.count {
             // add random names
-            for additionalPlayer in newPlayers - players.count + 1 ... newPlayers {
-                players.items.append(Player(name: "Player \(additionalPlayer)"))
-            }
-        } else if newPlayers < players.count {
-            players.items.removeLast(players.count - newPlayers)
-        } else {
-            // don't do anything if the number of players is the same as before
-            return
+            addRandomPlayer()
+        }
+        while newPlayers < players.count {
+            removeLastPlayer()
         }
     }
     
-    var canAddPlayers: Bool {
-        switch (rule.players) {
-        case .selection(let array):
-            return array.last! > players.count
-        default:
-            return false
-        }
-    }
+    /// checks the current rules if they have flexible player amounts
+    var canAddPlayers: Bool { rule.players >= players.count}
     
-    var canRemovePlayer: Bool {
-        switch (rule.players) {
-        case .selection(let array):
-            return array.min()! < players.count
-        default:
-            return false
-        }
-    }
+    /// checks the current rules if they have flexible player amounts
+    var canRemovePlayer: Bool { rule.players <= players.count }
     
     func addRandomPlayer() {
         guard canAddPlayers else { return }
-        players.add(name: "Player \(players.count)")
+        players.add(name: "Player \(players.count + 1)")
+        objectWillChange.send()
     }
     
     func removeLastPlayer() {

@@ -12,21 +12,50 @@ import SwiftUI
 /// can be:
 /// - *fixed*: a fixed number of points the game has, can't be changed
 /// - *selection*: there are fixed possibilities how far the game can go
-enum PlayerCount : Hashable { case fixed(Int), selection([Int])
+enum PlayerCount : SelectableEnum {
+    
+    case fixed(Int), selection([Int])
     /// maximum number of Points you can have, depending on which selection mechanism is used
-    var maximumSelectable : Int {
+    var max : Int {
         switch self {
         case .selection(let array):
-            return array.count
+            return array.max()!
+        case .fixed(let number):
+            return number
+        }
+    }
+    var min : Int {
+        switch self {
+        case .selection(let array):
+            return array.min()!
         case .fixed(let number):
             return number
         }
     }
 }
 
+protocol SelectableEnum: Hashable {
+    var maxValue: Int { get }
+    var minValue: Int { get }
+}
+
 extension Int {
     static let highestGamePointsEverPossilbe = 1001
 }
+/// MARK: - Player Count arithmetic
+func >(lhs: Int, rhs: PlayerCount) -> Bool {
+    switch rhs {
+    case .fixed(let value):
+        return lhs > value
+    case .selection(let values):
+        return lhs > values.max()!
+    }
+}
+
+func >(lhs: PlayerCount, rhs: Int) -> Bool { !(rhs > lhs) }
+func <(lhs: PlayerCount, rhs: Int) -> Bool { rhs > lhs }
+
+
 
 /// possible points for a game
 /// can be:
@@ -34,7 +63,9 @@ extension Int {
 /// - *free*: any number can be set (probably changed using a textfield)
 /// - *none*: the game is freestyle and won't end automatically
 /// - *selection*: there are fixed possibilities how far the game can go
-enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([Int])
+enum PointsSelection: Hashable {
+    
+    case fixed(Int), none, free(Int), selection([Int])
     
     /// maximum number of Points you can have, depending on which selection mechanism is used
     var maximumSelectable : Int {
@@ -50,6 +81,24 @@ enum PointsSelection: Hashable { case fixed(Int), none, free(Int), selection([In
         }
     }
 }
+
+/// MARK: - Points Selection arithmetic
+func >(lhs: Int, rhs: PointsSelection) -> Bool {
+    switch rhs {
+    case .fixed(let value):
+        fallthrough
+    case .free(let value):
+        return lhs > value
+    case .selection(let values):
+        return lhs > values.max()!
+    case .none:
+        return false
+    }
+}
+
+func >(lhs: PointsSelection, rhs: Int) -> Bool { !(rhs > lhs) }
+func <(lhs: PointsSelection, rhs: Int) -> Bool { rhs > lhs }
+
 
 /// how many rounds should be counted
 /// some games take a long time, so several rounds don't make sense, and maybe you want a fixed total

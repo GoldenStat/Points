@@ -78,32 +78,55 @@ struct TestEditing: View {
         
     private var players : Players { settings.players }
     
+    var error: String = "reached player maximum"
+    @State var errorOpacity: Double = 1.0
+    
     var body: some View {
-        
-        VStack {
-            EditPlayerNames()
-            
-            Button() {
-                settings.addRandomPlayer()
-            } label: {
-                Image(systemName: "plus.circle")
+        NavigationView() {
+            VStack {
+                EditPlayerNames()
+                
+                Text(error)
+                    .opacity(errorOpacity)
+                    .foregroundColor(.red)
+                    .padding()
             }
-            .disabled(!settings.canAddPlayers)
-            Button() {
-                settings.removeLastPlayer()
-            } label: {
-                Image(systemName: "minus.circle")
+            .navigationTitle(settings.rule.description)
+            .toolbar() {
+                ToolbarItem() {
+                    Button() {
+                        withAnimation() {
+                            if settings.canAddPlayers {
+                                settings.addRandomPlayer()
+                            } else {
+                                errorOpacity = 0.0
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .font(.system(size: 32))
+                    }
+                    .disabled(!settings.canAddPlayers)
+                }
+                ToolbarItem() {
+                    Button() {
+                        settings.removeLastPlayer()
+                    } label: {
+                        Image(systemName: "minus.circle")
+                            .font(.system(size: 32))
+                    }
+                    .disabled(!settings.canRemovePlayer)
+                }
+//                .padding()
             }
-            .disabled(!settings.canRemovePlayer)
+            .environmentObject(settings)
         }
     }
-    
-    
 }
 
 struct EditPlayerNames_Previews: PreviewProvider {
     static var previews: some View {
-        EditPlayerNames()
+        TestEditing()
             .environmentObject(GameSettings())
     }
 }
