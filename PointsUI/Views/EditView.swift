@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct EditView : View {
-    @EnvironmentObject var settings: GameSettings
-//    var settings = GameSettings()
+//    @EnvironmentObject var settings: GameSettings
+    var settings = GameSettings()
     @Environment(\.presentationMode) var isPresented
 
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }

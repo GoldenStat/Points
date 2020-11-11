@@ -39,7 +39,7 @@ struct EditableTextField: View {
 struct EditPlayerNames: View {
     @EnvironmentObject var settings: GameSettings
     
-    var players: Players { settings.players}
+    var players: Players { settings.players }
     
     @State private var selectedPlayer: Player?
 
@@ -66,7 +66,7 @@ struct EditPlayerNames: View {
     }
 
     // using a function found in an article on Stackoverflow:
-    // https://stackoverflow.com/questions/58997248/how-to-edit-an-item-in-a-list-using-navigationlink
+    // TODO: find a better way to do this... https://stackoverflow.com/questions/58997248/how-to-edit-an-item-in-a-list-using-navigationlink
     // by Asperi: https://stackoverflow.com/users/12299030/asperi
     func binding(for player: Player) -> Binding<String> {
         $settings.players.items[players.items.firstIndex(where: { $0.id == player.id } )!].name
@@ -78,13 +78,32 @@ struct TestEditing: View {
         
     private var players : Players { settings.players }
     
-    var error: String = "reached player maximum"
-    @State var errorOpacity: Double = 1.0
+    var minPlayers : Int { settings.rule.players.minValue }
+    var maxPlayers : Int { settings.rule.players.maxValue }
+    
+    var error: String {
+        guard maxPlayers != minPlayers else { return "" }
+        switch players.count {
+        case minPlayers:
+            return "Reached Player Minimum"
+        case maxPlayers:
+            return "Reached Player Maximum"
+        default:
+            return ""
+        }
+    }
+    
+    var errorOpacity: Double { error == "" ? 0.0 : 1.0 }
+    
+    var canAddPlayer : Bool { settings.canAddPlayers }
+    var canRemovePlayer: Bool { settings.canRemovePlayer }
     
     var body: some View {
         NavigationView() {
             VStack {
                 EditPlayerNames()
+                
+                Text("Min: \(settings.rule.players.minValue) Max: \(settings.rule.players.maxValue)")
                 
                 Text(error)
                     .opacity(errorOpacity)
@@ -93,31 +112,33 @@ struct TestEditing: View {
             }
             .navigationTitle(settings.rule.description)
             .toolbar() {
-                ToolbarItem() {
-                    Button() {
-                        withAnimation() {
-                            if settings.canAddPlayers {
-                                settings.addRandomPlayer()
-                            } else {
-                                errorOpacity = 0.0
+                ToolbarItemGroup() {
+                    HStack {
+                        Button() {
+                            withAnimation() {
+                                if settings.rule.players.maxValue > players.count {
+                                    settings.addRandomPlayer()
+                                }
                             }
+                        } label: {
+                            Image(systemName: "plus.circle")
+                                .font(.system(size: 32))
                         }
-                    } label: {
-                        Image(systemName: "plus.circle")
-                            .font(.system(size: 32))
+                        .disabled(!settings.canAddPlayers)
+                        
+                        Button() {
+                            withAnimation() {
+                                if settings.rule.players.minValue < players.count {
+                                    settings.removeLastPlayer()
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "minus.circle")
+                                .font(.system(size: 32))
+                        }
+                        .disabled(!settings.canRemovePlayer)
                     }
-                    .disabled(!settings.canAddPlayers)
                 }
-                ToolbarItem() {
-                    Button() {
-                        settings.removeLastPlayer()
-                    } label: {
-                        Image(systemName: "minus.circle")
-                            .font(.system(size: 32))
-                    }
-                    .disabled(!settings.canRemovePlayer)
-                }
-//                .padding()
             }
             .environmentObject(settings)
         }

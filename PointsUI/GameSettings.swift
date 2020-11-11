@@ -25,7 +25,7 @@ class GameSettings: ObservableObject {
     @Published var rule: Rule {
         didSet { processRuleUpdate() }
     }
-    
+        
     /// players that can be chosen. Will be set by rules
     var availablePlayers : [Int] = []
 
@@ -177,10 +177,10 @@ class GameSettings: ObservableObject {
     }
     
     /// checks the current rules if they have flexible player amounts
-    var canAddPlayers: Bool { rule.players > players.count + 1}
+    var canAddPlayers: Bool { players.count < rule.players.maxValue}
     
     /// checks the current rules if they have flexible player amounts
-    var canRemovePlayer: Bool { rule.players < players.count - 1}
+    var canRemovePlayer: Bool { players.count > rule.players.minValue }
     
     func addRandomPlayer() {
         guard canAddPlayers else { return }

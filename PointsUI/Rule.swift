@@ -25,6 +25,7 @@ extension Int {
 enum PlayerCount : SelectableEnum {
     
     case fixed(Int), selection([Int])
+    
     /// maximum number of Points you can have, depending on which selection mechanism is used
     var maxValue : Int {
         switch self {
@@ -34,6 +35,7 @@ enum PlayerCount : SelectableEnum {
             return number
         }
     }
+    
     var minValue : Int {
         switch self {
         case .selection(let array):
@@ -43,17 +45,6 @@ enum PlayerCount : SelectableEnum {
         }
     }
 }
-
-/// MARK: - Player Count arithmetic
-func >(lhs: Int, rhs: PlayerCount) -> Bool { lhs > rhs.maxValue }
-func >(lhs: PlayerCount, rhs: Int) -> Bool { !(rhs > lhs) }
-func <(lhs: PlayerCount, rhs: Int) -> Bool { rhs > lhs }
-
-func >(lhs: Int, rhs: PointsSelection) -> Bool { lhs > rhs.maxValue }
-func >(lhs: PointsSelection, rhs: Int) -> Bool { !(rhs > lhs) }
-func <(lhs: PointsSelection, rhs: Int) -> Bool { rhs > lhs }
-
-
 
 /// possible points for a game
 /// can be:
@@ -81,13 +72,13 @@ enum PointsSelection: SelectableEnum {
     var minValue : Int {
         switch self {
         case .selection(let array):
-            return array.count
+            return array.min()!
         case .fixed(let number):
             return number
         case .none:
-            return Int.highestGamePointsEverPossilbe
-        case .free(let value):
-            return value
+            return 0
+        case .free(_):
+            return 0
         }
     }
 }
