@@ -177,7 +177,7 @@ class GameSettings: ObservableObject {
     }
     
     /// checks the current rules if they have flexible player amounts
-    var canAddPlayers: Bool { players.count < rule.players.maxValue}
+    var canAddPlayers: Bool { players.count < rule.players.maxValue }
     
     /// checks the current rules if they have flexible player amounts
     var canRemovePlayer: Bool { players.count > rule.players.minValue }

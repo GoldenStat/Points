@@ -13,36 +13,30 @@ struct EditView : View {
 //    @EnvironmentObject var settings: GameSettings
     var settings = GameSettings()
     @Environment(\.presentationMode) var isPresented
-
+    
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }
     var playersCount: PlayerCount { settings.rule.players }
     var title: String { settings.rule.name }
     var body: some View {
-        VStack {
-            NavigationView {
-                Form {
-                    VStack {
-                        
-                        Text(title)
-                            .fontWeight(.bold)
-                        RulesPicker()
-                        PointsPicker()
-                        JuegosPicker()
-                        JugadoresPicker()
-                        
-                        EditPlayerNames()
-                    }
+        NavigationView {
+            Form {
+                Section(header: Text("Settings")) {
+                    RulesPicker()
+                    PointsPicker()
+                    JuegosPicker()
+                    JugadoresPicker()
+                }
+                
+                
+                Section(header: Text("Players")) {
+                    EditPlayerNames()
                 }
             }
-
-
-            HStack {
-                Button("Save") {
-                    isPresented.wrappedValue.dismiss()
+            .navigationTitle(Text(title))
+            .toolbar() {
+                Button("Dismiss") {
                     settings.updateSettings()
                     settings.needsUpdate = true
-                }
-                Button("Cancel") {
                     isPresented.wrappedValue.dismiss()
                 }
             }
@@ -50,7 +44,7 @@ struct EditView : View {
     }
 }
 
-struct PreviewView : View {
+struct PreviewEditView : View {
     @EnvironmentObject var settings: GameSettings
     @State private var presentView : Bool = true
     
@@ -64,11 +58,13 @@ struct PreviewView : View {
             Text("MaxGames: \(settings.maxGames)")
             Text("Players: \(settings.chosenNumberOfPlayers)")
             
+            Section(header: Text("Players")) {
             HStack {
                 Text("Names:")
                 ForEach(settings.players.items, id: \.self.id) { player in
                     Text(player.name)
                 }
+            }
             }
                 
             Button() {
@@ -86,7 +82,7 @@ struct PreviewView : View {
 
 struct EditView_Previews: PreviewProvider {
     static var previews: some View {
-        PreviewView()
+        PreviewEditView()
             .environmentObject(GameSettings())
     }
 }

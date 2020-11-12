@@ -110,7 +110,7 @@ struct AnimacionPicker: View {
 struct RulesPicker: View {
     @EnvironmentObject var settings: GameSettings
     
-    var title: String = "Juegos"
+    var title: String = "Rule"
         
     var body: some View {
         Picker(title, selection: $settings.rule) {
