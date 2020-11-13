@@ -10,8 +10,7 @@ import SwiftUI
 
 
 struct EditView : View {
-//    @EnvironmentObject var settings: GameSettings
-    var settings = GameSettings()
+    @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var isPresented
     
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }
@@ -26,7 +25,6 @@ struct EditView : View {
                     JuegosPicker()
                     JugadoresPicker()
                 }
-                
                 
                 Section(header: Text("Players")) {
                     EditPlayerNames()
@@ -46,7 +44,7 @@ struct EditView : View {
 
 struct PreviewEditView : View {
     @EnvironmentObject var settings: GameSettings
-    @State private var presentView : Bool = true
+    @State private var presentView : Bool = false
     
     var body: some View {
         VStack {
