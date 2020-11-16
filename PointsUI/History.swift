@@ -106,24 +106,6 @@ class History : ObservableObject {
         return list
     }
     
-    var playerSumScores : [[ Int ]] {
-        var scoresArray = [[Int]]()
-        
-        for state in states {
-            let thisRoundScores = state.scores
-            if let lastRoundScores = scoresArray.last {
-                var newRow : [Int] = []
-                for index in 0 ..< state.scores.count {
-                    newRow.append(lastRoundScores[index] + state.scores[index])
-                }
-                scoresArray.append(newRow)
-            } else {
-                scoresArray.append(thisRoundScores)
-            }
-        }
-        return scoresArray
-    }
-    
     var differentialScores : [[ Int ]] {
         return states.map { $0.scores }
     }

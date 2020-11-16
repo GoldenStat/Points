@@ -49,7 +49,7 @@ struct BoardUI: View {
     
     @ViewBuilder var playerViews : some View {
         let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
-        ForEach(objects) { player in
+        ForEach(settings.players.items) { player in
             PlayerView(player: player)
                 .aspectRatio(variableRatio, contentMode: .fill)
         }

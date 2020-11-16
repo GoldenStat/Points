@@ -29,6 +29,10 @@ struct EditView : View {
             Section(header: Text("Players")) {
                 EditPlayerNames()
             }
+            
+            Button("Done") {
+                isPresented.wrappedValue.dismiss()
+            }
         }
         .navigationTitle(Text(title))
     }
@@ -41,23 +45,19 @@ struct PreviewEditView : View {
     var body: some View {
         NavigationView {
             VStack {
-                Text(settings.rule.name)
-                    .font(.title)
-                
-                Text("Players: \(settings.playerNames.count)")
-                Text("MaxPoints: \(settings.maxPoints)")
-                Text("MaxGames: \(settings.maxGames)")
-                Text("Players: \(settings.chosenNumberOfPlayers)")
-                
-                Section(header: Text("Players")) {
-                    HStack {
-                        Text("Names:")
-                        ForEach(settings.players.items, id: \.self.id) { player in
+                Form {
+                    Text("Players: \(settings.playerNames.count)")
+                    Text("MaxPoints: \(settings.maxPoints)")
+                    Text("MaxGames: \(settings.maxGames)")
+                    Text("Players: \(settings.chosenNumberOfPlayers)")
+
+                    Section(header: Text("Players")) {
+                        ForEach(settings.players.items) { player in
                             Text(player.name)
                         }
                     }
                 }
-                
+
                 Button() {
                     presentView.toggle()
                 } label: {
@@ -65,6 +65,7 @@ struct PreviewEditView : View {
                 }
                 .padding()
             }
+            .navigationTitle(settings.rule.name)
             .sheet(isPresented: $presentView) {
                 EditView()
             }
