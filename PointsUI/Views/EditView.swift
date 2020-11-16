@@ -16,29 +16,21 @@ struct EditView : View {
     var pointsPerGame : PointsSelection { settings.rule.maxPoints }
     var playersCount: PlayerCount { settings.rule.players }
     var title: String { settings.rule.name }
+    
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Settings")) {
-                    RulesPicker()
-                    PointsPicker()
-                    JuegosPicker()
-                    JugadoresPicker()
-                }
-                
-                Section(header: Text("Players")) {
-                    EditPlayerNames()
-                }
+        Form {
+            Section(header: Text("Settings")) {
+                RulesPicker()
+                PointsPicker()
+                JuegosPicker()
+                JugadoresPicker()
             }
-            .navigationTitle(Text(title))
-            .toolbar() {
-                Button("Dismiss") {
-                    settings.updateSettings()
-                    settings.needsUpdate = true
-                    isPresented.wrappedValue.dismiss()
-                }
+            
+            Section(header: Text("Players")) {
+                EditPlayerNames()
             }
         }
+        .navigationTitle(Text(title))
     }
 }
 
@@ -47,7 +39,7 @@ struct PreviewEditView : View {
     @State private var presentView : Bool = false
     
     var body: some View {
-        VStack {
+        NavigationView {
             Text(settings.rule.name)
                 .font(.title)
             
@@ -57,14 +49,14 @@ struct PreviewEditView : View {
             Text("Players: \(settings.chosenNumberOfPlayers)")
             
             Section(header: Text("Players")) {
-            HStack {
-                Text("Names:")
-                ForEach(settings.players.items, id: \.self.id) { player in
-                    Text(player.name)
+                HStack {
+                    Text("Names:")
+                    ForEach(settings.players.items, id: \.self.id) { player in
+                        Text(player.name)
+                    }
                 }
             }
-            }
-                
+            
             Button() {
                 presentView.toggle()
             } label: {

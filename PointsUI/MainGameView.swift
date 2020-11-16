@@ -17,7 +17,7 @@ struct MainGameView: View {
     @EnvironmentObject var settings : GameSettings
     
     @State private var showMenu = false
-    @State private var showHistory: Bool = true
+    @State private var showHistory: Bool = false
     
     func historyFrame(for size: CGSize) -> CGSize {
         let widthFactor: CGFloat = 0.9
@@ -30,13 +30,14 @@ struct MainGameView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                
-                Color.invisible
-                
                 BoardUI()
                     .blur(radius: blurRadius)
                     .padding()
-                
+                    .gesture(showHistoryGesture)
+                    .environmentObject(settings)
+                    .popover(isPresented: $showInfo) {
+                        InfoView()
+                    }
                 
                 if showHistory {
                     ScoreHistoryView()
@@ -54,6 +55,15 @@ struct MainGameView: View {
                     
                 }
                 
+                if showEditView {
+                    EditView()
+                        .transition(.opacity)
+                        .onAppear {
+                            showMenu = false
+                        }
+                }
+
+                
                 if settings.playerWonRound != nil {
                     PlayerWonRound()
                         .transition(.move(edge: .bottom))
@@ -69,27 +79,22 @@ struct MainGameView: View {
                             showMenu = false
                         }
                 }
-                
+                                
             }
-            .gesture(showHistoryGesture)
-            .environmentObject(settings)
-            .popover(isPresented: $showInfo) {
-                InfoView()
-            }
+            
             .toolbar() {
-//                ToolbarItem() {
-//                    historyButtons
-//                }
-//                ToolbarItem() {
-//                    EditButton()
-//                }
-//                ToolbarItem() {
-//                }                
                 ToolbarItemGroup(placement: .bottomBar) {
                     HStack {
                         historyButtons
                         Spacer()
-                        EditButton()
+                        Button() {
+                            withAnimation() {
+                                showEditView.toggle()
+                            }
+                        } label: {
+                            Text(.init(systemName: "gear"))
+                        }
+                        
                         Spacer()
                         InfoButton(showInfo: $showInfo)
                     }
@@ -98,6 +103,7 @@ struct MainGameView: View {
         }
     }
     
+    @State var showEditView = false
     @State var showToolbar = true
     
     func selectRule(rule: Rule) {
@@ -106,7 +112,7 @@ struct MainGameView: View {
     
     var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
         .onEnded() {_ in
-            withAnimation(.linear(duration: 0.5)) {
+            withAnimation() {
                 showHistory = true                
             }
         }
@@ -152,8 +158,8 @@ struct MainGameView: View {
     }
     
     
-    var undoSymbol: some View { Image(systemName: "arrow.left")}
-    var redoSymbol: some View { Image(systemName: "arrow.right")}
+    var undoSymbol: some View { Image(systemName: "arrow.left") }
+    var redoSymbol: some View { Image(systemName: "arrow.right") }
 }
 
 struct InfoButton: View {
@@ -172,8 +178,10 @@ struct InfoButton: View {
 
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
-        MainGameView()
-            .environmentObject(GameSettings())
+        NavigationView() {
+            MainGameView()
+        }
+        .environmentObject(GameSettings())
     }
 }
 

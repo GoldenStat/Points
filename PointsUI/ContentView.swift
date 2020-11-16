@@ -15,11 +15,9 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-
             if gameStarted {
                 NavigationView {
                     MainGameView()
-                        .navigationBarHidden(true)
                 }
             } else {
                 TitleView(animatedState: .background)

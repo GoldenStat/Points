@@ -140,6 +140,9 @@ struct JugadoresPicker: View {
             .padding(.vertical)
         case .selection(let values):
             PointsUIPickerBuilder<Int>(title: "Jugadores", binding: $settings.chosenNumberOfPlayers, orderedSet: values)
+                .onDisappear() {
+                    settings.objectWillChange.send()
+                }
         }
     }
 }

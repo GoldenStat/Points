@@ -12,17 +12,17 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
-    var objects : [Player] { settings.players.items }
-    let minAmount: CGFloat = 300
-    let maxAmount: CGFloat = 400
-    
-    var oneColumn : [GridItem]  {
-        [ GridItem(.adaptive(minimum: minAmount)) ]
+    var objects : [Player] {
+        settings.players.items
     }
     
+    var oneColumn : [GridItem]  { [
+        GridItem(.flexible())
+    ] }
+    
     var twoColumns : [GridItem]  { [
-        GridItem(.adaptive(minimum: minAmount)),
-        GridItem(.adaptive(minimum: minAmount)),
+        GridItem(.flexible()),
+        GridItem(.flexible())
     ] }
     
     var vGridItems : [GridItem] {
@@ -30,29 +30,28 @@ struct BoardUI: View {
     }
     
     var body: some View {
-        if UIDevice.current.orientation.isLandscape {
-            // in landscape we put all players in a row -- there is always enough space
-            HStack(alignment: .center) {
-                playerViews()
-            }
-        } else {
-            // not landscape
-            if objects.count == 2 {
-                VStack(alignment: .center) {
-                    playerViews()
+        ZStack {
+            Color.invisible
+            if UIDevice.current.orientation.isLandscape {
+                // in landscape we put all players in a row -- there is always enough space
+                HStack() {
+                    playerViews
                 }
             } else {
-                LazyVGrid(columns: twoColumns,
-                          alignment: .center) {
-                    playerViews()
+                // not landscape
+                LazyVGrid(columns: vGridItems
+                ) {
+                    playerViews
                 }
             }
         }
     }
     
-    func playerViews() -> some View {
+    @ViewBuilder var playerViews : some View {
+        let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
         ForEach(objects) { player in
             PlayerView(player: player)
+                .aspectRatio(variableRatio, contentMode: .fill)
         }
     }
 }

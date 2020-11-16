@@ -83,13 +83,16 @@ class GameSettings: ObservableObject {
         history = History(names: GlobalSettings.playerNames)
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
-        rule = .doppelkopf // needs to be set to call methods
-        
+        rule = .trucoVenezolano // needs to be set to enable calling methods
+        setupRules()
+//        resetToFactorySettings()
+    }
+    
+    
+    func setupRules() {
         createRules()
         rule = rule(id: GlobalSettings.ruleID)
         processRuleUpdate()
-
-        resetToFactorySettings()
     }
     
     func rule(id: Int) -> Rule {
@@ -175,7 +178,12 @@ class GameSettings: ObservableObject {
             removeLastPlayer()
         }
     }
-    
+
+    // add or remove players appropriately
+    func handlePlayerChange() {
+        handlePlayerChange(to: chosenNumberOfPlayers)
+    }
+
     /// checks the current rules if they have flexible player amounts
     var canAddPlayers: Bool { players.count < rule.players.maxValue }
     
