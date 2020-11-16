@@ -18,18 +18,12 @@ struct MainGameView: View {
     
     @State private var showMenu = false
     @State private var showHistory: Bool = false
-    
-    func historyFrame(for size: CGSize) -> CGSize {
-        let widthFactor: CGFloat = 0.9
-        let heightFactor: CGFloat = 0.95
         
-        return CGSize(width: size.width * widthFactor,
-                      height: size.height * heightFactor)
-    }
-    
+    /// these views are all on top of another
     var body: some View {
         GeometryReader { geo in
             ZStack {
+                // MARK: Board
                 BoardUI()
                     .blur(radius: blurRadius)
                     .padding()
@@ -39,22 +33,12 @@ struct MainGameView: View {
                         InfoView()
                     }
                 
+                // MARK: History View
                 if showHistory {
-                    ScoreHistoryView()
-                        .frame(width: historyFrame(for: geo.size).width,
-                               height: historyFrame(for: geo.size).height)
-                        .emphasizeShape()
-                        .environmentObject(settings)
-                        .onTapGesture() {
-                            withAnimation() {
-                                showHistory = false
-                            }
-                        }
-                        .transition(.opacity)
-                        .padding()
-                    
+                    historyView(sized: geo.size)
                 }
                 
+                // MARK: EditView
                 if showEditView {
                     EditView()
                         .transition(.opacity)
@@ -63,18 +47,17 @@ struct MainGameView: View {
                         }
                 }
 
-                
+                // MARK: Won Round
                 if settings.playerWonRound != nil {
                     PlayerWonRound()
-                        .transition(.move(edge: .bottom))
                         .onAppear {
                             showMenu = false
                         }
                 }
                 
+                // MARK: Won Game
                 if settings.playerWonGame != nil {
                     PlayerWonGame()
-                        .transition(.opacity)
                         .onAppear {
                             showMenu = false
                         }
@@ -83,7 +66,7 @@ struct MainGameView: View {
             }
             
             .toolbar() {
-                ToolbarItemGroup(placement: .bottomBar) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     HStack {
                         historyButtons
                         Spacer()
@@ -103,14 +86,15 @@ struct MainGameView: View {
         }
     }
     
-    @State var showEditView = false
-    @State var showToolbar = true
+    @State private var showEditView = false
+    @State private var showToolbar = true
+    @State private var hideNavigationBar = true
     
-    func selectRule(rule: Rule) {
+    private func selectRule(rule: Rule) {
         settings.rule = rule
     }
     
-    var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
+    private  var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
         .onEnded() {_ in
             withAnimation() {
                 showHistory = true                
@@ -118,13 +102,36 @@ struct MainGameView: View {
         }
     }
     
-    var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    var blurBackground: Bool { showMenu && showHistory }
+    private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
+    private  var blurBackground: Bool { showMenu && showHistory }
+    
+    // MARK: History View
+    func historyView(sized geometrySize: CGSize) -> some View {
+        let widthFactor: CGFloat = 0.9
+        let heightFactor: CGFloat = 0.95
+
+        let width = geometrySize.width * widthFactor
+        let height = geometrySize.height * heightFactor
+
+        return ScoreHistoryView()
+            .frame(width: width,
+                   height: height)
+            .emphasizeShape()
+            .environmentObject(settings)
+            .onTapGesture() {
+                withAnimation() {
+                    showHistory = false
+                }
+            }
+            .transition(.opacity)
+            .padding()
+    }
     
     // MARK: - Buttons
-    @State var showInfo: Bool = false
+    @State private var showInfo: Bool = false
     
-    @ViewBuilder var infoButton: some View {
+    // MARK: info
+    @ViewBuilder private var infoButton: some View {
         Button() {
             showInfo.toggle()
         } label: {
@@ -133,8 +140,8 @@ struct MainGameView: View {
         }
     }
     
-    // MARK: - history buttons
-    @ViewBuilder var historyButtons: some View {
+    // MARK: history
+    @ViewBuilder private var historyButtons: some View {
         HStack {
             historyUndoButton
             historyRedoButton

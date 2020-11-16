@@ -18,7 +18,8 @@ struct PlayerView: View {
     @ObservedObject var player : Player
     
     var currentRule : Rule { settings.rule }
-    var playerUI: PlayerUIType { currentRule.playerUI }
+    var playerUI: PlayerUIType = .checkbox(5)
+//    { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
@@ -50,7 +51,7 @@ struct PlayerView: View {
             }
             .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: 0.5))
             .padding(.horizontal)
-            .aspectRatio(3/4, contentMode: .fit)
+            .aspectRatio(0.6, contentMode: .fit)
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
                 settings.startTimer()
@@ -75,7 +76,7 @@ struct PlayerHeadline: View {
             HStack(spacing: 20) {
                 Spacer()
                 MatchBox(score: Score(player.games))
-                    .frame(width: 100, height: 60)
+//                    .frame(width: 100, height: 60)
             }
             .background(Color.white
                             .opacity(0.1)

@@ -25,19 +25,27 @@ struct BoxesScoreView: View {
         return full + (remainder > 0 ? 1 : 0)
         }
     
+    var vGrid: [GridItem] { [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ] }
+    
     var body: some View {
-        FlowStack(columns: columns,
-                  numItems: numberOfBoxes) { index, colWidth in
+//        FlowStack(columns: columns,
+//                  numItems: numberOfBoxes) { index, colWidth in
+        LazyVGrid(columns: vGrid) {
+            ForEach(0 ..< numberOfBoxes) { index in
             filledBox(at: index)
                 .padding()
-                .frame(width: colWidth)
+//                .frame(width: colWidth)
                 .animation(.easeInOut(duration: .lineAnimationSpeed))
                 .aspectRatio(ratio, contentMode: .fit)
+            }
         }
     }
     
     // MARK: -- constants
-    var maxScoreSettings : Int { settings.maxPoints } // depends on game settings
+    var maxScoreSettings : Int = 30 // { settings.maxPoints } // depends on game settings
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?

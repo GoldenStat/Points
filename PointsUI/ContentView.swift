@@ -18,6 +18,7 @@ struct ContentView: View {
             if gameStarted {
                 NavigationView {
                     MainGameView()
+                        .navigationBarHidden(true)
                 }
             } else {
                 TitleView(animatedState: .background)
