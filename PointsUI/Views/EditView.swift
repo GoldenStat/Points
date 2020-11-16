@@ -40,32 +40,34 @@ struct PreviewEditView : View {
     
     var body: some View {
         NavigationView {
-            Text(settings.rule.name)
-                .font(.title)
-            
-            Text("Players: \(settings.playerNames.count)")
-            Text("MaxPoints: \(settings.maxPoints)")
-            Text("MaxGames: \(settings.maxGames)")
-            Text("Players: \(settings.chosenNumberOfPlayers)")
-            
-            Section(header: Text("Players")) {
-                HStack {
-                    Text("Names:")
-                    ForEach(settings.players.items, id: \.self.id) { player in
-                        Text(player.name)
+            VStack {
+                Text(settings.rule.name)
+                    .font(.title)
+                
+                Text("Players: \(settings.playerNames.count)")
+                Text("MaxPoints: \(settings.maxPoints)")
+                Text("MaxGames: \(settings.maxGames)")
+                Text("Players: \(settings.chosenNumberOfPlayers)")
+                
+                Section(header: Text("Players")) {
+                    HStack {
+                        Text("Names:")
+                        ForEach(settings.players.items, id: \.self.id) { player in
+                            Text(player.name)
+                        }
                     }
                 }
+                
+                Button() {
+                    presentView.toggle()
+                } label: {
+                    Image(systemName: "gear")
+                }
+                .padding()
             }
-            
-            Button() {
-                presentView.toggle()
-            } label: {
-                Image(systemName: "gear")
+            .sheet(isPresented: $presentView) {
+                EditView()
             }
-            .padding()
-        }
-        .sheet(isPresented: $presentView) {
-            EditView()
         }
     }
 }
