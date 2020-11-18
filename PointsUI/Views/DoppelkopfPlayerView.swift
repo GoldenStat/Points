@@ -67,6 +67,22 @@ struct DoppelkopfPlayerView: View {
     private let cornerRadius : CGFloat = 16.0
 }
 
+struct ScoreRow: View {
+    @State var editMode: EditMode = .inactive
+
+    let player: Player
+    var score: Score { player.score }
+
+    var body: some View {
+        HStack {
+            Text("Puntos: \(score.value)" +
+                    (score.buffer > 0 ? " + \(score.buffer)" : "")
+            )
+            .fontWeight(.bold)
+        }
+        .fixedSize()
+    }
+}
 
 
 struct DoppelkopfPlayerView_Previews: PreviewProvider {
