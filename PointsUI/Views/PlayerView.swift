@@ -20,8 +20,8 @@ struct PlayerView: View {
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType =
 //        .matches
-        .checkbox(5)
-//        .numberBox
+//        .checkbox(5)
+        .numberBox
 //        .selectionBox([3,4])
 //    { currentRule.playerUI }
     
@@ -84,7 +84,7 @@ struct PlayerHeadline: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: PlayerData(name: "Alexander", points: 9, games: 1))
+    static var player = Player(from: PlayerData(name: "Alexander", points: 10, games: 1))
     static var settings = GameSettings()
     
     static var previews: some View {

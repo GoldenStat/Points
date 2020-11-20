@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension Color {
-    static let invisible = Color.init(white: 1.0, opacity: 0.01)
+    static let invisible = Color.white.opacity(0.01)
 }
 
 struct MainGameView: View {
