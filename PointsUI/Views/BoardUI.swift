@@ -46,30 +46,36 @@ struct BoardUI: View {
             }
             
             if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
-                BufferView(score: Score(bufferScore))
+                BufferView(score: Score(0, buffer: bufferScore))
                     .position(bufferPosition)
             }
         }
     }
     
-    @State var bufferPosition : CGPoint?
+    @State var bufferPosition : CGPoint? = nil
     @ViewBuilder var playerViews : some View {
         let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
                 .aspectRatio(variableRatio, contentMode: .fill)
-                .gesture(DragGesture(minimumDistance: 20, coordinateSpace: .global)
-                            .onChanged() { value in
-                                settings.pointBuffer = player.score.buffer
-                                bufferPosition = value.location
-                            }
-                            .onEnded() { value in
-                                bufferPosition =  nil
-//                                value.location
-                            })
+                .gesture(buildDragGesture(forPlayer: player))
         }
     }
     
+    // MARK: - DragGesture
+    
+    /// bufferDragGesture
+    /// - when we start dragging from a view, we fill the gameState's buffer with that view's players buffer points
+    private func buildDragGesture(forPlayer player: Player) -> some Gesture {
+        DragGesture(minimumDistance: 20, coordinateSpace: .global)
+                    .onChanged() { value in
+                        bufferPosition = value.location
+                        settings.pointBuffer = player.score.buffer
+                    }
+                    .onEnded() { value in
+                        settings.pointBuffer = nil
+                    }
+    }
 }
 
 
