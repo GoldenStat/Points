@@ -10,7 +10,6 @@ import SwiftUI
 
 extension Double { static var lineAnimationSpeed = 1.0 }
 
-
 /// the UI with a collection of Boxes and maximum score
 struct BoxesScoreView: View {
     @EnvironmentObject var settings: GameSettings
@@ -31,13 +30,10 @@ struct BoxesScoreView: View {
     ] }
     
     var body: some View {
-//        FlowStack(columns: columns,
-//                  numItems: numberOfBoxes) { index, colWidth in
         LazyVGrid(columns: vGrid) {
             ForEach(0 ..< numberOfBoxes) { index in
             filledBox(at: index)
                 .padding()
-//                .frame(width: colWidth)
                 .animation(.easeInOut(duration: .lineAnimationSpeed))
                 .aspectRatio(ratio, contentMode: .fit)
             }
