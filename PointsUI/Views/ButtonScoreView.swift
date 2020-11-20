@@ -21,15 +21,21 @@ struct ButtonScoreView: View {
             Text(score.value.description)
                 .font(.system(size: 144, weight: .semibold, design: .rounded))
                 .fixedSize()
-            BufferView(score: score)
-                .foregroundColor(.blue)
-                .scaleEffect(scaleFactor)
-                .offset(offset)
-        }
-        .onAppear() {
-            withAnimation(.linear(duration: 1.0)) {
-                scaleFactor = 0.5
-                offset = CGSize(width: 60, height: -80)
+            
+            if score.buffer > 0 {
+                Text(score.buffer.description)
+                    .font(.system(size: 180, weight: .semibold, design: .rounded))
+                    .fixedSize()
+                    .foregroundColor(.blue)
+                    .fixedSize()
+                    .scaleEffect(scaleFactor)
+                    .offset(offset)
+                    .onAppear() {
+                        withAnimation(.linear(duration: 1.0)) {
+                            scaleFactor = 0.5
+                            offset = CGSize(width: 100, height: -80)
+                        }
+                    }
             }
         }
     }
