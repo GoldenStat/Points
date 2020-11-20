@@ -16,27 +16,32 @@ struct ScoreRepresentationView: View {
     var body: some View {
         switch uiType {
         case .checkbox(let num):
-            ZStack {
-                BoxesScoreView(score: score, linesPerBox: num)
-                BufferView(score: score)
-            }
+            BoxesScoreView(score: score, linesPerBox: num)
+                .buffered(score: score)            
 
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
                 .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
 
         case .matches:
-            ZStack {
-                MatchesScoreView(score: score)
-                BufferView(score: score)
-            }
-
+            MatchesScoreView(score: score)
+                .buffered(score: score)
+            
         case .selectionBox(let values):
             SelectionScoreView(score: score, selection: values)
         }
-        
     }
+}
 
+extension View {
+    func buffered(score: Score) -> some View {
+        return ZStack {
+            self
+            if score.buffer != 0 {
+                BufferView(score: score)
+            }
+        }
+    }
 }
 
 struct ScoreRepresentationView_Previews: PreviewProvider {

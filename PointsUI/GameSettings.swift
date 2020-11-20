@@ -116,6 +116,9 @@ class GameSettings: ObservableObject {
         set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
     }
         
+    /// a buffer for Points to copy them somewhere else
+    var pointBuffer: Int?
+
     var possibleRules = [Rule]()
     
     func createRules() {
@@ -289,8 +292,9 @@ class GameSettings: ObservableObject {
         updateState()
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
+        pointBuffer = 0
     }
-
+    
     /// a points buffer for history
     var bufferForHistoryStore: [Int]?
     

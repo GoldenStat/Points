@@ -15,7 +15,7 @@ struct BoardUI: View {
     var objects : [Player] {
         settings.players.items
     }
-    
+        
     var oneColumn : [GridItem]  { [
         GridItem(.flexible())
     ] }
@@ -44,16 +44,32 @@ struct BoardUI: View {
                     playerViews
                 }
             }
+            
+            if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
+                BufferView(score: Score(bufferScore))
+                    .position(bufferPosition)
+            }
         }
     }
     
+    @State var bufferPosition : CGPoint?
     @ViewBuilder var playerViews : some View {
         let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
                 .aspectRatio(variableRatio, contentMode: .fill)
+                .gesture(DragGesture(minimumDistance: 20, coordinateSpace: .global)
+                            .onChanged() { value in
+                                settings.pointBuffer = player.score.buffer
+                                bufferPosition = value.location
+                            }
+                            .onEnded() { value in
+                                bufferPosition =  nil
+//                                value.location
+                            })
         }
     }
+    
 }
 
 

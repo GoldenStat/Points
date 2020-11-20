@@ -20,40 +20,36 @@ struct PlayerView: View {
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType =
 //        .matches
-//        .checkbox(5)
+        .checkbox(5)
 //        .numberBox
-        .selectionBox([3,4])
+//        .selectionBox([3,4])
 //    { currentRule.playerUI }
     
-    var titleStyle : PlayerViewTitleStyle = .normal
+    var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 0) {
             
             if titleStyle == .normal {
                 PlayerHeadline(player: player)
             }
             
-            Emphasize() {
-                VStack {
-                    
-                    if titleStyle == .inline {
-                        PlayerHeadline(player: player)
-                            .padding(.top)
-                    }
-                    
-                    ScoreRepresentationView(
-                        score: player.score,
-                        uiType: playerUI
-                    )
-                    
+            VStack (spacing: 0) {
+                if titleStyle == .inline {
+                    PlayerHeadline(player: player)
+                        .padding(.top)
                 }
+                
+                ScoreRepresentationView(
+                    score: player.score,
+                    uiType: playerUI
+                )
             }
             .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: 0.5))
+            .emphasizeShape()
             .padding(.horizontal)
-//            .aspectRatio(1, contentMode: .fit)
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
                 settings.startTimer()

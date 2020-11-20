@@ -62,7 +62,6 @@ struct MainGameView: View {
                             showMenu = false
                         }
                 }
-                                
             }
             
             .toolbar() {

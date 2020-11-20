@@ -72,7 +72,7 @@ struct EmphasizeShape<Content: View> : View {
     }
     
     var body: some View {
-        Clip(isInvisible: true) {
+        Clip(isInvisible: false) {
             content
         }
             .clipped()
@@ -131,8 +131,8 @@ extension View {
         }
     }
     
-    func emphasizeShape(maxHeight: CGFloat = 100) -> some View {
-        EmphasizeShape(maxHeight: maxHeight) {
+    func emphasizeShape() -> some View {
+        EmphasizeShape() {
             self
         }
     }
