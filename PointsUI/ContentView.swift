@@ -19,6 +19,7 @@ struct ContentView: View {
             if gameStarted {
                 NavigationView {
                     MainGameView(hideToolBar: $hideStatusBar)
+                        .statusBar(hidden: hideStatusBar)
                         .navigationBarHidden(true)
                         .navigationBarBackButtonHidden(true)
                         .highPriorityGesture(toggleStatusBar)

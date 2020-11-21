@@ -117,15 +117,10 @@ struct MainGameView: View {
     
     // MARK: History View
     func historyView(sized geometrySize: CGSize) -> some View {
-//        let widthFactor: CGFloat = 0.9
-        let heightFactor: CGFloat = 0.6 // 0.95
-        
-//        let width = geometrySize.width * widthFactor
+        let heightFactor: CGFloat = 0.6
         let height = geometrySize.height * heightFactor
         
         return ScoreHistoryView()
-//            .frame(width: width,
-//                   height: height)
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
             .environmentObject(settings)
