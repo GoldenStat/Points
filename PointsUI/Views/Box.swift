@@ -43,7 +43,8 @@ struct Box: View {
             
             EdgeShape(totalLength: cappedPoints)
                 .stroke(
-                    Color.points,
+                    score.buffer > 0 ?
+                        Color.points : Color.clear,
                     style: strokeStyle)
                 .animation(nil)
                 .zIndex(1)

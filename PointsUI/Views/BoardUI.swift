@@ -32,29 +32,25 @@ struct BoardUI: View {
     
     var body: some View {
         GeometryReader { geo in
-        ZStack {
-            Color.invisible
-            if UIDevice.current.orientation.isLandscape {
-                // in landscape we put all players in a row -- there is always enough space
-                HStack() {
-                    playerViews
-                }
-                .frame(maxWidth: geo.size.width)
-            } else {
-                // not landscape
-                // can't get it to work with LazyVGrid
-                if objects == 2 {
-                    VStack {
-                        playerViews
-                    }
-                    .frame(maxHeight: geo.size.height)
+            ZStack {
+                Color.invisible
+                if UIDevice.current.orientation.isLandscape {
+                    // in landscape we put all players in a row -- there is always enough space
+                    HStack() { playerViews }
+                    .frame(maxWidth: geo.size.width)
                 } else {
-                    
-                    LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-                        playerViews
-                    }
+                    // not landscape
+                    // can't get it to work with LazyVGrid
+                    if objects == 2 {
+                        VStack {
+                            playerViews
+                        }
+                        .frame(maxHeight: geo.size.height)
+                    } else {
+                        LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+                            playerViews
+                        }
                     .frame(maxHeight: geo.size.height)
-                    
                 }
             }
                 
@@ -64,6 +60,7 @@ struct BoardUI: View {
             }
         }
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     @ViewBuilder private var playerViews : some View {
@@ -72,6 +69,8 @@ struct BoardUI: View {
             PlayerView(player: player)
 //                .aspectRatio(variableRatio, contentMode: .fill)
                 .gesture(buildDragGesture(forPlayer: player))
+            
+            
             // MARK: for dragn drop
 //                .onDrag { return NSItemProvider(object: UIImage(named: fruit.image) ?? UIImage()) }
 //                .onDrop(of supportedTypes: [String], isTargeted: Binding<Bool>?, perform action: @escaping ([NSItemProvider]) -> Bool) -> some View
@@ -88,7 +87,10 @@ struct BoardUI: View {
         DragGesture(minimumDistance: 20, coordinateSpace: .global)
                     .onChanged() { value in
                         bufferPosition = value.location
-                        settings.pointBuffer = player.score.buffer
+                        let buffer = player.score.buffer
+                        if buffer > 0 {
+                            settings.pointBuffer = player.score.buffer
+                        }
                     }
                     .onEnded() { value in
                         settings.pointBuffer = nil
