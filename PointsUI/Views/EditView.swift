@@ -34,6 +34,7 @@ struct EditView : View {
                 isPresented.wrappedValue.dismiss()
             }
         }
+        .onDisappear(perform: settings.updateSettings)
         .navigationTitle(Text(title))
     }
 }

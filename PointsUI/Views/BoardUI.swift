@@ -12,8 +12,8 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
-    var objects : [Player] {
-        settings.players.items
+    var objects : Int {
+        settings.players.count
     }
         
     var oneColumn : [GridItem]  { [
@@ -24,12 +24,14 @@ struct BoardUI: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ] }
-    
+        
     var vGridItems : [GridItem] {
-        objects.count == 2 ? oneColumn : twoColumns
+//        objects.count == 2 ? oneColumn :
+        twoColumns
     }
     
     var body: some View {
+        GeometryReader { geo in
         ZStack {
             Color.invisible
             if UIDevice.current.orientation.isLandscape {
@@ -37,18 +39,30 @@ struct BoardUI: View {
                 HStack() {
                     playerViews
                 }
+                .frame(maxWidth: geo.size.width)
             } else {
                 // not landscape
-                LazyVGrid(columns: vGridItems
-                ) {
-                    playerViews
+                // can't get it to work with LazyVGrid
+                if objects == 2 {
+                    VStack {
+                        playerViews
+                    }
+                    .frame(maxHeight: geo.size.height)
+                } else {
+                    
+                    LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+                        playerViews
+                    }
+                    .frame(maxHeight: geo.size.height)
+                    
                 }
             }
-            
+                
             if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
                 BufferView(score: Score(0, buffer: bufferScore))
                     .position(bufferPosition)
             }
+        }
         }
     }
     

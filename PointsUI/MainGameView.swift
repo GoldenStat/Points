@@ -22,6 +22,7 @@ struct MainGameView: View {
     /// these views are all on top of another
     var body: some View {
         ZStack {
+            
             // MARK: Board
             BoardUI()
                 .blur(radius: blurRadius)
@@ -32,6 +33,7 @@ struct MainGameView: View {
                     InfoView()
                 }
                 .popover(isPresented: $showEditView) {
+                    // MARK: EditView
                     NavigationView() {
                         EditView()
                     }
@@ -43,15 +45,6 @@ struct MainGameView: View {
                     historyView(sized: geo.size)
                 }
             }
-            
-            // MARK: EditView
-            //                if showEditView {
-            //                    EditView()
-            //                        .transition(.opacity)
-            //                        .onAppear {
-            //                            showMenu = false
-            //                        }
-            //                }
             
             // MARK: Won Round
             if settings.playerWonRound != nil {

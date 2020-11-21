@@ -100,5 +100,69 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D15B8961-948F-4F76-82CF-9CF7D4203F2F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PointsUI/Views/BoardUI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2A5EE742-CC2A-4202-95C5-480C8BDFFE22"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PointsUI/Views/BoardUI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "2A5EE742-CC2A-4202-95C5-480C8BDFFE22 - 8b5a087e32e42e3e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Color, SwiftUI._ConditionalContent&lt;SwiftUI.LazyHGrid&lt;&lt;&lt;opaque return type of PointsUI.BoardUI.(playerViews in _D98E1E0010CF5028A9C044E12D557395) : some&gt;&gt;.0&gt;, SwiftUI.LazyVGrid&lt;&lt;&lt;opaque return type of PointsUI.BoardUI.(playerViews in _D98E1E0010CF5028A9C044E12D557395) : some&gt;&gt;.0&gt;&gt;, Swift.Optional&lt;&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;)&gt; in PointsUI.BoardUI.body.getter : some"
+                  moduleName = "PointsUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/Views/BoardUI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "1836">
+               </Location>
+               <Location
+                  uuid = "2A5EE742-CC2A-4202-95C5-480C8BDFFE22 - 853decccb96a58aa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; &lt;&lt;opaque return type of PointsUI.BoardUI.(playerViews in _D98E1E0010CF5028A9C044E12D557395) : some&gt;&gt;.0 in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Color, SwiftUI._ConditionalContent&lt;SwiftUI.LazyHGrid&lt;&lt;&lt;opaque return type of PointsUI.BoardUI.(playerViews in _D98E1E0010CF5028A9C044E12D557395) : some&gt;&gt;.0&gt;, SwiftUI.LazyVGrid&lt;&lt;&lt;opaque return type of PointsUI.BoardUI.(playerViews in _D98E1E0010CF5028A9C044E12D557395) : some&gt;&gt;.0&gt;&gt;, Swift.Optional&lt;&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;)&gt; in PointsUI.BoardUI.body.getter : some"
+                  moduleName = "PointsUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/Views/BoardUI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48"
+                  offsetFromSymbolStart = "320">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
