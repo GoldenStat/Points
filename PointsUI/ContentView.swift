@@ -17,23 +17,38 @@ struct ContentView: View {
         ZStack {
             if gameStarted {
                 NavigationView {
+                    // TODO: improve this!
+                    // insert an EmptyView so we don't see the splitviewController??
+//                    if UIDevice.current.orientation.isLandscape {
+//                        EmptyView()
+//                    }
                     MainGameView()
                         .navigationBarHidden(true)
+                        .navigationBarBackButtonHidden(true)
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
             } else {
                 TitleView(animatedState: .background)
             }
-
         }
         .edgesIgnoringSafeArea(.all)
-        .gesture(tapGesture)
+        .gesture(startGameGesture)
+        .simultaneousGesture(toggleNavigationBar)
         .environmentObject(settings)
     }
 
-    var tapGesture : some Gesture {
+    var startGameGesture : some Gesture {
         TapGesture()
         .onEnded {
             gameStarted = true
+        }
+    }
+    
+    @State var hideStatusBar = false
+    var toggleNavigationBar : some Gesture {
+        TapGesture(count: 2)
+            .onEnded() {
+                hideStatusBar.toggle()
         }
     }
 }

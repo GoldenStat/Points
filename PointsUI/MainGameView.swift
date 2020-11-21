@@ -37,6 +37,7 @@ struct MainGameView: View {
                     NavigationView() {
                         EditView()
                     }
+                    .navigationViewStyle(StackNavigationViewStyle())
                 }
             
             // MARK: History View

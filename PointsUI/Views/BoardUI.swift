@@ -37,7 +37,7 @@ struct BoardUI: View {
                 if UIDevice.current.orientation.isLandscape {
                     // in landscape we put all players in a row -- there is always enough space
                     HStack() { playerViews }
-                    .frame(maxWidth: geo.size.width)
+                        .frame(maxHeight: geo.size.height)
                 } else {
                     // not landscape
                     // can't get it to work with LazyVGrid
@@ -50,24 +50,22 @@ struct BoardUI: View {
                         LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
                             playerViews
                         }
-                    .frame(maxHeight: geo.size.height)
+                        .frame(maxHeight: geo.size.height)
+                    }
+                }
+                
+                if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
+                    BufferView(score: Score(0, buffer: bufferScore))
+                        .position(bufferPosition)
                 }
             }
-                
-            if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
-                BufferView(score: Score(0, buffer: bufferScore))
-                    .position(bufferPosition)
-            }
+            .padding()
         }
-        }
-        .navigationBarBackButtonHidden(true)
     }
     
     @ViewBuilder private var playerViews : some View {
-//        let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
-//                .aspectRatio(variableRatio, contentMode: .fill)
                 .gesture(buildDragGesture(forPlayer: player))
             
             

@@ -19,4 +19,27 @@ struct PointsUIApp: App {
         }
     }
 }
+#if os(macOS)
+extension View {
+    func navigationBarTitle(_ title: String) -> some View {
+        self
+    }
+}
+#endif
+
+#if os(watchOS)
+struct NavigationView<Content: View>: View {
+    let content: () -> Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            content()
+        }
+    }
+}
+#endif
 

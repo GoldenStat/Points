@@ -34,6 +34,7 @@ struct Box: View {
     
     var body: some View {
         ZStack {
+            // buffer Points
             EdgeShape(totalLength: maxLength)
                 .stroke(
                     Color.inactive,
@@ -43,8 +44,7 @@ struct Box: View {
             
             EdgeShape(totalLength: cappedPoints)
                 .stroke(
-                    score.buffer > 0 ?
-                        Color.points : Color.clear,
+                    Color.points,
                     style: strokeStyle)
                 .animation(nil)
                 .zIndex(1)
@@ -56,8 +56,9 @@ struct Box: View {
         }
     }
     
-    
-    @State var bufferColor: Color = Color.pointbuffer
+    private var bufferColor: Color {
+        score.buffer > 0 ?
+        Color.pointbuffer : Color.clear }
     
     let strokeStyle: StrokeStyle =
         .init(lineWidth: 5.0,
@@ -73,7 +74,7 @@ struct AnimatedBox: View {
     var body: some View {
         ZStack {
             Color.background
-            Box(score: score, bufferColor: animatedColor)
+            Box(score: score)
         }
         .onTapGesture {
             animatedColor = Color.pointbuffer
