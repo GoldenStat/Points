@@ -24,14 +24,19 @@ struct MatchesScoreView: View {
         return full + (remainder > 0 ? 1 : 0)
         }
     
+    var vGrid: [GridItem] { [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ] }
+        
     var body: some View {
-        FlowStack(columns: columns,
-                  numItems: numberOfBoxes) { index, colWidth in
-            matchBox(at: index)
-                .padding()
-                .frame(width: colWidth)
-                .animation(.easeInOut(duration: .lineAnimationSpeed))
-                .aspectRatio(ratio, contentMode: .fit)
+        LazyVGrid(columns: vGrid) {
+            ForEach(0 ..< numberOfBoxes) { index in
+                matchBox(at: index)
+                    .padding()
+                    .animation(.easeInOut(duration: .lineAnimationSpeed))
+                    .aspectRatio(ratio, contentMode: .fit)
+            }
         }
     }
     

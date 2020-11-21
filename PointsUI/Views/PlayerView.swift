@@ -19,9 +19,9 @@ struct PlayerView: View {
     
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType =
-//        .matches
+        .matches
 //        .checkbox(5)
-        .numberBox
+//        .numberBox
 //        .selectionBox([3,4])
 //    { currentRule.playerUI }
     
