@@ -19,10 +19,10 @@ struct ContentView: View {
             if gameStarted {
                 NavigationView {
                     MainGameView(hideToolBar: $hideStatusBar)
-                        .statusBar(hidden: hideStatusBar)
+                        .statusBar(hidden: true)
                         .navigationBarHidden(true)
                         .navigationBarBackButtonHidden(true)
-                        .highPriorityGesture(toggleStatusBar)
+                        .gesture(toggleStatusBar)
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
             } else {
@@ -46,11 +46,11 @@ struct ContentView: View {
         DragGesture(minimumDistance: 30)
             .onChanged() { value in
                 if value.location.y < value.startLocation.y {
-                    withAnimation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/) {
+                    withAnimation(.easeIn) {
                         hideStatusBar = false
                     }
                 } else if value.location.y > value.startLocation.y {
-                    withAnimation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/) {
+                    withAnimation(.easeIn) {
                         hideStatusBar = true
                     }
                 }

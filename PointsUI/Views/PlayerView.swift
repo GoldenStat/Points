@@ -24,13 +24,14 @@ struct PlayerView: View {
     
     var body: some View {
         
-        VStack(spacing: 0) {
+        VStack() {
             
             if titleStyle == .normal {
                 PlayerHeadline(player: player)
             }
             
-            VStack (spacing: 0) {
+            VStack() {
+                
                 if titleStyle == .inline {
                     PlayerHeadline(player: player)
                 }
@@ -41,7 +42,7 @@ struct PlayerView: View {
                 )
             }
             .emphasizeShape(cornerRadius: cornerRadius)
-            .padding(.horizontal)
+            .padding()
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
                 settings.startTimer()

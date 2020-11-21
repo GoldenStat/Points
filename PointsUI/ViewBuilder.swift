@@ -128,7 +128,7 @@ extension View {
         }
     }
     
-    func emphasize(maxHeight: CGFloat = 100) -> some View {
+    func emphasize(maxHeight: CGFloat = .infinity) -> some View {
         Emphasize(maxHeight: maxHeight) {
             self
         }

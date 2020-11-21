@@ -16,19 +16,10 @@ struct BoardUI: View {
         settings.players.count
     }
         
-    var oneColumn : [GridItem]  { [
-        GridItem(.flexible())
-    ] }
-    
-    var twoColumns : [GridItem]  { [
+    var vGridItems : [GridItem] {[
         GridItem(.flexible()),
         GridItem(.flexible())
-    ] }
-        
-    var vGridItems : [GridItem] {
-//        objects.count == 2 ? oneColumn :
-        twoColumns
-    }
+    ]}
     
     var body: some View {
         GeometryReader { geo in
@@ -47,7 +38,7 @@ struct BoardUI: View {
                                 playerViews
                             }
                         } else {
-                            LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+                            LazyVGrid(columns: vGridItems, alignment: .center) {
                                 playerViews
                             }
                         }
@@ -65,10 +56,9 @@ struct BoardUI: View {
     }
         
     @ViewBuilder private var playerViews : some View {
-        ForEach(settings.players.items) { player in
+        ForEach(settings.players.items, id: \.id) { player in
             PlayerView(player: player)
                 .gesture(buildDragGesture(forPlayer: player))
-                
                 
                 // MARK: for drag'n drop
 //                .onDrag { return NSItemProvider(object: player.score.buffer.description) }

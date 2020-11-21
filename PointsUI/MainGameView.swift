@@ -28,7 +28,7 @@ struct MainGameView: View {
                 .blur(radius: blurRadius)
                 .padding(.horizontal)
                 .drawingGroup()
-                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
+                .animation(.easeIn)
                 .gesture(showHistoryGesture)
                 .environmentObject(settings)
                 .popover(isPresented: $showInfo) {
@@ -69,7 +69,7 @@ struct MainGameView: View {
         .toolbar() { ToolbarItemGroup(placement: .bottomBar) {
             toolbarView()
 //                .drawingGroup()
-//                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
+//                .animation(.easeIn)
 //                .transition(.move(edge: .bottom))
         } }
     }

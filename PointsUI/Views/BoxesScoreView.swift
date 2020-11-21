@@ -32,20 +32,24 @@ struct BoxesScoreView: View {
     var body: some View {
         LazyVGrid(columns: vGrid) {
             ForEach(0 ..< numberOfBoxes) { index in
-            filledBox(at: index)
-                .aspectRatio(contentMode: .fit)
-                .padding()
-                .animation(.easeInOut(duration: .lineAnimationSpeed))
+                Box(score: thisBoxScore(from: index), edges: linesPerBox)
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+                    .animation(.easeInOut(duration: .lineAnimationSpeed))
             }
         }
     }
     
     // MARK: -- constants
-    var maxScoreSettings : Int { min(30, settings.maxPoints) }
+    var maxScoreSettings : Int { min(maxScore, settings.maxPoints) }
+    
+    /// set a limit on boxes to draw - eventually these boxes are not feasible (add index marker and scroll views??
+    var maxScore: Int { 6 * linesPerBox }
     
     // MARK: -- calculate points for each box
-    private func filledBox(at index: Int) -> Box {
-        // count points and buffer points to what should be in this box
+    /// count points and buffer points to what should be in the box at this index
+    /// - parameter index: at what place is this box
+    private func thisBoxScore(from index: Int) -> Score {
         
         let start = index * linesPerBox
         let end = start + linesPerBox
@@ -59,7 +63,7 @@ struct BoxesScoreView: View {
             }
         }
         
-        return Box(score: thisBoxScore, edges: linesPerBox)
+        return thisBoxScore
     }
 }
 

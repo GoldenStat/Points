@@ -21,7 +21,7 @@ struct ScoreRepresentationView: View {
 
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
-                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
+                .animation(.easeIn)
 
         case .matches:
             MatchesScoreView(score: score)
