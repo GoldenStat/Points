@@ -78,7 +78,6 @@ struct BoardUI: View {
     }
 }
 
-
 struct BoardUI_Previews: PreviewProvider {
     static var previews: some View {
         Group {

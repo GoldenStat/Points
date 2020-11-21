@@ -33,7 +33,6 @@ struct MatchesScoreView: View {
         LazyVGrid(columns: vGrid) {
             ForEach(0 ..< numberOfBoxes) { index in
                 matchBox(at: index)
-                    .padding()
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
                     .aspectRatio(ratio, contentMode: .fit)
             }
@@ -58,7 +57,6 @@ struct MatchesScoreView: View {
         }
 
         return MatchBox(score: adjustedScore(from: score, at: index))
-            .frame(minHeight: 90)
     }
 }
 
@@ -77,28 +75,29 @@ struct MatchBox: View {
                     ForEach(1 ..< MatchBox.maxItems) { count in
                         MatchView()
                             .opacity(opacity(forMatch: count))
-                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems))
+                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems-1))
                     }
                 }
                 
                 
                 /// horizontal match (last one)
                 HStack() {
-                        Spacer()
-                        MatchView()
-                            .opacity(opacity(forMatch: MatchBox.maxItems))
-                            .frame(width: geo.size.width / CGFloat(MatchBox.maxItems),
-                                   height: geo.size.height * 1.5)
-                            .rotationEffect(.degrees(degrees), anchor: UnitPoint(x: 0.5, y: 0.3))
-                            .offset(x: -geo.size.width * CGFloat(0.25))
-                            .onAppear() {
-                                degrees = -80
-                            }
-                            .animation(.spring(response: 0.6, dampingFraction: 0.3, blendDuration: 0.4))
-                        
-                        Spacer()
-                    }
+                    Spacer()
+                    MatchView()
+                        .opacity(opacity(forMatch: MatchBox.maxItems))
+                        .frame(width: geo.size.width / CGFloat(MatchBox.maxItems-1),
+                               height: geo.size.height * 1.3)
+                        .rotationEffect(.degrees(degrees), anchor: UnitPoint(x: 0.5, y: 0.3))
+                        .offset(x: -geo.size.width * CGFloat(0.25))
+                        .onAppear() {
+                            degrees = -80
+                        }
+                        .animation(Animation.spring(response: 0.8, dampingFraction: 0.2, blendDuration: 0.4))
+                    Spacer()
+                }
             }
+            .padding()
+            .padding()
         }
     }
 
@@ -142,7 +141,7 @@ struct AnimatedMatchBox: View {
 
 struct MatchesScoreView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchesScoreView(score: Score(8, buffer: 8))
+        MatchesScoreView(score: Score(8, buffer: 8), overrideMaxScore: 24)
             .environmentObject(GameSettings())
     }
 }
