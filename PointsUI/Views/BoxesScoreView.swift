@@ -33,19 +33,16 @@ struct BoxesScoreView: View {
         LazyVGrid(columns: vGrid) {
             ForEach(0 ..< numberOfBoxes) { index in
             filledBox(at: index)
+                .aspectRatio(contentMode: .fit)
                 .padding()
                 .animation(.easeInOut(duration: .lineAnimationSpeed))
-                .aspectRatio(ratio, contentMode: .fit)
             }
         }
     }
     
     // MARK: -- constants
-    var maxScoreSettings : Int = 30 // { settings.maxPoints } // depends on game settings
+    var maxScoreSettings : Int { min(30, settings.maxPoints) }
     
-    private let ratio : CGFloat = 1.0
-    private let columns = 2 // make variable?
-
     // MARK: -- calculate points for each box
     private func filledBox(at index: Int) -> Box {
         // count points and buffer points to what should be in this box

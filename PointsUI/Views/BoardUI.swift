@@ -52,7 +52,7 @@ struct BoardUI: View {
                             }
                         }
                     }
-                    .frame(maxHeight: geo.size.height)
+                    .frame(height: geo.size.width * 3.0 / 2.0)
                 }
                 
                 if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
@@ -63,17 +63,25 @@ struct BoardUI: View {
             .padding()
         }
     }
-    
+        
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
                 .gesture(buildDragGesture(forPlayer: player))
-            
-            
-            // MARK: for dragn drop
-//                .onDrag { return NSItemProvider(object: UIImage(named: fruit.image) ?? UIImage()) }
-//                .onDrop(of supportedTypes: [String], isTargeted: Binding<Bool>?, perform action: @escaping ([NSItemProvider]) -> Bool) -> some View
-
+                
+                
+                // MARK: for drag'n drop
+//                .onDrag { return NSItemProvider(object: player.score.buffer.description) }
+//                .onDrop(of: [String], isTargeted: $isTargetedByDrop) {
+//                    values in
+//                    if let value = values.first {
+//                        if let number = Int(value) {
+//                            player.score.buffer = number
+//                            return true
+//                        }
+//                    }
+//                    return false
+//                }
         }
     }
     

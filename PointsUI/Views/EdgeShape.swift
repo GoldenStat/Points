@@ -12,7 +12,7 @@ import SwiftUI
 ///
 ///
 /// *struct lines*
-/// - TODO: the connetion point in Unit Points
+/// - TODO: declare the connection points in Unit Points
 /// start and endpoints scaled to a UnitRect
 ///
 struct EdgeShape: Shape {
@@ -30,7 +30,8 @@ struct EdgeShape: Shape {
         get { totalLength }
         set { totalLength = newValue }
     }
-    
+    // NOTE: - maybe later extract these as a struct, e.g. EdgeShapeSamples
+    // normally we use this one, but...
     private static let edges : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
         (start: (0.0, 1.0), end: (0.0, 0.0)),
         (start: (0.0, 0.0), end: (1.0, 0.0)),
@@ -40,19 +41,21 @@ struct EdgeShape: Shape {
         (start: (0.0, 1.0), end: (1.0, 0.0)),
     ]
     
-//    private static let HouseEdges : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
-//        (start: (0.0, 0.3), end: (0.0, 1.0)),
-//        (start: (0.0, 0.3), end: (1.0, 0.3)),
-//        (start: (0.0, 1.0), end: (1.0, 1.0)),
-//        (start: (1.0, 1.0), end: (1.0, 0.3)),
-//        (start: (0.0, 0.3), end: (1.0, 1.0)),
-//        (start: (0.0, 1.0), end: (1.0, 0.3)),
-//        (start: (0.0, 0.3), end: (0.5, 0.0)),
-//        (start: (0.5, 0.0), end: (1.0, 0.3))
-//    ]
+    // ...this one is bigger
+    private static let houseEdges : [(start: (CGFloat,CGFloat), end: (CGFloat,CGFloat))] = [
+        (start: (0.0, 0.3), end: (0.0, 1.0)),
+        (start: (0.0, 0.3), end: (1.0, 0.3)),
+        (start: (0.0, 1.0), end: (1.0, 1.0)),
+        (start: (1.0, 1.0), end: (1.0, 0.3)),
+        (start: (0.0, 0.3), end: (1.0, 1.0)),
+        (start: (0.0, 1.0), end: (1.0, 0.3)),
+        (start: (0.0, 0.3), end: (0.5, 0.0)),
+        (start: (0.5, 0.0), end: (1.0, 0.3))
+    ]
 
     static var numberOfEdges : Int { edges.count }
-    
+    static var numberOfHouseEdges : Int { edges.count }
+
     /// translate a relative Point from our corners to a CGPoint in our View
     private func cornerPoint(point: (CGFloat,CGFloat), in rect: CGRect) -> CGPoint {
         return CGPoint(

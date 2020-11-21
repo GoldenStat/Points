@@ -18,13 +18,7 @@ struct PlayerView: View {
     @ObservedObject var player : Player
     
     var currentRule : Rule { settings.rule }
-    var playerUI: PlayerUIType { currentRule.playerUI }
-//        =
-//        .matches
-//        .checkbox(5)
-//        .numberBox
-//        .selectionBox([3,4])
-    
+//    var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
     
@@ -39,7 +33,6 @@ struct PlayerView: View {
             VStack (spacing: 0) {
                 if titleStyle == .inline {
                     PlayerHeadline(player: player)
-                        .padding(.top)
                 }
                 
                 ScoreRepresentationView(
@@ -47,8 +40,7 @@ struct PlayerView: View {
                     uiType: playerUI
                 )
             }
-            .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: 0.5))
-            .emphasizeShape()
+            .emphasizeShape(cornerRadius: cornerRadius)
             .padding(.horizontal)
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
