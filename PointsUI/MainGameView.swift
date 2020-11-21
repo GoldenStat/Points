@@ -27,6 +27,8 @@ struct MainGameView: View {
             BoardUI()
                 .blur(radius: blurRadius)
                 .padding(.horizontal)
+                .drawingGroup()
+                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
                 .gesture(showHistoryGesture)
                 .environmentObject(settings)
                 .popover(isPresented: $showInfo) {
@@ -63,13 +65,20 @@ struct MainGameView: View {
                     }
             }
         }
-        .navigationBarHidden(true)
-        .toolbar() { ToolbarItemGroup(placement: .bottomBar) { toolbarView() } }
+//        .navigationBarHidden(false)
+        .toolbar() { ToolbarItemGroup(placement: .bottomBar) {
+            toolbarView()
+//                .drawingGroup()
+//                .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
+//                .transition(.move(edge: .bottom))
+        } }
     }
     
     
     @ViewBuilder func toolbarView() -> some View {
-        if showToolbar {
+        if hideToolBar {
+            EmptyView()
+        } else {
             HStack {
                 historyButtons
                 Spacer()
@@ -84,13 +93,11 @@ struct MainGameView: View {
                 Spacer()
                 InfoButton(showInfo: $showInfo)
             }
-        } else {
-            EmptyView()
         }
     }
     
     @State private var showEditView = false
-    @State private var showToolbar = true
+    @Binding var hideToolBar : Bool
     @State private var hideNavigationBar = true
     
     private func selectRule(rule: Rule) {
@@ -110,16 +117,17 @@ struct MainGameView: View {
     
     // MARK: History View
     func historyView(sized geometrySize: CGSize) -> some View {
-        let widthFactor: CGFloat = 0.9
-        let heightFactor: CGFloat = 0.95
+//        let widthFactor: CGFloat = 0.9
+        let heightFactor: CGFloat = 0.6 // 0.95
         
-        let width = geometrySize.width * widthFactor
+//        let width = geometrySize.width * widthFactor
         let height = geometrySize.height * heightFactor
         
         return ScoreHistoryView()
-            .frame(width: width,
-                   height: height)
-            .emphasizeShape()
+//            .frame(width: width,
+//                   height: height)
+            .frame(height: height)
+            .emphasizeShape(cornerRadius: 16.0)
             .environmentObject(settings)
             .onTapGesture() {
                 withAnimation() {
@@ -189,7 +197,7 @@ struct InfoButton: View {
 struct MainGameView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView() {
-            MainGameView()
+            MainGameView(hideToolBar: .constant(true))
         }
         .environmentObject(GameSettings())
     }

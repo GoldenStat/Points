@@ -15,25 +15,21 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
+            Color.background
             if gameStarted {
                 NavigationView {
-                    // TODO: improve this!
-                    // insert an EmptyView so we don't see the splitviewController??
-//                    if UIDevice.current.orientation.isLandscape {
-//                        EmptyView()
-//                    }
-                    MainGameView()
+                    MainGameView(hideToolBar: $hideStatusBar)
                         .navigationBarHidden(true)
                         .navigationBarBackButtonHidden(true)
+                        .highPriorityGesture(toggleStatusBar)
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
             } else {
                 TitleView(animatedState: .background)
+                    .gesture(startGameGesture)
             }
         }
         .edgesIgnoringSafeArea(.all)
-        .gesture(startGameGesture)
-        .simultaneousGesture(toggleNavigationBar)
         .environmentObject(settings)
     }
 
@@ -44,12 +40,20 @@ struct ContentView: View {
         }
     }
     
-    @State var hideStatusBar = false
-    var toggleNavigationBar : some Gesture {
-        TapGesture(count: 2)
-            .onEnded() {
-                hideStatusBar.toggle()
-        }
+    @State private var hideStatusBar = false
+    var toggleStatusBar : some Gesture {
+        DragGesture(minimumDistance: 30)
+            .onChanged() { value in
+                if value.location.y < value.startLocation.y {
+                    withAnimation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/) {
+                        hideStatusBar = false
+                    }
+                } else if value.location.y > value.startLocation.y {
+                    withAnimation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/) {
+                        hideStatusBar = true
+                    }
+                }
+            }
     }
 }
 

@@ -41,17 +41,18 @@ struct BoardUI: View {
                 } else {
                     // not landscape
                     // can't get it to work with LazyVGrid
-                    if objects == 2 {
-                        VStack {
-                            playerViews
+                    Group {
+                        if objects == 2 {
+                            VStack {
+                                playerViews
+                            }
+                        } else {
+                            LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
+                                playerViews
+                            }
                         }
-                        .frame(maxHeight: geo.size.height)
-                    } else {
-                        LazyVGrid(columns: vGridItems, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) {
-                            playerViews
-                        }
-                        .frame(maxHeight: geo.size.height)
                     }
+                    .frame(maxHeight: geo.size.height)
                 }
                 
                 if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {

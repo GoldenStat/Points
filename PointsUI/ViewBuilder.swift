@@ -66,34 +66,38 @@ struct EmphasizeCircle<Content: View> : View {
 struct EmphasizeShape<Content: View> : View {
     var maxHeight: CGFloat
     var content: Content
-    init(maxHeight: CGFloat = .infinity, @ViewBuilder content: () -> Content) {
+    var cornerRadius: CGFloat
+
+    init(maxHeight: CGFloat = .infinity, cornerRadius: CGFloat = 4, @ViewBuilder content: () -> Content) {
         self.maxHeight = maxHeight
         self.content = content()
+        self.cornerRadius = cornerRadius
     }
     
     var body: some View {
-        Clip(isInvisible: false) {
+        Clip(cornerRadius: cornerRadius, isInvisible: false) {
             content
         }
-            .clipped()
-            .frame(maxHeight: maxHeight)
-            .blur(radius: blurRadius)
-            .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
-            .overlay(
-                content
-            )
+        .clipped()
+        .frame(maxHeight: maxHeight)
+        .cornerRadius(cornerRadius)
+        .blur(radius: blurRadius)
+        .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
+        .overlay(
+            content
+        )
     }
     
-    let cornerRadius: CGFloat = 4
     let blurRadius: CGFloat = 5
     let shadow : (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) = (color: Color.accentColor, radius: 10.0, x: 8, y: 8)
 }
+
 struct Clip<Content: View> : View {
     var isInvisible: Bool = false
+    var cornerRadius: CGFloat
     var content: Content
     var borderColor: Color
     var lineWidth : CGFloat
-    var cornerRadius: CGFloat
 
     init(borderColor: Color = Color.blue, cornerRadius: CGFloat = 4, lineWidth: CGFloat = 4, isInvisible: Bool = false, @ViewBuilder content: () -> Content) {
         self.content = content()
@@ -131,8 +135,8 @@ extension View {
         }
     }
     
-    func emphasizeShape() -> some View {
-        EmphasizeShape() {
+    func emphasizeShape(cornerRadius: CGFloat = 4.0) -> some View {
+        EmphasizeShape(cornerRadius: cornerRadius) {
             self
         }
     }
