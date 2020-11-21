@@ -52,13 +52,16 @@ struct BoardUI: View {
         }
     }
     
-    @State var bufferPosition : CGPoint? = nil
-    @ViewBuilder var playerViews : some View {
-        let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
+    @ViewBuilder private var playerViews : some View {
+//        let variableRatio : CGFloat = objects.count == 2 ? 1.0 : 0.5
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
-                .aspectRatio(variableRatio, contentMode: .fill)
+//                .aspectRatio(variableRatio, contentMode: .fill)
                 .gesture(buildDragGesture(forPlayer: player))
+            // MARK: for dragn drop
+//                .onDrag { return NSItemProvider(object: UIImage(named: fruit.image) ?? UIImage()) }
+//                .onDrop(of supportedTypes: [String], isTargeted: Binding<Bool>?, perform action: @escaping ([NSItemProvider]) -> Bool) -> some View
+
         }
     }
     
@@ -66,6 +69,7 @@ struct BoardUI: View {
     
     /// bufferDragGesture
     /// - when we start dragging from a view, we fill the gameState's buffer with that view's players buffer points
+    @State private var bufferPosition : CGPoint? = nil
     private func buildDragGesture(forPlayer player: Player) -> some Gesture {
         DragGesture(minimumDistance: 20, coordinateSpace: .global)
                     .onChanged() { value in

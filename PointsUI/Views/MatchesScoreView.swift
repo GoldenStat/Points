@@ -40,7 +40,8 @@ struct MatchesScoreView: View {
     }
     
     // MARK: -- constants
-    var maxScore : Int { overrideMaxScore ?? settings.maxPoints } // depends on game settings
+    var maxScore : Int { min(Self.MAXScore, overrideMaxScore ?? settings.maxPoints) } // depends on game settings
+    static let MAXScore = 30
     
     private let ratio : CGFloat = 1.0
     private let columns = 2 // make variable?

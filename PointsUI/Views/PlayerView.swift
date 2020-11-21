@@ -18,12 +18,12 @@ struct PlayerView: View {
     @ObservedObject var player : Player
     
     var currentRule : Rule { settings.rule }
-    var playerUI: PlayerUIType =
-        .matches
+    var playerUI: PlayerUIType { currentRule.playerUI }
+//        =
+//        .matches
 //        .checkbox(5)
 //        .numberBox
 //        .selectionBox([3,4])
-//    { currentRule.playerUI }
     
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1

@@ -18,70 +18,80 @@ struct MainGameView: View {
     
     @State private var showMenu = false
     @State private var showHistory: Bool = false
-        
+    
     /// these views are all on top of another
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                // MARK: Board
-                BoardUI()
-                    .blur(radius: blurRadius)
-                    .padding()
-                    .gesture(showHistoryGesture)
-                    .environmentObject(settings)
-                    .popover(isPresented: $showInfo) {
-                        InfoView()
+        ZStack {
+            // MARK: Board
+            BoardUI()
+                .blur(radius: blurRadius)
+                .padding(.horizontal)
+                .gesture(showHistoryGesture)
+                .environmentObject(settings)
+                .popover(isPresented: $showInfo) {
+                    InfoView()
+                }
+                .popover(isPresented: $showEditView) {
+                    NavigationView() {
+                        EditView()
                     }
-                
-                // MARK: History View
-                if showHistory {
+                }
+            
+            // MARK: History View
+            if showHistory {
+                GeometryReader { geo in
                     historyView(sized: geo.size)
-                }
-                
-                // MARK: EditView
-                if showEditView {
-                    EditView()
-                        .transition(.opacity)
-                        .onAppear {
-                            showMenu = false
-                        }
-                }
-
-                // MARK: Won Round
-                if settings.playerWonRound != nil {
-                    PlayerWonRound()
-                        .onAppear {
-                            showMenu = false
-                        }
-                }
-                
-                // MARK: Won Game
-                if settings.playerWonGame != nil {
-                    PlayerWonGame()
-                        .onAppear {
-                            showMenu = false
-                        }
                 }
             }
             
-            .toolbar() {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    HStack {
-                        historyButtons
-                        Spacer()
-                        Button() {
-                            withAnimation() {
-                                showEditView.toggle()
-                            }
-                        } label: {
-                            Text(.init(systemName: "gear"))
-                        }
-                        
-                        Spacer()
-                        InfoButton(showInfo: $showInfo)
+            // MARK: EditView
+            //                if showEditView {
+            //                    EditView()
+            //                        .transition(.opacity)
+            //                        .onAppear {
+            //                            showMenu = false
+            //                        }
+            //                }
+            
+            // MARK: Won Round
+            if settings.playerWonRound != nil {
+                PlayerWonRound()
+                    .onAppear {
+                        showMenu = false
                     }
-                }
             }
+            
+            // MARK: Won Game
+            if settings.playerWonGame != nil {
+                PlayerWonGame()
+                    .onAppear {
+                        showMenu = false
+                    }
+            }
+        }
+        .navigationBarHidden(true)
+        .toolbar() { ToolbarItemGroup(placement: .bottomBar) { toolbarView() } }
+    }
+    
+    
+    @ViewBuilder func toolbarView() -> some View {
+        if showToolbar {
+            HStack {
+                historyButtons
+                Spacer()
+                Button() {
+                    withAnimation() {
+                        showEditView.toggle()
+                    }
+                } label: {
+                    Text(.init(systemName: "gear"))
+                }
+                
+                Spacer()
+                InfoButton(showInfo: $showInfo)
+            }
+        } else {
+            EmptyView()
         }
     }
     
@@ -108,10 +118,10 @@ struct MainGameView: View {
     func historyView(sized geometrySize: CGSize) -> some View {
         let widthFactor: CGFloat = 0.9
         let heightFactor: CGFloat = 0.95
-
+        
         let width = geometrySize.width * widthFactor
         let height = geometrySize.height * heightFactor
-
+        
         return ScoreHistoryView()
             .frame(width: width,
                    height: height)
