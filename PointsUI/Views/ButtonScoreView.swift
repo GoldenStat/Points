@@ -17,33 +17,42 @@ struct ButtonScoreView: View {
     
     var body: some View {
         ZStack {
+            Text("00")
+                .foregroundColor(.clear)
             Text(score.value.description)
-                .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
-                .foregroundColor(.points)
-                .padding()
-                .overlay(bufferView)
         }
+        .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
+        .fixedSize(horizontal: true, vertical: false)
+        .scaleEffect(0.8)
+        .foregroundColor(.points)
+        .padding()
+        .overlay(bufferView)
     }
     
     @ViewBuilder var bufferView: some View {
         if score.buffer > 0 {
-            Text(score.buffer.description)
-                .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
-                .foregroundColor(.blue)
-                .background(Color.white
-                                .opacity(0.05)
-                                .cornerRadius(20.0)
-                                .blur(radius: 2.0)
-                                )
-                
-                .scaleEffect(finalScaleFactor)
-                .offset(offset)
-                .onAppear() {
-                    withAnimation() {
-                        scaleFactor = finalScaleFactor
-                        offset = finalOffset
-                    }
+            ZStack {
+                Text("00")
+                    .foregroundColor(.clear)
+                Text(score.buffer.description)
+            }
+            .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
+            .fixedSize()
+            .foregroundColor(.blue)
+            .background(Color.background
+                            .border(Color.accentColor, width: 2)
+                            .opacity(0.05)
+                            .cornerRadius(20.0)
+                            .blur(radius: 2.0)
+            )
+            .scaleEffect(finalScaleFactor)
+            .offset(offset)
+            .onAppear() {
+                withAnimation() {
+                    scaleFactor = finalScaleFactor
+                    offset = finalOffset
                 }
+            }
         } else {
             EmptyView()
         }
@@ -51,7 +60,7 @@ struct ButtonScoreView: View {
     
     // MARK: - private variables
     
-    private let scoreSize : CGFloat = 144
+    private let scoreSize : CGFloat = 122
     private let bufferScoreSize : CGFloat = 180.0
     private var scoreOpacity : Double { score.buffer > 0 ? 0.3 : 1.0 }
     private let finalScaleFactor : CGFloat = 0.3
