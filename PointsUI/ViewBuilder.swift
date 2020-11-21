@@ -78,13 +78,12 @@ struct EmphasizeShape<Content: View> : View {
         Clip(cornerRadius: cornerRadius, isInvisible: false) {
             content
         }
-        .clipped()
-        .frame(maxHeight: maxHeight)
-        .cornerRadius(cornerRadius)
         .blur(radius: blurRadius)
         .shadow(color: shadow.color, radius: shadow.radius, x: shadow.x, y: shadow.y)
         .overlay(
-            content
+            Clip(cornerRadius: cornerRadius, isInvisible: true) {
+                content
+            }
         )
     }
     

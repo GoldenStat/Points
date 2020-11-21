@@ -281,6 +281,12 @@ fileprivate struct HistorySampleView : View {
         GeometryReader { geo in
             ZStack {
                 ScoreHistoryView()
+        //            .frame(width: width,
+        //                   height: height)
+                    .emphasizeShape(cornerRadius: 16.0)
+                    .frame(height: geo.size.height * 0.6)
+                    .transition(.opacity)
+                    .padding()
                 SampleButton()
                     .position(x: geo.size.width / 4, y: 28)
             }
