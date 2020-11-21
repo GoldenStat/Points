@@ -64,36 +64,41 @@ struct MainGameView: View {
                         showMenu = false
                     }
             }
+            
+            if !hideToolBar {
+                VStack {
+                    Spacer()
+                    bar
+                        .background(Color.background)
+                }
+            }
         }
-//        .navigationBarHidden(false)
-        .toolbar() { ToolbarItemGroup(placement: .bottomBar) {
-            toolbarView()
-//                .drawingGroup()
-//                .animation(.easeIn)
-//                .transition(.move(edge: .bottom))
-        } }
     }
-    
     
     @ViewBuilder func toolbarView() -> some View {
         if hideToolBar {
             EmptyView()
         } else {
-            HStack {
-                historyButtons
-                Spacer()
-                Button() {
-                    withAnimation() {
-                        showEditView.toggle()
-                    }
-                } label: {
-                    Text(.init(systemName: "gear"))
-                }
-                
-                Spacer()
-                InfoButton(showInfo: $showInfo)
-            }
+            bar
         }
+    }
+    
+    var bar : some View {
+        HStack {
+            historyButtons
+            Spacer()
+            Button() {
+                withAnimation() {
+                    showEditView.toggle()
+                }
+            } label: {
+                Text(.init(systemName: "gear"))
+            }
+            
+            Spacer()
+            InfoButton(showInfo: $showInfo)
+        }
+        .padding()
     }
     
     @State private var showEditView = false
@@ -169,7 +174,6 @@ struct MainGameView: View {
             }
             .disabled(!settings.canRedo)
     }
-    
     
     var undoSymbol: some View { Image(systemName: "arrow.left") }
     var redoSymbol: some View { Image(systemName: "arrow.right") }
