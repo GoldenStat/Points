@@ -67,15 +67,18 @@ struct EmphasizeShape<Content: View> : View {
     var maxHeight: CGFloat
     var content: Content
     var cornerRadius: CGFloat
+    var isInvisible: Bool
 
-    init(maxHeight: CGFloat = .infinity, cornerRadius: CGFloat = 4, @ViewBuilder content: () -> Content) {
+    init(maxHeight: CGFloat = .infinity, cornerRadius: CGFloat = 4, isInvisible: Bool = false, @ViewBuilder content: () -> Content) {
         self.maxHeight = maxHeight
         self.content = content()
         self.cornerRadius = cornerRadius
+        self.isInvisible = isInvisible
     }
-    
+
+
     var body: some View {
-        Clip(cornerRadius: cornerRadius, isInvisible: false) {
+        Clip(cornerRadius: cornerRadius, isInvisible: isInvisible) {
             content
         }
         .blur(radius: blurRadius)
@@ -134,8 +137,8 @@ extension View {
         }
     }
     
-    func emphasizeShape(cornerRadius: CGFloat = 4.0) -> some View {
-        EmphasizeShape(cornerRadius: cornerRadius) {
+    func emphasizeShape(cornerRadius: CGFloat = 4.0, isInvisible: Bool = false) -> some View {
+        EmphasizeShape(cornerRadius: cornerRadius, isInvisible: isInvisible) {
             self
         }
     }

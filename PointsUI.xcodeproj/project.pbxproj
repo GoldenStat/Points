@@ -116,8 +116,6 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				411DF206235C918200A37C64 /* BoardUI.swift */,
-				411DF204235C84B600A37C64 /* PlayerView.swift */,
 				4173576524A509D6002C10B2 /* EditView.swift */,
 				410CA6682532569100D92A29 /* EditPlayerNames.swift */,
 				4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */,
@@ -147,6 +145,8 @@
 				4168CE2824B3899D00DACD62 /* PointsUI.swift */,
 				4196485424D2CF09002FD363 /* ContentView.swift */,
 				411DF22023607CD100A37C64 /* MainGameView.swift */,
+				411DF206235C918200A37C64 /* BoardUI.swift */,
+				411DF204235C84B600A37C64 /* PlayerView.swift */,
 				41EC8FFF24E8240100038F5C /* Rule.swift */,
 				4168CE2624AF925800DACD62 /* GameSettings.swift */,
 				41F114A8236A073F00C6314D /* GlobalSettings.swift */,

@@ -37,9 +37,9 @@ struct BoxesScoreView: View {
                     .padding()
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
             }
-        }
+        }        
     }
-    
+        
     // MARK: -- constants
     var maxScoreSettings : Int { min(maxScore, settings.maxPoints) }
     

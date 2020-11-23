@@ -21,6 +21,7 @@ struct PlayerView: View {
     var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
     var scoreStep: Int = 1
+    var isActive: Bool = false
     
     var body: some View {
         
@@ -41,7 +42,7 @@ struct PlayerView: View {
                     uiType: playerUI
                 )
             }
-            .emphasizeShape(cornerRadius: cornerRadius)
+            .emphasizeShape(cornerRadius: cornerRadius, isInvisible: !isTargetedByDrop)
             .padding()
             .onTapGesture(perform: {
                 player.add(score: scoreStep)
@@ -49,8 +50,11 @@ struct PlayerView: View {
             })
         }
         .transition(.opacity)
+ 
     }
-    
+        
+    @State var isTargetedByDrop = false
+        
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 12.0
     private let scoreBoardRatio: CGFloat = 3/4

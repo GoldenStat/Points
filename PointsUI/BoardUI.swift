@@ -47,31 +47,23 @@ struct BoardUI: View {
                 }
                 
                 if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
+                    let centeredPosition = CGPoint(x: bufferPosition.x - bufferViewSize / 2.0,
+                                                   y: bufferPosition.y - bufferViewSize / 2.0)
                     BufferView(score: Score(0, buffer: bufferScore))
-                        .position(bufferPosition)
+                        .position(centeredPosition)
                 }
             }
             .padding()
         }
     }
+    
+    let bufferViewSize : CGFloat = 144.0
         
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items, id: \.id) { player in
             PlayerView(player: player)
                 .gesture(buildDragGesture(forPlayer: player))
                 
-                // MARK: for drag'n drop
-//                .onDrag { return NSItemProvider(object: player.score.buffer.description) }
-//                .onDrop(of: [String], isTargeted: $isTargetedByDrop) {
-//                    values in
-//                    if let value = values.first {
-//                        if let number = Int(value) {
-//                            player.score.buffer = number
-//                            return true
-//                        }
-//                    }
-//                    return false
-//                }
         }
     }
     

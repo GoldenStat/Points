@@ -12,12 +12,12 @@ import SwiftUI
 struct ScoreRepresentationView: View {
     var score: Score
     var uiType: PlayerUIType
-    
+        
     var body: some View {
         switch uiType {
         case .checkbox(let num):
             BoxesScoreView(score: score, linesPerBox: num)
-                .buffered(score: score)            
+                .buffered(score: score)
 
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
