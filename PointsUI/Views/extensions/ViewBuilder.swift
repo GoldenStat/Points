@@ -124,6 +124,26 @@ struct Clip<Content: View> : View {
     var strokeColor: Color { isInvisible ? Color.clear : borderColor }
 }
 
+fileprivate struct EmbedInStack: ViewModifier {
+    @Environment(\.sizeCategory) var sizeCategory
+
+    func body(content: Content) -> some View {
+        Group {
+            if sizeCategory > ContentSizeCategory.medium {
+                VStack { content }
+            } else {
+                HStack { content }
+            }
+        }
+    }
+}
+
+extension Group where Content: View {
+    func embedInStack() -> some View {
+        modifier(EmbedInStack())
+    }
+}
+
 extension View {
     func framedClip(borderColor: Color = Color.blue, cornerRadius: CGFloat = 4, lineWidth: CGFloat = 4, isInvisible: Bool = false) -> some View {
         Clip(borderColor: borderColor, cornerRadius: cornerRadius, lineWidth: lineWidth, isInvisible: isInvisible) {

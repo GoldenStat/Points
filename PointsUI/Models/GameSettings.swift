@@ -11,6 +11,7 @@ import Foundation
 class GameSettings: ObservableObject {
     
     @Published var players : Players
+    @Published var activePlayer: Player?
     @Published var history : History
     @Published var maxGames: Int
     @Published var maxPoints: Int
@@ -57,8 +58,9 @@ class GameSettings: ObservableObject {
                     }
                 }
         }
-        
     }
+    
+    
     
     @Published var chosenNumberOfPlayers : Int {
         didSet {
@@ -68,6 +70,7 @@ class GameSettings: ObservableObject {
 
     /// reset the settings to get a defined default
     func resetToFactorySettings() {
+        activePlayer = nil
         players = Players.sample
         chosenNumberOfPlayers = players.names.count
         history = History(names: players.names)
@@ -161,14 +164,20 @@ class GameSettings: ObservableObject {
         }
     }
     
-    /// reset the players. Only changes scores and resets history
+    /// reset the players. Changes scores, resets history - basically starts a new game
     func resetPlayers() {
         // create new players
         // also resets the wonGames!
-        players = Players(names: GlobalSettings.playerNames)
+        players = Players(names: playerNames)
         
         // history needs reset, when players reset
         history.reset()
+        activePlayer = nil
+    }
+    
+    // only reset the scores for a new round
+    func resetPlayerScores() {
+        _ = players.items.map { $0.score = Score(0) }
     }
     
     // add or remove players appropriately
@@ -180,6 +189,9 @@ class GameSettings: ObservableObject {
         while newPlayers < players.count {
             removeLastPlayer()
         }
+
+        // start a new game
+        resetPlayers()
     }
 
     // add or remove players appropriately
@@ -197,11 +209,13 @@ class GameSettings: ObservableObject {
         guard canAddPlayers else { return }
         players.add(name: "Player \(players.count + 1)")
         objectWillChange.send()
+        resetPlayers()
     }
     
     func removeLastPlayer() {
         guard canRemovePlayer else { return }
         _ = players.removeLast()
+        resetPlayers()
     }
 
 
@@ -219,13 +233,12 @@ class GameSettings: ObservableObject {
             playerWonRound = nil
         }
         // only set scores to zero, don't reset won games!
-        _ = players.items.map { $0.score = Score(0) }
+        resetPlayerScores()
         history.reset()
     }
     
     func newGame() {
         resetPlayers()
-        history.reset()
         playerWonRound = nil
         playerWonGame = nil
     }
@@ -269,19 +282,33 @@ class GameSettings: ObservableObject {
     func startTimer() {
         
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
-        registerPointsTimer?.invalidate()
+        cancelTimer()
+        
         registerPointsTimer = Timer.scheduledTimer(timeInterval: updateTimeIntervalToRegisterPoints,
                                      target: self,
                                      selector: #selector(updateRegisterPoints),
                                      userInfo: nil,
                                      repeats: false)
 
-        countAsRoundTimer?.invalidate()
         countAsRoundTimer = Timer.scheduledTimer(timeInterval: timeIntervalToCountAsRound,
                                      target: self,
                                      selector: #selector(updateRound),
                                      userInfo: nil,
                                      repeats: false)
+    }
+    
+    /// control Timer from outside
+    /// invalidates it
+    func cancelTimer() {
+        registerPointsTimer?.invalidate()
+        countAsRoundTimer?.invalidate()
+    }
+    
+    /// control Timer from outside
+    /// execute the actions it should perform
+    func fireTimer() {
+        updateRegisterPoints()
+        updateRound()
     }
     
     // when the timer fires, players need to be updated, and history buffer updated...
@@ -295,6 +322,7 @@ class GameSettings: ObservableObject {
         pointBuffer = 0
     }
     
+    // MARK: - history (controlled from above timer)
     /// a points buffer for history
     var bufferForHistoryStore: [Int]?
     

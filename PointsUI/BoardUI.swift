@@ -22,6 +22,7 @@ struct BoardUI: View {
     ]}
     
     var body: some View {
+        
         GeometryReader { geo in
             ZStack {
                 Color.invisible
@@ -34,15 +35,15 @@ struct BoardUI: View {
                     // can't get it to work with LazyVGrid
                     Group {
                         if objects == 2 {
-                            VStack {
-                                playerViews
-                            }
+                            VStack { playerViews }
                         } else {
                             LazyVGrid(columns: vGridItems, alignment: .center) {
                                 playerViews
                             }
                         }
                     }
+                    // NOTE: use maxHeight, instead?
+                    // NOTE: use @ScaledMetric for height?
                     .frame(height: geo.size.width * 3.0 / 2.0)
                 }
                 
@@ -61,9 +62,9 @@ struct BoardUI: View {
         
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items, id: \.id) { player in
-            PlayerView(player: player)
+            PlayerView(player: player, activePoint: $dragEndedLocation)
                 .gesture(buildDragGesture(forPlayer: player))
-                
+                .coordinateSpace(name: player.name)
         }
     }
     
@@ -72,16 +73,28 @@ struct BoardUI: View {
     /// bufferDragGesture
     /// - when we start dragging from a view, we fill the gameState's buffer with that view's players buffer points
     @State private var bufferPosition : CGPoint? = nil
+    @State var dragEndedLocation: CGPoint?
     private func buildDragGesture(forPlayer player: Player) -> some Gesture {
         DragGesture(minimumDistance: 20, coordinateSpace: .global)
                     .onChanged() { value in
                         bufferPosition = value.location
                         let buffer = player.score.buffer
                         if buffer > 0 {
+                            settings.cancelTimer()
                             settings.pointBuffer = player.score.buffer
                         }
                     }
                     .onEnded() { value in
+                        // find in which view we are and apply the buffer to that view's player's gesture
+//                        guard let targetPlayer = player(for: value.location),
+//                              targetPlayer != player else { return }
+//
+//                        guard let targetView = playerView(for: value.location) else { return }
+//
+//                        targetPlayer.score.buffer += player.score.buffer
+                        dragEndedLocation = value.location
+                        
+                        settings.fireTimer()
                         settings.pointBuffer = nil
                     }
     }

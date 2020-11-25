@@ -125,6 +125,7 @@ struct MainGameView: View {
         let heightFactor: CGFloat = 0.6
         let height = geometrySize.height * heightFactor
         
+        // NOTE: use @ScaledMetric for height? Use maxHeight, instead?
         return ScoreHistoryView()
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
