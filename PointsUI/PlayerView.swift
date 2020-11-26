@@ -51,12 +51,6 @@ struct PlayerView: View {
                     settings.startTimer()
                 })
             }
-            .onDrop(isTargetedByDrop: $isTargeted) { _ in
-                if let buffer = settings.pointBuffer {
-                    player.score.buffer = settings.pointBuffer
-                }
-                settings.pointBuffer = nil
-            }
             .transition(.opacity)
         }
     }
