@@ -329,7 +329,7 @@ class GameSettings: ObservableObject {
     /// register player's points from this round into history's buffer
     func updateHistoryBuffer(from scores: [Score]) {
         // add to  buffers
-        if bufferForHistoryStore != nil {
+        if bufferForHistoryStore != nil, bufferForHistoryStore!.count == scores.count {
             for (index,scoreBuffer) in scores.map({ $0.buffer }).enumerated() {
                 // as long as the round is not over
                 bufferForHistoryStore![index] += scoreBuffer

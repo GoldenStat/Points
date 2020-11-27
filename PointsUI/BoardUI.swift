@@ -16,13 +16,12 @@ struct BoardUI: View {
         settings.players.count
     }
         
-    var vGridItems : [GridItem] {[
+    var vGridItems : [GridItem] { [
         GridItem(.flexible()),
         GridItem(.flexible())
-    ]}
+    ] }
     
     var body: some View {
-        
         GeometryReader { geo in
             ZStack {
                 Color.invisible
@@ -30,6 +29,7 @@ struct BoardUI: View {
                     // in landscape we put all players in a row -- there is always enough space
                     HStack() { playerViews }
                         .frame(maxHeight: geo.size.height)
+                        .padding(.vertical)
                 } else {
                     // not landscape
                     // can't get it to work with LazyVGrid
@@ -42,9 +42,6 @@ struct BoardUI: View {
                             }
                         }
                     }
-                    // NOTE: use maxHeight, instead?
-                    // NOTE: use @ScaledMetric for height?
-                    .frame(height: geo.size.width * 3.0 / 2.0)
                 }
                 
                 if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
@@ -54,7 +51,6 @@ struct BoardUI: View {
                         .position(centeredPosition)
                 }
             }
-            .padding()
         }
     }
     

@@ -53,6 +53,10 @@ struct ButtonScoreView: View {
                     offset = finalOffset
                 }
             }
+            .onDisappear() {
+                scaleFactor = 0.3
+                offset = CGSize.zero
+            }
         } else {
             EmptyView()
         }
