@@ -110,8 +110,8 @@
             filePath = "PointsUI/BoardUI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "buildDragGesture(forPlayer:)"
             landmarkType = "7">
          </BreakpointContent>

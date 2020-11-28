@@ -11,7 +11,7 @@ import SwiftUI
 /// a View that handles a score depending on the representation Type
 struct ScoreRepresentationView: View {
     var score: Score
-    var uiType: PlayerUIType = .numberBox
+    var uiType: PlayerUIType
         
     var body: some View {
         switch uiType {
@@ -46,8 +46,8 @@ extension View {
 
 struct ScoreRepresentationView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreRepresentationView(score: Score(5, buffer: 3)) // ,
-//                                uiType: .checkbox(5))
+        ScoreRepresentationView(score: Score(5, buffer: 3),
+                                uiType: .checkbox(5))
             .environmentObject(GameSettings())
     }
 }
