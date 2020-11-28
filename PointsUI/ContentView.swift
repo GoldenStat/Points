@@ -9,15 +9,21 @@
 import SwiftUI
 
 struct ContentView: View {
-
+    
     @State var gameStarted : Bool
     @StateObject var settings : GameSettings = GameSettings()
-
+    
     var body: some View {
-        ZStack {
-            Color.background
-            if gameStarted {
-                NavigationView {
+        if gameStarted {
+            NavigationView {
+                ZStack {
+                    Color.background
+                    VStack {
+                        Text(settings.rule.description)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
                     MainGameView(hideToolBar: $hideStatusBar)
                         .statusBar(hidden: true)
                         .navigationBarHidden(true)
@@ -25,17 +31,22 @@ struct ContentView: View {
                         .gesture(toggleStatusBar)
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
-            } else {
+                .edgesIgnoringSafeArea(.all)
+            }
+            .environmentObject(settings)
+        } else {
+            ZStack {
+                Color.background
                 TitleView(animatedState: .background)
                     .gesture(startGameGesture)
             }
+            .edgesIgnoringSafeArea(.all)
+            .environmentObject(settings)
         }
-        .edgesIgnoringSafeArea(.all)
-        .environmentObject(settings)
     }
 
-    var startGameGesture : some Gesture {
-        TapGesture()
+var startGameGesture : some Gesture {
+    TapGesture()
         .onEnded {
             gameStarted = true
         }

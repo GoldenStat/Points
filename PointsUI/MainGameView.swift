@@ -75,6 +75,7 @@ struct MainGameView: View {
                 }
             }
         }
+        .navigationBarHidden(true)
     }
     
     @ViewBuilder func toolbarView() -> some View {

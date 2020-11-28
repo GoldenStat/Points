@@ -37,7 +37,7 @@ struct BoardUI: View {
                         if objects == 2 {
                             VStack { playerViews }
                         } else {
-                            LazyVGrid(columns: vGridItems, alignment: .center) {
+                            LazyVGrid(columns: vGridItems, alignment: .center, spacing: 0) {
                                 playerViews
                             }
                         }
@@ -51,8 +51,8 @@ struct BoardUI: View {
                         .position(centeredPosition)
                 }
             }
-            .ignoresSafeArea(edges: .all)
         }
+        .ignoresSafeArea(edges: .all)
     }
     
     let bufferViewSize : CGFloat = 144.0
@@ -60,8 +60,6 @@ struct BoardUI: View {
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items, id: \.id) { player in
             PlayerView(player: player, activePoint: $dragEndedLocation)
-                .frame(minHeight: 200)
-                .aspectRatio(contentMode: .fit)
                 .gesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
         }
