@@ -26,7 +26,6 @@ struct PlayerView: View {
     @Binding var activePoint: CGPoint?
     
     var body: some View {
-        GeometryReader { geo in
             VStack() {
                 
                 if titleStyle == .normal {
@@ -44,7 +43,7 @@ struct PlayerView: View {
                         uiType: playerUI
                     )
                 }
-                .emphasizeShape(cornerRadius: cornerRadius, isInvisible: !isTargetedByDrop(with: geo))
+                .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
                 .onTapGesture(perform: {
                     player.add(score: scoreStep)
@@ -52,7 +51,6 @@ struct PlayerView: View {
                 })
             }
             .transition(.opacity)
-        }
     }
         
     @State var isTargeted: Bool = false

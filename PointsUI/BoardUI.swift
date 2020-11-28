@@ -51,6 +51,7 @@ struct BoardUI: View {
                         .position(centeredPosition)
                 }
             }
+            .ignoresSafeArea(edges: .all)
         }
     }
     
@@ -59,6 +60,8 @@ struct BoardUI: View {
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items, id: \.id) { player in
             PlayerView(player: player, activePoint: $dragEndedLocation)
+                .frame(minHeight: 200)
+                .aspectRatio(contentMode: .fit)
                 .gesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
         }

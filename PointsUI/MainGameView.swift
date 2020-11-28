@@ -69,7 +69,9 @@ struct MainGameView: View {
                 VStack {
                     Spacer()
                     bar
-                        .background(Color.background)
+                        .background(Color.background.cornerRadius(10.0))
+                        .padding(5.0)
+                        .background(Color.white.opacity(0.3).cornerRadius(10.0))
                 }
             }
         }
@@ -101,14 +103,13 @@ struct MainGameView: View {
         .padding()
     }
     
-    @State private var showEditView = false
     @Binding var hideToolBar : Bool
+
+    // MARK: - View modifiers
+    
+    @State private var showEditView = false
     @State private var hideNavigationBar = true
-    
-    private func selectRule(rule: Rule) {
-        settings.rule = rule
-    }
-    
+        
     private  var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
         .onEnded() {_ in
             withAnimation() {

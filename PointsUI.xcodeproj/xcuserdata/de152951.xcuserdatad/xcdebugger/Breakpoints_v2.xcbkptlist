@@ -110,8 +110,8 @@
             filePath = "PointsUI/BoardUI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
             landmarkName = "buildDragGesture(forPlayer:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -127,8 +127,8 @@
             filePath = "PointsUI/PlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "isTargetedByDrop(with:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -143,8 +143,8 @@
             filePath = "PointsUI/PlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
             landmarkName = "isTargetedByDrop(with:)"
             landmarkType = "7">
          </BreakpointContent>

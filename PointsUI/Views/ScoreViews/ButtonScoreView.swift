@@ -25,7 +25,6 @@ struct ButtonScoreView: View {
         .fixedSize(horizontal: true, vertical: false)
         .scaleEffect(0.8)
         .foregroundColor(.points)
-        .padding()
         .overlay(bufferView)
     }
     
@@ -39,12 +38,12 @@ struct ButtonScoreView: View {
             .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
             .fixedSize()
             .foregroundColor(.blue)
-            .background(Color.background
-                            .border(Color.accentColor, width: 2)
-                            .opacity(0.05)
-                            .cornerRadius(20.0)
-                            .blur(radius: 2.0)
-            )
+//            .background(Color.background
+//                            .border(Color.accentColor, width: 2)
+//                            .opacity(0.05)
+//                            .cornerRadius(20.0)
+//                            .blur(radius: 2.0)
+//            )
             .scaleEffect(finalScaleFactor)
             .offset(offset)
             .onAppear() {
@@ -68,14 +67,14 @@ struct ButtonScoreView: View {
     private let bufferScoreSize : CGFloat = 180.0
     private var scoreOpacity : Double { score.buffer > 0 ? 0.3 : 1.0 }
     private let finalScaleFactor : CGFloat = 0.3
-    private let finalOffset = CGSize(width: 40, height: -80)
+    private let finalOffset = CGSize(width: 40, height: -60)
 }
 
 
 struct ButtonScorePreviewView: View {
     @State var score = Score(0, buffer: 3)
     var body: some View {
-        Color.gray
+        Color.background
             .overlay(
         ButtonScoreView(score: score)
             .onTapGesture(count: 2) {
