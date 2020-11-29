@@ -72,6 +72,7 @@ struct MainGameView: View {
                         .background(Color.background.cornerRadius(10.0))
                         .padding(5.0)
                         .background(Color.white.opacity(0.3).cornerRadius(10.0))
+                        .padding(.bottom)
                 }
             }
         }
@@ -120,7 +121,7 @@ struct MainGameView: View {
     }
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private  var blurBackground: Bool { showMenu && showHistory }
+    private  var blurBackground: Bool { showMenu || showHistory || showEditView}
     
     // MARK: History View
     func historyView(sized geometrySize: CGSize) -> some View {
@@ -139,6 +140,7 @@ struct MainGameView: View {
             }
             .transition(.opacity)
             .padding()
+            .padding(.top)
     }
     
     // MARK: - Buttons
