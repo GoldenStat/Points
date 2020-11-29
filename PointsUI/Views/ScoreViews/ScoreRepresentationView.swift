@@ -25,6 +25,7 @@ struct ScoreRepresentationView: View {
 
         case .matches:
             MatchesScoreView(score: score)
+                .padding()
                 .buffered(score: score)
             
         case .selectionBox(let values):

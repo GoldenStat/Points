@@ -73,13 +73,12 @@ struct PlayerView: View {
 }
 
 struct PlayerHeadline: View {
-    @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
     
     var body: some View {
         ZStack {
             Text("\(player.name)")
-                .font(.title)
+                .font(.largeTitle)
             HStack(spacing: 20) {
                 Spacer()
                 
@@ -87,9 +86,6 @@ struct PlayerHeadline: View {
                     .colorMultiply(.boardbgColor)
                     .frame(maxWidth: 120, maxHeight: 100)
             }
-            .background(Color.white
-                            .opacity(0.1)
-                            .blur(radius: /*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/))
         }
     }
 }

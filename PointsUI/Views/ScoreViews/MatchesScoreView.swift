@@ -30,7 +30,8 @@ struct MatchesScoreView: View {
     ] }
         
     var body: some View {
-        LazyVGrid(columns: vGrid) {
+        VStack {
+//        LazyVGrid(columns: vGrid) {
             ForEach(0 ..< numberOfBoxes) { index in
                 matchBox(at: index)
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
@@ -97,7 +98,6 @@ struct MatchBox: View {
                     Spacer()
                 }
             }
-            .padding()
             .padding()
         }
     }
