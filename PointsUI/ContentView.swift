@@ -18,6 +18,7 @@ struct ContentView: View {
             NavigationView {
                 ZStack {
                     Color.background
+                        .edgesIgnoringSafeArea(.all)
                     VStack {
                         Text(settings.rule.description)
                             .font(.largeTitle)
@@ -30,9 +31,8 @@ struct ContentView: View {
                         .navigationBarBackButtonHidden(true)
                         .gesture(toggleStatusBar)
                 }
-                .navigationViewStyle(StackNavigationViewStyle())
-                .edgesIgnoringSafeArea(.all)
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(settings)
         } else {
             ZStack {
@@ -45,14 +45,14 @@ struct ContentView: View {
         }
     }
 
-var startGameGesture : some Gesture {
-    TapGesture()
-        .onEnded {
-            gameStarted = true
-        }
+    var startGameGesture : some Gesture {
+        TapGesture()
+            .onEnded {
+                gameStarted = true
+            }
     }
     
-    @State private var hideStatusBar = false
+    @State private var hideStatusBar = true
     var toggleStatusBar : some Gesture {
         DragGesture(minimumDistance: 30)
             .onChanged() { value in

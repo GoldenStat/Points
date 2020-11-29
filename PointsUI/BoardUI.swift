@@ -34,13 +34,13 @@ struct BoardUI: View {
                     // not landscape
                     // can't get it to work with LazyVGrid
                     Group {
-                        if objects == 2 {
-                            VStack { playerViews }
-                        } else {
+//                        if objects == 2 {
+//                            VStack { playerViews }
+//                        } else {
                             LazyVGrid(columns: vGridItems, alignment: .center, spacing: 0) {
                                 playerViews
                             }
-                        }
+//                      }
                     }
                 }
                 
