@@ -73,6 +73,7 @@ struct PlayerView: View {
 }
 
 struct PlayerHeadline: View {
+    @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
     
     var body: some View {
@@ -81,8 +82,10 @@ struct PlayerHeadline: View {
                 .font(.title)
             HStack(spacing: 20) {
                 Spacer()
+                
                 MatchBox(score: Score(player.games))
-                    .frame(maxWidth: 100, maxHeight: 60)
+                    .colorMultiply(.boardbgColor)
+                    .frame(maxWidth: 120, maxHeight: 100)
             }
             .background(Color.white
                             .opacity(0.1)
@@ -92,11 +95,11 @@ struct PlayerHeadline: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: PlayerData(name: "Alexander", points: 10, games: 1))
+    static var player = Player(from: PlayerData(name: "Alexander", points: 10, games: 2))
     static var settings = GameSettings()
     
     static var previews: some View {
-        PlayerView(player: player, activePoint: .constant(nil))
+        PlayerView(player: player, activePoint: .constant(CGPoint(x: 100, y: 100)))
             .environmentObject(settings)
     }
 }

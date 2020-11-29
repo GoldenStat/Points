@@ -47,6 +47,7 @@ class History : ObservableObject {
     
     func reset() {
         states = []
+        redoStack = []
     }
     
     /// returns last Entry of game states

@@ -10,7 +10,7 @@ import Foundation
 
 class GameSettings: ObservableObject {
     
-    @Published var players : Players
+    @Published var players : Players { didSet { history.reset() }}
     @Published var activePlayer: Player?
     @Published var history : History
     @Published var maxGames: Int
@@ -170,8 +170,6 @@ class GameSettings: ObservableObject {
         // also resets the wonGames!
         players = Players(names: playerNames)
         
-        // history needs reset, when players reset
-        history.reset()
         activePlayer = nil
     }
     
@@ -238,7 +236,7 @@ class GameSettings: ObservableObject {
     }
     
     func newGame() {
-        resetPlayers()
+        resetPlayers() // also resets history
         playerWonRound = nil
         playerWonGame = nil
     }
