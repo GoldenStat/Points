@@ -15,13 +15,8 @@ import SwiftUI
 /// e.g. History.states[0] is the first round, History.state[5] are the scores of round 5
 class History : ObservableObject {
     
-    // only varialbe, get all information from here
     @Published var states = [GameState]() {
-        didSet {
-            canUndo = states.count > 0
-            canRedo = redoStack.count > 0
-            self.objectWillChange.send()
-        }
+        didSet { self.objectWillChange.send() }
     }
     
     @Published var buffer: GameState?
@@ -55,20 +50,19 @@ class History : ObservableObject {
         return playerNames.map { PlayerData(name: $0, points: 0, games: 0)}
     }
         
-    /// go back one step, if there is one
-    @Published var canUndo: Bool = false
+    /// remove last step and append it to redoStack
+    var canUndo: Bool { states.count > 0 }
     func undo() {
         guard canUndo else { return }
         redoStack.append(states.removeLast())
-        canRedo = true
     }
     
-    @Published var canRedo: Bool = false
+    /// append last step from redo Stack
+    var canRedo: Bool { redoStack.count > 0 }
     func redo() {
         guard canRedo else { return }
         states.append(redoStack.removeLast())
     }
-  
 
     /// clear the buffer
     /// use if actions get's interupted (e.g. we have some action stored, and we undo)

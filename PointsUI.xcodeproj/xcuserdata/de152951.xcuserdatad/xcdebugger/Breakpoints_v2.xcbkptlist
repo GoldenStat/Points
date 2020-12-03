@@ -175,10 +175,10 @@
             filePath = "PointsUI/Models/GameSettings.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
-            landmarkName = "GameSettings"
-            landmarkType = "3">
+            startingLineNumber = "350"
+            endingLineNumber = "350"
+            landmarkName = "updateRound()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

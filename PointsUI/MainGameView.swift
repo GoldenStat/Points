@@ -165,11 +165,11 @@ struct MainGameView: View {
     }
     
     @ViewBuilder var historyUndoButton: some View {
-        Button() { settings.redo() }
+        Button() { settings.undo() }
             label: {
                 undoSymbol
             }
-            .disabled(!settings.canRedo)
+            .disabled(!settings.canUndo)
     }
     
     @ViewBuilder var historyRedoButton: some View {
