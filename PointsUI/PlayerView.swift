@@ -20,7 +20,6 @@ struct PlayerView: View {
     var currentRule : Rule { settings.rule }
     var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
-    var scoreStep: Int = 1
     var isActive: Bool { settings.activePlayer == player }
     
     @Binding var activePoint: CGPoint?
@@ -46,11 +45,10 @@ struct PlayerView: View {
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
                 .onTapGesture(perform: {
-                    player.add(score: scoreStep)
+                    player.add(score: currentRule.scoreStep.defaultValue)
                     settings.startTimer()
                 })
             }
-            .transition(.opacity)
     }
         
     @State var isTargeted: Bool = false

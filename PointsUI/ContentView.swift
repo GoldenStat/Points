@@ -17,8 +17,7 @@ struct ContentView: View {
         if gameStarted {
             NavigationView {
                 ZStack {
-                    Color.background
-                        .edgesIgnoringSafeArea(.all)
+                    Background()
                     VStack {
                         Text(settings.rule.description)
                             .font(.largeTitle)
@@ -30,17 +29,17 @@ struct ContentView: View {
                         .navigationBarHidden(true)
                         .navigationBarBackButtonHidden(true)
                         .gesture(toggleStatusBar)
+                        
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(settings)
         } else {
             ZStack {
-                Color.background
+                Background()
                 TitleView(animatedState: .background)
                     .gesture(startGameGesture)
             }
-            .edgesIgnoringSafeArea(.all)
             .environmentObject(settings)
         }
     }
@@ -69,6 +68,12 @@ struct ContentView: View {
     }
 }
 
+//struct Background: View {
+//    var body: some View {
+//        Color.background
+//            .edgesIgnoringSafeArea(.all)
+//    }
+//}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

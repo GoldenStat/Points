@@ -28,7 +28,7 @@ struct BoardUI: View {
                 if UIDevice.current.orientation.isLandscape {
                     // in landscape we put all players in a row -- there is always enough space
                     HStack() { playerViews }
-                        .frame(maxHeight: geo.size.height)
+//                        .frame(maxHeight: geo.size.height)
                         .padding(.vertical)
                 } else {
                     // not landscape

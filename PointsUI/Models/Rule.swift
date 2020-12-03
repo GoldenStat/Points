@@ -83,6 +83,61 @@ enum PointsSelection: SelectableEnum {
     }
 }
 
+/// the scores that can be added
+/// can be;
+/// - *one*: a fixed step
+/// - *two*: one step, but ± (press or up in GUI to add, down to remove)
+/// - *some*: a selection of steps (dropdown in GUI) - first being default
+/// - *multiple*: two selections of steps (dropdown in GUI) - first being flexible, second being fixed (multiplier range?)
+
+enum ScoreStep : SelectableEnum {
+    case one(Int),
+         two(Int, Int),
+         some([Int]),
+         multiple([Int],[Int])
+
+
+    var defaultValue: Int {
+        switch self {
+        case .one(let value):
+            return value
+        case .two(let one, let two):
+            return [one, two].max()!
+        case .some(let values):
+            return values.max()!
+        case .multiple(let flexible, let fixed):
+            return [ flexible.max()!, fixed.max()! ].max()!
+        }
+    }
+    
+    /// maximum number of Points you can select, depending on which selection mechanism is used
+    var maxValue : Int {
+        switch self {
+        case .one(let value):
+            return value
+        case .two(let one, let two):
+            return [one, two].max()!
+        case .some(let values):
+            return values.max()!
+        case .multiple(let flexible, let fixed):
+            return [ flexible.max()!, fixed.max()! ].max()!
+        }
+    }
+    
+    var minValue : Int {
+        switch self {
+        case .one(let value):
+            return value
+        case .two(let one, let two):
+            return [one, two].min()!
+        case .some(let values):
+            return values.min()!
+        case .multiple(let flexible, let fixed):
+            return [ flexible.min()!, fixed.min()! ].min()!
+        }
+    }
+}
+
 /// how many rounds should be counted
 /// some games take a long time, so several rounds don't make sense, and maybe you want a fixed total
 /// also, maybe you want to let the user choose for certain games
@@ -123,6 +178,7 @@ struct Rule : Identifiable, Hashable {
     var playerUI: PlayerUIType
     var rounds: GamesCount
     var maxPlayers: Int { players.maxValue }
+    var scoreStep: ScoreStep = .one(1)
     
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([15,24,30]),
@@ -146,25 +202,29 @@ struct Rule : Identifiable, Hashable {
                                  maxPoints: .none,
                                  players: .fixed(4),
                                  playerUI: .numberBox,
-                                 rounds: .one
+                                 rounds: .one,
+                                 scoreStep: .one(10)
     )
     static let skat = Rule(name: "Skat",
                            maxPoints: .free(501),
                            players: .fixed(3),
                            playerUI: .selectionBox([9,10,11,12,23,24]), // selection with multiplier? keypad?
-                           rounds: .one
+                           rounds: .one,
+                           scoreStep: .multiple([9,10,11,12],[23,35,46])
     )
     static let shitzu = Rule(name: "Shitzu",
                              maxPoints: .fixed(1001),
                              players: .fixed(4),
                              playerUI: .selectionBox([-25,5,10,25]), // keypad?
-                             rounds: .wins([1,2,3])
+                             rounds: .wins([1,2,3]),
+                             scoreStep: .some([5,10,15,20,25,-25])
     )
     static let romme = Rule(name: "Rommé",
                             maxPoints: .fixed(501),
                             players: .selection([2,3,4,5,6]),
                             playerUI: .numberBox,
-                            rounds: .rounds([1,2,3,5])
+                            rounds: .rounds([1,2,3,5]),
+                            scoreStep: .two(10, -10)
     )
     static let scopa = Rule(name: "Scopa",
                             maxPoints: .fixed(15),
@@ -179,7 +239,7 @@ struct Rule : Identifiable, Hashable {
                             rounds: .wins([1,2,3,5])
     )
 
-    init(name: String, maxPoints: PointsSelection = .none, players: PlayerCount, playerUI: PlayerUIType, rounds: GamesCount) {
+    init(name: String, maxPoints: PointsSelection = .none, players: PlayerCount, playerUI: PlayerUIType, rounds: GamesCount, scoreStep : ScoreStep = .one(1)) {
         self.id = Self.count
         Self.count += 1
         self.name = name
@@ -187,6 +247,7 @@ struct Rule : Identifiable, Hashable {
         self.players = players
         self.playerUI = playerUI
         self.rounds = rounds
+        self.scoreStep = scoreStep
     }
     
 }
