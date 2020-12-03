@@ -110,25 +110,9 @@
             filePath = "PointsUI/BoardUI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "buildDragGesture(forPlayer:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C84F40AC-B102-4368-A32B-62F3B804242B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PointsUI/Models/GameSettings.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
-            landmarkName = "newRound()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -142,10 +126,10 @@
             filePath = "PointsUI/Models/GameSettings.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "350"
-            endingLineNumber = "350"
-            landmarkName = "updateRound()"
-            landmarkType = "7">
+            startingLineNumber = "345"
+            endingLineNumber = "345"
+            landmarkName = "GameSettings"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

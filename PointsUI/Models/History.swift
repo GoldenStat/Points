@@ -19,6 +19,7 @@ class History : ObservableObject {
         didSet { self.objectWillChange.send() }
     }
     
+    /// a buffer for the history for points that will be assigned, but aren't, yet
     @Published var buffer: GameState?
     
     struct Sample {

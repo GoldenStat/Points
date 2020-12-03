@@ -149,7 +149,7 @@ class GameSettings: ObservableObject {
         GlobalSettings.ruleID = rule.id        
     }
         
-    // MARK: control player data
+    // MARK: - control player data
     var numberOfPlayers: Int { players.count }
     
     var playerNames: [ String ] { players.names }
@@ -241,23 +241,15 @@ class GameSettings: ObservableObject {
         playerWonGame = nil
     }
     
-    
-    // a hack to send an event to all observers when the history functions are used
-    @Published var needsUpdate = false
-    
-    var canUndo: Bool { history.canUndo }
-    var canRedo: Bool { history.canRedo }
-    
     /// clears all players buffers (used for undo)
     /// returns true if a buffer was cleared
     private func clearBuffers() -> Bool {
         return players.clearBuffers()
     }
     
-    // MARK: History functions
+    // MARK: - History functions
     /// clears buffers first, then goes back in history
     func undo() {
-        needsUpdate.toggle()
         if !clearBuffers() {
             history.undo()
         }
@@ -265,12 +257,11 @@ class GameSettings: ObservableObject {
     }
     
     func redo() {
-        needsUpdate.toggle()
         history.redo()
         updatePlayersWithCurrentState()
     }
     
-    // MARK: Timers
+    // MARK: - Timers
     private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
     private var countAsRoundTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
 
@@ -324,6 +315,10 @@ class GameSettings: ObservableObject {
     /// a points buffer for history
     var bufferForHistoryStore: [Int]?
     
+    /// forward calls to history
+    var canUndo: Bool { history.canUndo }
+    var canRedo: Bool { history.canRedo }
+
     /// register player's points from this round into history's buffer
     func updateHistoryBuffer(from scores: [Score]) {
         // add to  buffers

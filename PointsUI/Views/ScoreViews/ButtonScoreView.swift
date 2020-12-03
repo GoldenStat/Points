@@ -20,6 +20,7 @@ struct ButtonScoreView: View {
     var body: some View {
         ZStack {
             Text("00")
+                .padding()
                 .foregroundColor(.clear)
             Text(score.value.description)
         }
@@ -27,9 +28,8 @@ struct ButtonScoreView: View {
         .fixedSize(horizontal: true, vertical: false)
         .scaleEffect(0.8)
         .foregroundColor(.points)
-        .matchedGeometryEffect(id: "bufferEffect", in: nspace)
-        .overlay(bufferView
-                    .matchedGeometryEffect(id: "bufferEffect", in: nspace))
+        .matchedGeometryEffect(id: "bufferEffect", in: nspace, properties: .frame, anchor: .center, isSource: true)
+        .overlay(bufferView)
     }
     
     @ViewBuilder var bufferView: some View {
@@ -37,29 +37,25 @@ struct ButtonScoreView: View {
             ZStack {
                 Text("00")
                     .foregroundColor(.clear)
+                    .padding()
                 Text(score.buffer.description)
             }
             .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
             .fixedSize()
             .foregroundColor(.blue)
-//            .background(Color.background
-//                            .border(Color.accentColor, width: 2)
-//                            .opacity(0.05)
-//                            .cornerRadius(20.0)
-//                            .blur(radius: 2.0)
-//            )
             .scaleEffect(finalScaleFactor)
             .offset(offset)
-            .onAppear() {
-                withAnimation() {
-                    scaleFactor = finalScaleFactor
-                    offset = finalOffset
-                }
-            }
-            .onDisappear() {
-                scaleFactor = 0.3
-                offset = CGSize.zero
-            }
+//            .onAppear() {
+//                withAnimation() {
+//                    scaleFactor = finalScaleFactor
+//                    offset = finalOffset
+//                }
+//            }
+//            .onDisappear() {
+//                scaleFactor = 0.3
+//                offset = CGSize.zero
+//            }
+            .matchedGeometryEffect(id: "bufferEffect", in: nspace, properties: .frame, anchor: .center, isSource: false)
         } else {
             EmptyView()
         }
