@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ButtonScoreView: View {
     
+    @Namespace var nspace
+    
     var score: Score
     
     @State private var scaleFactor: CGFloat = 0.3
@@ -25,7 +27,9 @@ struct ButtonScoreView: View {
         .fixedSize(horizontal: true, vertical: false)
         .scaleEffect(0.8)
         .foregroundColor(.points)
-        .overlay(bufferView)
+        .matchedGeometryEffect(id: "bufferEffect", in: nspace)
+        .overlay(bufferView
+                    .matchedGeometryEffect(id: "bufferEffect", in: nspace))
     }
     
     @ViewBuilder var bufferView: some View {
@@ -72,7 +76,7 @@ struct ButtonScoreView: View {
 
 
 struct ButtonScorePreviewView: View {
-    @State var score = Score(0, buffer: 3)
+    @State var score = Score(11, buffer: 3)
     var body: some View {
         Color.background
             .overlay(
