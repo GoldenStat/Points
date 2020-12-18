@@ -23,6 +23,8 @@
 		4139A3F225238EDC006E713B /* MatchesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F125238EDC006E713B /* MatchesScoreView.swift */; };
 		4139A3F725239133006E713B /* SelectionScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F625239133006E713B /* SelectionScoreView.swift */; };
 		414CC4C72569C62E00B5C10D /* EdgeShapeSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */; };
+		41648E61258D1CE20070FB42 /* TopMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E60258D1CE20070FB42 /* TopMenuBar.swift */; };
+		41648E64258D1E340070FB42 /* BottomMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E63258D1E340070FB42 /* BottomMenuBar.swift */; };
 		4168CE2524AF922000DACD62 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2424AF922000DACD62 /* InfoView.swift */; };
 		4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2624AF925800DACD62 /* GameSettings.swift */; };
 		4168CE2924B3899D00DACD62 /* PointsUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2824B3899D00DACD62 /* PointsUIApp.swift */; };
@@ -81,6 +83,8 @@
 		4139A3F125238EDC006E713B /* MatchesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesScoreView.swift; sourceTree = "<group>"; };
 		4139A3F625239133006E713B /* SelectionScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionScoreView.swift; sourceTree = "<group>"; };
 		414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EdgeShapeSamples.swift; path = PointsUI/Views/EdgeShapeSamples.swift; sourceTree = SOURCE_ROOT; };
+		41648E60258D1CE20070FB42 /* TopMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopMenuBar.swift; sourceTree = SOURCE_ROOT; };
+		41648E63258D1E340070FB42 /* BottomMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BottomMenuBar.swift; path = PointsUI/BottomMenuBar.swift; sourceTree = SOURCE_ROOT; };
 		4168CE2424AF922000DACD62 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4168CE2624AF925800DACD62 /* GameSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettings.swift; sourceTree = "<group>"; };
 		4168CE2824B3899D00DACD62 /* PointsUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsUIApp.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 		4105415A256EAE83001E60CA /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
+				41648E63258D1E340070FB42 /* BottomMenuBar.swift */,
+				41648E60258D1CE20070FB42 /* TopMenuBar.swift */,
 				41694CDE258AC1A000E8DB8C /* CountdownView.swift */,
 				41DFDF5C252E2C550068F129 /* MatchView.swift */,
 				410CA6682532569100D92A29 /* EditPlayerNames.swift */,
@@ -334,6 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4168CE2924B3899D00DACD62 /* PointsUIApp.swift in Sources */,
+				41648E61258D1CE20070FB42 /* TopMenuBar.swift in Sources */,
 				4196485524D2CF09002FD363 /* ContentView.swift in Sources */,
 				41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */,
 				41694CDF258AC1A000E8DB8C /* CountdownView.swift in Sources */,
@@ -361,6 +368,7 @@
 				4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */,
 				411DF2322360824900A37C64 /* BoxesScoreView.swift in Sources */,
 				41054157256EAE22001E60CA /* GameState.swift in Sources */,
+				41648E64258D1E340070FB42 /* BottomMenuBar.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
 				4173576424A507DA002C10B2 /* GameBoardView.swift in Sources */,
 				4125D14624D59DD700D00BA9 /* Box.swift in Sources */,

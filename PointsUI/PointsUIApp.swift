@@ -18,7 +18,7 @@ struct PointsUIApp: App {
     var body: some Scene {
         WindowGroup {
             if gameStarted {
-                ContentView(gameStarted: false)
+                ContentView()
             } else {
                 TitleView(title: Self.name, animatedState: animatedState)
                     .onAppear() { animatedState = TitleView.States.appear }

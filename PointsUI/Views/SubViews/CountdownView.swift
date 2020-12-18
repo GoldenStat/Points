@@ -34,7 +34,8 @@ struct CountDownArc: Shape {
 
 struct CountdownView: View {
     let totalTimeInterval: Double
-    let color: Color = .black
+    var color: Color = .black
+    
     @State private var length: Double = 1.0
     var body: some View {
         CountDownArc(length: length)

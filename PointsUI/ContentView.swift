@@ -11,39 +11,55 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
-    @State var gameStarted : Bool
-    
-    @State private var hideNavigationBar = true
+        
+    @State var showInfo: Bool = false
+    @State var showEditView: Bool = false
     
     var body: some View {
         NavigationView {
             ZStack {
                 Color.boardbgColor
-                
-                MainGameView(hideToolBar: $hideStatusBar)
+                    .edgesIgnoringSafeArea(.top)
+                VStack {
+                    if (!hideStatusBar) {
+                        TopMenuBar()
+                    }
+                    
+                    MainGameView()
+                    
+                    if (!hideStatusBar) {
+                        BottomMenuPreviewBar()
+                    }
+                }
                 
             }
             .statusBar(hidden: true)
-            .navigationBarHidden(hideNavigationBar)
+            .navigationBarHidden(hideStatusBar)
             .navigationBarBackButtonHidden(true)
             .navigationTitle(settings.rule.description)
-            .gesture(toggleStatusBar)
-            
+            .gesture(dragStatusBar)
+            .popover(isPresented: $showInfo) {
+                InfoView()
+            }
+            .popover(isPresented: $showEditView) {
+                EditView()
+                    .environmentObject(settings)
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .environmentObject(settings)
     }
     
     @State private var hideStatusBar = true
-    var toggleStatusBar : some Gesture {
+    var dragStatusBar : some Gesture {
         DragGesture(minimumDistance: 30)
             .onChanged() { value in
                 if value.location.y < value.startLocation.y {
-                    withAnimation(.easeIn) {
+                    withAnimation() {
                         hideStatusBar = false
                     }
                 } else if value.location.y > value.startLocation.y {
-                    withAnimation(.easeIn) {
+                    withAnimation() {
                         hideStatusBar = true
                     }
                 }
@@ -53,6 +69,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(gameStarted: false)
+        ContentView()
     }
 }

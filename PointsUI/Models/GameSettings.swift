@@ -252,6 +252,9 @@ class GameSettings: ObservableObject {
     var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
     var timeIntervalToCountAsRound: TimeInterval { updateSpeed.double * 2.0 }
 
+    @Published var timerPointsStarted = false
+    @Published var timerHistoryStarted = false
+    
     func startTimer() {
         
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
@@ -262,12 +265,9 @@ class GameSettings: ObservableObject {
                                      selector: #selector(updateRegisterPoints),
                                      userInfo: nil,
                                      repeats: false)
-
-        countAsRoundTimer = Timer.scheduledTimer(timeInterval: timeIntervalToCountAsRound,
-                                     target: self,
-                                     selector: #selector(updateRound),
-                                     userInfo: nil,
-                                     repeats: false)
+        
+        timerPointsStarted = true
+        timerHistoryStarted = true
     }
     
     /// control Timer from outside
@@ -275,6 +275,8 @@ class GameSettings: ObservableObject {
     func cancelTimer() {
         registerPointsTimer?.invalidate()
         countAsRoundTimer?.invalidate()
+        timerPointsStarted = false
+        timerHistoryStarted = false
     }
     
     /// control Timer from outside
@@ -293,6 +295,7 @@ class GameSettings: ObservableObject {
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
         pointBuffer = nil
+        timerPointsStarted = false
     }
     
     // MARK: - history (controlled from above timer)
@@ -322,6 +325,7 @@ class GameSettings: ObservableObject {
         bufferForHistoryStore = nil
         countAsRoundTimer?.invalidate()
         countAsRoundTimer = nil
+        timerHistoryStarted = false
     }
     
     /// updates the players with score from current state
