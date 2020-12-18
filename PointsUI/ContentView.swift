@@ -16,38 +16,22 @@ struct ContentView: View {
     @State private var hideNavigationBar = true
     
     var body: some View {
-        if gameStarted {
-            NavigationView {
-                ZStack {
-                    Color.boardbgColor
-                    
-                    MainGameView(hideToolBar: $hideStatusBar)
-                    
-                }
-                .statusBar(hidden: true)
-                .navigationBarHidden(hideNavigationBar)
-                .navigationBarBackButtonHidden(true)
-                .navigationTitle(settings.rule.description)
-                .gesture(toggleStatusBar)
+        NavigationView {
+            ZStack {
+                Color.boardbgColor
+                
+                MainGameView(hideToolBar: $hideStatusBar)
                 
             }
-            .navigationViewStyle(StackNavigationViewStyle())
-            .environmentObject(settings)
-        } else {
-            ZStack {
-                Background()
-                TitleView(animatedState: .background)
-                    .gesture(startGameGesture)
-            }
-            .environmentObject(settings)
+            .statusBar(hidden: true)
+            .navigationBarHidden(hideNavigationBar)
+            .navigationBarBackButtonHidden(true)
+            .navigationTitle(settings.rule.description)
+            .gesture(toggleStatusBar)
+            
         }
-    }
-
-    var startGameGesture : some Gesture {
-        TapGesture()
-            .onEnded {
-                gameStarted = true
-            }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .environmentObject(settings)
     }
     
     @State private var hideStatusBar = true

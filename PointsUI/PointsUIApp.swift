@@ -12,10 +12,22 @@ import SwiftUI
 @main
 struct PointsUIApp: App {
     static let name = "Points UI"
+    @State private var gameStarted = false
+    @State private var animatedState = TitleView.States.initial
     
     var body: some Scene {
         WindowGroup {
-            ContentView(gameStarted: false)
+            if gameStarted {
+                ContentView(gameStarted: false)
+            } else {
+                TitleView(title: Self.name, animatedState: animatedState)
+                    .onAppear() { animatedState = TitleView.States.appear }
+                    .onDisappear() { animatedState = TitleView.States.background }
+                    .gesture(TapGesture()
+                                .onEnded {
+                                    gameStarted = true
+                                })
+            }
         }
     }
 }

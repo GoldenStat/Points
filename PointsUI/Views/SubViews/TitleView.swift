@@ -10,13 +10,15 @@ import SwiftUI
 
 struct TitleView: View {
     
-    @EnvironmentObject var settings: GameSettings
-    @State var animatedState = Params.initial
-
+    let title: String
+    var animatedState: TitleView.States
+    
     var body: some View {
         ZStack {
-            Color.background
-            Text(PointsUIApp.name)
+            Color.boardbgColor
+                .edgesIgnoringSafeArea(.all)
+
+            Text(title)
                 
                 .font(.system(size: animatedState.fontSize))
                 .rotationEffect(.degrees(animatedState.textAngle),
@@ -26,17 +28,11 @@ struct TitleView: View {
                 .opacity(animatedState.opacity)
                 .foregroundColor(animatedState.color)
                 .animation(animatedState.spring)
-                .onAppear {
-                    animatedState = Params.appear
-                }
         }
-//        .onTapGesture {
-//            animatedState = Params.background
-//        }
     }
         
     // MARK: - Defining constant parameters used for animating states
-    struct Params {
+    struct States {
         
         let spring: Animation
         let offset: CGSize
@@ -46,7 +42,7 @@ struct TitleView: View {
         let color: Color
         let opacity: Double
         
-        public static let initial = Params(spring: Animation.spring(response: 1.0, dampingFraction: 0.0, blendDuration: 1.0),
+        public static let initial = States(spring: Animation.spring(response: 1.0, dampingFraction: 0.0, blendDuration: 1.0),
                                             offset: CGSize(width: 0.0, height: -200),
                                             fontSize: 134,
                                             textAngle: 0,
@@ -54,7 +50,7 @@ struct TitleView: View {
                                             color: Color.primary,
                                             opacity: 1.0)
         
-        public static let appear = Params(spring: Animation.spring(response: 2.0, dampingFraction: 0.6, blendDuration: 1.0),
+        public static let appear = States(spring: Animation.spring(response: 2.0, dampingFraction: 0.6, blendDuration: 1.0),
                                            offset: CGSize(width: 0.0, height: 0),
                                            fontSize: 134,
                                            textAngle: 0,
@@ -62,7 +58,7 @@ struct TitleView: View {
                                            color: Color.points,
                                            opacity: 0.6)
         
-        public static let background = Params(spring: Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.4),
+        public static let background = States(spring: Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.4),
                                                offset: CGSize(width: 0.0, height: 0),
                                                fontSize: 134,
                                                textAngle: 45,
@@ -72,21 +68,8 @@ struct TitleView: View {
     }
 }
 
-struct Background: View {
-    
-    var body: some View {
-        ZStack {
-            Color.boardbgColor
-                .edgesIgnoringSafeArea(.all)
-            TitleView()
-        }
-    }
-}
-
-
-struct Background_Previews: PreviewProvider {
-    
+struct TitleView_Previews: PreviewProvider {
     static var previews: some View {
-        Background()
+        TitleView(title: PointsUIApp.name, animatedState: TitleView.States.initial)
     }
 }
