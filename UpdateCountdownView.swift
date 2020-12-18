@@ -9,7 +9,16 @@
 import SwiftUI
 
 struct CountDownArc: Shape {
-    let length : Double // number between 1.0 and 0.0
+    
+    var length : Double
+    
+    // needed to actually have an animation
+    var animatableData: Double {
+        get { length }
+        set { length = newValue }
+    }
+
+    // number between 1.0 and 0.0
     func path(in rect: CGRect) -> Path {
         let radius = min(rect.height, rect.width) / 2.0
         let center = CGPoint(
@@ -30,7 +39,7 @@ struct UpdateCountdownView: View {
         CountDownArc(length: length)
             .onAppear {
                 withAnimation(.linear(duration: totalTimeInterval)) {
-                    length = 1.0
+                    length = 0.0
                 }
             }
     }
@@ -39,7 +48,6 @@ struct UpdateCountdownView: View {
 struct UpdateCountdownView_Previews: PreviewProvider {
     static var previews: some View {
         UpdateCountdownView(totalTimeInterval: 5.0)
-            .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
-//        CountDownArc(length: 5.0)
+            .previewLayout(.fixed(width: 100, height: 200))
     }
 }
