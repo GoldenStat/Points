@@ -32,11 +32,12 @@ struct CountDownArc: Shape {
     }
 }
 
-struct UpdateCountdownView: View {
+struct CountdownView: View {
     let totalTimeInterval: Double
     @State private var length: Double = 1.0
     var body: some View {
         CountDownArc(length: length)
+            .rotation(Angle(degrees: -90))
             .onAppear {
                 withAnimation(.linear(duration: totalTimeInterval)) {
                     length = 0.0
@@ -45,9 +46,9 @@ struct UpdateCountdownView: View {
     }
 }
 
-struct UpdateCountdownView_Previews: PreviewProvider {
+struct CountdownView_Previews: PreviewProvider {
     static var previews: some View {
-        UpdateCountdownView(totalTimeInterval: 5.0)
-            .previewLayout(.fixed(width: 100, height: 200))
+        CountdownView(totalTimeInterval: 5.0)
+            .previewLayout(.fixed(width: 60, height: 60))
     }
 }
