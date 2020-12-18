@@ -34,10 +34,12 @@ struct CountDownArc: Shape {
 
 struct CountdownView: View {
     let totalTimeInterval: Double
+    let color: Color = .black
     @State private var length: Double = 1.0
     var body: some View {
         CountDownArc(length: length)
             .rotation(Angle(degrees: -90))
+            .fill(color)
             .onAppear {
                 withAnimation(.linear(duration: totalTimeInterval)) {
                     length = 0.0
