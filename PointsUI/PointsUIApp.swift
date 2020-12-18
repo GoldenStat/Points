@@ -19,6 +19,7 @@ struct PointsUIApp: App {
         }
     }
 }
+
 #if os(macOS)
 extension View {
     func navigationBarTitle(_ title: String) -> some View {

@@ -23,6 +23,8 @@ class GameSettings: ObservableObject {
         }
     }
     
+    @Published var pointBuffer: BufferSpace?
+    
     @Published var rule: Rule {
         didSet { processRuleUpdate() }
     }
@@ -88,7 +90,6 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .trucoVenezolano // needs to be set to enable calling methods
         setupRules()
-//        resetToFactorySettings()
     }
     
     
@@ -119,9 +120,6 @@ class GameSettings: ObservableObject {
         set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
     }
         
-    /// a buffer for Points to copy them somewhere else
-    var pointBuffer: Int?
-
     var possibleRules = [Rule]()
     
     func createRules() {
@@ -246,27 +244,13 @@ class GameSettings: ObservableObject {
     private func clearBuffers() -> Bool {
         return players.clearBuffers()
     }
-    
-    // MARK: - History functions
-    /// clears buffers first, then goes back in history
-    func undo() {
-        if !clearBuffers() {
-            history.undo()
-        }
-        updatePlayersWithCurrentState()
-    }
-    
-    func redo() {
-        history.redo()
-        updatePlayersWithCurrentState()
-    }
-    
+        
     // MARK: - Timers
     private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
     private var countAsRoundTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
 
     var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
-    var timeIntervalToCountAsRound: TimeInterval = 10 // the time we wait from last touch to register this as a round and add it to the history menu
+    var timeIntervalToCountAsRound: TimeInterval { updateSpeed.double * 2.0 }
 
     func startTimer() {
         
@@ -308,17 +292,13 @@ class GameSettings: ObservableObject {
         updateState()
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
-        pointBuffer = 0
+        pointBuffer = nil
     }
     
     // MARK: - history (controlled from above timer)
     /// a points buffer for history
     var bufferForHistoryStore: [Int]?
     
-    /// forward calls to history
-    var canUndo: Bool { history.canUndo }
-    var canRedo: Bool { history.canRedo }
-
     /// register player's points from this round into history's buffer
     func updateHistoryBuffer(from scores: [Score]) {
         // add to  buffers

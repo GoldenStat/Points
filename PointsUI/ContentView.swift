@@ -10,27 +10,26 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var gameStarted : Bool
     @StateObject var settings : GameSettings = GameSettings()
+    @State var gameStarted : Bool
+    
+    @State private var hideNavigationBar = true
     
     var body: some View {
         if gameStarted {
             NavigationView {
                 ZStack {
-                    Background()
-                    VStack {
-                        Text(settings.rule.description)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
+                    Color.boardbgColor
+                    
                     MainGameView(hideToolBar: $hideStatusBar)
-                        .statusBar(hidden: true)
-                        .navigationBarHidden(true)
-                        .navigationBarBackButtonHidden(true)
-                        .gesture(toggleStatusBar)
-                        
+                    
                 }
+                .statusBar(hidden: true)
+                .navigationBarHidden(hideNavigationBar)
+                .navigationBarBackButtonHidden(true)
+                .navigationTitle(settings.rule.description)
+                .gesture(toggleStatusBar)
+                
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(settings)
@@ -68,15 +67,8 @@ struct ContentView: View {
     }
 }
 
-//struct Background: View {
-//    var body: some View {
-//        Color.background
-//            .edgesIgnoringSafeArea(.all)
-//    }
-//}
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(gameStarted: true)
+        ContentView(gameStarted: false)
     }
 }

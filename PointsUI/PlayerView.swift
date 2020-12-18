@@ -21,14 +21,13 @@ struct PlayerView: View {
     var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
     var isActive: Bool { settings.activePlayer == player }
-    
-    @Binding var activePoint: CGPoint?
-    
+        
     var body: some View {
             VStack() {
                 
                 if titleStyle == .normal {
                     PlayerHeadline(player: player)
+                        .padding()
                 }
                 
                 VStack() {
@@ -49,14 +48,6 @@ struct PlayerView: View {
                     settings.startTimer()
                 })
             }
-    }
-        
-    @State var isTargeted: Bool = false
-    // NOTE: - delete if .onDrop works
-    func isTargetedByDrop(with geo: GeometryProxy) -> Bool {
-        guard let point = activePoint else { return false }
-        let answer = viewContains(point: point, proxy: geo)
-        return answer
     }
         
     // MARK: -- private variables
@@ -93,7 +84,7 @@ struct PlayerUI_Previews: PreviewProvider {
     static var settings = GameSettings()
     
     static var previews: some View {
-        PlayerView(player: player, activePoint: .constant(CGPoint(x: 100, y: 100)))
+        PlayerView(player: player)
             .environmentObject(settings)
     }
 }

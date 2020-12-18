@@ -39,12 +39,16 @@ struct BoardUI: View {
                     }
                 }
                 
-                if let bufferPosition = bufferPosition, let bufferScore = settings.pointBuffer {
-                    let centeredPosition = CGPoint(x: bufferPosition.x - bufferViewSize / 2.0,
-                                                   y: bufferPosition.y - bufferViewSize / 2.0)
-                    BufferView(score: Score(0, buffer: bufferScore))
+                if let buffer = settings.pointBuffer {
+                    let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
+                                                   y: buffer.position.y - bufferViewSize / 2.0)
+                    BufferView(score: Score(0, buffer: buffer.points))
                         .position(centeredPosition)
+                    
+                    BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
+                        .padding(.bottom)
                 }
+                
             }
         }
         .ignoresSafeArea(edges: .all)
@@ -54,7 +58,7 @@ struct BoardUI: View {
         
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items, id: \.id) { player in
-            PlayerView(player: player, activePoint: $dragEndedLocation)
+            PlayerView(player: player)
                 .gesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
         }
@@ -64,27 +68,20 @@ struct BoardUI: View {
     
     /// bufferDragGesture
     /// - when we start dragging from a view, we fill the gameState's buffer with that view's players buffer points
-    @State private var bufferPosition : CGPoint? = nil
-    @State var dragEndedLocation: CGPoint?
     private func buildDragGesture(forPlayer player: Player) -> some Gesture {
         DragGesture(minimumDistance: 20, coordinateSpace: .global)
                     .onChanged() { value in
-                        bufferPosition = value.location
                         let buffer = player.score.buffer
-                        if buffer > 0 {
+                        if buffer != 0 {
                             settings.cancelTimer()
-                            settings.pointBuffer = player.score.buffer
+                            let location = value.location.applying(.init(translationX: 60, y: 60))
+                            settings.pointBuffer = BufferSpace(position: location, points: buffer)
                         }
                     }
                     .onEnded() { value in
-                        // find in which view we are and apply the buffer to that view's player's gesture
-//                        guard let targetPlayer = player(for: value.location),
-//                              targetPlayer != player else { return }
-//
-//                        guard let targetView = playerView(for: value.location) else { return }
-//
-//                        targetPlayer.score.buffer += player.score.buffer
-                        dragEndedLocation = value.location
+                        if let pointBuffer = settings.pointBuffer {
+                            pointBuffer.wasDropped = true
+                        }
                         
                         settings.fireTimer()
                         settings.pointBuffer = nil

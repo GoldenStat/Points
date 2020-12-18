@@ -68,7 +68,7 @@ struct MainGameView: View {
             if !hideToolBar {
                 VStack {
                     Spacer()
-                    bar
+                    toolbarView()
                         .background(Color.background.cornerRadius(10.0))
                         .padding(5.0)
                         .background(Color.white.opacity(0.3).cornerRadius(10.0))
@@ -121,7 +121,7 @@ struct MainGameView: View {
     }
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private  var blurBackground: Bool { showMenu || showHistory || showEditView}
+    private  var blurBackground: Bool { showMenu || showHistory || showEditView }
     
     // MARK: History View
     func historyView(sized geometrySize: CGSize) -> some View {
@@ -165,19 +165,19 @@ struct MainGameView: View {
     }
     
     @ViewBuilder var historyUndoButton: some View {
-        Button() { settings.undo() }
+        Button() { settings.history.undo() }
             label: {
                 undoSymbol
             }
-            .disabled(!settings.canUndo)
+            .disabled(!settings.history.canUndo)
     }
     
     @ViewBuilder var historyRedoButton: some View {
-        Button() { settings.redo() }
+        Button() { settings.history.redo() }
             label: {
                 redoSymbol
             }
-            .disabled(!settings.canRedo)
+            .disabled(!settings.history.canRedo)
     }
     
     var undoSymbol: some View { Image(systemName: "arrow.left") }

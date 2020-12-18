@@ -15,9 +15,10 @@ import SwiftUI
 /// e.g. History.states[0] is the first round, History.state[5] are the scores of round 5
 class History : ObservableObject {
     
-    @Published var states = [GameState]() {
-        didSet { self.objectWillChange.send() }
-    }
+    @Published var states = [GameState]()
+//    {
+//        didSet { self.objectWillChange.send() }
+//    }
     
     /// a buffer for the history for points that will be assigned, but aren't, yet
     @Published var buffer: GameState?
@@ -37,9 +38,10 @@ class History : ObservableObject {
     
     init(names: [String]) {
         playerNames = names
+        states.append(GameState(buffer: playerNames.map {_ in 0}))
     }
     
-    var redoStack : [GameState] = []
+    @Published var redoStack : [GameState] = []
     
     func reset() {
         states = []
@@ -51,14 +53,23 @@ class History : ObservableObject {
         return playerNames.map { PlayerData(name: $0, points: 0, games: 0)}
     }
         
-    /// remove last step and append it to redoStack
+    /// if the buffer has content, delete it
+    /// if not, remove last step and append it to redoStack
     var canUndo: Bool { states.count > 0 }
+    
     func undo() {
         guard canUndo else { return }
-        redoStack.append(states.removeLast())
+        if buffer !=  nil {
+            // first invalidate the buffer (not redoable)
+            buffer = nil
+        } else {
+            // only undo if buffer is empty
+            redoStack.append(states.removeLast())
+        }
     }
     
     /// append last step from redo Stack
+    /// if there is no step to 'redo', ignore silently
     var canRedo: Bool { redoStack.count > 0 }
     func redo() {
         guard canRedo else { return }
