@@ -12,22 +12,28 @@ struct TopMenuBar : View {
     @EnvironmentObject var settings: GameSettings
     
     var body: some View {
-        HStack {
+        ZStack {
             Text(settings.rule.description)
                 .font(.title)
                 .fontWeight(.bold)
             
-            ZStack {
-                if settings.timerPointsStarted {
-                    CountdownView(totalTimeInterval: settings.updateTimeIntervalToRegisterPoints,
-                                  color: Color.pointbuffer)
-                    
+            HStack {
+                Spacer()
+                ZStack {
+                    if settings.timerRoundStarted {
+                        CountdownView(totalTimeInterval: settings.timeIntervalToCountRound - settings.timeIntervalToCountPoints,
+                                      color: Color.points)
+                            .aspectRatio(contentMode: .fit)
+                    }
+                    if settings.timerPointsStarted {
+                        CountdownView(totalTimeInterval: settings.timeIntervalToCountPoints,
+                                      color: Color.pointbuffer)
+                            .aspectRatio(contentMode: .fit)
+                    }
                 }
-                if settings.timerHistoryStarted {
-                    CountdownView(totalTimeInterval: settings.timeIntervalToCountAsRound,
-                                  color: Color.points)
-                }
+                .padding()
             }
+            .frame(width: 360, height: 40)
         }
     }
 }
@@ -36,6 +42,6 @@ struct TopMenuBar_Previews: PreviewProvider {
     static var previews: some View {
         TopMenuBar()
             .environmentObject(GameSettings())
-            .previewLayout(.fixed(width: 480, height: 100))
+            .previewLayout(.fixed(width: 380, height: 40))
     }
 }

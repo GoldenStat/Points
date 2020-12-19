@@ -247,47 +247,53 @@ class GameSettings: ObservableObject {
         
     // MARK: - Timers
     private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
-    private var countAsRoundTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
+    private var registerRoundStarted : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
 
-    var updateTimeIntervalToRegisterPoints: TimeInterval { updateSpeed.double }
-    var timeIntervalToCountAsRound: TimeInterval { updateSpeed.double * 2.0 }
+    var timeIntervalToCountPoints: TimeInterval { updateSpeed.double }
+    var timeIntervalToCountRound: TimeInterval { updateSpeed.double * 2.0 }
 
     @Published var timerPointsStarted = false
-    @Published var timerHistoryStarted = false
+    @Published var timerRoundStarted = false
     
     func startTimer() {
         
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         cancelTimer()
         
-        registerPointsTimer = Timer.scheduledTimer(timeInterval: updateTimeIntervalToRegisterPoints,
+        registerPointsTimer = Timer.scheduledTimer(timeInterval: timeIntervalToCountPoints,
                                      target: self,
-                                     selector: #selector(updateRegisterPoints),
+                                     selector: #selector(updatePoints),
                                      userInfo: nil,
                                      repeats: false)
-        
+
+        registerRoundStarted = Timer.scheduledTimer(timeInterval: timeIntervalToCountRound,
+                                     target: self,
+                                     selector: #selector(updateRound),
+                                     userInfo: nil,
+                                     repeats: false)
+
         timerPointsStarted = true
-        timerHistoryStarted = true
+        timerRoundStarted = false
     }
     
     /// control Timer from outside
     /// invalidates it
     func cancelTimer() {
         registerPointsTimer?.invalidate()
-        countAsRoundTimer?.invalidate()
+        registerRoundStarted?.invalidate()
         timerPointsStarted = false
-        timerHistoryStarted = false
+        timerRoundStarted = false
     }
     
     /// control Timer from outside
     /// execute the actions it should perform
     func fireTimer() {
-        updateRegisterPoints()
+        updatePoints()
         updateRound()
     }
     
     // when the timer fires, players need to be updated, and history buffer updated...
-    @objc private func updateRegisterPoints() {
+    @objc private func updatePoints() {
         // add to bufferForHistory
         updateHistoryBuffer(from: players.scores) // add player's score buffer to bufferForHistoryStore
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
@@ -296,6 +302,7 @@ class GameSettings: ObservableObject {
         registerPointsTimer = nil
         pointBuffer = nil
         timerPointsStarted = false
+        timerRoundStarted = true
     }
     
     // MARK: - history (controlled from above timer)
@@ -311,21 +318,27 @@ class GameSettings: ObservableObject {
                 bufferForHistoryStore![index] += scoreBuffer
             }
         } else {
-            bufferForHistoryStore = scores.map { $0.buffer }
+            // only add scores if they are non-zero
+            let buffers = scores.map { $0.buffer }
+            if (buffers != buffers.map { _ in 0 }) {
+                bufferForHistoryStore = buffers
+            }
         }
         
         // overwirte history store
         history.store(state: GameState(buffer: bufferForHistoryStore))
+        
+        
     }
         
     /// this function adds the changes to the history, counting it as a round.
     /// history adds hist buffer to it's states
     @objc private func updateRound() {
-        history.save() 
+        history.save()
         bufferForHistoryStore = nil
-        countAsRoundTimer?.invalidate()
-        countAsRoundTimer = nil
-        timerHistoryStarted = false
+        registerRoundStarted?.invalidate()
+        registerRoundStarted = nil
+        timerRoundStarted = false
     }
     
     /// updates the players with score from current state

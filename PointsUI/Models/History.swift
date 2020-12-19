@@ -16,9 +16,6 @@ import SwiftUI
 class History : ObservableObject {
     
     @Published var states = [GameState]()
-//    {
-//        didSet { self.objectWillChange.send() }
-//    }
     
     /// a buffer for the history for points that will be assigned, but aren't, yet
     @Published var buffer: GameState?
@@ -38,7 +35,7 @@ class History : ObservableObject {
     
     init(names: [String]) {
         playerNames = names
-        states.append(GameState(buffer: playerNames.map {_ in 0}))
+//        states.append(GameState(buffer: playerNames.map {_ in 0}))
     }
     
     @Published var redoStack : [GameState] = []

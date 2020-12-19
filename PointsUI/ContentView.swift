@@ -23,6 +23,7 @@ struct ContentView: View {
                 VStack {
                     if (!hideStatusBar) {
                         TopMenuBar()
+                            .scaledToFit()
                     }
                     
                     MainGameView()
@@ -34,7 +35,7 @@ struct ContentView: View {
                 
             }
             .statusBar(hidden: true)
-            .navigationBarHidden(hideStatusBar)
+            .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationTitle(settings.rule.description)
             .gesture(dragStatusBar)
@@ -50,7 +51,7 @@ struct ContentView: View {
         .environmentObject(settings)
     }
     
-    @State private var hideStatusBar = true
+    @State private var hideStatusBar = false
     var dragStatusBar : some Gesture {
         DragGesture(minimumDistance: 30)
             .onChanged() { value in
