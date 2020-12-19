@@ -33,7 +33,7 @@ struct CountDownArc: Shape {
 }
 
 struct CountdownView: View {
-    var totalTimeInterval: Double
+    let totalTimeInterval: Double
     var color: Color = .black
     
     @State private var length: Double = 1.0
