@@ -23,15 +23,17 @@ struct TopMenuBar : View {
                     if settings.timerRoundStarted {
                         CountdownView(totalTimeInterval: settings.timeIntervalToCountRound - settings.timeIntervalToCountPoints,
                                       color: Color.points)
+                            .opacity(0.3)
                             .aspectRatio(contentMode: .fit)
                     }
                     if settings.timerPointsStarted {
                         CountdownView(totalTimeInterval: settings.timeIntervalToCountPoints,
                                       color: Color.pointbuffer)
+                            .opacity(0.3)
                             .aspectRatio(contentMode: .fit)
                     }
                 }
-                .padding()
+                .padding(10)
             }
             .frame(width: 360, height: 40)
         }

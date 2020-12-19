@@ -31,7 +31,7 @@ struct BottomMenuBar : View {
             InfoButton(showInfo: $showInfo)
         }
         .padding()
-//        .background(Color.background.cornerRadius(10.0))
+        .background(Color.background.cornerRadius(10.0))
         .padding(5.0)
         .background(Color.white.opacity(0.3).cornerRadius(10.0))
         

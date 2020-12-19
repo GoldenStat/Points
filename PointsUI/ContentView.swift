@@ -29,7 +29,11 @@ struct ContentView: View {
                     MainGameView()
                     
                     if (!hideStatusBar) {
-                        BottomMenuPreviewBar()
+                        BottomMenuBar(showEditView: $showEditView,
+                                      showInfo: $showInfo,
+                                      backAction: { settings.undo() },
+                                      forwardAction: { settings.redo() }
+                        )
                     }
                 }
                 

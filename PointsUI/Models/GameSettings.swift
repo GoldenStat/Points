@@ -351,5 +351,16 @@ class GameSettings: ObservableObject {
         }
     }
 
+    
+    // needed for object update
+    func undo() {
+        cancelTimer()
+        history.undo()
+    }
+    
+    func redo() {
+        cancelTimer()
+        history.redo()
+    }
 }
 

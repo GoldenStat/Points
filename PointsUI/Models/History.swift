@@ -35,7 +35,6 @@ class History : ObservableObject {
     
     init(names: [String]) {
         playerNames = names
-//        states.append(GameState(buffer: playerNames.map {_ in 0}))
     }
     
     @Published var redoStack : [GameState] = []
@@ -61,6 +60,7 @@ class History : ObservableObject {
             buffer = nil
         } else {
             // only undo if buffer is empty
+            // and there is something on the states stack
             redoStack.append(states.removeLast())
         }
     }
