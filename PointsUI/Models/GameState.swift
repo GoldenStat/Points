@@ -20,7 +20,7 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
     
     var activePlayerIndex = 0
     
-    init(players: [PlayerData]) {
+    init(players: [Player.Data]) {
         scores = players.map { $0.score.value }
     }
     

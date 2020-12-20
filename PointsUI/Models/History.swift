@@ -45,8 +45,8 @@ class History : ObservableObject {
     }
     
     /// returns last Entry of game states
-    var currentPlayers : [PlayerData] {
-        return playerNames.map { PlayerData(name: $0, points: 0, games: 0)}
+    var currentPlayers : [Player.Data] {
+        return playerNames.map { Player(name: $0).data }
     }
         
     /// if the buffer has content, delete it

@@ -10,23 +10,6 @@ import SwiftUI
 
 
 // MARK: - single Player
-
-/// Data representation of a player as a struct
-struct PlayerData: Codable, Identifiable, Equatable {
-    
-    var id = UUID()
-    var name: String
-    var score: Score
-    var gamesWon: Int = 0
-    
-    // when initializing a player his score has no buffer
-    init(name: String, points: Int, games: Int) {
-        self.name = name
-        self.score = Score(points)
-        self.gamesWon = games
-    }
-}
-
 func == (lhs: Player?, rhs: Player?) -> Bool {
     guard let lhs = lhs, let rhs = rhs else { return false }
     return lhs.id == rhs.id
@@ -34,7 +17,7 @@ func == (lhs: Player?, rhs: Player?) -> Bool {
 
 class Player: ObservableObject, Identifiable, Equatable {
 
-    var id = UUID()
+    let id = UUID()
     @Published var name: String
     @Published var games: Int = 0
     @Published var score = Score(0)
@@ -49,7 +32,7 @@ class Player: ObservableObject, Identifiable, Equatable {
     
     // MARK: initializers and converters
     
-    init(from data: PlayerData) {
+    init(from data: Data) {
         self.name = data.name
         self.score = data.score
         self.games = data.gamesWon
@@ -59,8 +42,21 @@ class Player: ObservableObject, Identifiable, Equatable {
         self.name = name
     }
     
-    var data: PlayerData {
-        PlayerData(name: name, points: score.value, games: games)
+    struct Data {
+        var name: String
+        var score: Score
+        var gamesWon: Int
+        
+        // when initializing a player his score has no buffer
+        init(name: String, score: Score = Score(0), games: Int = 0) {
+            self.name = name
+            self.score = Score(score.value)
+            self.gamesWon = games
+        }
+    }
+
+    var data: Data {
+        Data(name: name, score: score, games: games)
     }
     
 }
@@ -108,14 +104,10 @@ class Players: ObservableObject {
     var scores: [Score] { items.map {$0.score} }
     
     // MARK: conversion
-    var data: [PlayerData] {
+    var data: [Player.Data] {
         get { items.map {$0.data} }
         set { // updates the players with the given data
-            let maxIndex = Swift.min(names.count, newValue.count)
-            for i in 0 ..< maxIndex {
-                items[i].score = newValue[i].score
-                items[i].games = newValue[i].gamesWon
-            }
+            items = newValue.map { Player(from: $0)}
         }
     }
     

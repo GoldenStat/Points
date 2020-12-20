@@ -80,7 +80,7 @@ struct PlayerHeadline: View {
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: PlayerData(name: "Alexander", points: 10, games: 2))
+    static var player = Player(from: Player.Data(name: "Alexander", score: Score(10), games: 2))
     static var settings = GameSettings()
     
     static var previews: some View {

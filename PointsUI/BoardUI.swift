@@ -57,7 +57,7 @@ struct BoardUI: View {
     let bufferViewSize : CGFloat = 144.0
         
     @ViewBuilder private var playerViews : some View {
-        ForEach(settings.players.items, id: \.id) { player in
+        ForEach(settings.players.items) { player in
             PlayerView(player: player)
                 .gesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
