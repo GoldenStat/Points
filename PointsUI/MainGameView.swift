@@ -16,28 +16,17 @@ extension Color {
 struct MainGameView: View {
     
     @EnvironmentObject var settings : GameSettings
-    
-    @State private var showHistory: Bool = false
-    
+        
     /// these views are all on top of another
     var body: some View {
         ZStack {
     
             // MARK: Board
             BoardUI()
-                .blur(radius: blurRadius)
                 .padding(.horizontal)
                 .drawingGroup()
                 .animation(.easeIn)
-                .gesture(showHistoryGesture)
                 .environmentObject(settings)
-          
-            // MARK: History View
-            if showHistory {
-                GeometryReader { geo in
-                    historyView(sized: geo.size)
-                }
-            }
             
             // MARK: Won Round
             if settings.playerWonRound != nil {
@@ -50,38 +39,6 @@ struct MainGameView: View {
             }
             
         }
-    }
-            
-    // MARK: - History View
-
-    private  var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
-        .onEnded() {_ in
-            withAnimation() {
-                showHistory = true                
-            }
-        }
-    }
-    
-    private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private  var blurBackground: Bool { showHistory }
-    
-    func historyView(sized geometrySize: CGSize) -> some View {
-        let heightFactor: CGFloat = 0.6
-        let height = geometrySize.height * heightFactor
-        
-        // NOTE: use @ScaledMetric for height? Use maxHeight, instead?
-        return ScoreHistoryView()
-            .frame(height: height)
-            .emphasizeShape(cornerRadius: 16.0)
-            .environmentObject(settings)
-            .onTapGesture() {
-                withAnimation() {
-                    showHistory = false
-                }
-            }
-            .transition(.opacity)
-            .padding()
-            .padding(.top)
     }
 }
 
