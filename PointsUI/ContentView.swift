@@ -37,6 +37,7 @@ struct ContentView: View {
                         if showHistory {
                             GeometryReader { geo in
                                 historyView(sized: geo.size)
+                                    .offset(x: 0, y: 100)
                             }
                         }
                     }
@@ -94,10 +95,8 @@ struct ContentView: View {
         return ScoreHistoryView()
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
-            .environmentObject(settings)
             .transition(.opacity)
             .padding()
-            .padding(.top)
     }
     
     // MARK: - Status Bar
