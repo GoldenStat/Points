@@ -32,11 +32,10 @@ struct ContentView: View {
                         
                         
                         // MARK: History Views
-                        
-                        if showHistoryActionSymbol {
-                            HistoryActionView(systemName: symbolName)
+                        if showHistoryControls {
+                            HistoryControlView(showHistory: $showHistory)
                         }
-                        
+                                                
                         if showHistory {
                             GeometryReader { geo in
                                 historyView(sized: geo.size)
@@ -50,15 +49,19 @@ struct ContentView: View {
             .navigationBarBackButtonHidden(true)
             .navigationTitle(settings.rule.description)
             .onTapGesture {
-                if showHistory {
-                    withAnimation() {
-                        showHistory = false
-                    }
+                
+                withAnimation() {
+                    showHistory = false
+                    showHistoryControls = false
                 }
+                
             }
             .gesture(dragStatusBar)
-            .simultaneousGesture(historyActionGesture)
-            .gesture(showHistoryGesture)
+            .onLongPressGesture {
+                withAnimation() {
+                    showHistoryControls = true
+                }
+            }
 
             .popover(isPresented: $showInfo) {
                 InfoView()
@@ -77,13 +80,15 @@ struct ContentView: View {
     
     // MARK: - History View
     @State private var showHistory: Bool = false
-
-    private  var showHistoryGesture : some Gesture { LongPressGesture(minimumDuration: 1.0, maximumDistance: 50)
-        .onEnded() {_ in
-            withAnimation() {
-                showHistory = true
+    @State private var showHistoryControls: Bool = false
+    
+    private  var showHistoryGesture : some Gesture {
+        TapGesture(count: 2)
+            .onEnded() {_ in
+                withAnimation() {
+                    showHistory = true
+                }
             }
-        }
     }
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
@@ -98,11 +103,6 @@ struct ContentView: View {
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
             .environmentObject(settings)
-            .onTapGesture() {
-                withAnimation() {
-                    showHistory = false
-                }
-            }
             .transition(.opacity)
             .padding()
             .padding(.top)
@@ -121,49 +121,6 @@ struct ContentView: View {
                         hideStatusBar = false
                     }
                 }
-            }
-    }
-    
-    @State var symbolName: String = ""
-    
-    var historyActionGesture: some Gesture {
-        LongPressGesture(minimumDuration: 1)
-            .onChanged() { gesture in
-                showHistoryActionSymbol = true
-            }
-            .sequenced(before: historyDrag)
-    }
-    
-    @State var showHistoryActionSymbol: Bool = false
-    var historyDrag: some Gesture {
-        DragGesture(minimumDistance: 30)
-            .onChanged() { value in
-                if value.location.x < value.startLocation.x {
-                    withAnimation() {
-                        settings.undo()
-                        symbolName = "arrow.left"
-                    }
-                }
-                if value.location.x > value.startLocation.x {
-                    withAnimation() {
-                        settings.redo()
-                        symbolName = "arrow.right"
-                    }
-                }
-            }
-            .onEnded() { value in
-                if value.location.x < value.startLocation.x {
-                    withAnimation() {
-                        settings.undo()
-                    }
-                }
-                if value.location.x < value.startLocation.x {
-                    withAnimation() {
-                        settings.redo()
-                    }
-                }
-                showHistoryActionSymbol = false
-                symbolName = ""
             }
     }
     
