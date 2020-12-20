@@ -34,14 +34,12 @@ struct MenuBar : View {
             HStack {
                 Spacer()
                 ZStack {
-                    if settings.timerRoundStarted {
+                    if settings.timerPointsStarted {
+                        ActiveCircleView()
+                        .aspectRatio(contentMode: .fit)
+                    } else if settings.timerRoundStarted {
                         CountdownView(totalTimeInterval: settings.timeIntervalToCountRound - settings.timeIntervalToCountPoints,
                                       color: Color.points)
-                            .opacity(0.3)
-                            .aspectRatio(contentMode: .fit)
-                    } else if settings.timerPointsStarted {
-                        CountdownView(totalTimeInterval: settings.timeIntervalToCountPoints,
-                                      color: Color.pointbuffer)
                             .opacity(0.3)
                             .aspectRatio(contentMode: .fit)
                     } else {

@@ -49,9 +49,31 @@ struct CountdownView: View {
     }
 }
 
+struct ActiveCircleView: View {
+    var color: Color = .orange
+    @State private var scaleFactor : CGFloat = 0.5
+    @State private var opacity = 1.0
+    var body: some View {
+        Circle()
+            .fill(color)
+            .scaleEffect(scaleFactor)
+            .opacity(opacity)
+            .onAppear() {
+                withAnimation(
+                    Animation.easeInOut(duration: 1.2)
+                        .repeatForever(autoreverses: true)) {
+                    scaleFactor = 0.3
+                    opacity = 0.6
+                }
+            }
+    }
+}
+
 struct CountdownView_Previews: PreviewProvider {
     static var previews: some View {
-        CountdownView(totalTimeInterval: 5.0)
+//        CountdownView(totalTimeInterval: 5.0)
+            ActiveCircleView()
+                .frame(width: 40, height: 40)
             .previewLayout(.fixed(width: 60, height: 60))
     }
 }
