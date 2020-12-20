@@ -28,12 +28,18 @@ struct MatchesScoreView: View {
         GridItem(.flexible()),
         GridItem(.flexible()),
     ] }
-        
+       
+    var boxes: [MatchBox] {
+        (0 ..< numberOfBoxes).map { index in
+            matchBox(at: index)
+        }
+    }
+
     var body: some View {
         VStack {
 //        LazyVGrid(columns: vGrid) {
-            ForEach(0 ..< numberOfBoxes) { index in
-                matchBox(at: index)
+            ForEach(boxes) { box in
+                box
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
                     .aspectRatio(ratio, contentMode: .fit)
             }
@@ -48,7 +54,7 @@ struct MatchesScoreView: View {
     private let columns = 2 // make variable?
 
     // MARK: -- calculate points for each box
-    private func matchBox(at index: Int) -> some View {
+    private func matchBox(at index: Int) -> MatchBox {
         // count points and buffer points to what should be in this box
         func adjustedScore(from score: Score, at index: Int) -> Score {
             let thisBoxStartsAt = index * MatchBox.maxItems
@@ -62,8 +68,8 @@ struct MatchesScoreView: View {
     }
 }
 
-struct MatchBox: View {
-    
+struct MatchBox: View , Identifiable {
+    let id = UUID()
     var score: Score
     
     static let maxItems = 5 // maximum matches are 5

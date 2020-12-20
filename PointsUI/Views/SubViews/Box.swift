@@ -22,7 +22,8 @@ extension CGPoint {
 /// - Parameters
 /// - Parameter score: the current score the box has saved (drawn in Color.solid and Color.buffer)
 /// - Parameter edges: the maximum Edges that will be used from EdgeShape. *Must be* in range of edges aray
-struct Box: View {
+struct Box: View, Identifiable {
+    let id = UUID()
     var score : Score
     
     var cappedPoints : Double { min(maxLength, Double(score.value)) }

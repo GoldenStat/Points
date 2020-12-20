@@ -56,7 +56,7 @@ struct ScoreRowData : Identifiable {
     mutating func changeRow(addValues values: [CellData]) {
         
         guard values.count == scores.count else {
-            assertionFailure("You can only add rows with equal columns")
+            assertionFailure("Trying to add \(values.count) values to a row with \(scores.count) values")
             return
         }
         
@@ -90,7 +90,7 @@ struct HistoryScoreTableData : Identifiable {
         var previousScores: ScoreRowData?
         
         for row in data {
-            if var buffer = previousScores {
+            if var buffer = previousScores, row.scores.count > 0 {
                 buffer.changeRow(addValues: row.scores)
                 previousScores = ScoreRowData(scores: buffer.scores)
                 sums.append(buffer)

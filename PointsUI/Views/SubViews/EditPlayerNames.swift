@@ -57,7 +57,7 @@ struct EditPlayerNames: View {
     }
     
     var body: some View {
-        List(settings.players.items) { player in
+        List(players.items) { player in
             EditableTextField(binding: binding(for: player), placeholder: placeholder(for: player))
                 .onTapGesture() {
                     selectedPlayer = player

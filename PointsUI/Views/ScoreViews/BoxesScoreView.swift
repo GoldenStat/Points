@@ -29,17 +29,23 @@ struct BoxesScoreView: View {
         GridItem(.flexible()),
     ] }
     
+    var boxes: [Box] {
+        (0 ..< numberOfBoxes).map { index in
+            Box(score: thisBoxScore(from: index), edges: linesPerBox)
+        }
+    }
+    
     var body: some View {
         LazyVGrid(columns: vGrid) {
-            ForEach(0 ..< numberOfBoxes) { index in
-                Box(score: thisBoxScore(from: index), edges: linesPerBox)
+            ForEach(boxes) { box in
+                box
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
             }
         }        
     }
-        
+    
     // MARK: -- constants
     var maxScoreSettings : Int { min(maxScore, settings.maxPoints) }
     
