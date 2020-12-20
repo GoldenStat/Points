@@ -65,10 +65,26 @@ struct MenuBar : View {
     
 }
 
+struct MenuBarSampleView: View {
+    @State private var showEditView = false
+    @State private var showInfo = false
+    
+    var body: some View {
+        MenuBar(showEditView: $showEditView,
+                showInfo: $showInfo)
+            .sheet(isPresented: $showEditView) {
+                EditView()
+            }
+            .sheet(isPresented: $showInfo) {
+                InfoView()
+            }
+    }
+}
+
 struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
-        MenuBar(showEditView: .constant(false), showInfo: .constant(false))
+        MenuBarSampleView()
             .environmentObject(GameSettings())
-            .previewLayout(.fixed(width: 480, height: 100))
+//            .previewLayout(.fixed(width: 480, height: 100))
     }
 }

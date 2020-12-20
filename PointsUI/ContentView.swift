@@ -11,9 +11,6 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
-        
-    @State var showInfo: Bool = false
-    @State var showEditView: Bool = false
     
     var body: some View {
         NavigationView {
@@ -24,6 +21,7 @@ struct ContentView: View {
                 VStack {
                     MenuBar(showEditView: $showEditView,
                             showInfo: $showInfo)
+                        .zIndex(1) // needs to be in front for buttons to work...
                         .offset(x: 0, y: hideStatusBar ? -200 : 60)
                     
                     ZStack {
@@ -35,7 +33,7 @@ struct ContentView: View {
                         if showHistoryControls {
                             HistoryControlView(showHistory: $showHistory)
                         }
-                                                
+                        
                         if showHistory {
                             GeometryReader { geo in
                                 historyView(sized: geo.size)
@@ -48,21 +46,20 @@ struct ContentView: View {
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationTitle(settings.rule.description)
-            .onTapGesture {
-                
+            // MARK: Gestures
+            .onTapGesture() {
                 withAnimation() {
                     showHistory = false
                     showHistoryControls = false
                 }
-                
             }
-            .gesture(dragStatusBar)
+            .gesture(dragStatusBarGesture)
             .onLongPressGesture {
                 withAnimation() {
                     showHistoryControls = true
                 }
             }
-
+            // MARK: Popovers
             .popover(isPresented: $showInfo) {
                 InfoView()
             }
@@ -77,22 +74,17 @@ struct ContentView: View {
         .environmentObject(settings)
     }
     
+    // MARK: - overlay View triggers
+    @State var showInfo: Bool = false
+    @State var showEditView: Bool = false
+    @State private var showHistoryControls: Bool = false
+    @State private var hideStatusBar = false
     
     // MARK: - History View
     @State private var showHistory: Bool = false
-    @State private var showHistoryControls: Bool = false
-    
-    private  var showHistoryGesture : some Gesture {
-        TapGesture(count: 2)
-            .onEnded() {_ in
-                withAnimation() {
-                    showHistory = true
-                }
-            }
-    }
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private  var blurBackground: Bool { showHistory }
+    private var blurBackground: Bool { showHistory }
     
     func historyView(sized geometrySize: CGSize) -> some View {
         let heightFactor: CGFloat = 0.6
@@ -108,8 +100,8 @@ struct ContentView: View {
             .padding(.top)
     }
     
-    @State private var hideStatusBar = true
-    var dragStatusBar : some Gesture {
+    // MARK: - Status Bar
+    var dragStatusBarGesture : some Gesture {
         DragGesture(minimumDistance: 30)
             .onChanged() { value in
                 if value.location.y < value.startLocation.y && !hideStatusBar {
@@ -122,18 +114,6 @@ struct ContentView: View {
                     }
                 }
             }
-    }
-    
-}
-
-/// systemName ist passed to Image(systemName:)
-struct HistoryActionView: View {
-    var systemName: String
-    var body: some View {
-        Image(systemName: systemName)
-            .font(.largeTitle)
-            .scaleEffect(4)
-            .opacity(0.4)
     }
 }
 
