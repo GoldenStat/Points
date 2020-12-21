@@ -39,9 +39,9 @@ struct BoxesScoreView: View {
         LazyVGrid(columns: vGrid) {
             ForEach(boxes) { box in
                 box
+                    .animation(.easeInOut(duration: .lineAnimationSpeed))
                     .aspectRatio(contentMode: .fit)
                     .padding()
-                    .animation(.easeInOut(duration: .lineAnimationSpeed))
             }
         }        
     }

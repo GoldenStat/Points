@@ -60,10 +60,10 @@ struct ActiveCircleView: View {
             .opacity(opacity)
             .onAppear() {
                 withAnimation(
-                    Animation.easeInOut(duration: 1.2)
+                    Animation.easeInOut(duration: 0.8)
                         .repeatForever(autoreverses: true)) {
-                    scaleFactor = 0.3
-                    opacity = 0.6
+                    scaleFactor = 0.4
+                    opacity = 0.8
                 }
             }
     }

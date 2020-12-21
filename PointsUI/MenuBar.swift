@@ -12,6 +12,7 @@ struct MenuBar : View {
     @EnvironmentObject var settings: GameSettings
     @Binding var showEditView: Bool
     @Binding var showInfo: Bool
+    var padding: CGFloat = 10
     
     var body : some View {
         ZStack {
@@ -36,12 +37,14 @@ struct MenuBar : View {
                 ZStack {
                     if settings.timerPointsStarted {
                         ActiveCircleView()
-                        .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(padding)
                     } else if settings.timerRoundStarted {
                         CountdownView(totalTimeInterval: settings.timeIntervalToCountRound - settings.timeIntervalToCountPoints,
                                       color: Color.points)
                             .opacity(0.3)
                             .aspectRatio(contentMode: .fit)
+                            .padding(padding)
                     } else {
                         Button() {
                             showInfo.toggle()
@@ -64,18 +67,60 @@ struct MenuBar : View {
 }
 
 struct MenuBarSampleView: View {
+    @EnvironmentObject var settings : GameSettings
     @State private var showEditView = false
     @State private var showInfo = false
+    @State private var padding : CGFloat = 10
     
     var body: some View {
-        MenuBar(showEditView: $showEditView,
-                showInfo: $showInfo)
-            .sheet(isPresented: $showEditView) {
-                EditView()
+        VStack {
+            MenuBar(showEditView: $showEditView,
+                    showInfo: $showInfo, padding: padding)
+                .sheet(isPresented: $showEditView) {
+                    EditView()
+                }
+                .sheet(isPresented: $showInfo) {
+                    InfoView()
+                }
+            VStack {
+                Section(header: Text("Timer")) {
+                    HStack {
+                        Button(action: { settings.timerPointsStarted.toggle() }) {
+                            VStack {
+                                Text("Points")
+                                
+                                Text(string(bool: settings.timerPointsStarted))
+                                    .fontWeight(.bold)
+                            }
+                        }
+                        VStack {
+                            Button(action: { settings.timerRoundStarted.toggle() }) {
+                                Text("Round")
+                            }
+                            Text(string(bool: settings.timerRoundStarted))
+                                .fontWeight(.bold)
+                        }
+                        
+                        Button(action: { settings.timerPointsStarted = false; settings.timerRoundStarted = false }) {
+                            Text("Reset")
+                        }
+                    }
+                }
+                
+                Section(header: Text("Size")) {
+                    HStack {
+                        Text("Padding: ".appendingFormat("%2.0f", padding))
+                        Spacer()
+                        Button("+") { padding = padding + CGFloat(1) }
+                        Button("-") { padding = padding - CGFloat(1) }
+                    }
+                }
             }
-            .sheet(isPresented: $showInfo) {
-                InfoView()
-            }
+        }
+    }
+    
+    func string(bool: Bool) -> String {
+        bool ? "on" : "off"
     }
 }
 
@@ -83,6 +128,6 @@ struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
         MenuBarSampleView()
             .environmentObject(GameSettings())
-//            .previewLayout(.fixed(width: 480, height: 100))
+            .previewLayout(.fixed(width: 480, height: 100))
     }
 }
