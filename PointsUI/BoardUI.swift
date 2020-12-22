@@ -41,7 +41,7 @@ struct BoardUI: View {
                 
                 if let buffer = settings.pointBuffer {
                     let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
-                                                   y: buffer.position.y - bufferViewSize / 2.0)
+                                                   y: buffer.position.y - bufferViewSize)
                     BufferView(score: Score(0, buffer: buffer.points))
                         .position(centeredPosition)
                     
@@ -82,7 +82,9 @@ struct BoardUI: View {
                         if let pointBuffer = settings.pointBuffer {
                             pointBuffer.wasDropped = true
                         }
-                        
+//                        for let droppedPlayer in settings.players.items {
+//                            if droppedPlayer.nspace == value.location
+//                        }
                         settings.fireTimer()
                         settings.pointBuffer = nil
                     }

@@ -49,7 +49,7 @@ struct PlayerView: View {
                 })
             }
     }
-        
+            
     // MARK: -- private variables
     private let cornerRadius : CGFloat = 12.0
     private let scoreBoardRatio: CGFloat = 3/4

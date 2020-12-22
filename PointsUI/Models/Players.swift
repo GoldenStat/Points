@@ -18,6 +18,7 @@ func == (lhs: Player?, rhs: Player?) -> Bool {
 class Player: ObservableObject, Identifiable, Equatable {
 
     let id = UUID()
+    @Namespace var nspace
     @Published var name: String
     @Published var games: Int = 0
     @Published var score = Score(0)
