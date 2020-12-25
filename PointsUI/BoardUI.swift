@@ -22,7 +22,7 @@ struct BoardUI: View {
     ] }
     
     var body: some View {
-        GeometryReader { geo in
+//        GeometryReader { geo in
             ZStack {
                 Color.invisible
                 if UIDevice.current.orientation.isLandscape {
@@ -32,10 +32,17 @@ struct BoardUI: View {
                 } else {
                     // not landscape
                     // can't get it to work with LazyVGrid
-                    Group {
+                    if objects > 2 {
+//                    Group {
                             LazyVGrid(columns: vGridItems, alignment: .center, spacing: 0) {
                                 playerViews
                             }
+                    } else {
+                        LazyVGrid(columns: [GridItem(.flexible())]) {
+                            playerViews
+//                                .frame(maxHeight: geo.size.height / 5.0)
+                        }
+//                        .frame(width: geo.size.width * 0.6)
                     }
                 }
                 
@@ -49,7 +56,7 @@ struct BoardUI: View {
                         .padding(.bottom)
                 }
                 
-            }
+//            }
         }
         .ignoresSafeArea(edges: .all)
     }

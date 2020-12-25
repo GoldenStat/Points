@@ -41,7 +41,7 @@ struct BoxesScoreView: View {
                 box
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
                     .aspectRatio(contentMode: .fit)
-                    .padding()
+                    .padding(10)
             }
         }        
     }

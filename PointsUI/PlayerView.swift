@@ -27,19 +27,21 @@ struct PlayerView: View {
                 
                 if titleStyle == .normal {
                     PlayerHeadline(player: player)
-                        .padding()
+                        .padding(.horizontal)
                 }
                 
                 VStack() {
                     
                     if titleStyle == .inline {
                         PlayerHeadline(player: player)
+                            .padding(.horizontal)
                     }
                     
                     ScoreRepresentationView(
                         score: player.score,
                         uiType: playerUI
                     )
+//                    .aspectRatio(contentMode: .fill)
                 }
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
@@ -68,23 +70,40 @@ struct PlayerHeadline: View {
         ZStack {
             Text("\(player.name)")
                 .font(.largeTitle)
-            HStack(spacing: 20) {
+                .fixedSize()
+            HStack(spacing: 0) {
                 Spacer()
-                
-                MatchBox(score: Score(player.games))
-                    .colorMultiply(.boardbgColor)
-                    .frame(maxWidth: 120, maxHeight: 100)
+                PlayerGamesCounterView(games: player.games)
+            }
+            .offset(x: 0, y: 30)
+        }
+    }
+}
+
+struct PlayerGamesCounterView: View {
+    let games: Int
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<games) { num in
+                Circle()
+                    .fill(Color.pointbuffer)
+                    .frame(width: 10, height: 10)
+                    .offset(x: 0, y: -10)
             }
         }
     }
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: Player.Data(name: "Alexander", score: Score(10), games: 2))
+    static var player = Player(from: Player.Data(name: "Alexander", score: Score(21), games: 8))
     static var settings = GameSettings()
     
     static var previews: some View {
-        PlayerView(player: player)
+        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+            PlayerView(player: player)
+            PlayerView(player: player)
+            PlayerView(player: player)
+        }
             .environmentObject(settings)
     }
 }
