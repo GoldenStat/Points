@@ -12,21 +12,22 @@ import SwiftUI
 struct InfoView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    let description = "Count your game points with this app."
+    let description = "Cuenta tus puntos"
     
     let paragraph = """
-    You have several views: the one typically used for Truco which is lined boxes. But, in case you want to check in which round you made how many points, there are two other views available. Just swipe through the views.
+    Juegos tienen mañeras distintas de anotar los puntos de los jugadores. Hay juegos con grupos dinamicos y puntos individuales, por ejemplo. Algunos juegos anotan puntos en numeros, otros en rayas o tambien en fosforos. Por esto hay aparencias distintas por tipos de juegos distintos.
 
-    Double-clicking gets you into the menubar which has history options, so you can go back and forth in case you did make an error somewhen.
+    En la configuracion (se llega apretando el nombre del juego actual en la vista principal) se pueden cambiar unos ajustes, como la cantidad de jugadores, o los nombres. Ojo que algunos cambios resetean el juego actual.
 
-    Also, if you click on the little arrow on the top you get to set things like how long it takes to make the noted points permanent, the number of players - pretty limited in Truco - or the amount of points per game, as there are various variants (usually 24 or 30, but I made this configurable)
+    Apretando la pantalla aparece el menu historial donde se pueden ver los puntos anotados del juego actual.
 
-    Note that you loose tracking points for the game if you change the number of players.
+    Y al final, apretando las pantallas de los jugadores uno añade puntos al jugador por cada mano. si dejas de anotar por un cierto tiempo, la applicacion lo va a contar como una Mano
 
-    Please let me know if you have any suggestions, new rules you want to apply, etc.
+    He encontrado algunas apps para anotar puntos, pero me parecian muy limitadas todas, cada una sirviendo solo para un cierto juego (por ejemplo solo para Truco Argentino). Por eso escribí esta app.
 
-    I am planning to add a 'new rule' option, so that you can design your own games.
+    Por supuesto habra juegos que no aparecen aqui, si quizieran verlos integrados, mandenme una nota, preferibilmente con un link para las reglas de anotacion.
 
+    Tengo planeado aggregar un editor en la configuracion para que uno pueda agregar nuevas reglas directamente desde el app. Pero solo si me da tiempo.
 """
     
     var body: some View {
@@ -36,8 +37,15 @@ struct InfoView: View {
             Text(description)
                 .font(.subheadline)
             Spacer()
-            Text(paragraph)
-                .font(.body)
+            ScrollView {
+                Text(paragraph)
+                    .font(.system(size: 24))
+                Button("Cerrar") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                    .buttonStyle(DefaultButtonStyle())
+                .padding()
+            }
         }
         .padding()
         .onTapGesture {

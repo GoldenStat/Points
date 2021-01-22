@@ -41,7 +41,6 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .zIndex(2)
                 }
             }
             .statusBar(hidden: true)

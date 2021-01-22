@@ -49,6 +49,7 @@ struct MainGameView_Previews: PreviewProvider {
         NavigationView() {
             MainGameView()
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .environmentObject(GameSettings())
     }
 }

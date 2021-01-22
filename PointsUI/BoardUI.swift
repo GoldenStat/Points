@@ -25,9 +25,10 @@ struct BoardUI: View {
             ZStack {
                 Color.invisible
                 if UIDevice.current.orientation.isLandscape {
-                    // in landscape we put all players in a row -- there is always enough space
-                    HStack() { playerViews }
-                        .padding(.vertical)
+                    // in landscape we put all players in a row -- there must be enough space
+                    HStack() {
+                        playerViews
+                    }
                 } else {
                     // not landscape
                     // can't get it to work with LazyVGrid
@@ -44,7 +45,7 @@ struct BoardUI: View {
                     
                     BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
                         .padding(.bottom)
-                }    
+                }
         }
         .ignoresSafeArea(edges: .all)
     }
