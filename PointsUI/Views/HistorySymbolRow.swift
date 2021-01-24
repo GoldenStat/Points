@@ -77,28 +77,29 @@ struct OverlayHistorySymbol: View {
     
     var state : AnimationState
 
-    enum Side {
-        case left, right
-        var name: String {
-            switch self {
-            case .left: return "arrow.left.circle"
-            case .right: return "arrow.right.circle"
+    enum Side { case left, right, both }
+    
+    private let initialFontSize: CGFloat = 100
+
+    @ViewBuilder var image: some View {
+        switch side {
+            case .left:
+                Image(systemName: "arrow.left.circle")
+        case .right:
+            Image(systemName: "arrow.right.circle")
+        case .both:
+            HStack {
+                Image(systemName: "arrow.left.circle")
+                Image(systemName: "arrow.right.circle")
             }
         }
     }
     
-    private let initialFontSize: CGFloat = 100
-
-    var image: some View {
-        Image(systemName: side.name)
+    var body: some View {
+        image
             .font(.system(size: initialFontSize))
             .opacity(state.opacity)
             .scaleEffect(state.scale)
-    }
-    
-    var body: some View {
-        image
-//            .animation(animation)
             .animation(.easeInOut(duration: 5.0))
     }
 }

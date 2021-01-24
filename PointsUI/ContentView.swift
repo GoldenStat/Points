@@ -61,6 +61,12 @@ struct ContentView: View {
 //                    showHistoryControls = true
                 }
             }
+            .onTapGesture(count: 2) {
+                withAnimation() {
+                    showHistoryControls = true
+                }
+            }
+            
             // MARK: Popovers
             .popover(isPresented: $showInfo) {
                 InfoView()
@@ -80,13 +86,19 @@ struct ContentView: View {
     @State var showInfo: Bool = false
     @State var showEditView: Bool = false
 //    @State private var showHistoryControls: Bool = false
+    
     @State private var hideStatusBar = false
+    // MARK: - History Controls (undo/redo)
+    @State private var showHistoryControls = false
+    func historyControlView() -> some View {
+        OverlayHistorySymbol(side: .both, state: OverlayHistorySymbol.initial)
+    }
     
     // MARK: - History View
     @State private var showHistory: Bool = false
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private var blurBackground: Bool { showHistory }
+    private var blurBackground: Bool { showHistory || showHistoryControls }
     
     func historyView(sized geometrySize: CGSize) -> some View {
         let heightFactor: CGFloat = 0.6
