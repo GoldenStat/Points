@@ -30,9 +30,9 @@ struct ContentView: View {
                         
                         
                         // MARK: History Views
-                        if showHistoryControls {
-                            HistoryControlView(showHistory: $showHistory)
-                        }
+//                        if showHistoryControls {
+//                            HistoryControlView(showHistory: $showHistory)
+//                        }
                         
                         if showHistory {
                             GeometryReader { geo in
@@ -51,13 +51,14 @@ struct ContentView: View {
             .onTapGesture() {
                 withAnimation() {
                     showHistory = false
-                    showHistoryControls = false
+//                    showHistoryControls = false
                 }
             }
             .gesture(dragStatusBarGesture)
             .onLongPressGesture {
                 withAnimation() {
-                    showHistoryControls = true
+                    showHistory = true
+//                    showHistoryControls = true
                 }
             }
             // MARK: Popovers
@@ -78,7 +79,7 @@ struct ContentView: View {
     // MARK: - overlay View triggers
     @State var showInfo: Bool = false
     @State var showEditView: Bool = false
-    @State private var showHistoryControls: Bool = false
+//    @State private var showHistoryControls: Bool = false
     @State private var hideStatusBar = false
     
     // MARK: - History View
