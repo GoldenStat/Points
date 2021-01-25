@@ -19,6 +19,7 @@
 		411DF2312360824900A37C64 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF204235C84B600A37C64 /* PlayerView.swift */; };
 		411DF2322360824900A37C64 /* BoxesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */; };
 		4125D14624D59DD700D00BA9 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
+		412EF8E525BF20DD003FDB7E /* HistoryControlsTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412EF8E425BF20DD003FDB7E /* HistoryControlsTestView.swift */; };
 		4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */; };
 		4139A3F225238EDC006E713B /* MatchesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F125238EDC006E713B /* MatchesScoreView.swift */; };
 		4139A3F725239133006E713B /* SelectionScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F625239133006E713B /* SelectionScoreView.swift */; };
@@ -80,6 +81,7 @@
 		411DF22823607CDA00A37C64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		411DF22A23607CDA00A37C64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		411DF22E23607CF000A37C64 /* PointsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PointsUI.entitlements; sourceTree = "<group>"; };
+		412EF8E425BF20DD003FDB7E /* HistoryControlsTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryControlsTestView.swift; sourceTree = "<group>"; };
 		4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRepresentationView.swift; sourceTree = "<group>"; };
 		4139A3F125238EDC006E713B /* MatchesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesScoreView.swift; sourceTree = "<group>"; };
 		4139A3F625239133006E713B /* SelectionScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionScoreView.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				411DF202235B56D400A37C64 /* Box.swift */,
 				4103BFFA252F8F7B00043ACE /* BufferView.swift */,
 				4177075724D6A18F00FD851A /* HistorySymbolRow.swift */,
+				412EF8E425BF20DD003FDB7E /* HistoryControlsTestView.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				4173575C24A3EA47002C10B2 /* ViewBuilder.swift in Sources */,
 				4173576624A509D6002C10B2 /* EditView.swift in Sources */,
 				418D8B8624AE19F7008A4A3E /* PlayerWon.swift in Sources */,
+				412EF8E525BF20DD003FDB7E /* HistoryControlsTestView.swift in Sources */,
 				41E709D3257ABACC00DC959E /* BufferSpaceDebugView.swift in Sources */,
 				41EC900024E8240100038F5C /* Rule.swift in Sources */,
 				41E709D6257B0F4000DC959E /* CoordinateSampleView.swift in Sources */,

@@ -23,11 +23,20 @@ class History : ObservableObject {
     struct Sample {
         static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villamizar" ]
         static var points : [[Int]] { names.map { _ in
-            [ Int.random(in: 0...40),
-              Int.random(in: 0...40),
-              Int.random(in: 0...40),
-              Int.random(in: 0...40) ]
+            [ Int.random(in: 0...4),
+              Int.random(in: 0...4),
+              Int.random(in: 0...4),
+              Int.random(in: 0...4) ]
         } }
+    }
+    
+    /// a random history sample object for testing
+    static var sample : History {
+        let history = History(names: Sample.names)
+        for points in Sample.points {
+            history.states.append(GameState(buffer: points))
+        }
+        return history
     }
     
     var playerNames: [String]

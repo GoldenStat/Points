@@ -40,6 +40,10 @@ struct ContentView: View {
                                     .offset(x: 0, y: 100)
                             }
                         }
+                        
+                        if showHistoryControls {
+                            historyControlView()
+                        }
                     }
                 }
             }
@@ -51,7 +55,7 @@ struct ContentView: View {
             .onTapGesture() {
                 withAnimation() {
                     showHistory = false
-//                    showHistoryControls = false
+                    showHistoryControls = false
                 }
             }
             .gesture(dragStatusBarGesture)
@@ -89,7 +93,7 @@ struct ContentView: View {
     
     @State private var hideStatusBar = false
     // MARK: - History Controls (undo/redo)
-    @State private var showHistoryControls = false
+    @State private var showHistoryControls = true
     func historyControlView() -> some View {
         OverlayHistorySymbol(side: .both, state: OverlayHistorySymbol.initial)
     }

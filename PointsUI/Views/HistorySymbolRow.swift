@@ -22,7 +22,6 @@ struct HistorySymbolRow: View {
             OverlayHistorySymbol(active: activeSide == .right, side: .right, state: animationStateRight)
         }
         .padding()
-//        .gesture(dragGesture)
     }
     
     
@@ -104,9 +103,23 @@ struct OverlayHistorySymbol: View {
     }
 }
 
+struct TestHistorySymbols: View {
+    @State var showSymbols = true
+    @State var isDragging = false
+    
+    var body: some View {
+        ZStack {
+            HistorySampleView()
+            if showSymbols {
+                HistorySymbolRow()
+            }
+        }
+    }
+}
+
 struct HistorySymbol_Previews: PreviewProvider {
     static var previews: some View {
-        HistorySymbolRow()
+        TestHistorySymbols()
             .environmentObject(GameSettings())
     }
 }

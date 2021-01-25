@@ -232,14 +232,14 @@ struct ScoreHistoryView: View {
 }
 
 
-fileprivate struct BoldDivider: View {
+ struct BoldDivider: View {
     var body: some View {
         Rectangle()
             .frame(height: 2)
     }
 }
 
-fileprivate struct SampleButton: View {
+ struct SampleButton: View {
     @EnvironmentObject var settings: GameSettings
     var body: some View {
         Button() {
@@ -275,14 +275,12 @@ fileprivate struct SampleButton: View {
     }
 }
 
-fileprivate struct HistorySampleView : View {
+struct HistorySampleView : View {
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 ScoreHistoryView()
-        //            .frame(width: width,
-        //                   height: height)
                     .emphasizeShape(cornerRadius: 16.0)
                     .frame(height: geo.size.height * 0.6)
                     .transition(.opacity)
