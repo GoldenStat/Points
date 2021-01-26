@@ -10,6 +10,8 @@ import SwiftUI
 
 struct HistoryControlsTestView: View {
     
+    @State private var isActivated = false
+
     var body: some View {
         ZStack {
             Color.blue
@@ -18,112 +20,71 @@ struct HistoryControlsTestView: View {
             
             VStack {
                 
-                if showSymbol {
-                    Image(systemName: systemImageName)
-                        .resizable()
-                        .rotationEffect(rotation)
-                        .frame(width: 78, height: 78)
+                if isActivated {
+                    HistoryButtonView(rotation: discreteRotation)
+                        .animation(.easeInOut)
                         .transition(.opacity)
-                        .scaleEffect(scaleEffect)
-                        .animation(animation)
-                    
                 }
-                if steps > 0 {
-                    Text("Steps to redo: \(abs(steps))")
-                } else if steps < 0 {
-                    Text("Steps to undo: \(abs(steps))")
-                }
-            }
-            if let start = startDraggingLocation {
-                Circle()
-                    .fill(Color.white)
-                    .opacity(0.2)
-                    .frame(width: 10, height: 10)
-                    .position(start)
-            }
-            
-            if let end = endDraggingLocation {
-                Circle()
-                    .fill(Color.white)
-                    .opacity(0.3)
-                    .frame(width: 10, height: 10)
-                    .position(end)
             }
         }
-        .gesture(firstGesture.sequenced(before: secondGesture))
-    }
-    
-    var systemImageName: String {
-        animateImage ? "arrow.up.circle" : "circle"
-    }
-    
-    let animation: Animation = .spring(response: 0.4, dampingFraction: 0.4, blendDuration: 1.0)
-    
-    var rotation: Angle {
-        if animateImage {
-            if dragLength < 0 {
-                return .degrees(-90)
+        .gesture(rotationGesture)
+        .onTapGesture {
+            withAnimation(.linear(duration: 1.0)) {
+                isActivated.toggle()
             }
-            return .degrees(90)
         }
-        return .zero
     }
     
-    var steps: Int { Int((dragLength / minMovement).rounded(.towardZero)) }
-    
-    var scaleEffect: CGFloat { animateImage ? 1.3 : 1 }
-    
-    let minMovement : Double = 50
-    
-    var showSymbol: Bool { isActivated }
-    
-    var animateImage: Bool {
-        abs(dragLength) > minMovement
-    }
-    
-    @State var startDraggingLocation: CGPoint?
-    @State var endDraggingLocation: CGPoint?
-    
-    var dragLength: Double {
-        Double(endDraggingLocation?.x ?? startDraggingLocation?.x ?? 0) - Double(startDraggingLocation?.x ?? 0)
-    }
-    
-    @GestureState var longPressDetected: Bool = false
-    var firstGesture: some Gesture {
-        LongPressGesture(minimumDuration: 1)
-            .updating($longPressDetected) { currentstate, gestureState,
-                                            transaction in
-                gestureState = currentstate
+    var discreteRotation: Angle { .degrees(discreteMargin * Double(steps)) }
+    let discreteMargin: Double = 30
+    @GestureState private var steps: Int = 0
+
+    /// the rotation to control history updates:
+    /// ever 30 degrees mean one step
+    /// translate rotation gesture to a discrete value and avoid "jumps"
+    var rotationGesture: some Gesture {
+        RotationGesture()
+            .onEnded() { (_) in
+                updateHistory()
             }
-            .onEnded() { didEnd in
-                isActivated = true
-            }
-    }
-    
-    @State var isActivated = false
-    @State var gesturesStarted = false
-    
-    @GestureState var isDraging: Bool = false
-    @State var isDragging: Bool = false
-    var secondGesture: some Gesture {
-        
-        DragGesture()
-            .onChanged() { changed in
-                if !isDragging {
-                    startDraggingLocation = changed.location
-                    isDragging = true
-                } else {
-                    endDraggingLocation = changed.location
+            .updating($steps) { rotationValue, steps, transaction in
+                
+                let newSteps = Int((rotationValue.degrees / discreteMargin).rounded(.towardZero))
+                if abs(newSteps - steps) <= 1 {
+                    steps = newSteps
                 }
             }
-            .onEnded() { changed in
-                startDraggingLocation = nil
-                endDraggingLocation = nil
-                isDragging = false
-                gesturesStarted = false
-                isActivated = false
-            }
+    }
+    
+    func updateHistory() {
+        // update the History with so many steps
+    }
+    
+    func previewHistoryUpdate() {
+        // check what an update of so many steps would do to history
+    }
         
+    
+}
+
+struct HistoryButtonView: View {
+    var rotation: Angle
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .animation(nil)
+            Circle()
+                .fill(Color.white)
+                .opacity(0.9)
+                .offset(x: 0, y: -60)
+                .shadow(color: .white, radius: 4, x: 0, y: 2)
+                .frame(width: 20, height: 20)
+                .animation(nil)
+        }
+        .rotationEffect(rotation)
+        .shadow(color: Color/*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 10, y: 10)
+        .frame(width: 200, height: 200)
     }
 }
 
