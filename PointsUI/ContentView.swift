@@ -55,19 +55,12 @@ struct ContentView: View {
             .onTapGesture() {
                 withAnimation() {
                     showHistory = false
-                    showHistoryControls = false
                 }
             }
             .gesture(dragStatusBarGesture)
             .onLongPressGesture {
                 withAnimation() {
                     showHistory = true
-//                    showHistoryControls = true
-                }
-            }
-            .onTapGesture(count: 2) {
-                withAnimation() {
-                    showHistoryControls = true
                 }
             }
             

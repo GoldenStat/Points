@@ -52,6 +52,11 @@ struct ScoreRowData : Identifiable {
         Self.columns = values.count
     }
     
+    init(state: GameState) {
+        scores = state.scores.map { CellData(value: $0) }
+        Self.columns = state.scores.count
+    }
+    
     /// add values to this row
     mutating func changeRow(addValues values: [CellData]) {
         
@@ -73,17 +78,26 @@ struct HistoryScoreTableData : Identifiable {
     
     var buffer: ScoreRowData?
     
-    
     init(from history: History) {
         // just convert history states into data
         // which should be the individual scores of that round?
-        data = history.states.map { ScoreRowData(values: $0.scores) }
+        data = history.states.map { ScoreRowData(state: $0) }
         
         if let historyBuffer = history.buffer {
-            self.buffer = ScoreRowData(values: historyBuffer.scores)
+            self.buffer = ScoreRowData(state: historyBuffer)
         }
     }
     
+    init(from state: GameState) {
+        data = [ ScoreRowData(state: state) ]
+    }
+
+    init(from gameStates: [GameState]) {
+        // just convert history states into data
+        // which should be the individual scores of that round?
+        data = gameStates.map { ScoreRowData(state: $0) }
+    }
+
     /// add up the score
     var incrementingData: [ ScoreRowData ] {
         var sums: [ScoreRowData] = []
@@ -124,6 +138,7 @@ struct ScoreHistoryView: View {
     
     @State var showSums = false
     @State var showIndices = false
+    var showRedoStack = true
     
     private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
@@ -176,6 +191,18 @@ struct ScoreHistoryView: View {
                             }
                         }
                         
+                        if showRedoStack {
+                            ForEach(scoreRedoStack) { dataRow in
+                                
+                                // one row of scores for one round
+                                LazyVGrid(columns: gridColumns) {
+                                    ForEach(dataRow.scores) { score in
+                                        Text(score.value.description)
+                                    }
+                                }
+                            }
+                        }
+                        
                         if let buffer = historyData.buffer {
                             LazyVGrid(columns: gridColumns) {
                                 ForEach(buffer.scores) { score in
@@ -218,8 +245,20 @@ struct ScoreHistoryView: View {
         HistoryScoreTableData(from: settings.history)
     }
     
+    private var redoData: HistoryScoreTableData {
+        HistoryScoreTableData(from: settings.history.redoStack)
+    }
+    
     private var scoresForHistory: [ ScoreRowData ] {
         showSums ? historyData.data : historyData.incrementingData
+    }
+    
+    private var scoreRedoStack: [ ScoreRowData ] {
+        showSums ? redoData.data : redoData.incrementingData
+    }
+        
+    func extractScores(from state: GameState) -> [Int] {
+        state.scores
     }
     
     /// all Values in this Row are Zero
@@ -239,58 +278,75 @@ struct ScoreHistoryView: View {
     }
 }
 
- struct SampleButton: View {
+struct HistoryScoreGeneratorButton: View {
     @EnvironmentObject var settings: GameSettings
+    
+    var startScore: Int = 0
+    var endScore: Int = 3
+    
     var body: some View {
-        Button() {
-            addScoresToHistory()
-        } label: {
-            Text("Add New Round")
-                .fontWeight(.bold)
-                .foregroundColor(.text)
+        HStack {
+            Button() {
+                addScoresToHistory()
+            } label: {
+                Text("Add New Round")
+                    .fontWeight(.bold)
+                    .foregroundColor(.text)
+            }
+            .padding()
+            .background(Color.boardbgColor
+                            .cornerRadius(20)
+            )
+            .padding()
+            .onAppear {
+                addScoresToHistory()
+                addScoresToHistory()
+            }
         }
-        .padding()
-        .background(Color.boardbgColor
-                        .cornerRadius(20)
-        )
-        .padding()
     }
+
+    @State var playerDebugStorage: [[String]] = []
     
     private func addScoresToHistory() {
-        
-        let players = settings.players
-        
-        for player in players.items {
-            let sampleScore = Int.random(in: -6 ... 6)
-            player.add(score: sampleScore)
-            player.saveScore()
-        }
         
         if settings.history.buffer != nil {
             settings.history.save()
         } else {
+            let players = settings.players
+            
+            for player in players.items {
+                let sampleScore = Int.random(in: startScore ... endScore)
+                
+                player.add(score: sampleScore)
+                player.saveScore()
+            }
+    
             settings.history.store(state: GameState(players: players.data))
         }
+        
         settings.objectWillChange.send()
     }
 }
 
-struct HistorySampleView : View {
+struct HistoryDebugView : View {
     
     var body: some View {
         GeometryReader { geo in
-            ZStack {
+            VStack(alignment: .leading) {
+                HStack {
+                    HistoryScoreGeneratorButton()
+                    HistorySymbolRow()
+                }
                 ScoreHistoryView()
                     .emphasizeShape(cornerRadius: 16.0)
-                    .frame(height: geo.size.height * 0.6)
                     .transition(.opacity)
                     .padding()
-                SampleButton()
-                    .position(x: geo.size.width / 4, y: 28)
             }
         }
     }
 }
+
+
 
 struct SumButton: View {
     
@@ -311,10 +367,12 @@ struct SumButton: View {
 }
 
 struct ScoreHistoryView_Previews: PreviewProvider {
+    static var settings = GameSettings()
+    
     static var previews: some View {
-        HistorySampleView()
+        HistoryDebugView()
             .padding()
-            .environmentObject(GameSettings())
+            .environmentObject(settings)
             .colorScheme(.dark)
     }
 }

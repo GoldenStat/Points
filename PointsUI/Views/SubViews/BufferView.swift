@@ -28,11 +28,11 @@ struct BufferView: View {
     }
     
     private let scoreSize: CGFloat = 144/2
-    private var scoreOpacity: Double { score.buffer > 0 ? 0.3 : 0.0 }
+    private var scoreOpacity: Double { score.buffer != 0 ? 0.3 : 0.0 }
 }
 
 struct BufferView_Previews: PreviewProvider {
     static var previews: some View {
-        BufferView(score: Score(10, buffer: 8))
+        BufferView(score: Score(10, buffer: -8))
     }
 }

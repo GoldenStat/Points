@@ -12,11 +12,12 @@ import SwiftUI
 /// a list of game States
 /// used to record the progression of the entries
 /// every state has the individual score of that round
-/// e.g. History.states[0] is the first round, History.state[5] are the scores of round 5
+/// e.g. History.states[0] is the first round, History.state[4] are the scores of round 5
 class History : ObservableObject {
     
-    @Published var states = [GameState]()
-    
+    @Published var states : [GameState] = []
+    /// store the steps we might want to redo
+    @Published var redoStack : [GameState] = []
     /// a buffer for the history for points that will be assigned, but aren't, yet
     @Published var buffer: GameState?
     
@@ -39,16 +40,16 @@ class History : ObservableObject {
         return history
     }
     
-    var playerNames: [String]
+    @Published var playerNames: [String]
+    
     var numOfPlayers: Int { currentPlayers.count }
     
     init(names: [String]) {
         playerNames = names
     }
-    
-    @Published var redoStack : [GameState] = []
-    
-    func reset() {
+        
+    /// clear all memory, begin with a clean state
+    public func reset() {
         states = []
         redoStack = []
     }
@@ -61,6 +62,8 @@ class History : ObservableObject {
     /// if the buffer has content, delete it
     /// if not, remove last step and append it to redoStack
     var canUndo: Bool { states.count > 0 }
+    public var maxUndoSteps: Int { states.count }
+    public var maxRedoSteps: Int { redoStack.count }
     
     func undo() {
         guard canUndo else { return }
@@ -72,6 +75,7 @@ class History : ObservableObject {
             // and there is something on the states stack
             redoStack.append(states.removeLast())
         }
+        objectWillChange.send()
     }
     
     /// append last step from redo Stack
@@ -80,6 +84,7 @@ class History : ObservableObject {
     func redo() {
         guard canRedo else { return }
         states.append(redoStack.removeLast())
+        objectWillChange.send()
     }
 
     /// clear the buffer
@@ -88,7 +93,7 @@ class History : ObservableObject {
         buffer = nil
     }
     
-    /// stores given state in buffer, temporarily
+    /// stores given state in buffer, temporarily, same principle as with score
     /// if buffer is not empty, overwrite
     /// call save() to store in states
     func store(state: GameState) {
@@ -104,10 +109,9 @@ class History : ObservableObject {
         redoStack = []
 
         clearBuffer()
-        
         objectWillChange.send()
     }
-
+    
     /// a computed var that transfers all history states into a list
     var flatScores : [Int] {
         var list = [Int]()
@@ -128,24 +132,26 @@ class History : ObservableObject {
     }
 
     var risingScores: [Int] {
-        var list = [Int]()
-        var lastScore: [Int]?
+        var resultingScores = [Int].init(repeating:0, count: numOfPlayers) // a flat result
         
-        for state in states {
-            let currentScore : [Int] = state.scores
-            if let lastScore = lastScore {
-                var diffScore = [Int]()
-                for index in 0 ..< lastScore.count {
-                    diffScore.append(currentScore[index] - lastScore[index])
-                }
-                list.append(contentsOf: diffScore)
-            } else {
-                list.append(contentsOf: currentScore.map { $0 } )
-            }
-            lastScore = currentScore
+        guard var firstState = states.first else { return resultingScores }
+        
+        let remainingStates = Array<GameState>(states.dropFirst())
+        
+        guard remainingStates.count > 0 else { return firstState.scores }
+        
+        // Overwrite scores, so we don't count 0-0-0
+        resultingScores = firstState.scores
+        
+        var lastState = firstState // initialize last State
+        
+        for state in remainingStates {
+            resultingScores.append(contentsOf: state - lastState)
+            // remember this result
+            lastState = state
         }
         
-        return list
+
+        return resultinScores
     }
 }
-

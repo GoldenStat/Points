@@ -26,6 +26,8 @@ class Player: ObservableObject, Identifiable, Equatable {
     func saveScore() {
         score.save()
     }
+        
+    var description : String { "\(name): (\(score.value)/\(score.buffer))" }
     
     func add(score newScore: Int) {
         score.add(points: newScore)
@@ -127,9 +129,10 @@ class Players: ObservableObject {
             items.append(Player(name: name))
         }
     }
+    
     public func clearBuffers() -> Bool {
         let playersWithBuffer = items.filter { $0.score.buffer > 0 }
-        _ = playersWithBuffer.map { $0.score.buffer = 0 }
+        _ = playersWithBuffer.map { $0.score.reset() }
         return playersWithBuffer.count > 0
     }
     

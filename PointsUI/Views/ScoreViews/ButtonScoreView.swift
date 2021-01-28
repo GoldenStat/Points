@@ -78,12 +78,12 @@ struct ButtonScorePreviewView: View {
             .overlay(
         ButtonScoreView(score: score)
             .onTapGesture(count: 2) {
-                score.value += 1
+                score.save()
             }
             .simultaneousGesture(
                 TapGesture(count: 1)
                     .onEnded() {
-                    score.buffer += 1
+                    score.add(points: 1)
                 })
         )
     }

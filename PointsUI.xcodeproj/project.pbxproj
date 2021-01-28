@@ -88,7 +88,7 @@
 		414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EdgeShapeSamples.swift; path = PointsUI/Views/EdgeShapeSamples.swift; sourceTree = SOURCE_ROOT; };
 		41648E60258D1CE20070FB42 /* TopMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopMenuBar.swift; sourceTree = SOURCE_ROOT; };
 		41648E63258D1E340070FB42 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBar.swift; path = PointsUI/MenuBar.swift; sourceTree = SOURCE_ROOT; };
-		41648E6B258FE5560070FB42 /* HistoryControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryControlView.swift; sourceTree = SOURCE_ROOT; };
+		41648E6B258FE5560070FB42 /* HistoryControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryControlView.swift; path = PointsUI/Views/SubViews/HistoryControlView.swift; sourceTree = SOURCE_ROOT; };
 		4168CE2424AF922000DACD62 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4168CE2624AF925800DACD62 /* GameSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettings.swift; sourceTree = "<group>"; };
 		4168CE2824B3899D00DACD62 /* PointsUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsUIApp.swift; sourceTree = "<group>"; };
@@ -158,6 +158,7 @@
 				4103BFFA252F8F7B00043ACE /* BufferView.swift */,
 				4177075724D6A18F00FD851A /* HistorySymbolRow.swift */,
 				412EF8E425BF20DD003FDB7E /* HistoryControlsTestView.swift */,
+				41648E6B258FE5560070FB42 /* HistoryControlView.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -196,7 +197,6 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				41648E6B258FE5560070FB42 /* HistoryControlView.swift */,
 				4105415E256EAEF6001E60CA /* extensions */,
 				4105415D256EAED3001E60CA /* stateViews */,
 				4105415C256EAEAC001E60CA /* ScoreViews */,

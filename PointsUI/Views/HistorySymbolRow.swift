@@ -109,7 +109,7 @@ struct TestHistorySymbols: View {
     
     var body: some View {
         ZStack {
-            HistorySampleView()
+            HistoryDebugView()
             if showSymbols {
                 HistorySymbolRow()
             }
