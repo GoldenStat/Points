@@ -22,7 +22,7 @@ class History : ObservableObject {
     @Published var buffer: GameState?
     
     struct Sample {
-        static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villamizar" ]
+        static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villa" ]
         static var points : [[Int]] { names.map { _ in
             [ Int.random(in: 0...4),
               Int.random(in: 0...4),
@@ -134,7 +134,7 @@ class History : ObservableObject {
     var risingScores: [Int] {
         var resultingScores = [Int].init(repeating:0, count: numOfPlayers) // a flat result
         
-        guard var firstState = states.first else { return resultingScores }
+        guard let firstState = states.first else { return resultingScores }
         
         let remainingStates = Array<GameState>(states.dropFirst())
         
@@ -150,8 +150,7 @@ class History : ObservableObject {
             // remember this result
             lastState = state
         }
-        
 
-        return resultinScores
+        return resultingScores
     }
 }
