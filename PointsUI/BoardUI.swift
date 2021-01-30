@@ -69,7 +69,7 @@ struct BoardUI: View {
                     .onChanged() { value in
                         let buffer = player.score.buffer
                         if buffer != 0 {
-                            settings.cancelTimer()
+                            settings.cancelTimers()
                             let location = value.location.applying(.init(translationX: 60, y: 60))
                             settings.pointBuffer = BufferSpace(position: location, points: buffer)
                         }

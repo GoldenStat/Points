@@ -75,7 +75,7 @@ class GameSettings: ObservableObject {
         activePlayer = nil
         players = Players.sample
         chosenNumberOfPlayers = players.names.count
-        history = History(names: players.names)
+        history = History()
         maxPoints = 0
         maxGames = 2
         rule = .maumau
@@ -85,7 +85,7 @@ class GameSettings: ObservableObject {
     init() {
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
-        history = History(names: GlobalSettings.playerNames)
+        history = History()
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = .trucoVenezolano // needs to be set to enable calling methods
@@ -258,7 +258,7 @@ class GameSettings: ObservableObject {
     func startTimer() {
         
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
-        cancelTimer()
+        cancelTimers()
         
         registerPointsTimer = Timer.scheduledTimer(timeInterval: timeIntervalToCountPoints,
                                      target: self,
@@ -278,7 +278,7 @@ class GameSettings: ObservableObject {
     
     /// control Timer from outside
     /// invalidates it
-    func cancelTimer() {
+    func cancelTimers() {
         registerPointsTimer?.invalidate()
         registerRoundStarted?.invalidate()
         timerPointsStarted = false
@@ -311,24 +311,7 @@ class GameSettings: ObservableObject {
     
     /// register player's points from this round into history's buffer
     func updateHistoryBuffer(from scores: [Score]) {
-        // add to  buffers
-        if bufferForHistoryStore != nil, bufferForHistoryStore!.count == scores.count {
-            for (index,scoreBuffer) in scores.map({ $0.buffer }).enumerated() {
-                // as long as the round is not over
-                bufferForHistoryStore![index] += scoreBuffer
-            }
-        } else {
-            // only add scores if they are non-zero
-            let buffers = scores.map { $0.buffer }
-            if (buffers != buffers.map { _ in 0 }) {
-                bufferForHistoryStore = buffers
-            }
-        }
-        
-        // overwirte history store
-        history.store(state: GameState(buffer: bufferForHistoryStore))
-        
-        
+        history.add(state: GameState(buffer: bufferForHistoryStore))
     }
         
     /// this function adds the changes to the history, counting it as a round.
@@ -341,25 +324,14 @@ class GameSettings: ObservableObject {
         timerRoundStarted = false
     }
     
-    /// updates the players with score from current state
-    func updatePlayersWithCurrentState() {
-        if history.currentPlayers.isEmpty {
-            // set all to zero
-            players = Players(names: GlobalSettings.playerNames)
-        } else {
-            players.data = history.currentPlayers
-        }
-    }
-
-    
     // needed for object update
     func undo() {
-        cancelTimer()
+        cancelTimers()
         history.undo()
     }
     
     func redo() {
-        cancelTimer()
+        cancelTimers()
         history.redo()
     }
 }

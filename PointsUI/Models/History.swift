@@ -6,7 +6,6 @@
 //  Copyright © 2020 Alexander Völz. All rights reserved.
 //
 
-import Foundation
 import SwiftUI
 
 /// a list of game States
@@ -15,142 +14,63 @@ import SwiftUI
 /// e.g. History.states[0] is the first round, History.state[4] are the scores of round 5
 class History : ObservableObject {
     
-    @Published var states : [GameState] = []
-    /// store the steps we might want to redo
-    @Published var redoStack : [GameState] = []
-    /// a buffer for the history for points that will be assigned, but aren't, yet
-    @Published var buffer: GameState?
+    /// we need three versions for states and buffer :
+    /// 1. current scores of every round (e.g. [0,0,0]->[2,1,0]->[3,8,2]
+    /// 2. score changes of every round (e.g. [0,0,0]->[+2,+1,0]->[+1,+7,+2]
+    /// 3. sum of scores
     
-    struct Sample {
-        static let names = [ "Alexander", "Sebastian", "Lilibeth", "Villa" ]
-        static var points : [[Int]] { names.map { _ in
-            [ Int.random(in: 0...4),
-              Int.random(in: 0...4),
-              Int.random(in: 0...4),
-              Int.random(in: 0...4) ]
-        } }
-    }
+    /// stack of all game states that happened
+    @Published private(set) var states : [GameState] = []
     
-    /// a random history sample object for testing
-    static var sample : History {
-        let history = History(names: Sample.names)
-        for points in Sample.points {
-            history.states.append(GameState(buffer: points))
-        }
-        return history
-    }
+    /// stack of states we need to store temporary
+    @Published private(set) var buffer : [GameState] = []
     
-    @Published var playerNames: [String]
+    /// last state might be buffered
+    @Published private(set) var isBuffered: Bool = false
     
-    var numOfPlayers: Int { currentPlayers.count }
+    var isEmpty: Bool { states.isEmpty && buffer.isEmpty }
     
-    init(names: [String]) {
-        playerNames = names
-    }
-        
     /// clear all memory, begin with a clean state
     public func reset() {
         states = []
-        redoStack = []
-    }
-    
-    /// returns last Entry of game states
-    var currentPlayers : [Player.Data] {
-        return playerNames.map { Player(name: $0).data }
-    }
-        
-    /// if the buffer has content, delete it
-    /// if not, remove last step and append it to redoStack
-    var canUndo: Bool { states.count > 0 }
-    public var maxUndoSteps: Int { states.count }
-    public var maxRedoSteps: Int { redoStack.count }
-    
-    func undo() {
-        guard canUndo else { return }
-        if buffer !=  nil {
-            // first invalidate the buffer (not redoable)
-            buffer = nil
-        } else {
-            // only undo if buffer is empty
-            // and there is something on the states stack
-            redoStack.append(states.removeLast())
-        }
-        objectWillChange.send()
-    }
-    
-    /// append last step from redo Stack
-    /// if there is no step to 'redo', ignore silently
-    var canRedo: Bool { redoStack.count > 0 }
-    func redo() {
-        guard canRedo else { return }
-        states.append(redoStack.removeLast())
-        objectWillChange.send()
-    }
-
-    /// clear the buffer
-    /// use if actions get's interupted (e.g. we have some action stored, and we undo)
-    func clearBuffer() {
-        buffer = nil
+        buffer = []
+        isBuffered = false
     }
     
     /// stores given state in buffer, temporarily, same principle as with score
     /// if buffer is not empty, overwrite
     /// call save() to store in states
-    func store(state: GameState) {
-        buffer = state
-    }
-     
-    /// after using 'store' to put a game state into the buffer we can use this function
-    /// to make the change permanent and add it to the history's states
-    func save() {
-        guard let buffer = buffer else { return }
-        
-        states.append(buffer)
-        redoStack = []
-
-        clearBuffer()
-        objectWillChange.send()
+    public func add(state: GameState) {
+        states.append(state)
     }
     
-    /// a computed var that transfers all history states into a list
-    var flatScores : [Int] {
-        var list = [Int]()
-        
-        for state in states {
-            list.append(contentsOf: state.scores)
-        }
-        
-        return list
+    /// if the buffer has content, delete it
+    /// if not, remove last step and append it to redoStack
+    public var canUndo: Bool { states.count > 0 }
+    public var canRedo: Bool { buffer.count > 0 }
+    
+    public var maxUndoSteps: Int { states.count }
+    public var maxRedoSteps: Int { buffer.count }
+    
+    /// removes the last state and puts it to the end of the buffer stack
+    public func undo() {
+        guard canUndo else { return }
+        buffer.append(states.removeLast())
+        isBuffered = false
     }
     
-    var differentialScores : [[ Int ]] {
-        return states.map { $0.scores }
+    /// append last step from redo Stack
+    /// if there is no step to 'redo', ignore silently
+    public func redo() {
+        guard canRedo else { return }
+        states.append(buffer.removeLast())
     }
     
-    var flatSums: [Int] {
-        states.last?.scores.map { $0 } ?? [Int].init(repeating: 0, count: numOfPlayers)
+    /// makes current changes permanent:
+    /// deletes buffer
+    public func save() {
+        isBuffered = false
+        buffer = []
     }
-
-    var risingScores: [Int] {
-        var resultingScores = [Int].init(repeating:0, count: numOfPlayers) // a flat result
-        
-        guard let firstState = states.first else { return resultingScores }
-        
-        let remainingStates = Array<GameState>(states.dropFirst())
-        
-        guard remainingStates.count > 0 else { return firstState.scores }
-        
-        // Overwrite scores, so we don't count 0-0-0
-        resultingScores = firstState.scores
-        
-        var lastState = firstState // initialize last State
-        
-        for state in remainingStates {
-            resultingScores.append(contentsOf: state - lastState)
-            // remember this result
-            lastState = state
-        }
-
-        return resultingScores
-    }
+    
 }

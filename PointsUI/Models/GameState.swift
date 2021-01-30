@@ -35,22 +35,8 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
     
 }
 
-/// the difference between two states would be the difference of the scores between two states
-func - (lhs: [Int], rhs: [Int]) -> [Int] {
-    var diffScores = [Int]()
-    
-    /// only substract from what we have
-    let minElements = min(rhs.count,lhs.count)
-    for index in 0 ..< minElements {
-        diffScores.append(lhs[index] - rhs[index])
-    }
-    if minElements < lhs.count {
-        diffScores.append(contentsOf: lhs[minElements-1..<lhs.count-1])
-    }
-    return diffScores
-}
 
-
+/// subtract gamestates
 func - (lhs: GameState, rhs: GameState) -> [Int] {
     return lhs.scores - rhs.scores
 }

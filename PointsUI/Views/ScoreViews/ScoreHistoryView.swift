@@ -8,145 +8,22 @@
 
 import SwiftUI
 
-extension Array where Element: StringExpressable {
-    func stringElements() -> Array<String> {
-        self.map { $0.description }
-    }
-}
-
-struct CellData: Identifiable {
-    var id = UUID()
-    var value: Int
-    var description: String { value.description }
-    var prefix: String { value > 0 ? "+"  : "" }
-}
-
-
-func += ( lhs: inout CellData, rhs: CellData) {
-    lhs.value += rhs.value
-}
-
-func += ( lhs: inout CellData, rhs: Int) {
-    lhs.value += rhs
-}
-
-/// store Values for the table in a row
-/// being identifiable it's easier to use them in a ForEach
-struct ScoreRowData : Identifiable {
-    var id = UUID()
-    var scores: [CellData] = []
-    
-    static var columns: Int = 4
-    static var zero: ScoreRowData {
-        ScoreRowData(scores: [CellData](repeating: CellData(value:0),
-                                        count: Self.columns))
-    }
-    
-    init(scores: [CellData]) {
-        self.scores = scores
-        Self.columns = scores.count
-    }
-    
-    init(values: [Int]) {
-        scores = values.map { CellData(value: $0) }
-        Self.columns = values.count
-    }
-    
-    init(state: GameState) {
-        scores = state.scores.map { CellData(value: $0) }
-        Self.columns = state.scores.count
-    }
-    
-    /// add values to this row
-    mutating func changeRow(addValues values: [CellData]) {
-        
-        guard values.count == scores.count else {
-            assertionFailure("Trying to add \(values.count) values to a row with \(scores.count) values")
-            return
-        }
-        
-        for index in 0 ..< values.count {
-            scores[index] += values[index]
-        }
-    }
-}
-
-/// store all Values for the table in another table
-struct HistoryScoreTableData : Identifiable {
-    var id = UUID()
-    var data: [ScoreRowData] = []
-    
-    var buffer: ScoreRowData?
-    
-    init(from history: History) {
-        // just convert history states into data
-        // which should be the individual scores of that round?
-        data = history.states.map { ScoreRowData(state: $0) }
-        
-        if let historyBuffer = history.buffer {
-            self.buffer = ScoreRowData(state: historyBuffer)
-        }
-    }
-    
-    init(from state: GameState) {
-        data = [ ScoreRowData(state: state) ]
-    }
-
-    init(from gameStates: [GameState]) {
-        // just convert history states into data
-        // which should be the individual scores of that round?
-        data = gameStates.map { ScoreRowData(state: $0) }
-    }
-
-    /// add up the score
-    var incrementingData: [ ScoreRowData ] {
-        var sums: [ScoreRowData] = []
-        var previousScores: ScoreRowData?
-        
-        for row in data {
-            if var buffer = previousScores, row.scores.count > 0 {
-                buffer.changeRow(addValues: row.scores)
-                previousScores = ScoreRowData(scores: buffer.scores)
-                sums.append(buffer)
-            } else {
-                previousScores = ScoreRowData(scores: row.scores)
-                sums.append(row)
-            }
-        }
-        
-        return sums
-    }
-    
-    var sumRow: ScoreRowData {
-        incrementingData.last ?? ScoreRowData.zero
-    }
-    
-}
-
-
-func +<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> where Element: Numeric {
-    guard lhs.count == rhs.count else { return lhs }
-    var sum : Array<Element> = lhs
-    for index in (0 ..< lhs.count) {
-        sum[index] += rhs[index]
-    }
-    return sum
-}
 
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     
     @State var showSums = false
-    @State var showIndices = false
-    var showRedoStack = true
     
     private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
-    
-    private var sumLine: ScoreRowData {
-        historyData.sumRow
-    }
+    private var historyTable: HistoryScoresTable {
+        HistoryScoresTable(columns: numberOfColumns,
+                           states: history.states) }
+    private var historyTableBuffer: HistoryScoresTable {
+        HistoryScoresTable(columns: numberOfColumns,
+                           states: history.buffer) }
+    private var sumLine: ScoreRowData { historyTable.sums }
     
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
     
@@ -155,19 +32,15 @@ struct ScoreHistoryView: View {
             
             // Sum toggle button
             SumButton(toggle: $showSums)
-                .disabled(history.states.isEmpty)
+                .disabled(history.isEmpty)
                 .padding()
             
             // headline row
-            LazyVGrid(columns: gridColumns) {
-                ForEach(settings.playerNames, id: \.self) { name in
-                    Text(name)
-                }
-            }
+            ScoreHistoryHeadline(playerNames: settings.playerNames)
             
             Divider()
             
-            if isHistoryEmpty {
+            if history.isEmpty {
                 
                 LazyVGrid(columns: gridColumns) {
                     ForEach(0 ..< numberOfColumns) { _ in
@@ -181,7 +54,7 @@ struct ScoreHistoryView: View {
                     
                     // all scores
                     VStack {
-                        ForEach(scoresForHistory) { dataRow in
+                        ForEach(scores) { dataRow in
                             
                             // one row of scores for one round
                             LazyVGrid(columns: gridColumns) {
@@ -191,24 +64,24 @@ struct ScoreHistoryView: View {
                             }
                         }
                         
-                        if showRedoStack {
-                            ForEach(scoreRedoStack) { dataRow in
-                                
-                                // one row of scores for one round
-                                LazyVGrid(columns: gridColumns) {
-                                    ForEach(dataRow.scores) { score in
-                                        Text(score.value.description)
-                                    }
+                        ForEach(buffer) { dataRow in
+                            // one row of scores for one round
+                            LazyVGrid(columns: gridColumns) {
+                                ForEach(dataRow.scores) { score in
+                                    Text(score.value.description)
                                 }
+                                .foregroundColor(Color.white.opacity((0.6)))
                             }
                         }
                         
-                        if let buffer = historyData.buffer {
-                            LazyVGrid(columns: gridColumns) {
-                                ForEach(buffer.scores) { score in
-                                    Text(score.prefix + score.description)
+                        if history.isBuffered {
+                            ForEach(historyTableBuffer.totals + historyTable.totals) { scoreRow in
+                                LazyVGrid(columns: gridColumns) {
+                                    ForEach(scoreRow.scores) { score in
+                                        Text(score.prefix + score.description)
+                                    }
+                                    .foregroundColor(.gray)
                                 }
-                                .foregroundColor(.gray)
                             }
                         }
                     }
@@ -218,7 +91,7 @@ struct ScoreHistoryView: View {
                         BoldDivider()
                         
                         LazyVGrid(columns: gridColumns) {
-                            ForEach(historyData.sumRow.scores) { score in
+                            ForEach(historyTable.sums.scores) { score in
                                 Text(score.value.description)
                                     .fontWeight(.bold)
                                     .foregroundColor(sumColor)
@@ -236,42 +109,23 @@ struct ScoreHistoryView: View {
     }
     
     private var sumColor: Color {
-        history.buffer != nil ?
-            Color.pointbuffer :
-            Color.text
-    }
-    
-    private var historyData: HistoryScoreTableData {
-        HistoryScoreTableData(from: history)
-    }
-    
-    private var redoData: HistoryScoreTableData {
-        HistoryScoreTableData(from: history.redoStack)
-    }
-    
-    private var scoresForHistory: [ ScoreRowData ] {
-        showSums ? historyData.data : historyData.incrementingData
-    }
-    
-    private var scoreRedoStack: [ ScoreRowData ] {
-        showSums ? redoData.data : redoData.incrementingData
+        if history.buffer.isEmpty {
+            return Color.text
+        } else {
+            return Color.pointbuffer
+        }
     }
         
-    func extractScores(from state: GameState) -> [Int] {
-        state.scores
+    private var scores: [ ScoreRowData ] {
+        showSums ? historyTable.totals : historyTable.differences
     }
     
-    /// all Values in this Row are Zero
-    private var zeroRow : ScoreRowData {
-        ScoreRowData.zero
+    private var buffer: [ ScoreRowData ] {
+        showSums ? historyTableBuffer.totals : historyTableBuffer.differences
     }
-    
-    private var isHistoryEmpty: Bool { history.states.isEmpty && history.buffer == nil }
-    
 }
 
-
- struct BoldDivider: View {
+struct BoldDivider: View {
     var body: some View {
         Rectangle()
             .frame(height: 2)
@@ -304,15 +158,14 @@ struct HistoryScoreGeneratorButton: View {
             }
         }
     }
-
-    @State var playerDebugStorage: [[String]] = []
     
     @EnvironmentObject var logger: DebugLog
     
     var history: History { settings.history }
+    
     private func addScoresToHistory() {
         
-        if history.buffer != nil {
+        if history.isBuffered {
             history.save()
         } else {
             let players = settings.players
@@ -331,7 +184,8 @@ struct HistoryScoreGeneratorButton: View {
 
             let newState = GameState(players: players.data)
             logger.log(msg: newState.description)
-            history.store(state: newState)
+            
+            history.add(state: newState)
         }
         
         settings.objectWillChange.send()
@@ -384,5 +238,20 @@ struct ScoreHistoryView_Previews: PreviewProvider {
             .environmentObject(GameSettings())
             .environmentObject(DebugLog())
             .colorScheme(.dark)
+    }
+}
+
+struct ScoreHistoryHeadline: View {
+
+    let playerNames: [String]
+    
+    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: playerNames.count) }
+
+    var body: some View {
+        LazyVGrid(columns: gridColumns) {
+            ForEach(playerNames, id: \.self) { name in
+                Text(name)
+            }
+        }
     }
 }
