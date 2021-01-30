@@ -242,11 +242,11 @@ struct ScoreHistoryView: View {
     }
     
     private var historyData: HistoryScoreTableData {
-        HistoryScoreTableData(from: settings.history)
+        HistoryScoreTableData(from: history)
     }
     
     private var redoData: HistoryScoreTableData {
-        HistoryScoreTableData(from: settings.history.redoStack)
+        HistoryScoreTableData(from: history.redoStack)
     }
     
     private var scoresForHistory: [ ScoreRowData ] {
@@ -307,21 +307,31 @@ struct HistoryScoreGeneratorButton: View {
 
     @State var playerDebugStorage: [[String]] = []
     
+    @EnvironmentObject var logger: DebugLog
+    
+    var history: History { settings.history }
     private func addScoresToHistory() {
         
-        if settings.history.buffer != nil {
-            settings.history.save()
+        if history.buffer != nil {
+            history.save()
         } else {
             let players = settings.players
             
+            var messages : [String] = []
             for player in players.items {
                 let sampleScore = Int.random(in: startScore ... endScore)
                 
                 player.add(score: sampleScore)
                 player.saveScore()
+                
+                messages.append(player.description)
             }
-    
-            settings.history.store(state: GameState(players: players.data))
+
+            logger.log(msg: messages.joined(separator: " | "))
+
+            let newState = GameState(players: players.data)
+            logger.log(msg: newState.description)
+            history.store(state: newState)
         }
         
         settings.objectWillChange.send()
@@ -367,12 +377,12 @@ struct SumButton: View {
 }
 
 struct ScoreHistoryView_Previews: PreviewProvider {
-    static var settings = GameSettings()
     
     static var previews: some View {
         HistoryDebugView()
             .padding()
-            .environmentObject(settings)
+            .environmentObject(GameSettings())
+            .environmentObject(DebugLog())
             .colorScheme(.dark)
     }
 }

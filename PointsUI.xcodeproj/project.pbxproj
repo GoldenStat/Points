@@ -41,6 +41,7 @@
 		418D8B8624AE19F7008A4A3E /* PlayerWon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418D8B8524AE19F7008A4A3E /* PlayerWon.swift */; };
 		4194BF1B24A29209007CDBA1 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* TitleView.swift */; };
 		4196485524D2CF09002FD363 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4196485424D2CF09002FD363 /* ContentView.swift */; };
+		41ABA24A25C468FC0074A862 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ABA24925C468FC0074A862 /* DebugView.swift */; };
 		41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
 		41DB1E1923E5C8F100E17CC8 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1823E5C8F100E17CC8 /* History.swift */; };
 		41DFDF5D252E2C550068F129 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DFDF5C252E2C550068F129 /* MatchView.swift */; };
@@ -103,6 +104,7 @@
 		418D8B8524AE19F7008A4A3E /* PlayerWon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlayerWon.swift; path = ../PlayerWon.swift; sourceTree = "<group>"; };
 		4194BF1A24A29209007CDBA1 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		4196485424D2CF09002FD363 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		41ABA24925C468FC0074A862 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		41C12BCE24CB1D460043EEE1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		41C12BD024CB1D460043EEE1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		41DB1E1423E5C8B800E17CC8 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				41ABA24925C468FC0074A862 /* DebugView.swift */,
 				4105415E256EAEF6001E60CA /* extensions */,
 				4105415D256EAED3001E60CA /* stateViews */,
 				4105415C256EAEAC001E60CA /* ScoreViews */,
@@ -382,6 +385,7 @@
 				4125D14624D59DD700D00BA9 /* Box.swift in Sources */,
 				41EC900224EE7D9900038F5C /* Pickers.swift in Sources */,
 				4173575E24A4B676002C10B2 /* Score.swift in Sources */,
+				41ABA24A25C468FC0074A862 /* DebugView.swift in Sources */,
 				410CA6692532569100D92A29 /* EditPlayerNames.swift in Sources */,
 				411DF2312360824900A37C64 /* PlayerView.swift in Sources */,
 				4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */,

@@ -12,7 +12,8 @@ struct HistoryControlsTestView: View {
     @EnvironmentObject var settings: GameSettings
     var history : History { settings.history }
     @State private var isActivated = true
-
+    @StateObject var logger = DebugLog()
+    
     @State private var selecting = false
     
     var body: some View {
@@ -28,6 +29,10 @@ struct HistoryControlsTestView: View {
                 .animation(.easeInOut)
                 .offset(x: 0, y: 180)
         }
+        .overlay(
+            DebugView()                .frame(width: 400,height: 400)
+        )
+        .environmentObject(logger)
     }
 }
 

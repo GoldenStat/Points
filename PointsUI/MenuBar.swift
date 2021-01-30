@@ -31,6 +31,14 @@ struct MenuBar : View {
                 Text(settings.rule.description)
                     .font(.title)
             }
+            /// is this enough to create a context menu on longPress?
+            .contextMenu(menuItems: {
+                ForEach(settings.possibleRules) { rule in
+                    Button(rule.description) {
+                        settings.rule = rule
+                    }
+                }
+            })
             
             HStack {
                 Spacer()

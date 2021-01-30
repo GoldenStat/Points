@@ -29,6 +29,9 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
         scores = buffer ?? []
     }
     
+    var description: String {
+        "Scores: \(scores.map {String($0)}.joined(separator: "-"))"
+    }
     
 }
 
