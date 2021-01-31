@@ -30,10 +30,6 @@ struct ContentView: View {
                         
                         
                         // MARK: History Views
-//                        if showHistoryControls {
-//                            HistoryControlView(showHistory: $showHistory)
-//                        }
-                        
                         if showHistory {
                             GeometryReader { geo in
                                 historyView(sized: geo.size)
@@ -82,11 +78,10 @@ struct ContentView: View {
     // MARK: - overlay View triggers
     @State var showInfo: Bool = false
     @State var showEditView: Bool = false
-//    @State private var showHistoryControls: Bool = false
     
     @State private var hideStatusBar = false
     // MARK: - History Controls (undo/redo)
-    @State private var showHistoryControls = true
+    @State private var showHistoryControls = false
     func historyControlView() -> some View {
         OverlayHistorySymbol(side: .both, state: OverlayHistorySymbol.initial)
     }

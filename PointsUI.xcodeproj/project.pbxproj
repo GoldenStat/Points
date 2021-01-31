@@ -48,6 +48,53 @@
 		41E11F2525C5DD9E00E7B4F6 /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2425C5DD9E00E7B4F6 /* CellData.swift */; };
 		41E11F2825C5DDFC00E7B4F6 /* ScoreRowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */; };
 		41E11F2B25C5E54700E7B4F6 /* HistoryScoresTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */; };
+		41E11F7325C5F5DC00E7B4F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41E11F7225C5F5DC00E7B4F6 /* Assets.xcassets */; };
+		41E11F7625C5F5DC00E7B4F6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41E11F7525C5F5DC00E7B4F6 /* Preview Assets.xcassets */; };
+		41E11F8125C5F60E00E7B4F6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF204235C84B600A37C64 /* PlayerView.swift */; };
+		41E11F8225C5F60E00E7B4F6 /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF22023607CD100A37C64 /* MainGameView.swift */; };
+		41E11F8325C5F60E00E7B4F6 /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173576324A507DA002C10B2 /* GameBoardView.swift */; };
+		41E11F8425C5F60E00E7B4F6 /* PointsUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2824B3899D00DACD62 /* PointsUIApp.swift */; };
+		41E11F8525C5F60E00E7B4F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4196485424D2CF09002FD363 /* ContentView.swift */; };
+		41E11F8625C5F60E00E7B4F6 /* BoardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF206235C918200A37C64 /* BoardUI.swift */; };
+		41E11F8925C5F61300E7B4F6 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F114A8236A073F00C6314D /* GlobalSettings.swift */; };
+		41E11F8A25C5F61300E7B4F6 /* GameSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2624AF925800DACD62 /* GameSettings.swift */; };
+		41E11F8B25C5F61300E7B4F6 /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2425C5DD9E00E7B4F6 /* CellData.swift */; };
+		41E11F8C25C5F61300E7B4F6 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173575D24A4B676002C10B2 /* Score.swift */; };
+		41E11F8D25C5F61300E7B4F6 /* BufferSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709CF257947DE00DC959E /* BufferSpace.swift */; };
+		41E11F8E25C5F61300E7B4F6 /* ScoreRowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */; };
+		41E11F8F25C5F61300E7B4F6 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1423E5C8B800E17CC8 /* Players.swift */; };
+		41E11F9025C5F61300E7B4F6 /* HistoryScoresTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */; };
+		41E11F9125C5F61300E7B4F6 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DB1E1823E5C8F100E17CC8 /* History.swift */; };
+		41E11F9225C5F61300E7B4F6 /* BufferSpaceDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */; };
+		41E11F9325C5F61300E7B4F6 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC8FFF24E8240100038F5C /* Rule.swift */; };
+		41E11F9425C5F61300E7B4F6 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41054156256EAE22001E60CA /* GameState.swift */; };
+		41E11F9725C5F62000E7B4F6 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ABA24925C468FC0074A862 /* DebugView.swift */; };
+		41E11F9A25C5F64A00E7B4F6 /* ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173575B24A3EA47002C10B2 /* ViewBuilder.swift */; };
+		41E11F9D25C5F65000E7B4F6 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4168CE2424AF922000DACD62 /* InfoView.swift */; };
+		41E11F9E25C5F65000E7B4F6 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173576524A509D6002C10B2 /* EditView.swift */; };
+		41E11F9F25C5F65000E7B4F6 /* PlayerWon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418D8B8524AE19F7008A4A3E /* PlayerWon.swift */; };
+		41E11FA225C5F65700E7B4F6 /* SelectionScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F625239133006E713B /* SelectionScoreView.swift */; };
+		41E11FA325C5F65700E7B4F6 /* MatchesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F125238EDC006E713B /* MatchesScoreView.swift */; };
+		41E11FA425C5F65700E7B4F6 /* ButtonScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */; };
+		41E11FA525C5F65700E7B4F6 /* ScoreHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E83E324F9843200609A87 /* ScoreHistoryView.swift */; };
+		41E11FA625C5F65700E7B4F6 /* ScoreRepresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */; };
+		41E11FA725C5F65700E7B4F6 /* BoxesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */; };
+		41E11FAA25C5F65E00E7B4F6 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF202235B56D400A37C64 /* Box.swift */; };
+		41E11FAB25C5F65E00E7B4F6 /* BufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFFA252F8F7B00043ACE /* BufferView.swift */; };
+		41E11FAC25C5F65E00E7B4F6 /* HistoryControlsTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412EF8E425BF20DD003FDB7E /* HistoryControlsTestView.swift */; };
+		41E11FAD25C5F65E00E7B4F6 /* EdgeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416F37962442AB1A00D9D55B /* EdgeShape.swift */; };
+		41E11FAE25C5F65E00E7B4F6 /* TopMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E60258D1CE20070FB42 /* TopMenuBar.swift */; };
+		41E11FAF25C5F65E00E7B4F6 /* Pickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC900124EE7D9900038F5C /* Pickers.swift */; };
+		41E11FB025C5F65E00E7B4F6 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E63258D1E340070FB42 /* MenuBar.swift */; };
+		41E11FB125C5F65E00E7B4F6 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DFDF5C252E2C550068F129 /* MatchView.swift */; };
+		41E11FB225C5F65E00E7B4F6 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* TitleView.swift */; };
+		41E11FB325C5F65E00E7B4F6 /* HistorySymbolRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177075724D6A18F00FD851A /* HistorySymbolRow.swift */; };
+		41E11FB425C5F65E00E7B4F6 /* HistoryControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E6B258FE5560070FB42 /* HistoryControlView.swift */; };
+		41E11FB525C5F65E00E7B4F6 /* EditPlayerNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410CA6682532569100D92A29 /* EditPlayerNames.swift */; };
+		41E11FB625C5F65E00E7B4F6 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41694CDE258AC1A000E8DB8C /* CountdownView.swift */; };
+		41E11FB925C5F66900E7B4F6 /* CoordinateSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */; };
+		41E11FBA25C5F66900E7B4F6 /* EdgeShapeSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */; };
+		41E11FBD25C5F66E00E7B4F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411DF22223607CDA00A37C64 /* Assets.xcassets */; };
 		41E709D0257947DE00DC959E /* BufferSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709CF257947DE00DC959E /* BufferSpace.swift */; };
 		41E709D3257ABACC00DC959E /* BufferSpaceDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */; };
 		41E709D6257B0F4000DC959E /* CoordinateSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */; };
@@ -116,6 +163,12 @@
 		41E11F2425C5DD9E00E7B4F6 /* CellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellData.swift; sourceTree = "<group>"; };
 		41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRowData.swift; sourceTree = "<group>"; };
 		41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryScoresTable.swift; sourceTree = "<group>"; };
+		41E11F6725C5F4B000E7B4F6 /* PointsUI copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PointsUI copy-Info.plist"; path = "/Users/de152951/Library/Mobile Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI copy-Info.plist"; sourceTree = "<absolute>"; };
+		41E11F6C25C5F5D700E7B4F6 /* MacOsPoints.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacOsPoints.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41E11F7225C5F5DC00E7B4F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		41E11F7525C5F5DC00E7B4F6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		41E11F7725C5F5DC00E7B4F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		41E11F7825C5F5DC00E7B4F6 /* MacOsPoints.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacOsPoints.entitlements; sourceTree = "<group>"; };
 		41E709CF257947DE00DC959E /* BufferSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpace.swift; sourceTree = "<group>"; };
 		41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpaceDebugView.swift; sourceTree = "<group>"; };
 		41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSampleView.swift; sourceTree = SOURCE_ROOT; };
@@ -126,6 +179,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		411DF21723607CD100A37C64 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41E11F6925C5F5D700E7B4F6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,12 +313,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		41E11F6D25C5F5D700E7B4F6 /* MacOsPoints */ = {
+			isa = PBXGroup;
+			children = (
+				41E11F7225C5F5DC00E7B4F6 /* Assets.xcassets */,
+				41E11F7725C5F5DC00E7B4F6 /* Info.plist */,
+				41E11F7825C5F5DC00E7B4F6 /* MacOsPoints.entitlements */,
+				41E11F7425C5F5DC00E7B4F6 /* Preview Content */,
+			);
+			path = MacOsPoints;
+			sourceTree = "<group>";
+		};
+		41E11F7425C5F5DC00E7B4F6 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				41E11F7525C5F5DC00E7B4F6 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
 				411DF21B23607CD100A37C64 /* PointsUI */,
+				41E11F6D25C5F5D700E7B4F6 /* MacOsPoints */,
 				41C12BCD24CB1D460043EEE1 /* Frameworks */,
 				41ED4F3522AD799000A46C19 /* Products */,
+				41E11F6725C5F4B000E7B4F6 /* PointsUI copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -266,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				411DF21A23607CD100A37C64 /* PointsUI.app */,
+				41E11F6C25C5F5D700E7B4F6 /* MacOsPoints.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -304,18 +386,38 @@
 			productReference = 411DF21A23607CD100A37C64 /* PointsUI.app */;
 			productType = "com.apple.product-type.application";
 		};
+		41E11F6B25C5F5D700E7B4F6 /* MacOsPoints */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41E11F7925C5F5DC00E7B4F6 /* Build configuration list for PBXNativeTarget "MacOsPoints" */;
+			buildPhases = (
+				41E11F6825C5F5D700E7B4F6 /* Sources */,
+				41E11F6925C5F5D700E7B4F6 /* Frameworks */,
+				41E11F6A25C5F5D700E7B4F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacOsPoints;
+			productName = MacOsPoints;
+			productReference = 41E11F6C25C5F5D700E7B4F6 /* MacOsPoints.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		41ED4F2C22AD799000A46C19 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Alexander Völz";
 				TargetAttributes = {
 					411DF21923607CD100A37C64 = {
 						CreatedOnToolsVersion = 11.1;
+					};
+					41E11F6B25C5F5D700E7B4F6 = {
+						CreatedOnToolsVersion = 12.4;
 					};
 				};
 			};
@@ -335,6 +437,7 @@
 			projectRoot = "";
 			targets = (
 				411DF21923607CD100A37C64 /* PointsUI */,
+				41E11F6B25C5F5D700E7B4F6 /* MacOsPoints */,
 			);
 		};
 /* End PBXProject section */
@@ -347,6 +450,16 @@
 				411DF22923607CDA00A37C64 /* LaunchScreen.storyboard in Resources */,
 				411DF22623607CDA00A37C64 /* Preview Assets.xcassets in Resources */,
 				411DF22323607CDA00A37C64 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41E11F6A25C5F5D700E7B4F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41E11F7625C5F5DC00E7B4F6 /* Preview Assets.xcassets in Resources */,
+				41E11FBD25C5F66E00E7B4F6 /* Assets.xcassets in Resources */,
+				41E11F7325C5F5DC00E7B4F6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +514,57 @@
 				410CA6692532569100D92A29 /* EditPlayerNames.swift in Sources */,
 				411DF2312360824900A37C64 /* PlayerView.swift in Sources */,
 				4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41E11F6825C5F5D700E7B4F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41E11FA225C5F65700E7B4F6 /* SelectionScoreView.swift in Sources */,
+				41E11FA525C5F65700E7B4F6 /* ScoreHistoryView.swift in Sources */,
+				41E11F9125C5F61300E7B4F6 /* History.swift in Sources */,
+				41E11FA325C5F65700E7B4F6 /* MatchesScoreView.swift in Sources */,
+				41E11FA425C5F65700E7B4F6 /* ButtonScoreView.swift in Sources */,
+				41E11F8425C5F60E00E7B4F6 /* PointsUIApp.swift in Sources */,
+				41E11F9E25C5F65000E7B4F6 /* EditView.swift in Sources */,
+				41E11F8125C5F60E00E7B4F6 /* PlayerView.swift in Sources */,
+				41E11F9725C5F62000E7B4F6 /* DebugView.swift in Sources */,
+				41E11F8A25C5F61300E7B4F6 /* GameSettings.swift in Sources */,
+				41E11FB125C5F65E00E7B4F6 /* MatchView.swift in Sources */,
+				41E11F8925C5F61300E7B4F6 /* GlobalSettings.swift in Sources */,
+				41E11FB325C5F65E00E7B4F6 /* HistorySymbolRow.swift in Sources */,
+				41E11FAF25C5F65E00E7B4F6 /* Pickers.swift in Sources */,
+				41E11FB025C5F65E00E7B4F6 /* MenuBar.swift in Sources */,
+				41E11FB425C5F65E00E7B4F6 /* HistoryControlView.swift in Sources */,
+				41E11F8525C5F60E00E7B4F6 /* ContentView.swift in Sources */,
+				41E11FB525C5F65E00E7B4F6 /* EditPlayerNames.swift in Sources */,
+				41E11FAE25C5F65E00E7B4F6 /* TopMenuBar.swift in Sources */,
+				41E11F8325C5F60E00E7B4F6 /* GameBoardView.swift in Sources */,
+				41E11FAA25C5F65E00E7B4F6 /* Box.swift in Sources */,
+				41E11F9225C5F61300E7B4F6 /* BufferSpaceDebugView.swift in Sources */,
+				41E11FB625C5F65E00E7B4F6 /* CountdownView.swift in Sources */,
+				41E11F9325C5F61300E7B4F6 /* Rule.swift in Sources */,
+				41E11F9A25C5F64A00E7B4F6 /* ViewBuilder.swift in Sources */,
+				41E11FAB25C5F65E00E7B4F6 /* BufferView.swift in Sources */,
+				41E11F8F25C5F61300E7B4F6 /* Players.swift in Sources */,
+				41E11F9F25C5F65000E7B4F6 /* PlayerWon.swift in Sources */,
+				41E11F8E25C5F61300E7B4F6 /* ScoreRowData.swift in Sources */,
+				41E11FA725C5F65700E7B4F6 /* BoxesScoreView.swift in Sources */,
+				41E11FA625C5F65700E7B4F6 /* ScoreRepresentationView.swift in Sources */,
+				41E11F9D25C5F65000E7B4F6 /* InfoView.swift in Sources */,
+				41E11F8625C5F60E00E7B4F6 /* BoardUI.swift in Sources */,
+				41E11FAD25C5F65E00E7B4F6 /* EdgeShape.swift in Sources */,
+				41E11F8225C5F60E00E7B4F6 /* MainGameView.swift in Sources */,
+				41E11F9025C5F61300E7B4F6 /* HistoryScoresTable.swift in Sources */,
+				41E11F8C25C5F61300E7B4F6 /* Score.swift in Sources */,
+				41E11FB925C5F66900E7B4F6 /* CoordinateSampleView.swift in Sources */,
+				41E11FBA25C5F66900E7B4F6 /* EdgeShapeSamples.swift in Sources */,
+				41E11F9425C5F61300E7B4F6 /* GameState.swift in Sources */,
+				41E11F8B25C5F61300E7B4F6 /* CellData.swift in Sources */,
+				41E11F8D25C5F61300E7B4F6 /* BufferSpace.swift in Sources */,
+				41E11FAC25C5F65E00E7B4F6 /* HistoryControlsTestView.swift in Sources */,
+				41E11FB225C5F65E00E7B4F6 /* TitleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +631,56 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		41E11F7A25C5F5DC00E7B4F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MacOsPoints/MacOsPoints.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"MacOsPoints/Preview Content\"";
+				DEVELOPMENT_TEAM = 2NBB26789S;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = MacOsPoints/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.av.MacOsPoints;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		41E11F7B25C5F5DC00E7B4F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MacOsPoints/MacOsPoints.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"MacOsPoints/Preview Content\"";
+				DEVELOPMENT_TEAM = 2NBB26789S;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = MacOsPoints/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.av.MacOsPoints;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -596,6 +810,15 @@
 			buildConfigurations = (
 				411DF22C23607CDA00A37C64 /* Debug */,
 				411DF22D23607CDA00A37C64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41E11F7925C5F5DC00E7B4F6 /* Build configuration list for PBXNativeTarget "MacOsPoints" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41E11F7A25C5F5DC00E7B4F6 /* Debug */,
+				41E11F7B25C5F5DC00E7B4F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -36,7 +36,7 @@ struct BoardUI: View {
                         playerViews
                     }
                 }
-                
+
                 if let buffer = settings.pointBuffer {
                     let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
                                                    y: buffer.position.y - bufferViewSize)
