@@ -36,7 +36,6 @@ struct HistoryControlsTestView: View {
     }
 }
 
-
 /// a knob that controls history undo/redo functions
 struct HistoryControlKnob: View {
     @Binding var selecting: Bool

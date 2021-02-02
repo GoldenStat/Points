@@ -36,14 +36,38 @@ class History : ObservableObject {
         buffer = []
         isBuffered = false
     }
-    
+        
     /// stores given state in buffer, temporarily, same principle as with score
-    /// if buffer is not empty, overwrite
+    /// overwrites buffer if not empty
     /// call save() to store in states
-    public func add(state: GameState) {
-        states.append(state)
+    public func store(state: GameState) {
+        buffer = [state]
+    }
+
+    /// appends given state to buffer, temporarily, same principle as with score
+    /// call save() to store in states
+    
+    public func append(state: GameState) {
+        buffer.append(state)
+    }
+
+    /// adds given state to buffer, temporarily, same principle as with score
+    /// call save() to store in states
+    public func add(state newState: GameState) {
+        if buffer.last != nil {
+            let lastElement = buffer.removeLast()
+            let combinedState = GameState(buffer: lastElement + newState)
+            buffer.append(combinedState)
+        } else {
+            buffer.append(newState)
+        }
     }
     
+    public func mergeBuffer() {
+        /// sums all buffer entries and merges them into one
+        fatalError("not yet implemented")
+    }
+
     /// if the buffer has content, delete it
     /// if not, remove last step and append it to redoStack
     public var canUndo: Bool { states.count > 0 }
@@ -67,10 +91,24 @@ class History : ObservableObject {
     }
     
     /// makes current changes permanent:
-    /// deletes buffer
+    /// deletes buffer - we don't have anything to redo, anymore
     public func save() {
-        isBuffered = false
         buffer = []
+        isBuffered = false
     }
+}
+
+extension History {
+    static var sample : History {
+        let h = History()
     
+        h.add(state: GameState(buffer: [1,0]))
+        h.add(state: GameState(buffer: [2,3]))
+        h.add(state: GameState(buffer: [1,4]))
+        h.add(state: GameState(buffer: [1,0]))
+        
+        h.save()
+        
+        return h
+    }
 }

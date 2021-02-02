@@ -15,9 +15,8 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
     static func == (lhs: GameState, rhs: GameState) -> Bool {
         return lhs.scores == rhs.scores
     }
-    
     var id = UUID()
-    var scores : [Int]
+    private(set) var scores : [Int]
     
     var activePlayerIndex = 0
     
@@ -25,6 +24,7 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
         scores = players.map { $0.score.value }
     }
     
+    /// initialize from an [Int]
     init(buffer: [Int]?) {
         scores = buffer ?? []
     }
@@ -39,4 +39,8 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
 /// subtract gamestates
 func - (lhs: GameState, rhs: GameState) -> [Int] {
     return lhs.scores - rhs.scores
+}
+
+func + (lhs: GameState, rhs: GameState) -> [Int] {
+    return lhs.scores + rhs.scores
 }

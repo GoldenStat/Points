@@ -17,16 +17,33 @@ struct ScoreHistoryView: View {
     private var header: [ String ] { settings.playerNames }
     private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
-    private var historyTable: HistoryScoresTable {
-        HistoryScoresTable(columns: numberOfColumns,
-                           states: history.states) }
-    private var historyTableBuffer: HistoryScoresTable {
-        HistoryScoresTable(columns: numberOfColumns,
-                           states: history.buffer) }
-    private var sumLine: ScoreRowData { historyTable.sums }
     
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
+        
+    // MARK: - score and buffer
+    private var scoreBuffer: HistoryScoresTable {
+        HistoryScoresTable(columns: numberOfColumns,
+                           states: history.buffer) }
+    private var buffer: [ ScoreRowData ] {
+        !showSums ? scoreBuffer.totals : scoreBuffer.differences
+    }
+
+    private var scoreTable: HistoryScoresTable {
+        HistoryScoresTable(columns: numberOfColumns,
+                           states: history.states) }
+    private var scores: [ ScoreRowData ] {
+        !showSums ? scoreTable.totals : scoreTable.differences
+    }
     
+    private var bufferLine: ScoreRowData {
+        scoreBuffer.sums - scoreTable.sums
+    }
+    
+    @State var showBuffer: Bool = false
+
+    // MARK: - sums
+    private var sumLine: ScoreRowData { scoreTable.sums + scoreBuffer.sums }
+
     var body: some View {
         VStack() {
             
@@ -49,39 +66,49 @@ struct ScoreHistoryView: View {
                 }
                 
             } else {
-                
+                                
                 ScrollView(.vertical) {
                     
                     // all scores
                     VStack {
+                        
+                        /// show the scores
                         ForEach(scores) { dataRow in
                             
                             // one row of scores for one round
-                            LazyVGrid(columns: gridColumns) {
-                                ForEach(dataRow.scores) { score in
-                                    Text(score.value.description)
+                            // LazyVGrid(columns: gridColumns) {
+                            HStack {
+                                ForEach(dataRow.scores) {
+                                    score in
+                                    Text(score.description)
                                 }
                             }
                         }
                         
-                        ForEach(buffer) { dataRow in
-                            // one row of scores for one round
-                            LazyVGrid(columns: gridColumns) {
-                                ForEach(dataRow.scores) { score in
-                                    Text(score.value.description)
+                        
+                        /// show the buffer - just for debugging
+                        if showBuffer {
+                            ForEach(buffer) { dataRow in
+                                // one row of scores for one round
+                                // LazyVGrid(columns: gridColumns) {
+                                HStack {
+                                    ForEach(dataRow.scores) { score in
+                                        Text(score.description)
+                                    }
+                                    .foregroundColor(Color.red.opacity((0.6)))
                                 }
-                                .foregroundColor(Color.white.opacity((0.6)))
                             }
                         }
                         
+                        // show what would be added
                         if history.isBuffered {
-                            ForEach(historyTableBuffer.totals + historyTable.totals) { scoreRow in
-                                LazyVGrid(columns: gridColumns) {
-                                    ForEach(scoreRow.scores) { score in
+                                // LazyVGrid(columns: gridColumns) {
+                                HStack {
+                                    ForEach(bufferLine.scores) { score in
                                         Text(score.prefix + score.description)
                                     }
                                     .foregroundColor(.gray)
-                                }
+                                
                             }
                         }
                     }
@@ -90,9 +117,10 @@ struct ScoreHistoryView: View {
                         
                         BoldDivider()
                         
-                        LazyVGrid(columns: gridColumns) {
-                            ForEach(historyTable.sums.scores) { score in
-                                Text(score.value.description)
+//                        LazyVGrid(columns: gridColumns) {
+                        HStack {
+                            ForEach(sumLine.scores) { cellData in
+                                Text(cellData.description)
                                     .fontWeight(.bold)
                                     .foregroundColor(sumColor)
                             }
@@ -115,14 +143,7 @@ struct ScoreHistoryView: View {
             return Color.pointbuffer
         }
     }
-        
-    private var scores: [ ScoreRowData ] {
-        showSums ? historyTable.totals : historyTable.differences
-    }
     
-    private var buffer: [ ScoreRowData ] {
-        showSums ? historyTableBuffer.totals : historyTableBuffer.differences
-    }
 }
 
 struct BoldDivider: View {
@@ -153,7 +174,6 @@ struct HistoryScoreGeneratorButton: View {
             )
             .padding()
             .onAppear {
-                addScoresToHistory()
                 addScoresToHistory()
             }
         }
@@ -193,12 +213,23 @@ struct HistoryScoreGeneratorButton: View {
 }
 
 struct HistoryDebugView : View {
+    @EnvironmentObject var settings: GameSettings
     
     var body: some View {
         GeometryReader { geo in
             VStack(alignment: .leading) {
                 HStack {
                     HistoryScoreGeneratorButton()
+                    Button(action: { settings.history.undo()
+                        settings.objectWillChange.send()
+                    }, label: {
+                        Image(systemName: "arrow.left")
+                    })
+                    Button(action: { settings.history.redo()
+                        settings.objectWillChange.send()
+                    }, label: {
+                        Image(systemName: "arrow.right")
+                    })
                     HistorySymbolRow()
                 }
                 ScoreHistoryView()

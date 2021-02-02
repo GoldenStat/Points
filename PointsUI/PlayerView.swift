@@ -84,7 +84,7 @@ struct PlayerGamesCounterView: View {
     let games: Int
     var body: some View {
         HStack(spacing: 3) {
-            ForEach(0..<games) { num in
+            ForEach(0..<games, id: \.self) { num in
                 Circle()
                     .fill(Color.pointbuffer)
                     .frame(width: 10, height: 10)

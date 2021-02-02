@@ -31,3 +31,12 @@ func +<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> whe
     }
     return sum
 }
+
+prefix func -<Element> (lhs: Array<Element>) -> Array<Element> where Element: FloatingPoint {
+    lhs.map { -$0 }
+}
+
+func -<Element> (lhs: Array<Element>, rhs: Array<Element>) -> Array<Element> where Element: FloatingPoint {
+    lhs + -rhs
+}
+

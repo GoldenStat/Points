@@ -8,6 +8,11 @@
 
 import Foundation
 
+/// stores gameStates or ScoreRows and facitlitates output
+/// * as sums
+/// * differences
+/// * zeroRow
+/// * a flat list of Int by appending all rows onto each other
 struct HistoryScoresTable {
     
     private var scoreRows: [ScoreRowData]
