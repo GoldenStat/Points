@@ -40,10 +40,6 @@ struct ScoreHistoryView: View {
     
     @State var showBuffer: Bool = true
     
-    // MARK: - sums
-    private var sumLine: ScoreRowData {
-        scoreTable.sums + scoreBuffer.sums
-    }
     
     var body: some View {
         VStack {
@@ -53,66 +49,9 @@ struct ScoreHistoryView: View {
                 .disabled(history.isEmpty)
                 .padding()
             
-            // headline row
-            ScoreHistoryHeadline(uniqueItems: settings.playerNames)
-            
-            Divider()
-            
-            
-            if history.isEmpty {
-                LazyVGrid(columns: gridColumns) {
-                    ForEach(0 ..< numberOfColumns) { _ in
-                        Text("0")
-                    }
-                }
-                
-            } else {
-                
-                
-                ScrollView(.vertical) {
-                    
-                    // all scores
-                    /// show the scores
-                    LazyVGrid(columns: gridColumns) {
-                        ForEach(scores) { dataRow in
-                            // one row of scores for one round
-                            dataRow
-                                .rowView()
-                        }
-                        
-                        /// show the buffer - just for debugging
-                        if showBuffer {
-                            ForEach(buffer) { bufferRow in
-                                // one row of scores for one round
-                                bufferRow
-                                    .rowView()
-                                    .foregroundColor(Color.red.opacity((0.6)))
-                            }
-                        }
-                        
-                        // show what would be added
-                        if history.isBuffered {
-                            bufferLine
-                                .rowView(showPrefix: true)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-                
-                if showSums {
+            HistoryView(history: settings.history, playerNames: settings.playerNames)
 
-                    BoldDivider()
-
-                    LazyVGrid(columns: gridColumns) {
-                        sumLine
-                            .rowView()
-//                            .fontWeight(.bold)
-                            .foregroundColor(sumColor)
-                    }
-                }
-            }
-
-            Spacer()
+                Spacer()
         }
         .foregroundColor(.text)
         .background(Color.boardbgColor)

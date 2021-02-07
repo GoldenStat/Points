@@ -45,7 +45,7 @@ struct HistoryTestView: View {
             }
             
             /// rewrite History Body
-            HistoryView(history: history)
+            HistoryView(history: history, playerNames: players.names)
 
             if showLogs {
                 Divider()
@@ -143,15 +143,12 @@ struct PlayerBuffers: View {
 
 struct HistoryView: View {
     @ObservedObject var history: History
-    var columns : Int = 2
-    
-    var totals : [CellData] {
-        /// need to make a copy so we have different data in the lazygrids
-        HistoryScoresTable(columns: 2, states: history.states).sums.scores
-    }
-    var totalsRow : ScoreRowData {
-        HistoryScoresTable(columns: 2, states: history.states).sums
-    }
+
+    @State var debugBuffers = false
+
+    var playerNames : [String]
+    var columns : Int { playerNames.count }
+        
 
     enum HistoryMode {
         case perRow, total
@@ -162,53 +159,84 @@ struct HistoryView: View {
     var rowsInHistory: [ScoreRowData] {
         switch mode {
         case .perRow:
-            return HistoryScoresTable(columns: columns, states: history.states).differences
+            return historyTable.differences
         case .total:
-            return HistoryScoresTable(columns: columns, states: history.states).totals
+            return historyTable.totals
         }
     }
     
-    var rowsInBuffer: [ScoreRowData] {
-        HistoryScoresTable(columns: columns, states: history.buffer).totals
+    var historyTable : HistoryScoresTable {
+        table(for: history.states)
     }
     
+    func table(for states: [GameState]) -> HistoryScoresTable {
+        HistoryScoresTable(columns: columns,
+                           states: states)
+    }
+    
+    var bufferTable : HistoryScoresTable {
+        table(for: history.buffer)
+    }
+    
+    var rowsInBuffer: [ScoreRowData] {
+        bufferTable.totals
+    }
+  
+    var totalsRow : ScoreRowData {
+        historyTable.sums
+    }
+
     var bufferHighestRow: ScoreRowData {
         rowsInBuffer.first?.copy ?? .zero.copy
     }
 
-    var playerNames = [ "Yo", "Tu" ]
-    
+    var bufferDifference: ScoreRowData {
+        bufferHighestRow - totalsRow
+    }
+
+
     var body: some View {
         VStack {
             ScoreHistoryHeadline(uniqueItems: playerNames)
-            
+
+            Divider()
+
             Group {
                 ForEach(rowsInHistory) { row in
                     row.rowView()
                 }
-                ForEach(rowsInBuffer) { row in
-                    row.rowView()
-                }
+                if debugBuffers {
+                    ForEach(rowsInBuffer) { row in
+                        row.rowView()
+                    }
                     .foregroundColor(.gray)
-                bufferHighestRow.rowView()
-                    .foregroundColor(.red)
+                    
+                    bufferHighestRow.rowView()
+                        .foregroundColor(.red)
+                }
+                if history.isBuffered {
+                    bufferDifference.rowView()
+                        .foregroundColor(.pointbuffer)
+                }
             }
             .asGrid(columns: playerNames.count)
 
             BoldDivider()
             
-            LazyVGrid(columns: [GridItem(), GridItem()]) {
-                bufferDifference.rowView()
-                    .foregroundColor(.blue)
-                totalsRow.rowView()
+            Group {
+                if history.isBuffered {
+                    (totalsRow + bufferDifference)
+                        .rowView()
+                        .foregroundColor(.gray)
+                } else {
+                    totalsRow.rowView()
+                }
             }
+            .asGrid(columns: columns)
 
         }
     }
     
-    var bufferDifference: ScoreRowData {
-        bufferHighestRow - totalsRow
-    }
 }
 
 extension View {
@@ -219,34 +247,6 @@ extension View {
     }
 }
 
-struct HistoryView_Head: View {
-    var names = [ "Yo", "Tu" ]
-    var body: some View {
-        ForEach(names, id: \.self) { name in
-            Text(name)
-        }
-    }
-}
-
-struct HistoryView_Body: View {
-    var scoreRows: [ScoreRowData]
-    var body: some View {
-        ForEach(scoreRows) { row in
-            row.rowView()
-        }
-    }
-}
-
-struct HistoryView_Tail: View {
-    var totals: [CellData]
-    var body: some View {
-        LazyVGrid(columns: [GridItem(), GridItem()]) {
-            ForEach(totals) { data in
-                Text(data.description)
-            }
-        }
-    }
-}
 
 struct HistoryTestView_Previews: PreviewProvider {
     static var previews: some View {
