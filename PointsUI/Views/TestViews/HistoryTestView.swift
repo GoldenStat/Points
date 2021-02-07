@@ -22,14 +22,15 @@ struct HistoryTestView: View {
             Button(showBuffers ? "Players Off" : "Players On") {
                 showBuffers.toggle()
             }
+            
             HStack {
                 VStack {
                 Button("Add Round") {
                     addRound()
                     saveRound()
-                    save()
+//                    save()
                 }
-//                Button("Save Round") { save() }
+                Button("Save Round") { save() }
             }
                 VStack {
                 Button("Undo") { undo () }
@@ -39,7 +40,7 @@ struct HistoryTestView: View {
             
             Divider()
             if showBuffers {
-                PlayerBuffers(items: players.items)                
+                PlayerBuffers(players: players)
                 Divider()
             }
             
@@ -55,7 +56,7 @@ struct HistoryTestView: View {
                     .environmentObject(playerLogger)
                     
                     Divider()
-                        .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 40)
+                        .border(Color.black, width: 40)
                     
                     Section(header: Text("State Log")) {
                         DebugView()
@@ -89,6 +90,7 @@ struct HistoryTestView: View {
 
         playerLogger.err(msg: playersDescription)
         stateLogger.err(msg: stateDescription)
+        
     }
     
     func saveRound() {
@@ -100,6 +102,7 @@ struct HistoryTestView: View {
 
         history.store(state: newState)
         settings.objectWillChange.send()
+        settings.players.objectWillChange.send()
 
         playerLogger.log(msg: players.items.map {$0.description}.joined(separator: " "))
         stateLogger.log(msg: newState.description)
@@ -122,7 +125,8 @@ struct HistoryTestView: View {
 }
 
 struct PlayerBuffers: View {
-    var items: [Player]
+    @ObservedObject var players: Players
+    var items: [Player] { players.items }
     var body: some View {
         VStack {
             ForEach(items) { player in
@@ -145,29 +149,72 @@ struct HistoryView: View {
         /// need to make a copy so we have different data in the lazygrids
         HistoryScoresTable(columns: 2, states: history.states).sums.scores
     }
+    var totalsRow : ScoreRowData {
+        HistoryScoresTable(columns: 2, states: history.states).sums
+    }
 
-    var stateTotals: [ScoreRowData] {
-        HistoryScoresTable(columns: columns, states: history.states).totals
+    enum HistoryMode {
+        case perRow, total
     }
     
-    var bufferTotals: [ScoreRowData] {
+    var mode = HistoryMode.total
+    
+    var rowsInHistory: [ScoreRowData] {
+        switch mode {
+        case .perRow:
+            return HistoryScoresTable(columns: columns, states: history.states).differences
+        case .total:
+            return HistoryScoresTable(columns: columns, states: history.states).totals
+        }
+    }
+    
+    var rowsInBuffer: [ScoreRowData] {
         HistoryScoresTable(columns: columns, states: history.buffer).totals
     }
+    
+    var bufferHighestRow: ScoreRowData {
+        rowsInBuffer.first?.copy ?? .zero.copy
+    }
 
+    var playerNames = [ "Yo", "Tu" ]
+    
     var body: some View {
         VStack {
-            LazyVGrid(columns: [GridItem(), GridItem()]) {
-                HistoryView_Head()
-            }
-            LazyVGrid(columns: [GridItem(), GridItem()]) {
-                HistoryView_Body(scoreRows: stateTotals)
-                HistoryView_Body(scoreRows: bufferTotals)
+            ScoreHistoryHeadline(uniqueItems: playerNames)
+            
+            Group {
+                ForEach(rowsInHistory) { row in
+                    row.rowView()
+                }
+                ForEach(rowsInBuffer) { row in
+                    row.rowView()
+                }
                     .foregroundColor(.gray)
-                HistoryView_Body(scoreRows: [bufferTotals.last?.copy ?? .zero.copy])
+                bufferHighestRow.rowView()
                     .foregroundColor(.red)
             }
+            .asGrid(columns: playerNames.count)
+
             BoldDivider()
-            HistoryView_Tail(totals: totals)
+            
+            LazyVGrid(columns: [GridItem(), GridItem()]) {
+                bufferDifference.rowView()
+                    .foregroundColor(.blue)
+                totalsRow.rowView()
+            }
+
+        }
+    }
+    
+    var bufferDifference: ScoreRowData {
+        bufferHighestRow - totalsRow
+    }
+}
+
+extension View {
+    func asGrid(columns: Int) -> some View {
+        LazyVGrid(columns: Array<GridItem>(repeating: GridItem(), count: columns)) {
+            self
         }
     }
 }

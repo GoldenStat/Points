@@ -54,7 +54,7 @@ struct ScoreHistoryView: View {
                 .padding()
             
             // headline row
-            ScoreHistoryHeadline(playerNames: settings.playerNames)
+            ScoreHistoryHeadline(uniqueItems: settings.playerNames)
             
             Divider()
             
@@ -250,31 +250,21 @@ struct ScoreHistoryView_Previews: PreviewProvider {
 }
 
 extension ScoreRowData {
-    func rowView(showPrefix: Bool = false) -> some View {
-        
-        func string(_ data: CellData) -> String {
-            if showPrefix {
-                return data.prefix + data.description
-            } else {
-                return data.description
-            }
-        }
-        
-        return ForEach(self.scores) { cellData in
-            Text(string(cellData))
+    @ViewBuilder func rowView(showPrefix: Bool = false) -> some View {
+        ForEach(self.scores) { cellData in
+            Text(cellData.description)
         }
     }
 }
 
 struct ScoreHistoryHeadline: View {
+    let uniqueItems: [String]
     
-    let playerNames: [String]
-    
-    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: playerNames.count) }
+    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: uniqueItems.count) }
     
     var body: some View {
         LazyVGrid(columns: gridColumns) {
-            ForEach(playerNames, id: \.self) { name in
+            ForEach(uniqueItems, id: \.self) { name in
                 Text(name)
             }
         }
