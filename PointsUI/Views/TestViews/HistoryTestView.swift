@@ -15,32 +15,36 @@ struct HistoryTestView: View {
     @ObservedObject var stateLogger: DebugLog = DebugLog()
     @ObservedObject var playerLogger: DebugLog = DebugLog()
 
+    @State var showBuffers = false
+    
     var body: some View {
         VStack {
+            Button(showBuffers ? "Players Off" : "Players On") {
+                showBuffers.toggle()
+            }
             HStack {
-                Button("Add") { addRound() }
-                Button("Save") { saveRound() }
+                VStack {
+                Button("Add Round") {
+                    addRound()
+                    saveRound()
+                    save()
+                }
+//                Button("Save Round") { save() }
+            }
+                VStack {
                 Button("Undo") { undo () }
                 Button("Redo") { redo() }
-                Button("History") { save() }
-            }
-            
-            Divider()
-            
-            VStack {
-                ForEach(players.items) { player in
-                    HStack {
-                        Text(player.name)
-                        Text("\(player.score.value)")
-                        Text("\(player.score.buffer)")
-                            .foregroundColor(.red)
-                    }
                 }
             }
             
             Divider()
+            if showBuffers {
+                PlayerBuffers(items: players.items)                
+                Divider()
+            }
             
-            ScoreHistoryView()
+            /// rewrite History Body
+            HistoryView(history: history)
 
             if showLogs {
                 Divider()
@@ -63,8 +67,10 @@ struct HistoryTestView: View {
             
         }
         .environmentObject(settings)
-        
+        .buttonStyle(DefaultButtonStyle())
     }
+    
+    // MARK: - debug logging
     
     @State private var showLogs : Bool = false
     
@@ -76,14 +82,13 @@ struct HistoryTestView: View {
         GameState(players: settings.players.data).description
     }
     
+    // MARK: history functions
     func addRound() {
         /// adds a line to history with player's scores (as in first trigger - GameSettings.updatePoints())
         _ = settings.players.items.map { $0.add(score: Int.random(in: 0 ... 2)) }
 
         playerLogger.err(msg: playersDescription)
         stateLogger.err(msg: stateDescription)
-
-        settings.objectWillChange.send()
     }
     
     func saveRound() {
@@ -103,21 +108,96 @@ struct HistoryTestView: View {
     func undo() {
         /// undoes last history action (as in History.undo())
         history.undo()
-        settings.objectWillChange.send()
-
     }
     
     func redo() {
         /// redoes last history action (as in History.redo())
         history.redo()
-        settings.objectWillChange.send()
-
     }
     
     func save() {
         /// saves history states (as in History.save())
         history.save()
-        settings.objectWillChange.send()
+    }
+}
+
+struct PlayerBuffers: View {
+    var items: [Player]
+    var body: some View {
+        VStack {
+            ForEach(items) { player in
+                HStack {
+                    Text(player.name)
+                    Text("\(player.score.value)")
+                    Text("\(player.score.buffer)")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+    }
+}
+
+struct HistoryView: View {
+    @ObservedObject var history: History
+    var columns : Int = 2
+    
+    var totals : [CellData] {
+        /// need to make a copy so we have different data in the lazygrids
+        HistoryScoresTable(columns: 2, states: history.states).sums.scores
+    }
+
+    var stateTotals: [ScoreRowData] {
+        HistoryScoresTable(columns: columns, states: history.states).totals
+    }
+    
+    var bufferTotals: [ScoreRowData] {
+        HistoryScoresTable(columns: columns, states: history.buffer).totals
+    }
+
+    var body: some View {
+        VStack {
+            LazyVGrid(columns: [GridItem(), GridItem()]) {
+                HistoryView_Head()
+            }
+            LazyVGrid(columns: [GridItem(), GridItem()]) {
+                HistoryView_Body(scoreRows: stateTotals)
+                HistoryView_Body(scoreRows: bufferTotals)
+                    .foregroundColor(.gray)
+                HistoryView_Body(scoreRows: [bufferTotals.last?.copy ?? .zero.copy])
+                    .foregroundColor(.red)
+            }
+            BoldDivider()
+            HistoryView_Tail(totals: totals)
+        }
+    }
+}
+
+struct HistoryView_Head: View {
+    var names = [ "Yo", "Tu" ]
+    var body: some View {
+        ForEach(names, id: \.self) { name in
+            Text(name)
+        }
+    }
+}
+
+struct HistoryView_Body: View {
+    var scoreRows: [ScoreRowData]
+    var body: some View {
+        ForEach(scoreRows) { row in
+            row.rowView()
+        }
+    }
+}
+
+struct HistoryView_Tail: View {
+    var totals: [CellData]
+    var body: some View {
+        LazyVGrid(columns: [GridItem(), GridItem()]) {
+            ForEach(totals) { data in
+                Text(data.description)
+            }
+        }
     }
 }
 

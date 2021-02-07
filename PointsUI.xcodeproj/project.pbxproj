@@ -23,6 +23,7 @@
 		4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */; };
 		4139A3F225238EDC006E713B /* MatchesScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F125238EDC006E713B /* MatchesScoreView.swift */; };
 		4139A3F725239133006E713B /* SelectionScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139A3F625239133006E713B /* SelectionScoreView.swift */; };
+		41442D6525CC586300515899 /* GeoEffectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41442D6425CC586300515899 /* GeoEffectTest.swift */; };
 		414CC4C72569C62E00B5C10D /* EdgeShapeSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */; };
 		41648E61258D1CE20070FB42 /* TopMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E60258D1CE20070FB42 /* TopMenuBar.swift */; };
 		41648E64258D1E340070FB42 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41648E63258D1E340070FB42 /* MenuBar.swift */; };
@@ -90,6 +91,7 @@
 		4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRepresentationView.swift; sourceTree = "<group>"; };
 		4139A3F125238EDC006E713B /* MatchesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesScoreView.swift; sourceTree = "<group>"; };
 		4139A3F625239133006E713B /* SelectionScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionScoreView.swift; sourceTree = "<group>"; };
+		41442D6425CC586300515899 /* GeoEffectTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoEffectTest.swift; sourceTree = "<group>"; };
 		414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EdgeShapeSamples.swift; path = PointsUI/Views/EdgeShapeSamples.swift; sourceTree = SOURCE_ROOT; };
 		41648E60258D1CE20070FB42 /* TopMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopMenuBar.swift; sourceTree = SOURCE_ROOT; };
 		41648E63258D1E340070FB42 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBar.swift; path = PointsUI/MenuBar.swift; sourceTree = SOURCE_ROOT; };
@@ -151,6 +153,7 @@
 				41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */,
 				41DB1E1823E5C8F100E17CC8 /* History.swift */,
 				41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */,
+				41442D6425CC586300515899 /* GeoEffectTest.swift */,
 				41E11F2425C5DD9E00E7B4F6 /* CellData.swift */,
 				4173575D24A4B676002C10B2 /* Score.swift */,
 			);
@@ -400,6 +403,7 @@
 				4177075824D6A18F00FD851A /* HistorySymbolRow.swift in Sources */,
 				41E709D0257947DE00DC959E /* BufferSpace.swift in Sources */,
 				41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */,
+				41442D6525CC586300515899 /* GeoEffectTest.swift in Sources */,
 				4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */,
 				4139A3EF25238BF5006E713B /* ScoreRepresentationView.swift in Sources */,
 				41648E6C258FE5560070FB42 /* HistoryControlView.swift in Sources */,

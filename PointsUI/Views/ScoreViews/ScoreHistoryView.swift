@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     
@@ -19,7 +18,7 @@ struct ScoreHistoryView: View {
     private var history: History { settings.history }
     
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
-        
+    
     // MARK: - score and buffer
     private var scoreBuffer: HistoryScoresTable {
         HistoryScoresTable(columns: numberOfColumns,
@@ -27,7 +26,7 @@ struct ScoreHistoryView: View {
     private var buffer: [ ScoreRowData ] {
         !showSums ? scoreBuffer.totals : scoreBuffer.differences
     }
-
+    
     private var scoreTable: HistoryScoresTable {
         HistoryScoresTable(columns: numberOfColumns,
                            states: history.states) }
@@ -39,13 +38,15 @@ struct ScoreHistoryView: View {
         scoreBuffer.sums - scoreTable.sums
     }
     
-    @State var showBuffer: Bool = false
-
+    @State var showBuffer: Bool = true
+    
     // MARK: - sums
-    private var sumLine: ScoreRowData { scoreTable.sums + scoreBuffer.sums }
-
+    private var sumLine: ScoreRowData {
+        scoreTable.sums + scoreBuffer.sums
+    }
+    
     var body: some View {
-        VStack() {
+        VStack {
             
             // Sum toggle button
             SumButton(toggle: $showSums)
@@ -57,8 +58,8 @@ struct ScoreHistoryView: View {
             
             Divider()
             
+            
             if history.isEmpty {
-                
                 LazyVGrid(columns: gridColumns) {
                     ForEach(0 ..< numberOfColumns) { _ in
                         Text("0")
@@ -66,69 +67,51 @@ struct ScoreHistoryView: View {
                 }
                 
             } else {
-                                
+                
+                
                 ScrollView(.vertical) {
                     
                     // all scores
-                    VStack {
-                        
-                        /// show the scores
+                    /// show the scores
+                    LazyVGrid(columns: gridColumns) {
                         ForEach(scores) { dataRow in
-                            
                             // one row of scores for one round
-                            // LazyVGrid(columns: gridColumns) {
-                            HStack {
-                                ForEach(dataRow.scores) {
-                                    score in
-                                    Text(score.description)
-                                }
-                            }
+                            dataRow
+                                .rowView()
                         }
-                        
                         
                         /// show the buffer - just for debugging
                         if showBuffer {
-                            ForEach(buffer) { dataRow in
+                            ForEach(buffer) { bufferRow in
                                 // one row of scores for one round
-                                // LazyVGrid(columns: gridColumns) {
-                                HStack {
-                                    ForEach(dataRow.scores) { score in
-                                        Text(score.description)
-                                    }
+                                bufferRow
+                                    .rowView()
                                     .foregroundColor(Color.red.opacity((0.6)))
-                                }
                             }
                         }
                         
                         // show what would be added
                         if history.isBuffered {
-                                // LazyVGrid(columns: gridColumns) {
-                                HStack {
-                                    ForEach(bufferLine.scores) { score in
-                                        Text(score.prefix + score.description)
-                                    }
-                                    .foregroundColor(.gray)
-                                
-                            }
+                            bufferLine
+                                .rowView(showPrefix: true)
+                                .foregroundColor(.gray)
                         }
                     }
-                    
-                    if showSums {
-                        
-                        BoldDivider()
-                        
-//                        LazyVGrid(columns: gridColumns) {
-                        HStack {
-                            ForEach(sumLine.scores) { cellData in
-                                Text(cellData.description)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(sumColor)
-                            }
-                        }
-                        
+                }
+                
+                if showSums {
+
+                    BoldDivider()
+
+                    LazyVGrid(columns: gridColumns) {
+                        sumLine
+                            .rowView()
+//                            .fontWeight(.bold)
+                            .foregroundColor(sumColor)
                     }
                 }
             }
+
             Spacer()
         }
         .foregroundColor(.text)
@@ -143,7 +126,6 @@ struct ScoreHistoryView: View {
             return Color.pointbuffer
         }
     }
-    
 }
 
 struct BoldDivider: View {
@@ -173,9 +155,6 @@ struct HistoryScoreGeneratorButton: View {
                             .cornerRadius(20)
             )
             .padding()
-            .onAppear {
-                addScoresToHistory()
-            }
         }
     }
     
@@ -199,9 +178,9 @@ struct HistoryScoreGeneratorButton: View {
                 
                 messages.append(player.description)
             }
-
+            
             logger.log(msg: messages.joined(separator: " | "))
-
+            
             let newState = GameState(players: players.data)
             logger.log(msg: newState.description)
             
@@ -241,8 +220,6 @@ struct HistoryDebugView : View {
     }
 }
 
-
-
 struct SumButton: View {
     
     @Binding var toggle: Bool
@@ -272,12 +249,29 @@ struct ScoreHistoryView_Previews: PreviewProvider {
     }
 }
 
-struct ScoreHistoryHeadline: View {
+extension ScoreRowData {
+    func rowView(showPrefix: Bool = false) -> some View {
+        
+        func string(_ data: CellData) -> String {
+            if showPrefix {
+                return data.prefix + data.description
+            } else {
+                return data.description
+            }
+        }
+        
+        return ForEach(self.scores) { cellData in
+            Text(string(cellData))
+        }
+    }
+}
 
+struct ScoreHistoryHeadline: View {
+    
     let playerNames: [String]
     
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: playerNames.count) }
-
+    
     var body: some View {
         LazyVGrid(columns: gridColumns) {
             ForEach(playerNames, id: \.self) { name in

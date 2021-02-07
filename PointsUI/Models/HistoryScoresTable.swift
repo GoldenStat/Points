@@ -56,8 +56,8 @@ struct HistoryScoresTable {
     }
     
     public var totals: [ScoreRowData] { scoreRows }
-    public var sums: ScoreRowData { scoreRows.last ?? .zero }
-    
+    public var sums: ScoreRowData { scoreRows.last?.copy ?? .zero.copy }
+        
     public var flat : [Int] {
         var flatList = [Int]()
         

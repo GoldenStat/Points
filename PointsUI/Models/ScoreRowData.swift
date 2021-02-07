@@ -28,6 +28,8 @@ struct ScoreRowData : Identifiable {
                                         count: Self.columns))
     }
     
+    var copy: ScoreRowData { ScoreRowData(values: values) }
+
     init(scores: [CellData]) {
         self.scores = scores
         Self.columns = scores.count
@@ -69,17 +71,6 @@ func - (lhs: ScoreRowData, rhs: ScoreRowData) -> ScoreRowData {
 /// the difference between two states would be the difference of the scores between two states
 func - (lhs: [Int], rhs: [Int]) -> [Int] {
     lhs + -rhs
-//    var diffScores = [Int]()
-//
-//    /// only substract from what we have
-//    let minElements = min(rhs.count,lhs.count)
-//    for index in 0 ..< minElements {
-//        diffScores.append(lhs[index] - rhs[index])
-//    }
-//    if minElements < lhs.count {
-//        diffScores.append(contentsOf: lhs[minElements-1..<lhs.count-1])
-//    }
-//    return diffScores
 }
 
 prefix func -(rhs: [Int]) -> [Int] {

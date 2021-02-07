@@ -42,6 +42,7 @@ class History : ObservableObject {
     /// call save() to store in states
     public func store(state: GameState) {
         buffer = [state]
+        isBuffered = true // save operation will append this last state to our history and make it the current game State
     }
 
     /// appends given state to buffer, temporarily, same principle as with score
@@ -61,6 +62,7 @@ class History : ObservableObject {
         } else {
             buffer.append(newState)
         }
+        isBuffered = true // save operation will append this last state to our history and make it the current game State
     }
     
     public func mergeBuffer() {
@@ -87,12 +89,19 @@ class History : ObservableObject {
     /// if there is no step to 'redo', ignore silently
     public func redo() {
         guard canRedo else { return }
-        states.append(buffer.removeLast())
+        // MARK: if this buffer is not from an undo operation - it could be a temporary state? the buffer last state should be added check what we do with the state, maybe?
+        let bufferState = buffer.removeLast()
+        
+        states.append(bufferState)
     }
     
     /// makes current changes permanent:
+    /// saves the buffer if it's not from an undo operation (we know that from the isBuffered value)
     /// deletes buffer - we don't have anything to redo, anymore
     public func save() {
+        if isBuffered, let lastBufferEntry = buffer.last {
+            states.append(lastBufferEntry)
+        }
         buffer = []
         isBuffered = false
     }
