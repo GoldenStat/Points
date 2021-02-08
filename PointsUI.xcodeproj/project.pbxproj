@@ -50,6 +50,7 @@
 		41E11F2525C5DD9E00E7B4F6 /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2425C5DD9E00E7B4F6 /* CellData.swift */; };
 		41E11F2825C5DDFC00E7B4F6 /* ScoreRowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */; };
 		41E11F2B25C5E54700E7B4F6 /* HistoryScoresTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */; };
+		41E2E3A625D1ABD000005043 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2E3A525D1AB4200005043 /* HistoryView.swift */; };
 		41E709D0257947DE00DC959E /* BufferSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709CF257947DE00DC959E /* BufferSpace.swift */; };
 		41E709D3257ABACC00DC959E /* BufferSpaceDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */; };
 		41E709D6257B0F4000DC959E /* CoordinateSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */; };
@@ -121,6 +122,7 @@
 		41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRowData.swift; sourceTree = "<group>"; };
 		41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryScoresTable.swift; sourceTree = "<group>"; };
 		41E11F6725C5F4B000E7B4F6 /* PointsUI copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PointsUI copy-Info.plist"; path = "/Users/de152951/Library/Mobile Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI copy-Info.plist"; sourceTree = "<absolute>"; };
+		41E2E3A525D1AB4200005043 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		41E709CF257947DE00DC959E /* BufferSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpace.swift; sourceTree = "<group>"; };
 		41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpaceDebugView.swift; sourceTree = "<group>"; };
 		41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSampleView.swift; sourceTree = SOURCE_ROOT; };
@@ -195,6 +197,7 @@
 		4105415D256EAED3001E60CA /* stateViews */ = {
 			isa = PBXGroup;
 			children = (
+				41E2E3A525D1AB4200005043 /* HistoryView.swift */,
 				4173576524A509D6002C10B2 /* EditView.swift */,
 				4168CE2424AF922000DACD62 /* InfoView.swift */,
 				418D8B8524AE19F7008A4A3E /* PlayerWon.swift */,
@@ -410,6 +413,7 @@
 				411DF2322360824900A37C64 /* BoxesScoreView.swift in Sources */,
 				41054157256EAE22001E60CA /* GameState.swift in Sources */,
 				41648E64258D1E340070FB42 /* MenuBar.swift in Sources */,
+				41E2E3A625D1ABD000005043 /* HistoryView.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
 				4173576424A507DA002C10B2 /* GameBoardView.swift in Sources */,
 				4125D14624D59DD700D00BA9 /* Box.swift in Sources */,

@@ -280,7 +280,9 @@ class GameSettings: ObservableObject {
     /// invalidates it
     func cancelTimers() {
         registerPointsTimer?.invalidate()
+        registerPointsTimer = nil
         registerRoundStarted?.invalidate()
+        registerRoundStarted = nil
         timerPointsStarted = false
         timerRoundStarted = false
     }

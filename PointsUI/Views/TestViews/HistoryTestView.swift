@@ -80,13 +80,13 @@ struct HistoryTestView: View {
     }
     
     var stateDescription: String {
-        GameState(players: settings.players.data).description
+        GameState(players: players.data).description
     }
     
     // MARK: history functions
     func addRound() {
         /// adds a line to history with player's scores (as in first trigger - GameSettings.updatePoints())
-        _ = settings.players.items.map { $0.add(score: Int.random(in: 0 ... 2)) }
+        _ = players.items.map { $0.add(score: Int.random(in: 0 ... 2)) }
 
         playerLogger.err(msg: playersDescription)
         stateLogger.err(msg: stateDescription)
@@ -96,13 +96,13 @@ struct HistoryTestView: View {
     func saveRound() {
         /// makes the round permament (as in GameSettings.updateRound())
 
-        settings.players.saveScore() // saves players score
+        players.saveScore() // saves players score
         
-        let newState = GameState(players: settings.players.data)
+        let newState = GameState(players: players.data)
 
         history.store(state: newState)
         settings.objectWillChange.send()
-        settings.players.objectWillChange.send()
+        players.objectWillChange.send()
 
         playerLogger.log(msg: players.items.map {$0.description}.joined(separator: " "))
         stateLogger.log(msg: newState.description)
@@ -140,113 +140,6 @@ struct PlayerBuffers: View {
         }
     }
 }
-
-struct HistoryView: View {
-    @ObservedObject var history: History
-
-    @State var debugBuffers = false
-
-    var playerNames : [String]
-    var columns : Int { playerNames.count }
-        
-
-    enum HistoryMode {
-        case perRow, total
-    }
-    
-    var mode = HistoryMode.total
-    
-    var rowsInHistory: [ScoreRowData] {
-        switch mode {
-        case .perRow:
-            return historyTable.differences
-        case .total:
-            return historyTable.totals
-        }
-    }
-    
-    var historyTable : HistoryScoresTable {
-        table(for: history.states)
-    }
-    
-    func table(for states: [GameState]) -> HistoryScoresTable {
-        HistoryScoresTable(columns: columns,
-                           states: states)
-    }
-    
-    var bufferTable : HistoryScoresTable {
-        table(for: history.buffer)
-    }
-    
-    var rowsInBuffer: [ScoreRowData] {
-        bufferTable.totals
-    }
-  
-    var totalsRow : ScoreRowData {
-        historyTable.sums
-    }
-
-    var bufferHighestRow: ScoreRowData {
-        rowsInBuffer.first?.copy ?? .zero.copy
-    }
-
-    var bufferDifference: ScoreRowData {
-        bufferHighestRow - totalsRow
-    }
-
-
-    var body: some View {
-        VStack {
-            ScoreHistoryHeadline(uniqueItems: playerNames)
-
-            Divider()
-
-            Group {
-                ForEach(rowsInHistory) { row in
-                    row.rowView()
-                }
-                if debugBuffers {
-                    ForEach(rowsInBuffer) { row in
-                        row.rowView()
-                    }
-                    .foregroundColor(.gray)
-                    
-                    bufferHighestRow.rowView()
-                        .foregroundColor(.red)
-                }
-                if history.isBuffered {
-                    bufferDifference.rowView()
-                        .foregroundColor(.pointbuffer)
-                }
-            }
-            .asGrid(columns: playerNames.count)
-
-            BoldDivider()
-            
-            Group {
-                if history.isBuffered {
-                    (totalsRow + bufferDifference)
-                        .rowView()
-                        .foregroundColor(.gray)
-                } else {
-                    totalsRow.rowView()
-                }
-            }
-            .asGrid(columns: columns)
-
-        }
-    }
-    
-}
-
-extension View {
-    func asGrid(columns: Int) -> some View {
-        LazyVGrid(columns: Array<GridItem>(repeating: GridItem(), count: columns)) {
-            self
-        }
-    }
-}
-
 
 struct HistoryTestView_Previews: PreviewProvider {
     static var previews: some View {
