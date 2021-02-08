@@ -13,33 +13,7 @@ struct ScoreHistoryView: View {
     
     @State var showSums = false
     
-    private var header: [ String ] { settings.playerNames }
-    private var numberOfColumns: Int { header.count }
     private var history: History { settings.history }
-    
-    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: numberOfColumns) }
-    
-    // MARK: - score and buffer
-    private var scoreBuffer: HistoryScoresTable {
-        HistoryScoresTable(columns: numberOfColumns,
-                           states: history.buffer) }
-    private var buffer: [ ScoreRowData ] {
-        !showSums ? scoreBuffer.totals : scoreBuffer.differences
-    }
-    
-    private var scoreTable: HistoryScoresTable {
-        HistoryScoresTable(columns: numberOfColumns,
-                           states: history.states) }
-    private var scores: [ ScoreRowData ] {
-        !showSums ? scoreTable.totals : scoreTable.differences
-    }
-    
-    private var bufferLine: ScoreRowData {
-        scoreBuffer.sums - scoreTable.sums
-    }
-    
-    @State var showBuffer: Bool = true
-    
     
     var body: some View {
         VStack {
@@ -58,13 +32,6 @@ struct ScoreHistoryView: View {
         .padding(.bottom)
     }
     
-    private var sumColor: Color {
-        if history.buffer.isEmpty {
-            return Color.text
-        } else {
-            return Color.pointbuffer
-        }
-    }
 }
 
 struct BoldDivider: View {
@@ -192,20 +159,6 @@ extension ScoreRowData {
     @ViewBuilder func rowView(showPrefix: Bool = false) -> some View {
         ForEach(self.scores) { cellData in
             Text(cellData.description)
-        }
-    }
-}
-
-struct ScoreHistoryHeadline: View {
-    let uniqueItems: [String]
-    
-    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: uniqueItems.count) }
-    
-    var body: some View {
-        LazyVGrid(columns: gridColumns) {
-            ForEach(uniqueItems, id: \.self) { name in
-                Text(name)
-            }
         }
     }
 }

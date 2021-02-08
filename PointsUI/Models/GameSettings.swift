@@ -62,8 +62,6 @@ class GameSettings: ObservableObject {
         }
     }
     
-    
-    
     @Published var chosenNumberOfPlayers : Int {
         didSet {
             handlePlayerChange(to: chosenNumberOfPlayers)
@@ -214,8 +212,6 @@ class GameSettings: ObservableObject {
         resetPlayers()
     }
 
-
-    
     // MARK: - control game State
     
     func updateState() {
@@ -297,8 +293,8 @@ class GameSettings: ObservableObject {
     // when the timer fires, players need to be updated, and history buffer updated...
     @objc private func updatePoints() {
         // add to bufferForHistory
-        updateHistoryBuffer(from: players.scores) // add player's score buffer to bufferForHistoryStore
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
+        history.store(state: GameState(players: players.data))
         updateState()
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
@@ -306,21 +302,11 @@ class GameSettings: ObservableObject {
         timerPointsStarted = false
         timerRoundStarted = true
     }
-    
-    // MARK: - history (controlled from above timer)
-    /// a points buffer for history
-    var bufferForHistoryStore: [Int]?
-    
-    /// register player's points from this round into history's buffer
-    func updateHistoryBuffer(from scores: [Score]) {
-        history.add(state: GameState(buffer: bufferForHistoryStore))
-    }
-        
+            
     /// this function adds the changes to the history, counting it as a round.
     /// history adds hist buffer to it's states
     @objc private func updateRound() {
         history.save()
-        bufferForHistoryStore = nil
         registerRoundStarted?.invalidate()
         registerRoundStarted = nil
         timerRoundStarted = false
@@ -330,11 +316,24 @@ class GameSettings: ObservableObject {
     func undo() {
         cancelTimers()
         history.undo()
+        updateCurrentState()
+//        objectWillChange.send()
+    }
+    
+    func updateCurrentState() {
+        /// update players with game state from current state?
+        if let currentState = history.states.last {
+            players.setScores(to: currentState.scores)
+        } else {
+            resetPlayerScores()
+        }
     }
     
     func redo() {
         cancelTimers()
         history.redo()
+        updateCurrentState()
+//        objectWillChange.send()
     }
 }
 

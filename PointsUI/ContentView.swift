@@ -21,6 +21,7 @@ struct ContentView: View {
                 VStack {
                     MenuBar(showEditView: $showEditView,
                             showInfo: $showInfo)
+                        .padding(.horizontal)
                         .zIndex(1) // needs to be in front for buttons to work...
                         .offset(x: 0, y: hideStatusBar ? -200 : 60)
                     

@@ -57,7 +57,7 @@ class Player: ObservableObject, Identifiable, Equatable {
             self.gamesWon = games
         }
     }
-
+    
     var data: Data {
         Data(name: name, score: score, games: games)
     }
@@ -141,6 +141,16 @@ class Players: ObservableObject {
         self.init()
         items = players
     }
+    
+    // set the scores to match a game state
+    func setScores(to values: [Int]) {
+        guard items.count == values.count else { fatalError("saved state doesn't match players count") }
+        
+        for (player, newValue) in zip(items, values) {
+            player.score.reset(newValue)
+        }
+    }
+
 }
 
 // MARK: Player equality functions 

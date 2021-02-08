@@ -17,18 +17,17 @@ struct PointsUIApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HistoryTestView()
-//            if gameStarted {
-//                ContentView()
-//            } else {
-//                TitleView(title: Self.name, animatedState: animatedState)
-//                    .onAppear() { animatedState = TitleView.States.appear }
-//                    .onDisappear() { animatedState = TitleView.States.background }
-//                    .gesture(TapGesture()
-//                                .onEnded {
-//                                    gameStarted = true
-//                                })
-//            }
+            if gameStarted {
+                ContentView()
+            } else {
+                TitleView(title: Self.name, animatedState: animatedState)
+                    .onAppear() { animatedState = TitleView.States.appear }
+                    .onDisappear() { animatedState = TitleView.States.background }
+                    .gesture(TapGesture()
+                                .onEnded {
+                                    gameStarted = true
+                                })
+            }
         }
     }
 }

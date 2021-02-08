@@ -145,9 +145,9 @@
 		41054155256EAE22001E60CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4168CE2624AF925800DACD62 /* GameSettings.swift */,
 				41054156256EAE22001E60CA /* GameState.swift */,
 				41EC8FFF24E8240100038F5C /* Rule.swift */,
-				4168CE2624AF925800DACD62 /* GameSettings.swift */,
 				41E709CF257947DE00DC959E /* BufferSpace.swift */,
 				41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */,
 				41F114A8236A073F00C6314D /* GlobalSettings.swift */,

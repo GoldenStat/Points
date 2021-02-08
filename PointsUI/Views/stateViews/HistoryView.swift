@@ -72,15 +72,9 @@ struct HistoryView: View {
                 ForEach(rowsInHistory) { row in
                     row.rowView()
                 }
-                if debugBuffers {
-                    ForEach(rowsInBuffer) { row in
-                        row.rowView()
-                    }
-                    .foregroundColor(.gray)
-                    
-                    bufferHighestRow.rowView()
-                        .foregroundColor(.red)
-                }
+                
+                debugView(showBuffers: debugBuffers)
+                
                 if history.isBuffered {
                     bufferDifference.rowView()
                         .foregroundColor(.pointbuffer)
@@ -104,6 +98,18 @@ struct HistoryView: View {
         }
     }
     
+    @ViewBuilder func debugView(showBuffers: Bool) -> some View {
+        if debugBuffers {
+            ForEach(rowsInBuffer) { row in
+                row.rowView()
+            }
+            .foregroundColor(.gray)
+            
+            bufferHighestRow.rowView()
+                .foregroundColor(.red)
+        }
+    }
+    
 }
 
 extension View {
@@ -118,5 +124,19 @@ extension View {
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
         HistoryView(history: History(), playerNames: ["yo", "tu"])
+    }
+}
+
+struct ScoreHistoryHeadline: View {
+    let uniqueItems: [String]
+    
+    private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: uniqueItems.count) }
+    
+    var body: some View {
+        LazyVGrid(columns: gridColumns) {
+            ForEach(uniqueItems, id: \.self) { name in
+                Text(name)
+            }
+        }
     }
 }
