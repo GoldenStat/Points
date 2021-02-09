@@ -30,10 +30,14 @@ struct HistoryControlsTestView: View {
                 .offset(x: 0, y: 180)
         }
         .overlay(
-            DebugView()                .frame(width: 400,height: 400)
+            debug ? AnyView(DebugView()
+                .frame(width: 400,height: 400))
+                : AnyView(EmptyView())
         )
         .environmentObject(logger)
     }
+    
+    var debug = false
 }
 
 /// a knob that controls history undo/redo functions

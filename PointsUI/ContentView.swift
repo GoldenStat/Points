@@ -20,8 +20,7 @@ struct ContentView: View {
                 
                 ZStack {
                     MainGameView()
-                        .blur(radius: blurRadius)
-                    
+                        .blur(radius: blurRadius)                    
                     
                     // MARK: History Views
                     if showHistory {
@@ -30,21 +29,22 @@ struct ContentView: View {
                                 .offset(x: 0, y: 100)
                         }
                     }
-                    
                 }
                 
                 VStack {
                     MenuBar(showEditView: $showEditView,
-                            showInfo: $showInfo)
+                            showInfo: $showInfo,
+                            showHistory: $showHistory)
                         .padding([.horizontal, .top])
                         .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
                         .zIndex(1) // needs to be in front for buttons to work...
+                        .drawingGroup()
+                        .shadow(color: .black, radius: 10, x: 8, y: 8)
                     
                     if menuBarPosition == .top {
                         Spacer()
                     }
                 }
-
             }
             .statusBar(hidden: true)
             .navigationBarHidden(true)
@@ -56,7 +56,7 @@ struct ContentView: View {
                     showHistory = false
                 }
             }
-            .gesture(dragStatusBarGesture)
+            .gesture(dragGesture)
             .onLongPressGesture {
                 withAnimation() {
                     showHistory = true
@@ -122,29 +122,95 @@ struct ContentView: View {
 
     @State var menuBarPosition = BarPosition.top
     
-    var dragStatusBarGesture : some Gesture {
+
+    @State var dragStart: CGPoint? = nil
+    
+    var dragGesture : some Gesture {
         DragGesture(minimumDistance: 30)
-            .onEnded() { value in
-                if value.location.above(value.startLocation) {
-                    // go up
+            .onChanged() { value in
+                guard let fromLocation = dragStart else {
+                    dragStart = value.startLocation
+                    return
+                }
+                
+                let dir : Direction = Direction.move(from: fromLocation,
+                                                     to: value.location)
+
+                let changeSteps = Int((fromLocation.xDelta(value.location) / 30).rounded(.towardZero))
+
+                if changeSteps != 0 {
+                switch dir {
+                case .right:
                     withAnimation() {
-                        menuBarPosition.moveUp()
+                        settings.previewHistoryRedo()
                     }
-                } else {
+                    dragStart = value.location
+                case .left:
                     withAnimation() {
-                        menuBarPosition.moveDown()
+                        settings.previewHistoryUndo()
                     }
+                    dragStart = value.location
+                default:
+                    break
+                }
                 }
             }
+            .onEnded() { value in
+                let dir : Direction = Direction.move(from: value.startLocation,
+                                                     to: value.location)
+                switch dir {
+                case .up:
+                    withAnimation() { menuBarPosition.moveUp() }
+                case .down:
+                    withAnimation() { menuBarPosition.moveDown() }
+                case .left:
+                    fallthrough
+                case .right:
+                    settings.performHistoryChange()
+                default:
+                    break
+                }
+                dragStart = nil
+            }
+    }
+
+}
+
+enum Direction {
+    case left, up, right, down, none
+    
+    static func move(from: CGPoint, to: CGPoint) -> Direction {
+        if from.above(to) { return .down }
+        if from.below(to) { return .up }
+        if from.left(to) { return .right }
+        if from.right(to) { return .left }
+        return .none
     }
 }
 
 extension CGPoint {
-    func above(_ point: CGPoint) -> Bool {
-        self.y < point.y
+    func xDeltaRelevant(_ point: CGPoint) -> Bool {
+        abs(x  - point.x) > abs(y - point.y)
     }
+    
+    func xDelta(_ point: CGPoint) -> CGFloat {
+        abs(x - point.x)
+    }
+    
+    func above(_ point: CGPoint) -> Bool {
+        !xDeltaRelevant(point) && y < point.y
+    }
+    
     func below(_ point: CGPoint) -> Bool {
-        !above(point)
+        !xDeltaRelevant(point) && y > point.y
+    }
+    
+    func left(_ point: CGPoint) -> Bool {
+        xDeltaRelevant(point) && x < point.x
+    }
+    
+    func right(_ point: CGPoint) -> Bool {
+        xDeltaRelevant(point) && x > point.x
     }
 }
 

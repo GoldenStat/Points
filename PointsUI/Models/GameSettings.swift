@@ -306,13 +306,6 @@ class GameSettings: ObservableObject {
         cancelTimers()
     }
     
-    // needed for object update
-    func undo() {
-        cancelTimers()
-        history.undo()
-        updateCurrentState()
-    }
-    
     func updateCurrentState() {
         /// update players with game state from current state?
         if let currentState = history.states.last {
@@ -322,9 +315,42 @@ class GameSettings: ObservableObject {
         }
     }
     
+    // needed for object update
+    func undo() {
+        cancelTimers()
+        history.undo()
+        updateCurrentState()
+    }
+
     func redo() {
         cancelTimers()
         history.redo()
+        updateCurrentState()
+    }
+    
+    /// preview number of steps backward / forward as oppose to simple undo()/redo()
+    func previewHistoryUndo() {
+        history.undo()
+        updateHistoryPreview()
+    }
+    
+    func previewHistoryRedo() {
+        history.redo()
+        updateHistoryPreview()
+    }
+    
+    private func updateHistoryPreview() {
+        if let newPlayerBuffers = history.buffer.first,
+           let newPlayerScores = history.states.last {
+            let pairs = zip(newPlayerScores.scores, newPlayerBuffers.scores)
+            let scores = pairs.map { Score($0, buffer: $1) }
+            players.setScores(to: scores)
+        }
+    }
+
+    func performHistoryChange() {
+        /// we have the history states where we want them, just have to erase the player's buffers of set the last state as the current one
+        cancelTimers()
         updateCurrentState()
     }
 }

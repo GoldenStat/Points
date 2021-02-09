@@ -12,64 +12,46 @@ struct MenuBar : View {
     @EnvironmentObject var settings: GameSettings
     @Binding var showEditView: Bool
     @Binding var showInfo: Bool
-    var padding: CGFloat = 10
+    @Binding var showHistory: Bool
     
     var body : some View {
         ZStack {
-            HStack {
-                Button(action: { settings.undo() }, label: { Image(systemName: "arrow.left") })
-                Button(action: { settings.redo() }, label: { Image(systemName: "arrow.right") })
-                Spacer()
-            }
-            
-            
-            Button() {
-                withAnimation() {
-                    showEditView.toggle()
-                }
-            } label: {
-                Text(settings.rule.description)
-                    .font(.title)
-            }
-            /// is this enough to create a context menu on longPress?
-            .contextMenu(menuItems: {
-                ForEach(settings.possibleRules) { rule in
-                    Button(rule.description) {
-                        settings.rule = rule
-                    }
-                }
-            })
-            
-            HStack {
-                Spacer()
+            Group {
                 ZStack {
-                    if settings.timerPointsStarted {
-                        ActiveCircleView()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(padding)
-                    } else if settings.timerRoundStarted {
-                        CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
-                                      color: Color.points)
-                            .opacity(0.3)
-                            .aspectRatio(contentMode: .fit)
-                            .padding(padding)
-                    } else {
-                        Button() {
-                            showInfo.toggle()
-                        } label: {
-                            Image(systemName:
-                                    "info")
+                    
+                    Button() {
+                        withAnimation() {
+                            showEditView.toggle()
                         }
+                    } label: {
+                        Text(settings.rule.description)
+                            .font(.title)
                     }
+                    /// is this enough to create a context menu on longPress?
+                    .contextMenu(menuItems: {
+                        ForEach(settings.possibleRules) { rule in
+                            Button(rule.description) {
+                                settings.rule = rule
+                            }
+                        }
+                    })
                 }
             }
+            .padding(8)
+            .background(Color.background.cornerRadius(10.0))
+            
+            HStack {
+                Button(action: { showHistory.toggle() }, label: {
+                    Image(systemName: "doc.plaintext")
+                })
+                Spacer()
+            }
+            .padding(.horizontal)
+
+            RightSymbolView(toggle: $showInfo)
+                .padding(.horizontal)
         }
-        .padding()
-        .background(Color.background.cornerRadius(10.0))
-        .padding(5.0)
-        .background(Color.white.opacity(0.3).cornerRadius(10.0))
-        .frame(height: 40)
-        
+        .frame(height: 50)
     }
     
 }
@@ -78,18 +60,21 @@ struct MenuBarSampleView: View {
     @EnvironmentObject var settings : GameSettings
     @State private var showEditView = false
     @State private var showInfo = false
+    @State private var showHistory = false
     @State private var padding : CGFloat = 10
     
     var body: some View {
         VStack {
             MenuBar(showEditView: $showEditView,
-                    showInfo: $showInfo, padding: padding)
-                .sheet(isPresented: $showEditView) {
-                    EditView()
-                }
-                .sheet(isPresented: $showInfo) {
-                    InfoView()
-                }
+                    showInfo: $showInfo,
+                    showHistory: $showHistory
+            )
+            .sheet(isPresented: $showEditView) {
+                EditView()
+            }
+            .sheet(isPresented: $showInfo) {
+                InfoView()
+            }
             VStack {
                 Section(header: Text("Timer")) {
                     HStack {
@@ -136,6 +121,40 @@ struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
         MenuBarSampleView()
             .environmentObject(GameSettings())
-            .previewLayout(.fixed(width: 480, height: 100))
+            .previewLayout(.fixed(width: 480, height: 400))
+    }
+}
+
+struct RightSymbolView: View {
+    @EnvironmentObject var settings: GameSettings
+    @Binding var toggle: Bool
+    
+    let paddingAmount : CGFloat = 10
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            ZStack {
+                if settings.timerPointsStarted {
+                    ActiveCircleView()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                } else if settings.timerRoundStarted {
+                    CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
+                                  color: Color.points)
+                        .opacity(0.3)
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                } else {
+                    Button() {
+                        toggle.toggle()
+                    } label: {
+                        Image(systemName:
+                                "info")
+                    }
+                    .padding(.trailing)
+                }
+            }
+        }
     }
 }
