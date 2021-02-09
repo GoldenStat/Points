@@ -17,11 +17,11 @@ struct HistoryView: View {
     var columns : Int { playerNames.count }
         
 
-    enum HistoryMode {
+    enum Mode {
         case perRow, total
     }
     
-    @State var mode = HistoryMode.perRow
+    var mode : Mode = .total
     
     var rowsInHistory: [ScoreRowData] {
         switch mode {
@@ -88,19 +88,21 @@ struct HistoryView: View {
             }
             .asGrid(columns: playerNames.count)
 
-            BoldDivider()
-            
-            Group {
-                if history.isBuffered {
-                    (totalsRow + bufferDifference)
-                        .rowView()
-                        .foregroundColor(.gray)
-                } else {
-                    totalsRow.rowView()
+            // show results if we show addition
+            if mode == .perRow {
+                BoldDivider()
+                
+                Group {
+                    if history.isBuffered {
+                        (totalsRow + bufferDifference)
+                            .rowView()
+                            .foregroundColor(.gray)
+                    } else {
+                        totalsRow.rowView()
+                    }
                 }
+                .asGrid(columns: columns)
             }
-            .asGrid(columns: columns)
-
         }
     }
     
