@@ -21,12 +21,12 @@ struct HistoryView: View {
         case perRow, total
     }
     
-    var mode = HistoryMode.total
+    @State var mode = HistoryMode.perRow
     
     var rowsInHistory: [ScoreRowData] {
         switch mode {
         case .perRow:
-            return historyTable.differences
+            return historyTable.differences.map {$0.copy}
         case .total:
             return historyTable.totals
         }
@@ -46,7 +46,13 @@ struct HistoryView: View {
     }
     
     var rowsInBuffer: [ScoreRowData] {
-        bufferTable.totals
+        switch mode {
+        case .perRow:
+            return bufferTable.differences.map {$0.copy}
+        case .total:
+            return bufferTable.totals
+        }
+
     }
   
     var totalsRow : ScoreRowData {

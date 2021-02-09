@@ -261,13 +261,13 @@ class GameSettings: ObservableObject {
     }
     
     func stop(timer: inout Timer?) {
+        guard timer != nil else { return }
         timer?.invalidate()
         timer = nil
         objectWillChange.send()
     }
     
     func startTimer() {
-        
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         cancelTimers()
         registerPointsTimer = start(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
