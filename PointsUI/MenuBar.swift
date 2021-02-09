@@ -48,7 +48,7 @@ struct MenuBar : View {
                             .aspectRatio(contentMode: .fit)
                             .padding(padding)
                     } else if settings.timerRoundStarted {
-                        CountdownView(totalTimeInterval: settings.timeIntervalToCountRound - settings.timeIntervalToCountPoints,
+                        CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
                                       color: Color.points)
                             .opacity(0.3)
                             .aspectRatio(contentMode: .fit)
@@ -93,7 +93,7 @@ struct MenuBarSampleView: View {
             VStack {
                 Section(header: Text("Timer")) {
                     HStack {
-                        Button(action: { settings.timerPointsStarted.toggle() }) {
+                        Button(action: { settings.startTimer() }) {
                             VStack {
                                 Text("Points")
                                 
@@ -102,14 +102,14 @@ struct MenuBarSampleView: View {
                             }
                         }
                         VStack {
-                            Button(action: { settings.timerRoundStarted.toggle() }) {
+                            Button(action: { settings.startTimer() }) {
                                 Text("Round")
                             }
                             Text(string(bool: settings.timerRoundStarted))
                                 .fontWeight(.bold)
                         }
                         
-                        Button(action: { settings.timerPointsStarted = false; settings.timerRoundStarted = false }) {
+                        Button(action: { settings.cancelTimers() }) {
                             Text("Reset")
                         }
                     }

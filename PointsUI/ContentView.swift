@@ -18,31 +18,33 @@ struct ContentView: View {
                 Color.boardbgColor
                     .edgesIgnoringSafeArea(.all)
                 
+                ZStack {
+                    MainGameView()
+                        .blur(radius: blurRadius)
+                    
+                    
+                    // MARK: History Views
+                    if showHistory {
+                        GeometryReader { geo in
+                            historyView(sized: geo.size)
+                                .offset(x: 0, y: 100)
+                        }
+                    }
+                    
+                }
+                
                 VStack {
                     MenuBar(showEditView: $showEditView,
                             showInfo: $showInfo)
-                        .padding(.horizontal)
+                        .padding([.horizontal, .top])
+                        .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
                         .zIndex(1) // needs to be in front for buttons to work...
-                        .offset(x: 0, y: hideStatusBar ? -200 : 60)
                     
-                    ZStack {
-                        MainGameView()
-                            .blur(radius: blurRadius)
-                        
-                        
-                        // MARK: History Views
-                        if showHistory {
-                            GeometryReader { geo in
-                                historyView(sized: geo.size)
-                                    .offset(x: 0, y: 100)
-                            }
-                        }
-                        
-                        if showHistoryControls {
-                            historyControlView()
-                        }
+                    if menuBarPosition == .top {
+                        Spacer()
                     }
                 }
+
             }
             .statusBar(hidden: true)
             .navigationBarHidden(true)
@@ -79,19 +81,12 @@ struct ContentView: View {
     // MARK: - overlay View triggers
     @State var showInfo: Bool = false
     @State var showEditView: Bool = false
-    
-    @State private var hideStatusBar = false
-    // MARK: - History Controls (undo/redo)
-    @State private var showHistoryControls = false
-    func historyControlView() -> some View {
-        OverlayHistorySymbol(side: .both, state: OverlayHistorySymbol.initial)
-    }
-    
+        
     // MARK: - History View
     @State private var showHistory: Bool = false
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private var blurBackground: Bool { showHistory || showHistoryControls }
+    private var blurBackground: Bool { showHistory }
     
     func historyView(sized geometrySize: CGSize) -> some View {
         let heightFactor: CGFloat = 0.6
@@ -106,19 +101,50 @@ struct ContentView: View {
     }
     
     // MARK: - Status Bar
+    enum BarPosition {
+        case hidden, top, center
+        mutating func moveUp() {
+            if self == .center {
+                self = .top
+            } else {
+                self = .hidden
+            }
+        }
+        
+        mutating func moveDown() {
+            if self == .hidden {
+                self = .top
+            } else {
+                self = .center
+            }
+        }
+    }
+
+    @State var menuBarPosition = BarPosition.top
+    
     var dragStatusBarGesture : some Gesture {
         DragGesture(minimumDistance: 30)
-            .onChanged() { value in
-                if value.location.y < value.startLocation.y && !hideStatusBar {
+            .onEnded() { value in
+                if value.location.above(value.startLocation) {
+                    // go up
                     withAnimation() {
-                        hideStatusBar = true
+                        menuBarPosition.moveUp()
                     }
-                } else if value.location.y > value.startLocation.y && hideStatusBar {
+                } else {
                     withAnimation() {
-                        hideStatusBar = false
+                        menuBarPosition.moveDown()
                     }
                 }
             }
+    }
+}
+
+extension CGPoint {
+    func above(_ point: CGPoint) -> Bool {
+        self.y < point.y
+    }
+    func below(_ point: CGPoint) -> Bool {
+        !above(point)
     }
 }
 

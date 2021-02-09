@@ -242,45 +242,42 @@ class GameSettings: ObservableObject {
     }
         
     // MARK: - Timers
-    private var registerPointsTimer : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
-    private var registerRoundStarted : Timer? { didSet { objectWillChange.send() } } // send modification notice to observers
+    private var registerPointsTimer : Timer?
+    private var registerRoundTimer : Timer?
 
-    var timeIntervalToCountPoints: TimeInterval { updateSpeed.double }
-    var timeIntervalToCountRound: TimeInterval { updateSpeed.double * 2.0 }
+    public var timeIntervalToCountPoints: TimeInterval { updateSpeed.double }
+    public var timeIntervalToCountRound: TimeInterval { updateSpeed.double }
 
-    @Published var timerPointsStarted = false
-    @Published var timerRoundStarted = false
+    public var timerPointsStarted : Bool { registerPointsTimer != nil }
+    public var timerRoundStarted : Bool { registerRoundTimer != nil }
+    
+    func start(interval: TimeInterval, selector: Selector) -> Timer {
+        objectWillChange.send()
+        return Timer.scheduledTimer(timeInterval: interval,
+                                     target: self,
+                                     selector: selector,
+                                     userInfo: nil,
+                                     repeats: false)
+    }
+    
+    func stop(timer: inout Timer?) {
+        timer?.invalidate()
+        timer = nil
+        objectWillChange.send()
+    }
     
     func startTimer() {
         
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         cancelTimers()
-        
-        registerPointsTimer = Timer.scheduledTimer(timeInterval: timeIntervalToCountPoints,
-                                     target: self,
-                                     selector: #selector(updatePoints),
-                                     userInfo: nil,
-                                     repeats: false)
-
-        registerRoundStarted = Timer.scheduledTimer(timeInterval: timeIntervalToCountRound,
-                                     target: self,
-                                     selector: #selector(updateRound),
-                                     userInfo: nil,
-                                     repeats: false)
-
-        timerPointsStarted = true
-        timerRoundStarted = false
+        registerPointsTimer = start(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
     }
     
     /// control Timer from outside
     /// invalidates it
     func cancelTimers() {
-        registerPointsTimer?.invalidate()
-        registerPointsTimer = nil
-        registerRoundStarted?.invalidate()
-        registerRoundStarted = nil
-        timerPointsStarted = false
-        timerRoundStarted = false
+        stop(timer: &registerPointsTimer)
+        stop(timer: &registerRoundTimer)
     }
     
     /// control Timer from outside
@@ -299,17 +296,14 @@ class GameSettings: ObservableObject {
         registerPointsTimer?.invalidate()
         registerPointsTimer = nil
         pointBuffer = nil
-        timerPointsStarted = false
-        timerRoundStarted = true
+        registerRoundTimer = start(interval: timeIntervalToCountRound, selector:  #selector(updateRound))
     }
             
     /// this function adds the changes to the history, counting it as a round.
     /// history adds hist buffer to it's states
     @objc private func updateRound() {
         history.save()
-        registerRoundStarted?.invalidate()
-        registerRoundStarted = nil
-        timerRoundStarted = false
+        cancelTimers()
     }
     
     // needed for object update
@@ -317,7 +311,6 @@ class GameSettings: ObservableObject {
         cancelTimers()
         history.undo()
         updateCurrentState()
-//        objectWillChange.send()
     }
     
     func updateCurrentState() {
@@ -333,7 +326,6 @@ class GameSettings: ObservableObject {
         cancelTimers()
         history.redo()
         updateCurrentState()
-//        objectWillChange.send()
     }
 }
 
