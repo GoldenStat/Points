@@ -8,12 +8,30 @@
 
 import SwiftUI
 
+/// show a menu bar for game flow control functionality
+///
+/// this View is displayed by a Main View and get's its bindings from there
+/// each Button sets a different variable that is used in the main display logic
+/// 1. provides a way to get into settings
+/// 1. quickchange rules
+/// 1. display information
+/// 1. feedback for history modification
+/// 1. get overview (e.g. History)
+///
+/// *expects* GameSettings environment variable
 struct MenuBar : View {
     @EnvironmentObject var settings: GameSettings
+
+        /// editView display control
     @Binding var showEditView: Bool
+
+        /// info display control
     @Binding var showInfo: Bool
+
+        /// History control (with step counter for preview)
     @Binding var showHistory: Bool
-    
+    var steps: Int = 0
+        
     var body : some View {
         ZStack {
             Group {
@@ -41,22 +59,77 @@ struct MenuBar : View {
             .background(Color.background.cornerRadius(10.0))
             
             HStack {
-                Button(action: { showHistory.toggle() }, label: {
-                    Image(systemName: "doc.plaintext")
-                })
+                HistoryMenuSymbol(
+                    show: $showHistory,
+                    counter: steps)
                 Spacer()
+                InfoMenuSymbol(show: $showInfo)
             }
-            .padding(.horizontal)
-
-            RightSymbolView(toggle: $showInfo)
                 .padding(.horizontal)
         }
         .frame(height: 50)
     }
-    
 }
 
-struct MenuBarSampleView: View {
+// MARK: - subviews
+
+/// show the symbol in the left part of the menu
+/// history control: show
+fileprivate struct HistoryMenuSymbol: View {
+    @Binding var show: Bool
+    var counter: Int = 0
+    
+    var body: some View {
+        ZStack {
+            Button(action: { show.toggle() },
+                   label: {
+                Image(systemName: "doc.plaintext")
+            })
+            if counter != 0 {
+                Text(counter.description)
+                    .opacity(0.4)
+            }
+        }
+    }
+}
+
+/// show the symbol in the right part of the menu
+/// info button, if no timer is running, one of two timerviews, otherwise
+/// - *expects*: GameSettings environment variable
+fileprivate struct InfoMenuSymbol: View {
+    @EnvironmentObject var settings: GameSettings
+    @Binding var show: Bool
+    
+    let paddingAmount : CGFloat = 10
+    
+    var body: some View {
+        Group {
+            if settings.timerPointsStarted {
+                ActiveCircleView()
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+            } else if settings.timerRoundStarted {
+                CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
+                              color: Color.points)
+                    .opacity(0.3)
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+            } else {
+                Button() {
+                    show.toggle()
+                } label: {
+                    Image(systemName:
+                            "info")
+                }
+                .padding(.trailing)
+            }
+        }
+    }
+}
+
+// MARK: - sample View
+/// sample view only for showing what menu would look like, starts / stops timer
+fileprivate struct MenuBarSampleView: View {
     @EnvironmentObject var settings : GameSettings
     @State private var showEditView = false
     @State private var showInfo = false
@@ -117,44 +190,12 @@ struct MenuBarSampleView: View {
     }
 }
 
+
+// MARK: - preview
 struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
         MenuBarSampleView()
             .environmentObject(GameSettings())
             .previewLayout(.fixed(width: 480, height: 400))
-    }
-}
-
-struct RightSymbolView: View {
-    @EnvironmentObject var settings: GameSettings
-    @Binding var toggle: Bool
-    
-    let paddingAmount : CGFloat = 10
-    
-    var body: some View {
-        HStack {
-            Spacer()
-            ZStack {
-                if settings.timerPointsStarted {
-                    ActiveCircleView()
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
-                } else if settings.timerRoundStarted {
-                    CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
-                                  color: Color.points)
-                        .opacity(0.3)
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
-                } else {
-                    Button() {
-                        toggle.toggle()
-                    } label: {
-                        Image(systemName:
-                                "info")
-                    }
-                    .padding(.trailing)
-                }
-            }
-        }
     }
 }

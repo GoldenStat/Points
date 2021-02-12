@@ -34,7 +34,8 @@ struct ContentView: View {
                 VStack {
                     MenuBar(showEditView: $showEditView,
                             showInfo: $showInfo,
-                            showHistory: $showHistory)
+                            showHistory: $showHistory,
+                            steps: modifyHistory)
                         .padding([.horizontal, .top])
                         .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
                         .zIndex(1) // needs to be in front for buttons to work...
@@ -65,7 +66,9 @@ struct ContentView: View {
             
             // MARK: Popovers
             .popover(isPresented: $showInfo) {
-                InfoView()
+                NavigationView {
+                    InfoView()
+                }
             }
             .popover(isPresented: $showEditView) {
                 NavigationView {
@@ -121,38 +124,32 @@ struct ContentView: View {
     }
 
     @State var menuBarPosition = BarPosition.top
-    
-
-    @State var dragStart: CGPoint? = nil
+        
+    @GestureState var modifyHistory: Int = 0
     
     var dragGesture : some Gesture {
         DragGesture(minimumDistance: 30)
-            .onChanged() { value in
-                guard let fromLocation = dragStart else {
-                    dragStart = value.startLocation
-                    return
-                }
-                
-                let dir : Direction = Direction.move(from: fromLocation,
-                                                     to: value.location)
+            .updating($modifyHistory) { value, state, _ in
+                let dir : Direction = Direction
+                    .move(from: value.startLocation,
+                          to: value.location)
 
-                let changeSteps = Int((fromLocation.xDelta(value.location) / 30).rounded(.towardZero))
+                state = Int((value
+                                .startLocation
+                                .xDelta(value.location) / 30)
+                                .rounded(.towardZero))
 
-                if changeSteps != 0 {
                 switch dir {
-                case .right:
-                    withAnimation() {
-                        settings.previewHistoryRedo()
-                    }
-                    dragStart = value.location
                 case .left:
                     withAnimation() {
-                        settings.previewHistoryUndo()
+                        settings.previewHistorySteps(steps: -state)
                     }
-                    dragStart = value.location
+                case .right:
+                    withAnimation() {
+                        settings.previewHistorySteps(steps: state)
+                    }
                 default:
                     break
-                }
                 }
             }
             .onEnded() { value in
@@ -170,7 +167,6 @@ struct ContentView: View {
                 default:
                     break
                 }
-                dragStart = nil
             }
     }
 
@@ -194,7 +190,7 @@ extension CGPoint {
     }
     
     func xDelta(_ point: CGPoint) -> CGFloat {
-        abs(x - point.x)
+        abs(point.x - x)
     }
     
     func above(_ point: CGPoint) -> Bool {

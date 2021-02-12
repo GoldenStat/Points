@@ -88,6 +88,27 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .trucoVenezolano // needs to be set to enable calling methods
         setupRules()
+        history.add(state: GameState(buffer: [1,0]))
+        history.save()
+        history.add(state: GameState(buffer: [2,0]))
+        history.save()
+        history.add(state: GameState(buffer: [3,0]))
+        history.save()
+        history.add(state: GameState(buffer: [4,0]))
+        history.save()
+        history.add(state: GameState(buffer: [5,0]))
+        history.save()
+        history.add(state: GameState(buffer: [6,0]))
+        history.save()
+        history.add(state: GameState(buffer: [7,0]))
+        history.save()
+        history.add(state: GameState(buffer: [8,0]))
+        history.save()
+        history.add(state: GameState(buffer: [9,0]))
+        history.save()
+        history.add(state: GameState(buffer: [10,0]))
+        history.save()
+        updateCurrentState()
     }
     
     
@@ -160,16 +181,15 @@ class GameSettings: ObservableObject {
         }
     }
     
-    /// reset the players. Changes scores, resets history - basically starts a new game
+    /// reset the players. Changes scores, resets history - for starting a new game
     func resetPlayers() {
         // create new players
         // also resets the wonGames!
         players = Players(names: playerNames)
-        
         activePlayer = nil
     }
     
-    // only reset the scores for a new round
+    /// reset only the scores of the players, not the game count
     func resetPlayerScores() {
         _ = players.items.map { $0.score = Score(0) }
     }
@@ -214,11 +234,14 @@ class GameSettings: ObservableObject {
 
     // MARK: - control game State
     
+    /// check if a player won the game or all games, sets the win-variables, accordingly
+    // TODO: refactor and change to enum for possible outcomes
     func updateState() {
         playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
         playerWonGame = players.items.filter { $0.games >= maxGames }.first
     }
     
+    /// handle the beginning of a new round
     func newRound() {
         if let playerWon = playerWonRound {
             playerWon.games += 1
@@ -306,8 +329,9 @@ class GameSettings: ObservableObject {
         cancelTimers()
     }
     
+    /// update players with game state from current state
+    /// to reflect actual history
     func updateCurrentState() {
-        /// update players with game state from current state?
         if let currentState = history.states.last {
             players.setScores(to: currentState.scores)
         } else {
@@ -315,34 +339,73 @@ class GameSettings: ObservableObject {
         }
     }
     
+    /// sets the players scores to reflect the given GameState.
+    /// sets all scores to Score(0) if GameState is nil
+    func updatePlayers(with newState: GameState?) {
+        if let state = newState {
+            players.setScores(to: state.scores)
+        } else {
+            resetPlayerScores()
+        }
+    }
+    
+    /// sets the players to reflect the given [Score]
+    func updatePlayers(with newScores: [Score]){
+        players.setScores(to: newScores)
+    }
+
     // needed for object update
-    func undo() {
+    func undoHistory() {
         cancelTimers()
         history.undo()
         updateCurrentState()
     }
 
-    func redo() {
+    func redoHistory() {
         cancelTimers()
         history.redo()
         updateCurrentState()
     }
     
     /// preview number of steps backward / forward as oppose to simple undo()/redo()
-    func previewHistoryUndo() {
+    func previewUndoHistory() {
         history.undo()
         updateHistoryPreview()
     }
     
-    func previewHistoryRedo() {
+    func previewRedoHistory() {
         history.redo()
         updateHistoryPreview()
     }
     
+    // preview history <steps> many steps
+    private func previewHistoryHelper(steps: Int) {
+        if steps < 0 {
+            for _ in 0 ..< -steps {
+                history.undo()
+            }
+        } else if steps >= 0 {
+            for _ in 0 ..< steps {
+                history.redo()
+            }
+        }
+    }
+    
+    /// modifies history stack updates previews and puts everything back as before
+    func previewHistorySteps(steps: Int) {
+        // go a few steps in one direction...
+        previewHistoryHelper(steps: steps)
+        // ...updates the views...
+        updateHistoryPreview()
+        // ...aaaand changes back, again
+        previewHistoryHelper(steps: -steps)
+    }
+    
     private func updateHistoryPreview() {
-        if let newPlayerBuffers = history.buffer.first,
+        if let totalScores = history.buffer.first,
            let newPlayerScores = history.states.last {
-            let pairs = zip(newPlayerScores.scores, newPlayerBuffers.scores)
+            let newPlayerBuffers = totalScores - newPlayerScores
+            let pairs = zip(newPlayerScores.scores, newPlayerBuffers)
             let scores = pairs.map { Score($0, buffer: $1) }
             players.setScores(to: scores)
         }
@@ -351,6 +414,7 @@ class GameSettings: ObservableObject {
     func performHistoryChange() {
         /// we have the history states where we want them, just have to erase the player's buffers of set the last state as the current one
         cancelTimers()
+        history.save()
         updateCurrentState()
     }
 }

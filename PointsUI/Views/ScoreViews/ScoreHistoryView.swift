@@ -37,6 +37,7 @@ struct ScoreHistoryView: View {
     
 }
 
+/// a slighter bigger divider... only for horizontal divisions, though
 struct BoldDivider: View {
     var body: some View {
         Rectangle()
@@ -44,6 +45,7 @@ struct BoldDivider: View {
     }
 }
 
+/// this view is used in two places for adding test values to the settings' history property for testing
 struct HistoryScoreGeneratorButton: View {
     @EnvironmentObject var settings: GameSettings
     
@@ -129,7 +131,7 @@ struct HistoryDebugView : View {
     }
 }
 
-struct SumButton: View {
+fileprivate struct SumButton: View {
     
     @Binding var toggle: Bool
     
@@ -155,13 +157,5 @@ struct ScoreHistoryView_Previews: PreviewProvider {
             .environmentObject(GameSettings())
             .environmentObject(DebugLog())
             .colorScheme(.dark)
-    }
-}
-
-extension ScoreRowData {
-    @ViewBuilder func rowView(showPrefix: Bool = false) -> some View {
-        ForEach(self.scores) { cellData in
-            Text(cellData.description)
-        }
     }
 }

@@ -16,7 +16,9 @@ struct HistoryView: View {
     var playerNames : [String]
     var columns : Int { playerNames.count }
         
-
+    // MARK: many variables...
+    // TODO: see if this can be refactored in model
+    
     enum Mode {
         case perRow, total
     }
@@ -67,9 +69,12 @@ struct HistoryView: View {
         bufferHighestRow - totalsRow
     }
 
+    // MARK: view body
 
     var body: some View {
         VStack {
+            
+            // show the player names
             ScoreHistoryHeadline(uniqueItems: playerNames)
 
             Divider()
@@ -120,22 +125,7 @@ struct HistoryView: View {
     
 }
 
-extension View {
-    func asGrid(columns: Int) -> some View {
-        LazyVGrid(columns: Array<GridItem>(repeating: GridItem(), count: columns)) {
-            self
-        }
-    }
-}
-
-
-struct HistoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        HistoryView(history: History(), playerNames: ["yo", "tu"])
-    }
-}
-
-struct ScoreHistoryHeadline: View {
+fileprivate struct ScoreHistoryHeadline: View {
     let uniqueItems: [String]
     
     private var gridColumns : [GridItem] { [GridItem](repeating: GridItem(), count: uniqueItems.count) }
@@ -146,5 +136,34 @@ struct ScoreHistoryHeadline: View {
                 Text(name)
             }
         }
+    }
+}
+
+
+// - MARK: view extensions ScoreRowData.rowView and View.asGrid
+
+/// row Data extension for refactoring
+extension ScoreRowData {
+    @ViewBuilder func rowView(showPrefix: Bool = false) -> some View {
+        ForEach(self.scores) { cellData in
+            Text(cellData.description)
+        }
+    }
+}
+
+/// grid display for a view, for better comparmentilization
+extension View {
+    func asGrid(columns: Int) -> some View {
+        LazyVGrid(columns: Array<GridItem>(repeating: GridItem(), count: columns)) {
+            self
+        }
+    }
+}
+
+
+// MARK: - preview
+struct HistoryView_Previews: PreviewProvider {
+    static var previews: some View {
+        HistoryView(history: History(), playerNames: ["yo", "tu"])
     }
 }

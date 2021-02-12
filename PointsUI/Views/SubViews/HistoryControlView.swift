@@ -8,14 +8,15 @@
 
 import SwiftUI
 
-struct HistoryControlView: View {
+/// this is not used anymore and obsolete. History is manages in ScoreHistoryView, now
+fileprivate struct HistoryControlView: View {
     @EnvironmentObject var settings: GameSettings
     @Binding var showHistory : Bool
     
     var body: some View {
         
         HStack {
-            Button(action:{ settings.undo() }) {
+            Button(action:{ settings.undoHistory() }) {
                 Image(systemName: "arrow.left")
             }
             
@@ -29,7 +30,7 @@ struct HistoryControlView: View {
             
             Spacer()
             
-            Button(action:{ settings.redo() }) {
+            Button(action:{ settings.redoHistory() }) {
                 Image(systemName: "arrow.right")
             }
         }
