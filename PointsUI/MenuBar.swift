@@ -88,6 +88,7 @@ fileprivate struct HistoryMenuSymbol: View {
             if counter != 0 {
                 Text(counter.description)
                     .opacity(0.4)
+                    .scaleEffect(0.8)
             }
         }
     }

@@ -41,13 +41,12 @@ struct PlayerView: View {
                         score: player.score,
                         uiType: playerUI
                     )
-//                    .aspectRatio(contentMode: .fill)
                 }
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
                 .onTapGesture(perform: {
-                    player.add(score: currentRule.scoreStep.defaultValue)
                     settings.startTimer()
+                    player.add(score: currentRule.scoreStep.defaultValue)
                 })
             }
     }

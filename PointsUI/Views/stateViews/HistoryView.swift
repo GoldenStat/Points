@@ -11,7 +11,7 @@ import SwiftUI
 struct HistoryView: View {
     @ObservedObject var history: History
 
-    @State var debugBuffers = false
+    @State var debugBuffers = true
 
     var playerNames : [String]
     var columns : Int { playerNames.count }

@@ -35,7 +35,7 @@ struct ContentView: View {
                     MenuBar(showEditView: $showEditView,
                             showInfo: $showInfo,
                             showHistory: $showHistory,
-                            steps: modifyHistory)
+                            steps: modifyHistory.steps)
                         .padding([.horizontal, .top])
                         .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
                         .zIndex(1) // needs to be in front for buttons to work...
@@ -45,6 +45,10 @@ struct ContentView: View {
                     if menuBarPosition == .top {
                         Spacer()
                     }
+                }
+                
+                if (modifyHistory.dragStarted) {
+                    HistorySymbolRow()
                 }
             }
             .statusBar(hidden: true)
@@ -124,38 +128,36 @@ struct ContentView: View {
     }
 
     @State var menuBarPosition = BarPosition.top
-        
-    @GestureState var modifyHistory: Int = 0
     
+    struct HistoryControl {
+        var steps: Int = 0
+        var dragStarted: Bool = false
+    }
+    
+    // has a link to history
+    @GestureState var modifyHistory = HistoryControl()
     var dragGesture : some Gesture {
         DragGesture(minimumDistance: 30)
-            .updating($modifyHistory) { value, state, _ in
-                let dir : Direction = Direction
-                    .move(from: value.startLocation,
-                          to: value.location)
-
-                state = Int((value
-                                .startLocation
-                                .xDelta(value.location) / 30)
-                                .rounded(.towardZero))
-
-                switch dir {
+            .updating($modifyHistory) { value, historyControl, _ in
+                
+                historyControl = HistoryControl(
+                    steps: value.steps,
+                    dragStarted: true
+                )
+                
+                switch value.dir {
                 case .left:
-                    withAnimation() {
-                        settings.previewHistorySteps(steps: -state)
-                    }
+                    fallthrough
                 case .right:
                     withAnimation() {
-                        settings.previewHistorySteps(steps: state)
+                        settings.previewHistorySteps(steps: value.steps)
                     }
                 default:
                     break
                 }
             }
             .onEnded() { value in
-                let dir : Direction = Direction.move(from: value.startLocation,
-                                                     to: value.location)
-                switch dir {
+                switch value.dir {
                 case .up:
                     withAnimation() { menuBarPosition.moveUp() }
                 case .down:
@@ -169,9 +171,20 @@ struct ContentView: View {
                 }
             }
     }
-
 }
 
+/// an extension to measure steps and direction of movement
+extension DragGesture.Value {
+    var steps: Int {
+        Int((startLocation.xDelta(location) / 80).rounded(.towardZero))
+    }
+    var dir: Direction {
+        .move(from: startLocation,
+              to: location)
+    }
+}
+
+/// a new enum to reflect movement
 enum Direction {
     case left, up, right, down, none
     
@@ -189,8 +202,9 @@ extension CGPoint {
         abs(x  - point.x) > abs(y - point.y)
     }
     
+    /// x.xDelta(point)
     func xDelta(_ point: CGPoint) -> CGFloat {
-        abs(point.x - x)
+        point.x - x
     }
     
     func above(_ point: CGPoint) -> Bool {
