@@ -86,9 +86,9 @@ fileprivate struct HistoryMenuSymbol: View {
                 Image(systemName: "doc.plaintext")
             })
             if counter != 0 {
-                Text(counter.description)
+                Text(abs(counter).description)
                     .opacity(0.4)
-                    .scaleEffect(0.8)
+                    .scaleEffect(2.8)
             }
         }
     }

@@ -37,9 +37,9 @@ struct ContentView: View {
                             showHistory: $showHistory,
                             steps: modifyHistory.steps)
                         .padding([.horizontal, .top])
-                        .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
                         .zIndex(1) // needs to be in front for buttons to work...
                         .drawingGroup()
+                        .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 30)
                         .shadow(color: .black, radius: 10, x: 8, y: 8)
                     
                     if menuBarPosition == .top {
