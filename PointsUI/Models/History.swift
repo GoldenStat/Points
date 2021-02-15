@@ -26,6 +26,7 @@ class History : ObservableObject {
     @Published private(set) var buffer : [GameState] = []
     
     /// last state might be buffered
+    /// this is used only if we store a value, before saving it, as opposed to undo/redo operations
     @Published private(set) var isBuffered: Bool = false
     
     var isEmpty: Bool { states.isEmpty && buffer.isEmpty }

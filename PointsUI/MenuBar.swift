@@ -22,7 +22,7 @@ import SwiftUI
 struct MenuBar : View {
     @EnvironmentObject var settings: GameSettings
 
-        /// editView display control
+        /// Settings display control
     @Binding var showSettings: Bool
 
         /// info display control
@@ -33,22 +33,22 @@ struct MenuBar : View {
     var steps: Int = 0
         
     var body : some View {
-        HStack {
-
-            HistoryMenuSymbol(
-                show: $showHistory,
-                counter: steps)
-
-            Spacer()
+        ZStack {
 
             SettingsButton(show: $showSettings)
 
-            Spacer()
-            
-            InfoMenuSymbol(show: $showInfo)
+            HStack {
+                HistoryMenuSymbol(show: $showHistory, counter: steps)
+                    .fontSized()
+
+                Spacer()
+                
+                InfoMenuSymbol(show: $showInfo)
+                    .fontSized()
+            }
+            .frame(width: 400)
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
-        .frame(height: 50)
     }
 }
 
@@ -85,27 +85,33 @@ fileprivate struct InfoMenuSymbol: View {
     let paddingAmount : CGFloat = 10
     
     var body: some View {
-        Group {
-            if settings.timerPointsStarted {
-                ActiveCircleView()
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-            } else if settings.timerRoundStarted {
-                CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
-                              color: Color.points)
-                    .opacity(0.3)
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-            } else {
-                Button() {
-                    show.toggle()
-                } label: {
-                    Image(systemName:
-                            "info")
-                }
-                .padding(.trailing)
+        if settings.timerPointsStarted {
+            ActiveCircleView()
+                .aspectRatio(contentMode: .fit)
+        } else if settings.timerRoundStarted {
+            CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
+                          color: Color.points)
+                .opacity(0.3)
+                .aspectRatio(contentMode: .fit)
+        } else {
+            Button() {
+                show.toggle()
+            } label: {
+                Image(systemName:
+                        "info")
             }
         }
+    }
+}
+
+/// scale a view according to a given font
+extension View {
+    func fontSized(_ font: Font = .largeTitle) -> some View {
+        
+            Image(systemName: "circle")
+                .font(font)
+                .opacity(0.01)
+                .background(self)
     }
 }
 
@@ -125,7 +131,7 @@ fileprivate struct MenuBarSampleView: View {
                     showHistory: $showHistory
             )
             .sheet(isPresented: $showSettings) {
-                EditView()
+                SettingsView()
             }
             .sheet(isPresented: $showInfo) {
                 InfoView()
