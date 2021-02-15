@@ -306,6 +306,11 @@ class GameSettings: ObservableObject {
         updateRound()
     }
     
+    /// use this when you want to update points and start the countdown
+    func startCountDown() {
+        updatePoints()
+    }
+    
     // when the timer fires, players need to be updated, and history buffer updated...
     @objc private func updatePoints() {
         // add to bufferForHistory
@@ -392,31 +397,5 @@ class GameSettings: ObservableObject {
             updatePlayersScoreWithRecentState()
          }
      }
-    
-//    // preview history <steps> many steps, negative values undo
-//    private func previewHistoryHelper(steps: Int) {
-//        if steps < 0 {
-//            for _ in 0 ..< -steps {
-//                previewUndoHistory()
-//            }
-//        } else if steps >= 0 {
-//            for _ in 0 ..< steps {
-//                previewRedoHistory()
-//            }
-//        }
-//    }
-        
-
-//    /// modifies history stack updates previews and puts everything back as before
-//    /// might be called before updating history. Should only show what would happen
-//    func previewHistorySteps(steps: Int) {
-//        // go a few steps in one direction...
-//        previewHistoryHelper(steps: steps)
-//        // ...updates the views...
-//        updateHistoryPreview()
-//        // ...aaaand changes back, again
-//        previewHistoryHelper(steps: -steps)
-//    }
-
 }
 

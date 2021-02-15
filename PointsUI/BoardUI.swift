@@ -43,19 +43,45 @@ struct BoardUI: View {
                     BufferView(score: Score(0, buffer: buffer.points))
                         .position(centeredPosition)
                     
+                    if showBufferContents {
                     BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
                         .padding(.bottom)
+                    }
                 }
         }
         .ignoresSafeArea(edges: .all)
     }
+    
+    private let showBufferContents = false
     
     let bufferViewSize : CGFloat = 144.0
         
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
-                .gesture(buildDragGesture(forPlayer: player))
+                .onDrag() {
+                    settings.cancelTimers()
+                    settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: player.score.buffer)
+                    return NSItemProvider(object: "\(player.score.buffer)" as NSString)
+                }
+                .onDrop(of: ["public.utf8-plain-text"], isTargeted: nil) { provider in
+                    guard let pkg = provider.first, pkg.canLoadObject(ofClass: NSString.self) else {
+                        return false
+                    }
+                    _ = pkg.loadObject(ofClass: NSString.self) { reading, error in
+                        if let string = reading as? String {
+                            if let buffer = Int(string) {
+                                player.add(score: buffer)
+                                DispatchQueue.main.async {
+                                    settings.startCountDown()
+                                }
+                            }
+                        }
+                    }
+
+                    return true
+                }
+                .simultaneousGesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
         }
     }
@@ -78,10 +104,6 @@ struct BoardUI: View {
                         if let pointBuffer = settings.pointBuffer {
                             pointBuffer.wasDropped = true
                         }
-//                        for let droppedPlayer in settings.players.items {
-//                            if droppedPlayer.nspace == value.location
-//                        }
-                        settings.fireTimer()
                         settings.pointBuffer = nil
                     }
     }

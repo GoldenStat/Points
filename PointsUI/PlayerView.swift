@@ -21,20 +21,22 @@ struct PlayerView: View {
     var playerUI: PlayerUIType { currentRule.playerUI }
     var titleStyle : PlayerViewTitleStyle = .inline
     var isActive: Bool { settings.activePlayer == player }
+    var isTargetedForDrop: Bool = false
         
     var body: some View {
             VStack() {
                 
                 if titleStyle == .normal {
-                    PlayerHeadline(player: player)
+                    PlayerHeadline(player: player, isActive: isTargetedForDrop)
                         .padding(.horizontal)
                 }
                 
                 VStack() {
                     
                     if titleStyle == .inline {
-                        PlayerHeadline(player: player)
+                        PlayerHeadline(player: player, isActive: isTargetedForDrop)
                             .padding(.horizontal)
+                            
                     }
                     
                     ScoreRepresentationView(
@@ -65,10 +67,13 @@ struct PlayerView: View {
 struct PlayerHeadline: View {
     @ObservedObject var player : Player
     
+    var isActive: Bool = false
+    
     var body: some View {
         ZStack {
             Text("\(player.name)")
                 .font(.largeTitle)
+                .fontWeight(isActive ? .bold : .regular)
                 .fixedSize()
             HStack(spacing: 0) {
                 Spacer()
