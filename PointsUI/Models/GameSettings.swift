@@ -88,7 +88,6 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .trucoVenezolano // needs to be set to enable calling methods
         setupRules()
-        setupHistoryTests()
     }
     
     // setup something for testing
