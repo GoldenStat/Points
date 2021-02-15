@@ -383,11 +383,13 @@ class GameSettings: ObservableObject {
     private func previewHistoryHelper(steps: Int) {
         if steps < 0 {
             for _ in 0 ..< -steps {
-                history.undo()
+                previewUndoHistory()
+//                history.undo()
             }
         } else if steps >= 0 {
             for _ in 0 ..< steps {
-                history.redo()
+                previewRedoHistory()
+//                history.redo()
             }
         }
     }
@@ -415,7 +417,7 @@ class GameSettings: ObservableObject {
     func performHistoryChange() {
         /// we have the history states where we want them, just have to erase the player's buffers of set the last state as the current one
         cancelTimers()
-        history.save()
+        history.save() // update history, throw buffer away
         updatePlayersScore(with: history.states.last)
     }
 }

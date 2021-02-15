@@ -23,7 +23,7 @@ struct MenuBar : View {
     @EnvironmentObject var settings: GameSettings
 
         /// editView display control
-    @Binding var showEditView: Bool
+    @Binding var showSettings: Bool
 
         /// info display control
     @Binding var showInfo: Bool
@@ -33,40 +33,21 @@ struct MenuBar : View {
     var steps: Int = 0
         
     var body : some View {
-        ZStack {
-            Group {
-                ZStack {
-                    
-                    Button() {
-                        withAnimation() {
-                            showEditView.toggle()
-                        }
-                    } label: {
-                        Text(settings.rule.description)
-                            .font(.title)
-                    }
-                    /// is this enough to create a context menu on longPress?
-                    .contextMenu(menuItems: {
-                        ForEach(settings.possibleRules) { rule in
-                            Button(rule.description) {
-                                settings.rule = rule
-                            }
-                        }
-                    })
-                }
-            }
-            .padding(8)
-            .background(Color.background.cornerRadius(10.0))
+        HStack {
+
+            HistoryMenuSymbol(
+                show: $showHistory,
+                counter: steps)
+
+            Spacer()
+
+            SettingsButton(show: $showSettings)
+
+            Spacer()
             
-            HStack {
-                HistoryMenuSymbol(
-                    show: $showHistory,
-                    counter: steps)
-                Spacer()
-                InfoMenuSymbol(show: $showInfo)
-            }
-                .padding(.horizontal)
+            InfoMenuSymbol(show: $showInfo)
         }
+        .padding(.horizontal)
         .frame(height: 50)
     }
 }
@@ -132,18 +113,18 @@ fileprivate struct InfoMenuSymbol: View {
 /// sample view only for showing what menu would look like, starts / stops timer
 fileprivate struct MenuBarSampleView: View {
     @EnvironmentObject var settings : GameSettings
-    @State private var showEditView = false
+    @State private var showSettings = false
     @State private var showInfo = false
     @State private var showHistory = false
     @State private var padding : CGFloat = 10
     
     var body: some View {
         VStack {
-            MenuBar(showEditView: $showEditView,
+            MenuBar(showSettings: $showSettings,
                     showInfo: $showInfo,
                     showHistory: $showHistory
             )
-            .sheet(isPresented: $showEditView) {
+            .sheet(isPresented: $showSettings) {
                 EditView()
             }
             .sheet(isPresented: $showInfo) {
@@ -198,5 +179,31 @@ struct MenuBar_Previews: PreviewProvider {
         MenuBarSampleView()
             .environmentObject(GameSettings())
             .previewLayout(.fixed(width: 480, height: 400))
+    }
+}
+
+struct SettingsButton: View {
+    @EnvironmentObject var settings: GameSettings
+    @Binding var show: Bool
+    
+    var body: some View {
+        Button() {
+            withAnimation() {
+                show.toggle()
+            }
+        } label: {
+            Text(settings.rule.description)
+                .font(.title)
+        }
+        /// is this enough to create a context menu on longPress?
+        .contextMenu(menuItems: {
+            ForEach(settings.possibleRules) { rule in
+                Button(rule.description) {
+                    settings.rule = rule
+                }
+            }
+        })
+        .padding(8)
+        .background(Color.background.cornerRadius(10.0))
     }
 }
