@@ -32,7 +32,7 @@ struct ContentView: View {
                 }
                 
                 VStack {
-                    MenuBar(showEditView: $showEditView,
+                    MenuBar(showSettings: $showSettings,
                             showInfo: $showInfo,
                             showHistory: $showHistory,
                             steps: modifyHistory.steps)
@@ -74,9 +74,9 @@ struct ContentView: View {
                     InfoView()
                 }
             }
-            .popover(isPresented: $showEditView) {
+            .popover(isPresented: $showSettings) {
                 NavigationView {
-                    EditView()
+                    SettingsView()
                 }
                 .environmentObject(settings)
             }
@@ -87,7 +87,7 @@ struct ContentView: View {
     
     // MARK: - overlay View triggers
     @State var showInfo: Bool = false
-    @State var showEditView: Bool = false
+    @State var showSettings: Bool = false
         
     // MARK: - History View
     @State private var showHistory: Bool = false

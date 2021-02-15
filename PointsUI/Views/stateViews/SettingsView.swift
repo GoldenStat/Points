@@ -1,5 +1,5 @@
 //
-//  SettingsEditor.swift
+//  SettingsView.swift
 //  PointsUI
 //
 //  Created by Alexander Völz on 25.06.20.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 
-struct EditView : View {
+struct SettingsView : View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var isPresented
     
@@ -39,7 +39,7 @@ struct EditView : View {
     }
 }
 
-struct PreviewEditView : View {
+struct PreviewSettingsView : View {
     @EnvironmentObject var settings: GameSettings
     @State private var presentView : Bool = false
     
@@ -68,15 +68,15 @@ struct PreviewEditView : View {
             }
             .navigationTitle(settings.rule.name)
             .sheet(isPresented: $presentView) {
-                EditView()
+                SettingsView()
             }
         }
     }
 }
 
-struct EditView_Previews: PreviewProvider {
+struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        PreviewEditView()
+        PreviewSettingsView()
             .environmentObject(GameSettings())
     }
 }
