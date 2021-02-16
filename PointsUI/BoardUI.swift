@@ -37,25 +37,21 @@ struct BoardUI: View {
                     }
                 }
 
-                if let buffer = settings.pointBuffer {
-                    let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
-                                                   y: buffer.position.y - bufferViewSize / 2.0)
-                    BufferView(score: Score(0, buffer: buffer.points))
-                        .position(centeredPosition)
-                        .onDrag() {
-                            settings.cancelTimers()
-                            settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: buffer.points)
-                            return NSItemProvider(object: "\(buffer.points)" as NSString)
-                        }
-
-                    if showBufferContents {
-                        HStack {
-                            BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
-                            Text("dragging...")
-                        }
-                        .padding(.bottom)
-                    }
-                }
+                // this buffer gets set in some SubView children of the ScoreRepresentationView
+//                if let buffer = settings.pointBuffer {
+//                    let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
+//                                                   y: buffer.position.y - bufferViewSize / 2.0)
+//                    BufferView(score: Score(0, buffer: buffer.points))
+//                        .position(centeredPosition)
+//
+//                    if showBufferContents {
+//                        HStack {
+//                            BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
+//                            Text("dragging...")
+//                        }
+//                        .padding(.bottom)
+//                    }
+//                }
         }
         .ignoresSafeArea(edges: .all)
     }
@@ -75,8 +71,8 @@ struct BoardUI: View {
                     _ = pkg.loadObject(ofClass: NSString.self) { reading, error in
                         if let string = reading as? String {
                             if let buffer = Int(string) {
-                                player.add(score: buffer)
                                 DispatchQueue.main.async {
+                                    player.add(score: buffer)
                                     settings.startCountDown()
                                 }
                             }

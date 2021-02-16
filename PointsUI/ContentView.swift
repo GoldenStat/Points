@@ -38,6 +38,11 @@ struct ContentView: View {
                         }
                     }
                 }
+                .popover(isPresented: $showInfo) {
+                    NavigationView {
+                        InfoView()
+                    }
+                }
                 
                 VStack {
                     MenuBar(showSettings: $showSettings,
@@ -70,11 +75,6 @@ struct ContentView: View {
             .gesture(dragHistoryGesture)
             
             // MARK: Popovers
-            .popover(isPresented: $showInfo) {
-                NavigationView {
-                    InfoView()
-                }
-            }
             .popover(isPresented: $showSettings) {
                 NavigationView {
                     SettingsView()

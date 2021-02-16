@@ -86,7 +86,7 @@ class GameSettings: ObservableObject {
         history = History()
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
-        rule = .trucoVenezolano // needs to be set to enable calling methods
+        rule = .doppelkopf // needs to be set to enable calling methods
         setupRules()
     }
     

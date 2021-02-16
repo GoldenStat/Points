@@ -8,7 +8,10 @@
 
 import SwiftUI
 
+/// One of the views that you can drag points out of... therefore, it has an .onDrag-modifier.
+/// this modifier must comply to the .onDrop in the playerView
 struct ButtonScoreView: View {
+    @EnvironmentObject var settings: GameSettings
     
     @Namespace var nspace
     
@@ -29,7 +32,13 @@ struct ButtonScoreView: View {
         .scaleEffect(0.8)
         .foregroundColor(.points)
         .matchedGeometryEffect(id: "bufferEffect", in: nspace, properties: .frame, anchor: .center, isSource: true)
-        .overlay(bufferView)
+        .overlay(bufferView
+        .onDrag() {
+            settings.cancelTimers() // timers  must be started in onDrop
+            settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: score.buffer)
+            return NSItemProvider(object: "\(score.buffer)" as NSString)
+        }
+        )
     }
     
     @ViewBuilder var bufferView: some View {
