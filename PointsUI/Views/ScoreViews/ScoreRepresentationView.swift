@@ -18,10 +18,11 @@ struct ScoreRepresentationView: View {
         case .checkbox(let num):
             BoxesScoreView(score: score, linesPerBox: num)
                 .buffered(score: score)
+                .animation(.easeInOut(duration: .lineAnimationSpeed))
+
 
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
-                .animation(.easeIn)
 
         case .matches:
             MatchesScoreView(score: score)

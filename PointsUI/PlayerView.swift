@@ -48,7 +48,9 @@ struct PlayerView: View {
                 .padding()
                 .onTapGesture(perform: {
                     settings.startTimer()
-                    player.add(score: currentRule.scoreStep.defaultValue)
+                    withAnimation(.easeInOut(duration: 2.0)) {
+                        player.add(score: currentRule.scoreStep.defaultValue)
+                    }
                 })
             }
     }

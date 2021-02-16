@@ -25,17 +25,15 @@ struct ButtonScoreView: View {
         .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
         .fixedSize(horizontal: true, vertical: false)
         .foregroundColor(.points)
-        .overlay(bufferView
-        )
+        .overlay(bufferView)
     }
   
     private let scoreSize : CGFloat = 122
-    private let bufferScoreSize : CGFloat = 180.0
 
     @ViewBuilder var bufferView: some View {
         if score.buffer > 0 {
             Text(score.buffer.description)
-                .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
+                .font(bufferParam.font)
                 .fixedSize()
                 .foregroundColor(.blue)
                 .scaleEffect(bufferParam.scaleFactor)
@@ -47,7 +45,7 @@ struct ButtonScoreView: View {
                 .background(Color.white.opacity(0.6).cornerRadius(25).blur(radius: 20.0))
                 .offset(bufferParam.offset)
                 .onAppear() {
-                    withAnimation {
+                    withAnimation(.spring(response: 0.8, dampingFraction: 0.4, blendDuration: 0.5)) {
                         bufferParam = .final
                     }
                 }
@@ -67,6 +65,7 @@ struct ButtonScoreView: View {
     struct BufferParameters {
         var scaleFactor: CGFloat
         var offset: CGSize
+        var font: Font = .system(size: 180.0, weight: .semibold, design: .rounded)
         static let appear = BufferParameters(scaleFactor: 0.3, offset: .zero)
         static let final = BufferParameters(scaleFactor: 0.6, offset: CGSize(width: 40, height: -80))
     }
