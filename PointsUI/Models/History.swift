@@ -73,7 +73,7 @@ class History : ObservableObject {
 
     /// if the buffer has content, delete it
     /// if not, remove last step and append it to redoStack
-    public var canUndo: Bool { states.count > 0 }
+    public var canUndo: Bool { states.count > 0 || isBuffered }
     public var canRedo: Bool { buffer.count > 0 }
     
     public var maxUndoSteps: Int { states.count }
@@ -82,8 +82,12 @@ class History : ObservableObject {
     /// removes the last state and puts it to the end of the buffer stack
     public func undo() {
         guard canUndo else { return }
-        buffer.append(states.removeLast())
-        isBuffered = false
+        if isBuffered {
+            isBuffered = false
+            buffer = []
+        } else {
+            buffer.append(states.removeLast())
+        }
     }
     
     /// append last step from redo Stack

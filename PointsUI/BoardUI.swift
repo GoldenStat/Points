@@ -39,12 +39,20 @@ struct BoardUI: View {
 
                 if let buffer = settings.pointBuffer {
                     let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
-                                                   y: buffer.position.y - bufferViewSize)
+                                                   y: buffer.position.y - bufferViewSize / 2.0)
                     BufferView(score: Score(0, buffer: buffer.points))
                         .position(centeredPosition)
-                    
+                        .onDrag() {
+                            settings.cancelTimers()
+                            settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: buffer.points)
+                            return NSItemProvider(object: "\(buffer.points)" as NSString)
+                        }
+
                     if showBufferContents {
-                    BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
+                        HStack {
+                            BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
+                            Text("dragging...")
+                        }
                         .padding(.bottom)
                     }
                 }
@@ -52,20 +60,16 @@ struct BoardUI: View {
         .ignoresSafeArea(edges: .all)
     }
     
-    private let showBufferContents = false
+    private let showBufferContents = true
     
     let bufferViewSize : CGFloat = 144.0
         
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
-                .onDrag() {
-                    settings.cancelTimers()
-                    settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: player.score.buffer)
-                    return NSItemProvider(object: "\(player.score.buffer)" as NSString)
-                }
                 .onDrop(of: ["public.utf8-plain-text"], isTargeted: nil) { provider in
                     guard let pkg = provider.first, pkg.canLoadObject(ofClass: NSString.self) else {
+                        // just to make sure we have the buffer
                         return false
                     }
                     _ = pkg.loadObject(ofClass: NSString.self) { reading, error in
@@ -81,7 +85,7 @@ struct BoardUI: View {
 
                     return true
                 }
-                .simultaneousGesture(buildDragGesture(forPlayer: player))
+//                .simultaneousGesture(buildDragGesture(forPlayer: player))
                 .coordinateSpace(name: player.name)
         }
     }
