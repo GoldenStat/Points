@@ -95,7 +95,7 @@ class GameSettings: ObservableObject {
         var scores: [Int] = .init(repeating: 0, count: numberOfPlayers)
         
         for _ in 1 ... 10 {
-            scores[0] += 1
+            scores[0] += Int.random(in: 1 ... 2)
             history.add(state: GameState(buffer: scores))
             history.save()
         }

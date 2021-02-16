@@ -11,6 +11,14 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var settings : GameSettings = GameSettings()
+
+    var stepsToUndo: Int {
+        if settings.history.isBuffered {
+            return 0
+        } else {
+            return settings.history.buffer.count
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -35,14 +43,15 @@ struct ContentView: View {
                     MenuBar(showSettings: $showSettings,
                             showInfo: $showInfo,
                             showHistory: $showHistory,
-                            steps: modifyHistory.steps)
-                        .padding([.horizontal, .top])
+                            steps: stepsToUndo
+                            )
+                        .padding(.horizontal)
                         .zIndex(1) // needs to be in front for buttons to work...
                         .drawingGroup()
-                        .offset(x: 0, y: menuBarPosition == .hidden ? -500 : 0)
+                        .offset(x: 0, y: menuBarPosition.rawValue)
                         .shadow(color: .black, radius: 10, x: 8, y: 8)
                     
-                    if menuBarPosition == .top {
+                    if menuBarPosition != .center {
                         Spacer()
                     }
                 }
@@ -105,8 +114,8 @@ struct ContentView: View {
     }
     
     // MARK: - Status Bar
-    enum BarPosition {
-        case hidden, top, center
+    enum BarPosition : CGFloat {
+        case hidden = -100, top = 0.0, center = 0.1
         mutating func moveUp() {
             if self == .center {
                 self = .top
@@ -134,11 +143,15 @@ struct ContentView: View {
         var valueChanged: Bool { storedSteps != steps }
         mutating func compareSteps(to valueSteps: Int) {
             if steps < valueSteps {
-                steps = valueSteps
-                settings!.previewUndoHistory()
+                if settings!.history.canUndo {
+                    steps = valueSteps
+                    settings!.previewUndoHistory()
+                }
             } else if steps > valueSteps {
-                steps = valueSteps
-                settings!.previewRedoHistory()
+                if settings!.history.canRedo {
+                    steps = valueSteps
+                    settings!.previewRedoHistory()
+                }
             }
         }
         mutating func set(settings: GameSettings) {

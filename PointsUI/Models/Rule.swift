@@ -181,7 +181,7 @@ struct Rule : Identifiable, Hashable {
     var scoreStep: ScoreStep = .one(1)
     
     static let trucoArgentino = Rule(name: "Truco Argentino",
-                                     maxPoints: .selection([15,24,30]),
+                                     maxPoints: .selection([24,30]),
                                      players: .selection([2,3]),
                                      playerUI: .checkbox(5),
                                      rounds: .wins([3,5])
