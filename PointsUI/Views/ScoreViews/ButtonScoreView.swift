@@ -12,9 +12,6 @@ import SwiftUI
 /// this modifier must comply to the .onDrop in the playerView
 struct ButtonScoreView: View {
     @EnvironmentObject var settings: GameSettings
-    
-    @Namespace var nspace
-    
     var score: Score
     
     @State private var scaleFactor: CGFloat = 0.3
@@ -22,6 +19,7 @@ struct ButtonScoreView: View {
     
     var body: some View {
         ZStack {
+            /// main View to fix space
             Text("00")
                 .padding()
                 .foregroundColor(.clear)

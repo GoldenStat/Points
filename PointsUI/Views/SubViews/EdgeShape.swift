@@ -124,7 +124,6 @@ struct EdgeSampleView: View {
                             lineJoin: .round))
                 .padding()
             
-//            Text(index.description)
         }
         .onTapGesture {
             if Int(self.index) + 1 > maxEdges {

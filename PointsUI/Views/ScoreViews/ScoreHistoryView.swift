@@ -120,7 +120,6 @@ struct HistoryDebugView : View {
                     }, label: {
                         Image(systemName: "arrow.right")
                     })
-                    HistorySymbolRow()
                 }
                 ScoreHistoryView()
                     .emphasizeShape(cornerRadius: 16.0)

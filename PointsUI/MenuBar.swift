@@ -191,6 +191,7 @@ struct MenuBar_Previews: PreviewProvider {
     }
 }
 
+/// title button to select rules and conjure the settings popover in ContentView
 struct SettingsButton: View {
     @EnvironmentObject var settings: GameSettings
     @Binding var show: Bool

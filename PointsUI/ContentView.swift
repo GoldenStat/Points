@@ -29,18 +29,19 @@ struct ContentView: View {
                 ZStack {
                     MainGameView()
                         .blur(radius: blurRadius)                    
-                    
+                        .popover(isPresented: $showSettings) {
+                            NavigationView {
+                                SettingsView()
+                            }
+                            .environmentObject(settings)
+                        }
+
                     // MARK: History Views
                     if showHistory {
                         GeometryReader { geo in
                             historyView(sized: geo.size)
                                 .offset(x: 0, y: 100)
                         }
-                    }
-                }
-                .popover(isPresented: $showInfo) {
-                    NavigationView {
-                        InfoView()
                     }
                 }
                 
@@ -59,8 +60,14 @@ struct ContentView: View {
                     if menuBarPosition != .center {
                         Spacer()
                     }
+                    
                 }
-                
+                .popover(isPresented: $showInfo) {
+                    NavigationView {
+                        InfoView()
+                    }
+                }
+
             }
             .statusBar(hidden: true)
             .navigationBarHidden(true)
@@ -75,12 +82,6 @@ struct ContentView: View {
             .gesture(dragHistoryGesture)
             
             // MARK: Popovers
-            .popover(isPresented: $showSettings) {
-                NavigationView {
-                    SettingsView()
-                }
-                .environmentObject(settings)
-            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .environmentObject(settings)
