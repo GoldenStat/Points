@@ -82,17 +82,20 @@ fileprivate struct InfoMenuSymbol: View {
     @EnvironmentObject var settings: GameSettings
     @Binding var show: Bool
     
-    let paddingAmount : CGFloat = 10
+    // the circle views look better a little smaller
+    private let circleScaleRatio : CGFloat = 0.4
+    private var showCircleView: Bool { settings.timerPointsStarted }
+    private var showCountDownView: Bool { settings.timerRoundStarted }
+    private var countdown: TimeInterval { settings.timeIntervalToCountRound }
     
     var body: some View {
-        if settings.timerPointsStarted {
+        if showCircleView {
             ActiveCircleView()
-                .aspectRatio(contentMode: .fit)
-        } else if settings.timerRoundStarted {
-            CountdownView(totalTimeInterval: settings.timeIntervalToCountRound,
-                          color: Color.points)
-                .opacity(0.3)
-                .aspectRatio(contentMode: .fit)
+                .scaleEffect(circleScaleRatio)
+        } else if showCountDownView {
+            CountdownView(totalTimeInterval: countdown)
+                .opacity(0.8)
+                .scaleEffect(circleScaleRatio)
         } else {
             Button() {
                 show.toggle()

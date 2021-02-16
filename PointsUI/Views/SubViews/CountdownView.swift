@@ -34,7 +34,7 @@ struct CountDownArc: Shape {
 
 struct CountdownView: View {
     let totalTimeInterval: Double
-    var color: Color = .black
+    var color: Color = .orange
     
     @State private var length: Double = 1.0
     var body: some View {
@@ -51,7 +51,7 @@ struct CountdownView: View {
 
 struct ActiveCircleView: View {
     var color: Color = .orange
-    @State private var scaleFactor : CGFloat = 0.5
+    @State private var scaleFactor : CGFloat = 1.0
     @State private var opacity = 1.0
     var body: some View {
         Circle()
@@ -62,8 +62,8 @@ struct ActiveCircleView: View {
                 withAnimation(
                     Animation.easeInOut(duration: 0.8)
                         .repeatForever(autoreverses: true)) {
-                    scaleFactor = 0.4
-                    opacity = 0.8
+                    scaleFactor = 0.8
+                    opacity = 0.5
                 }
             }
     }
