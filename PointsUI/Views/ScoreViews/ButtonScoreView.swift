@@ -13,74 +13,87 @@ import SwiftUI
 struct ButtonScoreView: View {
     @EnvironmentObject var settings: GameSettings
     var score: Score
-    
-    @State private var scaleFactor: CGFloat = 0.3
-    @State private var offset: CGSize = .zero
-    
+        
     var body: some View {
         ZStack {
             /// main View to fix space
-            Text("00")
+            Text("000")
                 .padding()
                 .foregroundColor(.clear)
             Text(score.value.description)
         }
         .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
         .fixedSize(horizontal: true, vertical: false)
-        .scaleEffect(0.8)
         .foregroundColor(.points)
         .overlay(bufferView
-                    .onDrag() {
-                        settings.cancelTimers() // timers  must be started in onDrop
-                        settings.pointBuffer = score.buffer
-                        return NSItemProvider(object: "\(score.buffer)" as NSString)
-                    }
         )
     }
-    
+  
+    private let scoreSize : CGFloat = 122
+    private let bufferScoreSize : CGFloat = 180.0
+
     @ViewBuilder var bufferView: some View {
         if score.buffer > 0 {
-            ZStack {
-                Text("00")
-                    .foregroundColor(.clear)
-                    .padding()
-                Text(score.buffer.description)
-            }
-            .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
-            .fixedSize()
-            .foregroundColor(.blue)
-            .scaleEffect(finalScaleFactor)
-            .offset(offset)
+            Text(score.buffer.description)
+                .font(.system(size: bufferScoreSize, weight: .semibold, design: .rounded))
+                .fixedSize()
+                .foregroundColor(.blue)
+                .scaleEffect(bufferParam.scaleFactor)
+                .onDrag() {
+                    settings.cancelTimers() // timers  must be started in onDrop
+                    settings.pointBuffer = score.buffer
+                    return NSItemProvider(object: "\(score.buffer)" as NSString)
+                }
+                .background(Color.white.opacity(0.6).cornerRadius(25).blur(radius: 20.0))
+                .offset(bufferParam.offset)
+                .onAppear() {
+                    withAnimation {
+                        bufferParam = .final
+                    }
+                }
+                .onDisappear() {
+                    withAnimation {
+                        bufferParam = .appear
+                    }
+                }
         } else {
             EmptyView()
         }
     }
-    
+
     // MARK: - private variables
+    @State private var bufferParam: BufferParameters = .appear
     
-    private let scoreSize : CGFloat = 122
-    private let bufferScoreSize : CGFloat = 180.0
-    private var scoreOpacity : Double { score.buffer > 0 ? 0.3 : 1.0 }
-    private let finalScaleFactor : CGFloat = 0.3
-    private let finalOffset = CGSize(width: 40, height: -60)
+    struct BufferParameters {
+        var scaleFactor: CGFloat
+        var offset: CGSize
+        static let appear = BufferParameters(scaleFactor: 0.3, offset: .zero)
+        static let final = BufferParameters(scaleFactor: 0.6, offset: CGSize(width: 40, height: -80))
+    }
 }
 
 
 struct ButtonScorePreviewView: View {
+    @State var settings = GameSettings()
     @State var score = Score(11, buffer: 3)
     var body: some View {
         Color.background
             .overlay(
         ButtonScoreView(score: score)
             .onTapGesture(count: 2) {
+                withAnimation {
                 score.save()
+                }
             }
             .simultaneousGesture(
                 TapGesture(count: 1)
                     .onEnded() {
+                        withAnimation {
                     score.add(points: 1)
+                        }
                 })
         )
+            .environmentObject(settings)
     }
 }
 struct ButtonScoreView_Previews: PreviewProvider {
