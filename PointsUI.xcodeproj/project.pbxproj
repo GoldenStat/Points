@@ -51,8 +51,6 @@
 		41E11F2825C5DDFC00E7B4F6 /* ScoreRowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */; };
 		41E11F2B25C5E54700E7B4F6 /* HistoryScoresTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */; };
 		41E2E3A625D1ABD000005043 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2E3A525D1AB4200005043 /* HistoryView.swift */; };
-		41E709D0257947DE00DC959E /* BufferSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709CF257947DE00DC959E /* BufferSpace.swift */; };
-		41E709D3257ABACC00DC959E /* BufferSpaceDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */; };
 		41E709D6257B0F4000DC959E /* CoordinateSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */; };
 		41EC900024E8240100038F5C /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC8FFF24E8240100038F5C /* Rule.swift */; };
 		41EC900224EE7D9900038F5C /* Pickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC900124EE7D9900038F5C /* Pickers.swift */; };
@@ -123,8 +121,6 @@
 		41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryScoresTable.swift; sourceTree = "<group>"; };
 		41E11F6725C5F4B000E7B4F6 /* PointsUI copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PointsUI copy-Info.plist"; path = "/Users/de152951/Library/Mobile Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI copy-Info.plist"; sourceTree = "<absolute>"; };
 		41E2E3A525D1AB4200005043 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		41E709CF257947DE00DC959E /* BufferSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpace.swift; sourceTree = "<group>"; };
-		41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferSpaceDebugView.swift; sourceTree = "<group>"; };
 		41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSampleView.swift; sourceTree = SOURCE_ROOT; };
 		41EC8FFF24E8240100038F5C /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		41EC900124EE7D9900038F5C /* Pickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pickers.swift; sourceTree = "<group>"; };
@@ -148,8 +144,6 @@
 				4168CE2624AF925800DACD62 /* GameSettings.swift */,
 				41054156256EAE22001E60CA /* GameState.swift */,
 				41EC8FFF24E8240100038F5C /* Rule.swift */,
-				41E709CF257947DE00DC959E /* BufferSpace.swift */,
-				41E709D2257ABACB00DC959E /* BufferSpaceDebugView.swift */,
 				41F114A8236A073F00C6314D /* GlobalSettings.swift */,
 				41DB1E1423E5C8B800E17CC8 /* Players.swift */,
 				41E11F2725C5DDFC00E7B4F6 /* ScoreRowData.swift */,
@@ -387,7 +381,6 @@
 				418D8B8624AE19F7008A4A3E /* PlayerWon.swift in Sources */,
 				4180CC9E25C850CC009B0A42 /* HistoryTestView.swift in Sources */,
 				412EF8E525BF20DD003FDB7E /* HistoryControlsTestView.swift in Sources */,
-				41E709D3257ABACC00DC959E /* BufferSpaceDebugView.swift in Sources */,
 				41E11F2525C5DD9E00E7B4F6 /* CellData.swift in Sources */,
 				41EC900024E8240100038F5C /* Rule.swift in Sources */,
 				41E709D6257B0F4000DC959E /* CoordinateSampleView.swift in Sources */,
@@ -404,7 +397,6 @@
 				41E11F2825C5DDFC00E7B4F6 /* ScoreRowData.swift in Sources */,
 				416E83E424F9843200609A87 /* ScoreHistoryView.swift in Sources */,
 				4177075824D6A18F00FD851A /* HistorySymbolRow.swift in Sources */,
-				41E709D0257947DE00DC959E /* BufferSpace.swift in Sources */,
 				41F114A9236A073F00C6314D /* GlobalSettings.swift in Sources */,
 				41442D6525CC586300515899 /* GeoEffectTest.swift in Sources */,
 				4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */,

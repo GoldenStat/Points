@@ -36,22 +36,6 @@ struct BoardUI: View {
                         playerViews
                     }
                 }
-
-                // this buffer gets set in some SubView children of the ScoreRepresentationView
-//                if let buffer = settings.pointBuffer {
-//                    let centeredPosition = CGPoint(x: buffer.position.x - bufferViewSize / 2.0,
-//                                                   y: buffer.position.y - bufferViewSize / 2.0)
-//                    BufferView(score: Score(0, buffer: buffer.points))
-//                        .position(centeredPosition)
-//
-//                    if showBufferContents {
-//                        HStack {
-//                            BufferSpaceDebugView(bufferSpace: settings.pointBuffer)
-//                            Text("dragging...")
-//                        }
-//                        .padding(.bottom)
-//                    }
-//                }
         }
         .ignoresSafeArea(edges: .all)
     }
@@ -63,6 +47,7 @@ struct BoardUI: View {
     @ViewBuilder private var playerViews : some View {
         ForEach(settings.players.items) { player in
             PlayerView(player: player)
+                // to receive drop values, the .onDrag must be called in the correspondent subview
                 .onDrop(of: ["public.utf8-plain-text"], isTargeted: nil) { provider in
                     guard let pkg = provider.first, pkg.canLoadObject(ofClass: NSString.self) else {
                         // just to make sure we have the buffer
@@ -78,34 +63,9 @@ struct BoardUI: View {
                             }
                         }
                     }
-
                     return true
                 }
-//                .simultaneousGesture(buildDragGesture(forPlayer: player))
-                .coordinateSpace(name: player.name)
         }
-    }
-    
-    // MARK: - DragGesture
-    
-    /// bufferDragGesture
-    /// - when we start dragging from a view, we fill the gameState's buffer with that view's players buffer points
-    private func buildDragGesture(forPlayer player: Player) -> some Gesture {
-        DragGesture(minimumDistance: 20, coordinateSpace: .global)
-                    .onChanged() { value in
-                        let buffer = player.score.buffer
-                        if buffer != 0 {
-                            settings.cancelTimers()
-                            let location = value.location.applying(.init(translationX: 60, y: 60))
-                            settings.pointBuffer = BufferSpace(position: location, points: buffer)
-                        }
-                    }
-                    .onEnded() { value in
-                        if let pointBuffer = settings.pointBuffer {
-                            pointBuffer.wasDropped = true
-                        }
-                        settings.pointBuffer = nil
-                    }
     }
 }
 

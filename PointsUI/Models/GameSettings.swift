@@ -23,7 +23,7 @@ class GameSettings: ObservableObject {
         }
     }
     
-    @Published var pointBuffer: BufferSpace?
+    @Published var pointBuffer: Int?
     
     @Published var rule: Rule {
         didSet { processRuleUpdate() }

@@ -31,13 +31,12 @@ struct ButtonScoreView: View {
         .fixedSize(horizontal: true, vertical: false)
         .scaleEffect(0.8)
         .foregroundColor(.points)
-        .matchedGeometryEffect(id: "bufferEffect", in: nspace, properties: .frame, anchor: .center, isSource: true)
         .overlay(bufferView
-        .onDrag() {
-            settings.cancelTimers() // timers  must be started in onDrop
-            settings.pointBuffer = BufferSpace(position: CGPoint.zero, points: score.buffer)
-            return NSItemProvider(object: "\(score.buffer)" as NSString)
-        }
+                    .onDrag() {
+                        settings.cancelTimers() // timers  must be started in onDrop
+                        settings.pointBuffer = score.buffer
+                        return NSItemProvider(object: "\(score.buffer)" as NSString)
+                    }
         )
     }
     
@@ -54,17 +53,6 @@ struct ButtonScoreView: View {
             .foregroundColor(.blue)
             .scaleEffect(finalScaleFactor)
             .offset(offset)
-//            .onAppear() {
-//                withAnimation() {
-//                    scaleFactor = finalScaleFactor
-//                    offset = finalOffset
-//                }
-//            }
-//            .onDisappear() {
-//                scaleFactor = 0.3
-//                offset = CGSize.zero
-//            }
-            .matchedGeometryEffect(id: "bufferEffect", in: nspace, properties: .frame, anchor: .center, isSource: false)
         } else {
             EmptyView()
         }
