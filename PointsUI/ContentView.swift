@@ -67,12 +67,7 @@ struct ContentView: View {
                     showHistory = false
                 }
             }
-            .gesture(dragGesture)
-            .onLongPressGesture {
-                withAnimation() {
-                    showHistory = true
-                }
-            }
+            .gesture(dragHistoryGesture)
             
             // MARK: Popovers
             .popover(isPresented: $showInfo) {
@@ -99,7 +94,7 @@ struct ContentView: View {
     @State private var showHistory: Bool = false
     
     private var blurRadius : CGFloat { blurBackground ? 4.0 : 0.0 }
-    private var blurBackground: Bool { showHistory }
+    private var blurBackground: Bool { showHistory || showInfo || showSettings }
     
     func historyView(sized geometrySize: CGSize) -> some View {
         let heightFactor: CGFloat = 0.6
@@ -162,7 +157,7 @@ struct ContentView: View {
     // has a link to history
     @GestureState var modifyHistory = HistoryControl()
     
-    var dragGesture : some Gesture {
+    var dragHistoryGesture : some Gesture {
         DragGesture(minimumDistance: 60)
 
             .updating($modifyHistory) { value, historyControl, _ in
