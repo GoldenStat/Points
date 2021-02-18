@@ -72,36 +72,39 @@ struct PlayerHeadline: View {
     var isActive: Bool = false
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 0) {
             Text("\(player.name)")
                 .font(.largeTitle)
                 .fontWeight(isActive ? .bold : .regular)
                 .fixedSize()
-            HStack(spacing: 0) {
-                Spacer()
-                PlayerGamesCounterView(games: player.games)
-            }
-            .offset(x: 0, y: 30)
+                
+            CounterView(counter: player.games)
         }
     }
 }
 
-struct PlayerGamesCounterView: View {
-    let games: Int
+struct CounterView: View {
+
+    let counter: Int
+
+    var counterImage: some View {
+        Image(systemName: "circle.fill")
+            .font(.caption)
+            .foregroundColor(.pointbuffer)
+    }
+    
     var body: some View {
-        HStack(spacing: 3) {
-            ForEach(0..<games, id: \.self) { num in
-                Circle()
-                    .fill(Color.pointbuffer)
-                    .frame(width: 10, height: 10)
-                    .offset(x: 0, y: -10)
+        HStack(spacing: 10) {
+            Spacer()
+            ForEach(0..<counter, id: \.self) { num in
+                counterImage
             }
         }
     }
 }
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: Player.Data(name: "Alexander", score: Score(21), games: 8))
+    static var player = Player(from: Player.Data(name: "Alexander", score: Score(21), games: 3))
     static var settings = GameSettings()
     
     static var previews: some View {
