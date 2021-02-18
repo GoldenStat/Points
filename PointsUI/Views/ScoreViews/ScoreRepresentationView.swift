@@ -50,6 +50,8 @@ struct ScoreRepresentationView_Previews: PreviewProvider {
     static var previews: some View {
         ScoreRepresentationView(score: Score(5, buffer: 3),
                                 uiType: .numberBox)
+            .frame(width: 200, height: 400)
+            .background(Color.yellow.opacity(0.2))
             .environmentObject(GameSettings())
     }
 }

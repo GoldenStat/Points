@@ -48,11 +48,13 @@ struct ButtonScoreView: View {
     
     // the text should be the biggest possible to look good, so we would get our available area, select a "box" out of it and calculate the best size
     var body: some View {
-        ScalingTextView(score.value.description)
-            .foregroundColor(.points)
-            .overlay(bufferView
-                        .offset(offsetSize))
-            .background(bgColor)
+        ZStack {
+            ScalingTextView(score.value.description)
+                .foregroundColor(.points)
+            bufferView
+                .offset(offsetSize)
+        }
+        .background(bgColor)
     }
     
     let showFrame = false
@@ -98,7 +100,7 @@ struct ButtonScoreView: View {
         var offset: CGSize
         var font: Font = .system(size: 180.0, weight: .semibold, design: .rounded)
         static let appear = BufferParameters(scaleFactor: 0.3, offset: .zero)
-        static let final = BufferParameters(scaleFactor: 0.8, offset: CGSize(width: 80, height: -80))
+        static let final = BufferParameters(scaleFactor: 0.8, offset: CGSize(width: 10, height: -80))
     }
 }
 
@@ -112,14 +114,12 @@ struct ButtonScorePreviewView: View {
         VStack {
             Color.background
                 .overlay(
-//                    LazyHGrid(rows: [GridItem(.flexible()),GridItem(.flexible())]) {
-                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible())]) {
-                            ForEach(1..<4) { _ in
-                                button
-                                
-                            }
+                    LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible())]) {
+                        ForEach(1..<4) { _ in
+                            button
+                            
                         }
-//                    }
+                    }
                 )
                 .frame(width: sizeWidth.value, height: sizeHeight.value)
                 .environmentObject(settings)
