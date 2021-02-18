@@ -72,7 +72,7 @@ struct ButtonScoreView: View {
                     settings.pointBuffer = score.buffer
                     return NSItemProvider(object: "\(score.buffer)" as NSString)
                 }
-                .background(Color.white.opacity(0.4).cornerRadius(25).blur(radius: 20.0))
+                .background(Color.white.opacity(0.2).cornerRadius(25).blur(radius: 20.0))
                 .onAppear() {
                     withAnimation(.spring(response: 0.8, dampingFraction: 0.4, blendDuration: 0.5)) {
                         bufferParam = .final

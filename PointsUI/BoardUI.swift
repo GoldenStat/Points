@@ -58,7 +58,7 @@ struct BoardUI: View {
                             if let buffer = Int(string) {
                                 DispatchQueue.main.async {
                                     player.add(score: buffer)
-                                    settings.startCountDown()
+                                    settings.startTimer()
                                 }
                             }
                         }
