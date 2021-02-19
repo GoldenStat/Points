@@ -102,7 +102,7 @@ struct ContentView: View {
         let height = geometrySize.height * heightFactor
         
         // NOTE: use @ScaledMetric for height? Use maxHeight, instead?
-        return ScoreHistoryView()
+        return ScoreHistoryView(showBuffer: modifyHistory.steps != 0)
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
             .transition(.opacity)

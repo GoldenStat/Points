@@ -49,7 +49,7 @@ class History : ObservableObject {
     /// appends given state to buffer, temporarily, same principle as with score
     /// call save() to store in states
     
-    public func append(state: GameState) {
+    public func appendBuffer(state: GameState) {
         buffer.append(state)
     }
 
@@ -88,6 +88,11 @@ class History : ObservableObject {
         } else {
             buffer.append(states.removeLast())
         }
+    }
+    
+    // erase whatever is in the buffer
+    public func clearBuffer() {
+        buffer = []
     }
     
     /// append last step from redo Stack

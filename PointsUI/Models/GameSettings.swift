@@ -88,6 +88,7 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .doppelkopf // needs to be set to enable calling methods
         setupRules()
+        setupHistoryTests()
     }
     
     // setup something for testing
@@ -95,7 +96,7 @@ class GameSettings: ObservableObject {
         var scores: [Int] = .init(repeating: 0, count: numberOfPlayers)
         
         for _ in 1 ... 10 {
-            scores[0] += Int.random(in: 1 ... 2)
+            scores[0] += Int.random(in: (1 ... 3)) * 10
             history.add(state: GameState(buffer: scores))
             history.save()
         }
@@ -285,7 +286,8 @@ class GameSettings: ObservableObject {
         // if the round is already active, we already have registered some points and should undo that
         if (registerRoundTimer != nil) {
             // put last buffer into player's buffers
-            updatePlayersScoresPreview()
+            updatePlayersScoresPreview() // restore Players according to last game state
+            
         }
         cancelTimers()
         registerPointsTimer = start(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
@@ -302,7 +304,7 @@ class GameSettings: ObservableObject {
     /// execute the actions it should perform
     func fireTimer() {
         updatePoints()
-        updateRound()
+        registerRound()
     }
     
     /// use this when you want to update points and start the countdown
@@ -310,21 +312,40 @@ class GameSettings: ObservableObject {
         updatePoints()
     }
     
-    // when the timer fires, players need to be updated, and history buffer updated...
+    /// start of a countdown, after the trigger action.
+    /// points are added to the player's buffer and *updatePoints()* is started when we touch a *PlayerView()*
+    ///
+    /// 2. *updatePoints()*
+    ///     1. players' *score*s are saved, adding their *buffer* to their *value*,
+    ///     2. this new *GameState*'s Data is appended to the history's *buffer* queue
+    ///     3. we check if a player has won
+    ///     4. the timer for *updatePoints()* is invalidated and the pointer set to nil
+    ///     5. the *pointBuffer* - used for drag'n drop operations is set to nil
+    ///     6. start the *updatePoints()* timer
+    ///
     @objc private func updatePoints() {
+        // when the timer fires, players need to be updated, and history buffer updated...
         // add to bufferForHistory
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
-        history.store(state: GameState(players: players.data))
+        let playerState = GameState(players: players.data)
+        // if there already is a buffer in history, add
+//        if let currentHistoryBufferScores = history.buffer.first?.scores {
+//            let newBuffer = GameState(buffer: currentHistoryBufferScores + playerState.scores)
+//            history.store(state: newBuffer)
+//            updatePlayersBuffer(with: newBuffer)
+//        } else {
+            history.store(state: playerState)
+//        }
         updateState()
-        registerPointsTimer?.invalidate()
-        registerPointsTimer = nil
+        stop(timer: &registerPointsTimer)
         pointBuffer = nil
-        registerRoundTimer = start(interval: timeIntervalToCountRound, selector:  #selector(updateRound))
+        registerRoundTimer = start(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
     }
             
-    /// this function adds the changes to the history, counting it as a round.
-    /// history adds hist buffer to it's states
-    @objc private func updateRound() {
+    /// 3. updateRound()
+    ///     1. save the history's <buffer>, appending the last value to the state queue
+    ///     2. invalidate all running timers
+    @objc private func registerRound() {
         history.save()
         cancelTimers()
     }
@@ -334,7 +355,17 @@ class GameSettings: ObservableObject {
     private func updatePlayersScoreWithRecentState() {
         updatePlayersScore(with: history.states.last)
     }
-    
+
+    /// sets the players buffers to reflect the given GameState from history buffer.
+    /// sets all scores to Score(0) if GameState is nil
+    private func updatePlayersBuffer(with newState: GameState?) {
+        if let state = newState {
+            players.setScores(to: state.scores.map {Score(0, buffer: $0)})
+        } else {
+            resetPlayerScores()
+        }
+    }
+
     /// sets the players scores to reflect the given GameState.
     /// sets all scores to Score(0) if GameState is nil
     private func updatePlayersScore(with newState: GameState?) {
@@ -384,16 +415,16 @@ class GameSettings: ObservableObject {
     }
     
     private func updatePlayersScoresPreview() {
-        // if we have something in the history's buffer... calculate the difference between first buffer and last state
-         if let totalScores = history.buffer.first,
-            let newPlayerScores = history.states.last {
-             let newPlayerBuffers = totalScores - newPlayerScores
-             let pairs = zip(newPlayerScores.scores, newPlayerBuffers)
-             let scores = pairs.map { Score($0, buffer: $1) }
-             players.setScores(to: scores)
-         } else {
-         // the buffer is empty, just reset the player's scores
-            updatePlayersScoreWithRecentState()
+        /// calculate the players scores and buffers base on the current history state and buffer
+        if let newPlayerScores = history.states.last {
+            if let bufferedTotalScores = history.buffer.first {
+                // this can come from an undo-operation or from an interrupted action
+                let newPlayerBuffers = bufferedTotalScores - newPlayerScores
+                let pairs = zip(newPlayerScores.scores, newPlayerBuffers)
+                let scores = pairs.map { Score($0, buffer: $1) }
+                players.setScores(to: scores)
+                history.clearBuffer()
+            }
          }
      }
 }

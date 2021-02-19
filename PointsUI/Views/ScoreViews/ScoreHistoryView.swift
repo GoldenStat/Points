@@ -15,6 +15,7 @@ struct ScoreHistoryView: View {
     private var historyMode : HistoryView.Mode {
         showSums ? .perRow : .total
     }
+    var showBuffer = false // show stored steps
     private var history: History { settings.history }
     
     var body: some View {
@@ -25,7 +26,10 @@ struct ScoreHistoryView: View {
                 .disabled(history.isEmpty)
                 .padding()
             
-            HistoryView(history: settings.history, playerNames: settings.playerNames, mode:  historyMode)
+            HistoryView(history: settings.history,
+                        playerNames: settings.playerNames,
+                        showHistoryBuffer: showBuffer,
+                        mode:  historyMode)
                 .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
 
                 Spacer()

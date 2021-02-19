@@ -150,7 +150,7 @@ class Players: ObservableObject {
             player.score.reset(newValue)
         }
     }
-    
+
     func setScores(to values: [Score]) {
         guard items.count == values.count else { fatalError("saved state doesn't match players count") }
         

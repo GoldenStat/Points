@@ -11,12 +11,12 @@ import SwiftUI
 struct HistoryView: View {
     @ObservedObject var history: History
 
-    // NOTE: set this whenever history does weired things
-    @State var debugBuffers = false
-
     var playerNames : [String]
     var columns : Int { playerNames.count }
-        
+
+    /// variable to show the buffer. In undo-operations, for instance
+    var showHistoryBuffer = false
+
     // MARK: many variables...
     // TODO: see if this can be refactored in model
     
@@ -85,7 +85,7 @@ struct HistoryView: View {
                     row.rowView()
                 }
                 
-                debugView(showBuffers: debugBuffers)
+                bufferView(showBuffers: showHistoryBuffer)
                 
                 if history.isBuffered {
                     bufferDifference.rowView()
@@ -112,15 +112,15 @@ struct HistoryView: View {
         }
     }
     
-    @ViewBuilder func debugView(showBuffers: Bool) -> some View {
-        if debugBuffers {
-            ForEach(rowsInBuffer) { row in
+    @ViewBuilder func bufferView(showBuffers: Bool) -> some View {
+        if showHistoryBuffer {
+            ForEach(rowsInBuffer.reversed()) { row in
                 row.rowView()
             }
-            .foregroundColor(.gray)
+            .opacity(0.3)
             
-            bufferHighestRow.rowView()
-                .foregroundColor(.red)
+//            bufferHighestRow.rowView()
+//                .foregroundColor(.red)
         }
     }
     
