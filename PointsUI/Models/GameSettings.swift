@@ -88,7 +88,6 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = .doppelkopf // needs to be set to enable calling methods
         setupRules()
-        setupHistoryTests()
     }
     
     // setup something for testing
@@ -100,7 +99,7 @@ class GameSettings: ObservableObject {
             history.add(state: GameState(buffer: scores))
             history.save()
         }
-        updatePlayersScoreWithRecentState()
+        updatePlayers()
     }
     
     func setupRules() {
@@ -163,6 +162,7 @@ class GameSettings: ObservableObject {
     var playerNames: [ String ] { players.names }
     
     func player(named name: String) -> Player? {
+        // TODO: move to *Players*
         players.items.filter {$0.name == name}.first
     }
     
@@ -174,14 +174,16 @@ class GameSettings: ObservableObject {
     
     /// reset the players. Changes scores, resets history - for starting a new game
     func resetPlayers() {
+        // TODO: move to *Players*
         // create new players
         // also resets the wonGames!
-        players = Players(names: playerNames)
+        players = Players(names: players.names)
         activePlayer = nil
     }
     
     /// reset only the scores of the players, not the game count
     func resetPlayerScores() {
+        // TODO: move to *Players*
         _ = players.items.map { $0.score = Score(0) }
     }
     
@@ -213,8 +215,8 @@ class GameSettings: ObservableObject {
     func addRandomPlayer() {
         guard canAddPlayers else { return }
         players.add(name: "Player \(players.count + 1)")
+        resetPlayers() // set all counts to zerio
         objectWillChange.send()
-        resetPlayers()
     }
     
     func removeLastPlayer() {
@@ -265,7 +267,7 @@ class GameSettings: ObservableObject {
     public var timerPointsStarted : Bool { registerPointsTimer != nil }
     public var timerRoundStarted : Bool { registerRoundTimer != nil }
     
-    func start(interval: TimeInterval, selector: Selector) -> Timer {
+    func timer(interval: TimeInterval, selector: Selector) -> Timer {
         objectWillChange.send()
         return Timer.scheduledTimer(timeInterval: interval,
                                      target: self,
@@ -275,10 +277,8 @@ class GameSettings: ObservableObject {
     }
     
     func stop(timer: inout Timer?) {
-        guard timer != nil else { return }
         timer?.invalidate()
         timer = nil
-        objectWillChange.send()
     }
     
     func startTimer() {
@@ -286,11 +286,12 @@ class GameSettings: ObservableObject {
         // if the round is already active, we already have registered some points and should undo that
         if (registerRoundTimer != nil) {
             // put last buffer into player's buffers
-            updatePlayersScoresPreview() // restore Players according to last game state
+            updatePlayers()
+            // restore Players according to last game state
             
         }
         cancelTimers()
-        registerPointsTimer = start(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
+        registerPointsTimer = timer(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
     }
     
     /// control Timer from outside
@@ -327,19 +328,17 @@ class GameSettings: ObservableObject {
         // when the timer fires, players need to be updated, and history buffer updated...
         // add to bufferForHistory
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
-        let playerState = GameState(players: players.data)
+
         // if there already is a buffer in history, add
-//        if let currentHistoryBufferScores = history.buffer.first?.scores {
-//            let newBuffer = GameState(buffer: currentHistoryBufferScores + playerState.scores)
-//            history.store(state: newBuffer)
-//            updatePlayersBuffer(with: newBuffer)
-//        } else {
-            history.store(state: playerState)
-//        }
+        if let _ = history.savePendingBuffer {
+            history.add(state: GameState(players: players.data))
+        } else {
+            history.store(state: GameState(players: players.data))
+        }
         updateState()
         stop(timer: &registerPointsTimer)
         pointBuffer = nil
-        registerRoundTimer = start(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
+        registerRoundTimer = timer(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
     }
             
     /// 3. updateRound()
@@ -350,82 +349,51 @@ class GameSettings: ObservableObject {
         cancelTimers()
     }
     
-    /// update players with game state from current state
-    /// to reflect actual history
-    private func updatePlayersScoreWithRecentState() {
-        updatePlayersScore(with: history.states.last)
-    }
-
-    /// sets the players buffers to reflect the given GameState from history buffer.
-    /// sets all scores to Score(0) if GameState is nil
-    private func updatePlayersBuffer(with newState: GameState?) {
-        if let state = newState {
-            players.setScores(to: state.scores.map {Score(0, buffer: $0)})
-        } else {
-            resetPlayerScores()
-        }
-    }
-
-    /// sets the players scores to reflect the given GameState.
-    /// sets all scores to Score(0) if GameState is nil
-    private func updatePlayersScore(with newState: GameState?) {
-        if let state = newState {
-            players.setScores(to: state.scores)
-        } else {
-            resetPlayerScores()
-        }
-    }
     
-    /// sets the players to reflect the given [Score]
-    private func updatePlayers(with newScores: [Score]){
-        players.setScores(to: newScores)
-    }
-
     // needed for object update
     func undoHistory() {
         cancelTimers()
         history.undo()
-        updatePlayersScoreWithRecentState()
+        updatePlayers() // ignore buffer
+        startTimer()
     }
 
     func redoHistory() {
         cancelTimers()
         history.redo()
-        updatePlayersScoreWithRecentState()
+        updatePlayers() // ignore buffer
     }
     
     func updateHistory() {
         /// we have the history states where we want them, just have to erase the player's buffers of set the last state as the current one
         cancelTimers()
         history.save() // update history, throw buffer away
-        updatePlayersScoreWithRecentState()
+        updatePlayers()
     }
 
     /// preview number of steps backward / forward as oppose to simple undo()/redo()
     func previewUndoHistory() {
+        /// as opposed to undoHistory, we shouldn't set the isBuffered
         cancelTimers()
         history.undo()
-        updatePlayersScoresPreview()
+        updatePlayers()
     }
     
     func previewRedoHistory() {
         cancelTimers()
         history.redo()
-        updatePlayersScoresPreview()
+        updatePlayers()
     }
     
-    private func updatePlayersScoresPreview() {
-        /// calculate the players scores and buffers base on the current history state and buffer
-        if let newPlayerScores = history.states.last {
-            if let bufferedTotalScores = history.buffer.first {
-                // this can come from an undo-operation or from an interrupted action
-                let newPlayerBuffers = bufferedTotalScores - newPlayerScores
-                let pairs = zip(newPlayerScores.scores, newPlayerBuffers)
-                let scores = pairs.map { Score($0, buffer: $1) }
-                players.setScores(to: scores)
-                history.clearBuffer()
-            }
-         }
-     }
+    /// updates Players to current history state
+    /// calculates the difference of buffer and score, if buffer is given (assumes that buffer is in a 'later' state)
+    private func updatePlayers() {
+        let zeroScores = [Score](repeating: Score(0), count: numberOfPlayers)
+        
+        players.setScores(to: history.redoScores ?? zeroScores)
+        
+//        history.clearBuffer()
+    }
+
 }
 

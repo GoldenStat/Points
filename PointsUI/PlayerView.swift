@@ -47,10 +47,10 @@ struct PlayerView: View {
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
                 .onTapGesture(perform: {
-                    settings.startTimer()
                     withAnimation(.easeInOut(duration: 2.0)) {
                         player.add(score: currentRule.scoreStep.defaultValue)
                     }
+                    settings.startTimer()
                 })
             }
     }

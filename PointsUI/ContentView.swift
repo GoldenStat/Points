@@ -13,11 +13,7 @@ struct ContentView: View {
     @StateObject var settings : GameSettings = GameSettings()
 
     var stepsToUndo: Int {
-        if settings.history.isBuffered {
-            return 0
-        } else {
-            return settings.history.buffer.count
-        }
+        settings.history.undoBuffer.count
     }
     
     var body: some View {
@@ -177,6 +173,7 @@ struct ContentView: View {
                     historyControl.set(settings: settings)
                     withAnimation() {
                         historyControl.compareSteps(to: value.steps)
+                        
                     }
                 }
             }

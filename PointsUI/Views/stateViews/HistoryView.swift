@@ -45,7 +45,7 @@ struct HistoryView: View {
     }
     
     var bufferTable : HistoryScoresTable {
-        table(for: history.buffer)
+        table(for: history.undoBuffer)
     }
     
     var rowsInBuffer: [ScoreRowData] {
@@ -80,14 +80,14 @@ struct HistoryView: View {
 
             Divider()
 
-            Group {
+             Group {
                 ForEach(rowsInHistory) { row in
                     row.rowView()
                 }
                 
                 bufferView(showBuffers: showHistoryBuffer)
                 
-                if history.isBuffered {
+                if !history.undoBuffer.isEmpty {
                     bufferDifference.rowView()
                         .foregroundColor(.pointbuffer)
                 }
@@ -99,7 +99,7 @@ struct HistoryView: View {
                 BoldDivider()
                 
                 Group {
-                    if history.isBuffered {
+                    if !history.undoBuffer.isEmpty {
                         (totalsRow + bufferDifference)
                             .rowView()
                             .foregroundColor(.gray)

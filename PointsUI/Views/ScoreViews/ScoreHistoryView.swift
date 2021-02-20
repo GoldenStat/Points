@@ -79,7 +79,7 @@ struct HistoryScoreGeneratorButton: View {
     
     private func addScoresToHistory() {
         
-        if history.isBuffered {
+        if history.needsSaving {
             history.save()
         } else {
             let players = settings.players

@@ -23,97 +23,107 @@ class History : ObservableObject {
     @Published private(set) var states : [GameState] = []
     
     /// stack of states we need to store temporary
-    @Published private(set) var buffer : [GameState] = []
+    @Published private(set) var savePendingBuffer : GameState?
+    var needsSaving : Bool { savePendingBuffer != nil }
+    @Published private(set) var undoBuffer: [GameState] = []
+
+    /// the first state in the undo buffer containts our former total
+    public var storedTotal : GameState? { undoBuffer.first }
     
-    /// last state might be buffered
-    /// this is used only if we store a value, before saving it, as opposed to undo/redo operations
-    @Published private(set) var isBuffered: Bool = false
-    
-    var isEmpty: Bool { states.isEmpty && buffer.isEmpty }
+    /// what scores should our players get if we redo all steps
+    public var redoScores: [ Score ]? {
+
+        if let buffer = storedTotal?.scores {
+            if let values = currentGameState?.scores {
+                return zip(values, buffer).map { value, buffer in Score(value, buffer: buffer) }
+            } else {
+                return buffer.map { buffer in Score(0,buffer: buffer) }
+            }
+        } else {
+            if let values = currentGameState?.scores {
+                return values.map { Score($0) }
+            } else {
+                return nil
+            }
+        }
+    }
+        
+    /// the last state in our states stack reflects the current game state
+    public var currentGameState: GameState? { states.last }
+
+    var isEmpty: Bool { states.isEmpty && savePendingBuffer != nil && undoBuffer.isEmpty }
     
     /// clear all memory, begin with a clean state
     public func reset() {
         states = []
-        buffer = []
-        isBuffered = false
+        savePendingBuffer = nil
+        undoBuffer = []
     }
         
     /// stores given state in buffer, temporarily, same principle as with score
     /// overwrites buffer if not empty
     /// call save() to store in states
     public func store(state: GameState) {
-        buffer = [state]
-        isBuffered = true // save operation will append this last state to our history and make it the current game State
+        savePendingBuffer = state
     }
 
     /// appends given state to buffer, temporarily, same principle as with score
     /// call save() to store in states
     
     public func appendBuffer(state: GameState) {
-        buffer.append(state)
+        undoBuffer.append(state)
     }
 
     /// adds given state to buffer, temporarily, same principle as with score
     /// call save() to store in states
     public func add(state newState: GameState) {
-        if buffer.last != nil {
-            let lastElement = buffer.removeLast()
-            let combinedState = GameState(buffer: lastElement + newState)
-            buffer.append(combinedState)
+        if let buffer = savePendingBuffer {
+            savePendingBuffer = buffer + newState.scores
         } else {
-            buffer.append(newState)
+            savePendingBuffer = newState
         }
-        isBuffered = true // save operation will append this last state to our history and make it the current game State
     }
     
     public func mergeBuffer() {
         /// sums all buffer entries and merges them into one
+        /// don't think we need this
         fatalError("not yet implemented")
     }
 
     /// if the buffer has content, delete it
     /// if not, remove last step and append it to redoStack
-    public var canUndo: Bool { states.count > 0 || isBuffered }
-    public var canRedo: Bool { buffer.count > 0 }
+    public var canUndo: Bool { states.count > 0 }
+    public var canRedo: Bool { undoBuffer.count > 0 }
     
     public var maxUndoSteps: Int { states.count }
-    public var maxRedoSteps: Int { buffer.count }
+    public var maxRedoSteps: Int { undoBuffer.count }
     
     /// removes the last state and puts it to the end of the buffer stack
     public func undo() {
-        guard canUndo else { return }
-        if isBuffered {
-            isBuffered = false
-            buffer = []
-        } else {
-            buffer.append(states.removeLast())
-        }
+        guard states.count > 0 else { return }
+        undoBuffer.append(states.removeLast())
     }
     
     // erase whatever is in the buffer
     public func clearBuffer() {
-        buffer = []
+        undoBuffer = []
     }
     
     /// append last step from redo Stack
     /// if there is no step to 'redo', ignore silently
     public func redo() {
-        guard canRedo else { return }
-        // MARK: if this buffer is not from an undo operation - it could be a temporary state? the buffer last state should be added check what we do with the state, maybe?
-        let bufferState = buffer.removeLast()
-        
-        states.append(bufferState)
+        guard undoBuffer.count > 0  else { return }
+        states.append(undoBuffer.removeLast())
     }
     
     /// makes current changes permanent:
     /// saves the buffer if it's not from an undo operation (we know that from the isBuffered value)
     /// deletes buffer - we don't have anything to redo, anymore
     public func save() {
-        if isBuffered, let lastBufferEntry = buffer.last {
-            states.append(lastBufferEntry)
+        if let buffer = savePendingBuffer {
+            states.append(buffer)
+            savePendingBuffer = nil
         }
-        buffer = []
-        isBuffered = false
     }
 }
 

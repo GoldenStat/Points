@@ -17,6 +17,8 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
     }
     var id = UUID()
     private(set) var scores : [Int]
+    // Note: add separated buffer? Might make things easier and easier to understand
+    // at the moment we only use one Game state, and it requires some calculation to restore player's buffers
     
     var activePlayerIndex = 0
     
@@ -38,9 +40,17 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
 
 /// subtract gamestates
 func - (lhs: GameState, rhs: GameState) -> [Int] {
-    return lhs.scores - rhs.scores
+    lhs.scores - rhs.scores
 }
 
 func + (lhs: GameState, rhs: GameState) -> [Int] {
-    return lhs.scores + rhs.scores
+    lhs.scores + rhs.scores
+}
+
+func + (lhs: GameState, rhs: [Int]?) -> GameState {
+    if let rhs = rhs {
+        return GameState(buffer: lhs.scores + rhs)
+    } else {
+        return lhs
+    }
 }
