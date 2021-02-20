@@ -21,7 +21,6 @@ struct HistoryControlsTestView: View {
 
             VStack {
                 ScoreHistoryView()
-                HistoryScoreGeneratorButton()
             }
             
             HistoryControlKnob(selecting: $selecting)

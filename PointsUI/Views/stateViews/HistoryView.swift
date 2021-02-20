@@ -87,10 +87,10 @@ struct HistoryView: View {
                 
                 bufferView(showBuffers: showHistoryBuffer)
                 
-                if !history.undoBuffer.isEmpty {
-                    bufferDifference.rowView()
-                        .foregroundColor(.pointbuffer)
-                }
+//                if !history.undoBuffer.isEmpty {
+//                    bufferDifference.rowView()
+//                        .foregroundColor(.pointbuffer)
+//                }
             }
             .asGrid(columns: playerNames.count)
 
@@ -99,13 +99,7 @@ struct HistoryView: View {
                 BoldDivider()
                 
                 Group {
-                    if !history.undoBuffer.isEmpty {
-                        (totalsRow + bufferDifference)
-                            .rowView()
-                            .foregroundColor(.gray)
-                    } else {
-                        totalsRow.rowView()
-                    }
+                    totalsRow.rowView()
                 }
                 .asGrid(columns: columns)
             }

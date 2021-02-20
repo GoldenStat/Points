@@ -30,14 +30,14 @@ class History : ObservableObject {
     /// the first state in the undo buffer containts our former total
     public var storedTotal : GameState? { undoBuffer.first }
     
-    /// what scores should our players get if we redo all steps
+    /// what scores should our players get if we redo all steps (total scores - current game state)
     public var redoScores: [ Score ]? {
 
-        if let buffer = storedTotal?.scores {
+        if let total = storedTotal?.scores {
             if let values = currentGameState?.scores {
-                return zip(values, buffer).map { value, buffer in Score(value, buffer: buffer) }
+                return zip(values, total - values).map { Score($0, buffer: $1) }
             } else {
-                return buffer.map { buffer in Score(0,buffer: buffer) }
+                return total.map { Score(0,buffer: $0) }
             }
         } else {
             if let values = currentGameState?.scores {

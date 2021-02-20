@@ -390,9 +390,8 @@ class GameSettings: ObservableObject {
     private func updatePlayers() {
         let zeroScores = [Score](repeating: Score(0), count: numberOfPlayers)
         
+        // sets values and buffers according to history stacks
         players.setScores(to: history.redoScores ?? zeroScores)
-        
-//        history.clearBuffer()
     }
 
 }
