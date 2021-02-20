@@ -85,12 +85,9 @@ struct HistoryView: View {
                     row.rowView()
                 }
                 
+                // TODO: these are strange in .sum mode
                 bufferView(showBuffers: showHistoryBuffer)
                 
-//                if !history.undoBuffer.isEmpty {
-//                    bufferDifference.rowView()
-//                        .foregroundColor(.pointbuffer)
-//                }
             }
             .asGrid(columns: playerNames.count)
 
@@ -112,9 +109,6 @@ struct HistoryView: View {
                 row.rowView()
             }
             .opacity(0.3)
-            
-//            bufferHighestRow.rowView()
-//                .foregroundColor(.red)
         }
     }
     
