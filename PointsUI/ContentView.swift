@@ -155,7 +155,7 @@ struct ContentView: View {
     @GestureState var modifyHistory = HistoryControl()
     
     var dragHistoryGesture : some Gesture {
-        DragGesture(minimumDistance: 60)
+        DragGesture(minimumDistance: 100)
 
             .updating($modifyHistory) { value, historyControl, _ in
                 

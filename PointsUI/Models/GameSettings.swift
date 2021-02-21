@@ -363,10 +363,12 @@ class GameSettings: ObservableObject {
         updatePlayers() // ignore buffer
     }
     
-    func updateHistory() {
-        /// we have the history states where we want them, just have to erase the player's buffers of set the last state as the current one
+    /// call this when you want to delete the redo-stack
+    public func updateHistory() {
+        /// we have the history states where we want them, just have to erase the  buffers of set the last state as the current one
         cancelTimers()
         history.save() // update history, throw buffer away
+        history.clearBuffer()
         updatePlayers()
     }
 

@@ -109,7 +109,7 @@ struct HistoryView: View {
     
     @ViewBuilder func bufferView(showBuffers: Bool) -> some View {
         if showHistoryBuffer {
-            ForEach(rowsInBuffer.reversed()) { row in
+            ForEach(bufferTable.totals.reversed()) { row in
                 row.rowView()
             }
             .opacity(0.3)
