@@ -137,12 +137,12 @@ struct ContentView: View {
             if steps < valueSteps {
                 if settings!.history.canUndo {
                     steps = valueSteps
-                    settings!.previewUndoHistory()
+                    settings?.undoHistory()
                 }
             } else if steps > valueSteps {
                 if settings!.history.canRedo {
                     steps = valueSteps
-                    settings!.previewRedoHistory()
+                    settings?.redoHistory()
                 }
             }
         }

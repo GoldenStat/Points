@@ -258,8 +258,8 @@ class GameSettings: ObservableObject {
     }
         
     // MARK: - Timers
-    private var registerPointsTimer : Timer?
-    private var registerRoundTimer : Timer?
+    @Published private var registerPointsTimer : Timer?
+    @Published private var registerRoundTimer : Timer?
 
     public var timeIntervalToCountPoints: TimeInterval { updateSpeed.double }
     public var timeIntervalToCountRound: TimeInterval { updateSpeed.double }
@@ -268,7 +268,6 @@ class GameSettings: ObservableObject {
     public var timerRoundStarted : Bool { registerRoundTimer != nil }
     
     func timer(interval: TimeInterval, selector: Selector) -> Timer {
-        objectWillChange.send()
         return Timer.scheduledTimer(timeInterval: interval,
                                      target: self,
                                      selector: selector,
@@ -320,7 +319,6 @@ class GameSettings: ObservableObject {
     ///
     /// 2. *updatePoints()*
     ///     1. players' *score*s are saved, adding their *buffer* to their *value*,
-    ///     <2. this new *GameState*'s Data is appended to the history's *buffer* queue>
     ///     3. we check if a player has won
     ///     4. the timer for *updatePoints()* is invalidated and the pointer set to nil
     ///     5. the *pointBuffer* - used for drag'n drop operations is set to nil
@@ -330,12 +328,12 @@ class GameSettings: ObservableObject {
         // when the timer fires, players need to be updated, and history buffer updated...
         // add to bufferForHistory
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
-//        history.store(state: players.gameState) // overwrite history buffer
 
         // check if a player has won and handle the win
         checkPlayerWon()
         
-        stop(timer: &registerPointsTimer)
+        cancelTimers()
+
         pointBuffer = nil
         registerRoundTimer = timer(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
     }
@@ -347,14 +345,12 @@ class GameSettings: ObservableObject {
         history.save()
         cancelTimers()
     }
-    
-    
+        
     // needed for object update
     func undoHistory() {
         cancelTimers()
         history.undo()
         updatePlayers() // ignore buffer
-        startTimer()
     }
 
     func redoHistory() {
@@ -372,19 +368,6 @@ class GameSettings: ObservableObject {
         updatePlayers()
     }
 
-    /// preview number of steps backward / forward as oppose to simple undo()/redo()
-    func previewUndoHistory() {
-        /// as opposed to undoHistory, we shouldn't set the isBuffered
-        cancelTimers()
-        history.undo()
-        updatePlayers()
-    }
-    
-    func previewRedoHistory() {
-        cancelTimers()
-        history.redo()
-        updatePlayers()
-    }
     
     /// updates Players to current history state
     /// calculates the difference of buffer and score, if buffer is given (assumes that buffer is in a 'later' state)
