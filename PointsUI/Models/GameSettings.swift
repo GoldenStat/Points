@@ -286,7 +286,7 @@ class GameSettings: ObservableObject {
         registerPointsTimer = timer(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
     }
     
-    // overwrite history in save buffer with player's points totals
+    /// overwrite history in save buffer with player's points totals
     func storeInHistory() {
         history.store(state: players.totals)
         updatePlayers()
@@ -317,24 +317,20 @@ class GameSettings: ObservableObject {
     /// start of a countdown, after the trigger action.
     /// points are added to the player's buffer and *updatePoints()* is started when we touch a *PlayerView()*
     ///
-    /// 2. *updatePoints()*
-    ///     1. players' *score*s are saved, adding their *buffer* to their *value*,
-    ///     3. we check if a player has won
-    ///     4. the timer for *updatePoints()* is invalidated and the pointer set to nil
-    ///     5. the *pointBuffer* - used for drag'n drop operations is set to nil
-    ///     6. start the *updatePoints()* timer
+    /// 1. cancel Timers
+    /// 2. players' *score*s are saved, adding their *buffer* to their *value*,
+    /// 3. we check if a player has won
+    /// 4. start the *updatePoints()* timer
     ///
     @objc private func updatePoints() {
-        // when the timer fires, players need to be updated, and history buffer updated...
-        // add to bufferForHistory
+
+        cancelTimers()
+
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
 
         // check if a player has won and handle the win
         checkPlayerWon()
-        
-        cancelTimers()
 
-        pointBuffer = nil
         registerRoundTimer = timer(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
     }
             

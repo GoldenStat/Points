@@ -37,18 +37,27 @@ struct Score: Codable, Equatable {
         self.buffer = buffer
     }
 
-    // add buffer to value if final value is below game total
-    // clear buffer
+    /// add buffer to value if final value is below game total
+    /// clear buffer
     mutating func save() {
         value = min(sum,maxPoints)
         buffer = 0
     }
     
+    /// add given points to the buffer, but don't superate buffer of maxPoints per game
     mutating func add(points: Int = 1) {
         buffer += points
         buffer = min(maxPoints,buffer)
     }
     
+    /// overwrites buffer
+    mutating func store(points: Int = 0) {
+        buffer = min(maxPoints, points)
+    }
+    
+    /// reset the value to a new value
+    /// value can be nil to ignore the value
+    /// buffer is set to 0
     mutating func reset(_ newValue: Int? = nil) {
         if let newValue = newValue {
             value = newValue

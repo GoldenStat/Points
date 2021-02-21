@@ -29,10 +29,15 @@ class Player: ObservableObject, Identifiable, Equatable {
         
     var description : String { "\(name): (\(score.value)/\(score.buffer))" }
     
+    // add points to the buffer
     func add(score newScore: Int) {
         score.add(points: newScore)
     }
     
+    func store(score newScore: Int) {
+        score.store(points: newScore)
+    }
+
     // MARK: initializers and converters
     
     init(from data: Data) {

@@ -91,6 +91,7 @@
 		4139A3F625239133006E713B /* SelectionScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionScoreView.swift; sourceTree = "<group>"; };
 		41442D6425CC586300515899 /* GeoEffectTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoEffectTest.swift; sourceTree = "<group>"; };
 		414CC4C62569C62E00B5C10D /* EdgeShapeSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EdgeShapeSamples.swift; path = PointsUI/Views/TestViews/EdgeShapeSamples.swift; sourceTree = SOURCE_ROOT; };
+		415ED59A25E2F7360063D8C0 /* PointsUI copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PointsUI copy-Info.plist"; path = "/Users/de152951/Library/Mobile Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI copy-Info.plist"; sourceTree = "<absolute>"; };
 		41648E63258D1E340070FB42 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBar.swift; path = PointsUI/MenuBar.swift; sourceTree = SOURCE_ROOT; };
 		41648E6B258FE5560070FB42 /* HistoryControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryControlView.swift; path = PointsUI/Views/TestViews/HistoryControlView.swift; sourceTree = SOURCE_ROOT; };
 		4168CE2424AF922000DACD62 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
@@ -239,6 +240,7 @@
 		4180CC9C25C84EA5009B0A42 /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
+				4135AE8725DE9C4500EF61FF /* GridTests.swift */,
 				41648E6B258FE5560070FB42 /* HistoryControlView.swift */,
 				41ABA24925C468FC0074A862 /* DebugView.swift */,
 				41E709D5257B0F4000DC959E /* CoordinateSampleView.swift */,
@@ -262,10 +264,10 @@
 		41ED4F2B22AD799000A46C19 = {
 			isa = PBXGroup;
 			children = (
-				4135AE8725DE9C4500EF61FF /* GridTests.swift */,
 				411DF21B23607CD100A37C64 /* PointsUI */,
 				41C12BCD24CB1D460043EEE1 /* Frameworks */,
 				41ED4F3522AD799000A46C19 /* Products */,
+				415ED59A25E2F7360063D8C0 /* PointsUI copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

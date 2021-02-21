@@ -57,7 +57,11 @@ struct BoardUI: View {
                         if let string = reading as? String {
                             if let buffer = Int(string) {
                                 DispatchQueue.main.async {
-                                    player.add(score: buffer)
+                                    withAnimation(.easeInOut(duration: 2.0)) {
+                                        // overwrite what's in the buffer
+                                        player.store(score: buffer)
+                                        settings.storeInHistory()
+                                    }
                                     settings.startTimer()
                                 }
                             }
