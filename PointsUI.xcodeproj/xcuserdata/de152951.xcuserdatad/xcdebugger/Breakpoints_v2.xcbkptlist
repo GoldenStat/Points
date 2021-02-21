@@ -103,15 +103,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5FCE901A-9A23-4DA1-B522-434820014D1D"
-            shouldBeEnabled = "Yes"
+            uuid = "95720AD2-7976-4BEA-A101-FA21FE7AD19F"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PointsUI/Models/GameSettings.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "394"
-            endingLineNumber = "394"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
             landmarkName = "updatePlayers()"
             landmarkType = "7">
          </BreakpointContent>

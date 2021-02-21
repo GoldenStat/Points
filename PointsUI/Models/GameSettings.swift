@@ -229,7 +229,7 @@ class GameSettings: ObservableObject {
     
     /// check if a player won the game or all games, sets the win-variables, accordingly
     // TODO: refactor and change to enum for possible outcomes
-    func updateState() {
+    func checkPlayerWon() {
         playerWonRound = players.items.filter { $0.score.value >= maxPoints }.first
         playerWonGame = players.items.filter { $0.games >= maxGames }.first
     }
@@ -284,12 +284,18 @@ class GameSettings: ObservableObject {
     func startTimer() {
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         // if the round is already active, we already have registered some points and should undo that
-        if (registerRoundTimer != nil) {
-            // put last buffer into player's buffers
-            updatePlayers()
-            // restore Players according to last game state
-            
+        
+        if history.savePendingBuffer != nil {
+            // a save is pending, the difference between this state and last history's state should go into the player's buffers
+            history.add(state: GameState(buffer: players.items.map {$0.score.buffer}))
+//            players.saveScore() // move current buffer to value
+//            history.save() // moves savePending into state queue
+//            history.undo() // now move it to undoBuffer
+            updatePlayers() // puts undoBuffer into player's buffer
+            // move last undo to savePending
+            // remove last undo state?
         }
+        
         cancelTimers()
         registerPointsTimer = timer(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
     }
@@ -311,6 +317,7 @@ class GameSettings: ObservableObject {
     /// use this when you want to update points and start the countdown
     func startCountDown() {
         updatePoints()
+        objectWillChange.send()
     }
     
     /// start of a countdown, after the trigger action.
@@ -333,9 +340,15 @@ class GameSettings: ObservableObject {
         if let _ = history.savePendingBuffer {
             history.add(state: GameState(players: players.data))
         } else {
+            // players->scores ->> history.savePendingBuffer
             history.store(state: GameState(players: players.data))
         }
-        updateState()
+        // after modifying history states, update player scores
+//        updatePlayers()
+
+        // check if a player has won and handle the win
+        checkPlayerWon()
+        
         stop(timer: &registerPointsTimer)
         pointBuffer = nil
         registerRoundTimer = timer(interval: timeIntervalToCountRound, selector:  #selector(registerRound))
