@@ -25,7 +25,15 @@ struct GameState : Codable, Hashable, Identifiable, Equatable {
     init(players: [Player.Data]) {
         scores = players.map { $0.score.value }
     }
-    
+
+    init(totals players: [Player.Data]) {
+        scores = players.map { $0.score.value + $0.score.buffer }
+    }
+
+    init(buffers players: [Player.Data]) {
+        scores = players.map { $0.score.buffer }
+    }
+
     /// initialize from an [Int]
     init(buffer: [Int]?) {
         scores = buffer ?? []

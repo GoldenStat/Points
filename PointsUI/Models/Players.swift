@@ -50,10 +50,9 @@ class Player: ObservableObject, Identifiable, Equatable {
         var score: Score
         var gamesWon: Int
         
-        // when initializing a player his score has no buffer
         init(name: String, score: Score = Score(0), games: Int = 0) {
             self.name = name
-            self.score = Score(score.value)
+            self.score = score
             self.gamesWon = games
         }
     }
@@ -112,6 +111,17 @@ class Players: ObservableObject {
         set { // updates the players with the given data
             items = newValue.map { Player(from: $0)}
         }
+    }
+    
+    var gameState: GameState { // as
+        get { GameState(players: data) }
+        set { setScores(to: newValue.scores) }
+    }
+    var totals: GameState {
+        get { GameState(totals: data) }
+    }
+    var buffers: GameState {
+        get { GameState(buffers: data) }
     }
     
     // MARK: update score for all players

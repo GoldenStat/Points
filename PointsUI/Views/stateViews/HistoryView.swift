@@ -87,7 +87,11 @@ struct HistoryView: View {
                 
                 // TODO: these are strange in .sum mode
                 bufferView(showBuffers: showHistoryBuffer)
-                
+                if let tempRow = history.savePendingBuffer {
+                    ScoreRowData(from: tempRow)
+                        .rowView()
+                        .opacity(0.5)
+                }
             }
             .asGrid(columns: playerNames.count)
 

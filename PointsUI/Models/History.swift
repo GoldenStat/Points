@@ -47,7 +47,25 @@ class History : ObservableObject {
             }
         }
     }
-        
+
+    /// what scores should our players get if we redo all steps (total scores - current game state)
+    public var tmpScores: [ Score ]? {
+        // subtracts first undoBuffer or last state pending from current state
+        if let total = savePendingBuffer?.scores {
+            if let values = currentGameState?.scores {
+                return zip(values, total - values).map { Score($0, buffer: $1) }
+            } else {
+                return total.map { Score(0,buffer: $0) }
+            }
+        } else {
+            if let values = currentGameState?.scores {
+                return values.map { Score($0) }
+            } else {
+                return nil
+            }
+        }
+    }
+
     /// the last state in our states stack reflects the current game state
     public var currentGameState: GameState? { states.last }
 

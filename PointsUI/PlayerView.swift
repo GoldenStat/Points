@@ -43,12 +43,16 @@ struct PlayerView: View {
                         score: player.score,
                         uiType: playerUI
                     )
+                    .animation(.default)
                 }
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
                 .onTapGesture(perform: {
                     withAnimation(.easeInOut(duration: 2.0)) {
+                        // add score for this player
                         player.add(score: currentRule.scoreStep.defaultValue)
+                        // modify current history buffer
+                        settings.storeInHistory()
                     }
                     settings.startTimer()
                 })

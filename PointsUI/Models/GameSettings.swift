@@ -283,21 +283,16 @@ class GameSettings: ObservableObject {
     
     func startTimer() {
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
-        // if the round is already active, we already have registered some points and should undo that
-        
-        if history.savePendingBuffer != nil {
-            // a save is pending, the difference between this state and last history's state should go into the player's buffers
-            history.add(state: GameState(buffer: players.items.map {$0.score.buffer}))
-//            players.saveScore() // move current buffer to value
-//            history.save() // moves savePending into state queue
-//            history.undo() // now move it to undoBuffer
-            updatePlayers() // puts undoBuffer into player's buffer
-            // move last undo to savePending
-            // remove last undo state?
-        }
-        
         cancelTimers()
         registerPointsTimer = timer(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
+    }
+    
+    // overwrite history in save buffer with player's points totals
+    func storeInHistory() {
+        history.store(state: players.totals)
+        updatePlayers()
+        players.objectWillChange.send()
+        objectWillChange.send()
     }
     
     /// control Timer from outside
@@ -325,7 +320,7 @@ class GameSettings: ObservableObject {
     ///
     /// 2. *updatePoints()*
     ///     1. players' *score*s are saved, adding their *buffer* to their *value*,
-    ///     2. this new *GameState*'s Data is appended to the history's *buffer* queue
+    ///     <2. this new *GameState*'s Data is appended to the history's *buffer* queue>
     ///     3. we check if a player has won
     ///     4. the timer for *updatePoints()* is invalidated and the pointer set to nil
     ///     5. the *pointBuffer* - used for drag'n drop operations is set to nil
@@ -335,16 +330,7 @@ class GameSettings: ObservableObject {
         // when the timer fires, players need to be updated, and history buffer updated...
         // add to bufferForHistory
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
-
-        // if there already is a buffer in history, add
-        if let _ = history.savePendingBuffer {
-            history.add(state: GameState(players: players.data))
-        } else {
-            // players->scores ->> history.savePendingBuffer
-            history.store(state: GameState(players: players.data))
-        }
-        // after modifying history states, update player scores
-//        updatePlayers()
+//        history.store(state: players.gameState) // overwrite history buffer
 
         // check if a player has won and handle the win
         checkPlayerWon()
