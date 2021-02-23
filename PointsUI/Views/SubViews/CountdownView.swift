@@ -34,7 +34,7 @@ struct CountDownArc: Shape {
 
 struct CountdownView: View {
     let totalTimeInterval: Double
-    var color: Color = .orange
+    var color: Color = .accentColor
     
     @State private var length: Double = 1.0
     var body: some View {
@@ -50,7 +50,7 @@ struct CountdownView: View {
 }
 
 struct ActiveCircleView: View {
-    var color: Color = .orange
+    var color: Color = .accentColor
     @State private var scaleFactor : CGFloat = 1.0
     @State private var opacity = 1.0
     var body: some View {

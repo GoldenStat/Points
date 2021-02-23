@@ -21,29 +21,29 @@ struct BoardUI: View {
         GridItem(.flexible())
     ] }
     
+    @State var lastOrientation = UIDevice.current.orientation
+    
     var body: some View {
         ZStack {
-            Color.invisible
             VStack {
-
-                if UIDevice.current.orientation.isLandscape {
-                    // in landscape we put all players in a row -- there must be enough space
-                    LazyHGrid(rows: vGridItems) {
+                if lastOrientation.isLandscape {
                         playerViews
-                    }
-                } else if UIDevice.current.orientation.isPortrait {
-                    // not landscape
+                            .asGrid(columns: objects)
+                            .frame(minHeight: 400, maxHeight: 400)
+                } else if lastOrientation.isPortrait {
                     // can't get it to work with LazyVGrid
-                    LazyVGrid(columns: vGridItems, alignment: .center, spacing: 0) {
                         playerViews
-                    }
-                } else {
-                    playerViews
-                        .asGrid(columns: 2)
+                            .asGrid(columns: 2)
                 }
             }
         }
-        .onRotate(perform: {_ in withAnimation() {settings.objectWillChange.send()}} )
+        .onRotate(perform: {
+                    orientation in
+            if orientation == .landscapeLeft || orientation == .landscapeRight || orientation == .portrait {
+                lastOrientation = orientation
+            }
+            withAnimation() { settings.objectWillChange.send() }
+        })
         .ignoresSafeArea(edges: .all)
     }
     

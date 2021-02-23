@@ -36,7 +36,6 @@ struct PlayerView: View {
                     score: player.score,
                     uiType: playerUI
                 )
-                .animation(.default)
                 .gesture(countScoreGesture)
             }
             .emphasizeShape(cornerRadius: cornerRadius)
@@ -62,12 +61,10 @@ struct PlayerView: View {
     private var countScoreGesture: some Gesture {
         TapGesture()
             .onEnded { _ in
-                withAnimation(.easeInOut(duration: 2.0)) {
-                    // add score for this player
-                    player.add(score: settings.scoreStep)
-                    // modify current history buffer
-                    settings.storeInHistory()
-                }
+                // add score for this player
+                player.add(score: settings.scoreStep)
+                // modify current history buffer
+                settings.storeInHistory()
                 settings.startTimer()
             }
     }

@@ -40,10 +40,11 @@ struct BoxesScoreView: View {
             ForEach(boxes) { box in
                 box
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(1, contentMode: .fill)
                     .padding(10)
+                    .frame(minWidth: 80, minHeight: 80)
             }
-        }        
+        }
     }
     
     // MARK: -- constants

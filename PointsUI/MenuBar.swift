@@ -112,9 +112,11 @@ fileprivate struct InfoMenuSymbol: View {
     var body: some View {
         if showCircleView {
             ActiveCircleView()
+                .blur(radius: 3.0)
                 .scaleEffect(circleScaleRatio)
         } else if showCountDownView {
             CountdownView(totalTimeInterval: countdown)
+                .blur(radius: 3.0)
                 .opacity(0.8)
                 .scaleEffect(circleScaleRatio)
         } else {

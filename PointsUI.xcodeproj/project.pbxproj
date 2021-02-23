@@ -171,10 +171,10 @@
 			isa = PBXGroup;
 			children = (
 				4139A3EE25238BF5006E713B /* ScoreRepresentationView.swift */,
-				4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */,
 				4139A3F125238EDC006E713B /* MatchesScoreView.swift */,
-				4139A3F625239133006E713B /* SelectionScoreView.swift */,
 				411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */,
+				4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */,
+				4139A3F625239133006E713B /* SelectionScoreView.swift */,
 				416E83E324F9843200609A87 /* ScoreHistoryView.swift */,
 			);
 			path = ScoreViews;
