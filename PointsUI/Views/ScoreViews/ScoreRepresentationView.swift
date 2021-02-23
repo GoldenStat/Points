@@ -21,7 +21,6 @@ struct ScoreRepresentationView: View {
                 .buffered(score: score)
                 .animation(.easeInOut(duration: .lineAnimationSpeed))
 
-
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
 

@@ -28,19 +28,22 @@ struct BoardUI: View {
 
                 if UIDevice.current.orientation.isLandscape {
                     // in landscape we put all players in a row -- there must be enough space
-                    HStack() {
+                    LazyHGrid(rows: vGridItems) {
                         playerViews
                     }
-                } else {
+                } else if UIDevice.current.orientation.isPortrait {
                     // not landscape
                     // can't get it to work with LazyVGrid
                     LazyVGrid(columns: vGridItems, alignment: .center, spacing: 0) {
                         playerViews
                     }
+                } else {
+                    playerViews
+                        .asGrid(columns: 2)
                 }
             }
         }
-        .onRotate(perform: {_ in print()})
+        .onRotate(perform: {_ in withAnimation() {settings.objectWillChange.send()}} )
         .ignoresSafeArea(edges: .all)
     }
     

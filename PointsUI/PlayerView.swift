@@ -18,38 +18,39 @@ struct PlayerView: View {
     @ObservedObject var player : Player
     
     var titleStyle : PlayerViewTitleStyle = .inline
-
+    
     private var currentRule : Rule { settings.rule }
     private var playerUI: PlayerUIType { currentRule.playerUI }
-        
+    
     var body: some View {
+        VStack() {
+            
+            playerName(titleStyle == .normal)
+                .padding(.horizontal)
+            
             VStack() {
+                Spacer()
+                    .frame(height: 40)
                 
-                playerName(titleStyle == .normal)
-                    .padding(.horizontal)
-                
-                VStack() {
-                    Spacer()
-                    
-                    ScoreRepresentationView(
-                        score: player.score,
-                        uiType: playerUI
-                    )
-                    .animation(.default)
-                    .gesture(countScoreGesture)
-                }
-                .emphasizeShape(cornerRadius: cornerRadius)
-                .padding()
-                .overlay(playerName(titleStyle == .inline))
+                ScoreRepresentationView(
+                    score: player.score,
+                    uiType: playerUI
+                )
+                .animation(.default)
+                .gesture(countScoreGesture)
             }
+            .emphasizeShape(cornerRadius: cornerRadius)
+            .padding()
+            .overlay(playerName(titleStyle == .inline))
+        }
     }
     
     @ViewBuilder func playerName(_ isVisible: Bool) -> some View {
         if isVisible {
             VStack {
-            PlayerHeadline(player: player)
-                .padding(.horizontal)
-                .zIndex(1)
+                PlayerHeadline(player: player)
+                    .padding(.horizontal)
+                    .zIndex(1)
                 Spacer()
             }
         } else {
@@ -70,7 +71,7 @@ struct PlayerView: View {
                 settings.startTimer()
             }
     }
-
+    
     // MARK: private variables
     private let cornerRadius : CGFloat = 12.0
     private let scoreBoardRatio: CGFloat = 3/4
@@ -85,7 +86,7 @@ struct PlayerHeadline: View {
     
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
-
+    
     /// marks a player as 'active' (e.g. he's the dealer)
     private var isActive: Bool { settings.activePlayer == player }
     
@@ -110,7 +111,9 @@ struct PlayerHeadline: View {
             }
             .textFieldStyle(PlayerNameTextField())
 
-            CounterView(counter: player.games)
+            .overlay(CounterView(counter: player.games)
+                        .padding(.horizontal)
+                     , alignment: .bottomTrailing)
         }
         .onTapGesture(count: 2) {
             withAnimation() {
@@ -122,13 +125,13 @@ struct PlayerHeadline: View {
 
 /// the counter for the games a player has won
 struct CounterView: View {
-
+    
     let counter: Int
-
+    
     var counterImage: some View {
         Image(systemName: "circle.fill")
             .font(.caption)
-            .foregroundColor(.pointbuffer)
+            .foregroundColor(.pointbuffer.opacity(0.6))
     }
     
     var body: some View {
@@ -208,7 +211,7 @@ extension View {
 
 struct DeviceRotationViewModifier: ViewModifier {
     let action: (UIDeviceOrientation) -> Void
-
+    
     func body(content: Content) -> some View {
         content
             .onAppear()
@@ -225,45 +228,10 @@ extension View {
 }
 
 
-// MARK: - preview & tests
-struct PlayerHeader_Preview: View {
-    @State var name: String = "Alexander"
-    @State var isEditing = false
-    
-    var body: some View {
-        Group{
-            if (isEditing) {
-                TextField(name, text: $name, onCommit: {
-                    isEditing = false
-                })
-                .padding(.top)
-            } else {
-                Text(name)
-                    .fontWeight(.bold)
-                    .playerHeadlineStyle()
-            }
-        }
-        .textFieldStyle(PlayerNameTextField())
-        .onTapGesture {
-            isEditing = true
-        }
-    }
-}
 
 struct PlayerUI_Previews: PreviewProvider {
-    static var player = Player(from: Player.Data(name: "Alexander", score: Score(21), games: 3))
-
-    static var names = ["Alexander", "Lili", "Opa", "Oma"]
     static var previews: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            ForEach(names, id: \.self) { name in
-                PlayerHeader_Preview(name: name)
-            }
-        }
-        .padding()
-        .background(Color.background)
-        .cornerRadius(15)
-        .scaleEffect(2)
-        .environmentObject(GameSettings())
+        BoardUI()
+            .environmentObject(GameSettings())
     }
 }
