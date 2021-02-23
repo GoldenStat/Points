@@ -25,18 +25,11 @@ struct PlayerView: View {
     var body: some View {
             VStack() {
                 
-                if titleStyle == .normal {
-                    PlayerHeadline(player: player)
-                        .padding(.horizontal)
-                }
+                playerName(titleStyle == .normal)
+                    .padding(.horizontal)
                 
                 VStack() {
-                    
-                    if titleStyle == .inline {
-                        PlayerHeadline(player: player)
-                            .padding(.horizontal)
-                            .zIndex(1)
-                    }
+                    Spacer()
                     
                     ScoreRepresentationView(
                         score: player.score,
@@ -47,7 +40,21 @@ struct PlayerView: View {
                 }
                 .emphasizeShape(cornerRadius: cornerRadius)
                 .padding()
+                .overlay(playerName(titleStyle == .inline))
             }
+    }
+    
+    @ViewBuilder func playerName(_ isVisible: Bool) -> some View {
+        if isVisible {
+            VStack {
+            PlayerHeadline(player: player)
+                .padding(.horizontal)
+                .zIndex(1)
+                Spacer()
+            }
+        } else {
+            EmptyView()
+        }
     }
     
     /// updates the player's score
@@ -93,20 +100,16 @@ struct PlayerHeadline: View {
                     TextField(player.name, text: $player.name, onCommit: {
                         settings.editingPlayer = nil
                     })
-                    .autocapitalization(.words)
-                    .padding(3)
-                    .disableAutocorrection(true)
-                    .keyboardType(.alphabet)
-                    .background(Color.white.opacity(0.5)
-                                    .cornerRadius(12))
-                    .scaleEffect(1.1)
+                    .padding(.top)
                 } else {
                     Text(player.name)
+                        .fontWeight(.bold)
+                        .playerHeadlineStyle()
+                    
                 }
             }
-            .font(.largeTitle)
-            .fixedSize()
-            
+            .textFieldStyle(PlayerNameTextField())
+
             CounterView(counter: player.games)
         }
         .onTapGesture(count: 2) {
@@ -129,12 +132,66 @@ struct CounterView: View {
     }
     
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 5) {
             Spacer()
             ForEach(0..<counter, id: \.self) { num in
                 counterImage
             }
         }
+    }
+}
+
+
+// MARK: - text view modifiers
+// taken from https://thehappyprogrammer.com/custom-textfield-in-swiftui/
+
+extension Color {
+    static let lightShadow = Color(red: 255 / 255, green: 255 / 255, blue: 255 / 255)
+    static let darkShadow = Color(red: 163 / 255, green: 177 / 255, blue: 198 / 255)
+    static let neumorphictextColor = Color(red: 132 / 255, green: 132 / 255, blue: 132 / 255)
+}
+
+struct PlayerNameModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .fixedSize()
+            .padding()
+    }
+}
+
+struct NeumorphicModifier: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal)
+            .background(Color.white.opacity(0.2))
+            .cornerRadius(6)
+            .shadow(color: Color.darkShadow, radius: 3, x: 2, y: 2)
+            .shadow(color: Color.lightShadow, radius: 3, x: -2, y: -2)
+    }
+}
+
+extension View {
+    func neumorphic() -> some View {
+        self
+            .modifier(NeumorphicModifier())
+    }
+    func playerHeadlineStyle() -> some View {
+        self
+            .modifier(PlayerNameModifier())
+    }
+}
+
+struct PlayerNameTextField: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .autocapitalization(.words)
+            .disableAutocorrection(true)
+            .keyboardType(.alphabet)
+            .font(.largeTitle)
+            .fixedSize()
+            .neumorphic()
     }
 }
 
@@ -168,18 +225,45 @@ extension View {
 }
 
 
-// MARK: - preview
+// MARK: - preview & tests
+struct PlayerHeader_Preview: View {
+    @State var name: String = "Alexander"
+    @State var isEditing = false
+    
+    var body: some View {
+        Group{
+            if (isEditing) {
+                TextField(name, text: $name, onCommit: {
+                    isEditing = false
+                })
+                .padding(.top)
+            } else {
+                Text(name)
+                    .fontWeight(.bold)
+                    .playerHeadlineStyle()
+            }
+        }
+        .textFieldStyle(PlayerNameTextField())
+        .onTapGesture {
+            isEditing = true
+        }
+    }
+}
 
 struct PlayerUI_Previews: PreviewProvider {
     static var player = Player(from: Player.Data(name: "Alexander", score: Score(21), games: 3))
-    static var settings = GameSettings()
-    
+
+    static var names = ["Alexander", "Lili", "Opa", "Oma"]
     static var previews: some View {
-        VStack {
-            PlayerView(player: player)
-            PlayerView(player: player)
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(names, id: \.self) { name in
+                PlayerHeader_Preview(name: name)
+            }
         }
-        .aspectRatio(0.3, contentMode: .fit)
-        .environmentObject(settings)
+        .padding()
+        .background(Color.background)
+        .cornerRadius(15)
+        .scaleEffect(2)
+        .environmentObject(GameSettings())
     }
 }

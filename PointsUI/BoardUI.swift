@@ -40,6 +40,7 @@ struct BoardUI: View {
                 }
             }
         }
+        .onRotate(perform: {_ in print()})
         .ignoresSafeArea(edges: .all)
     }
     
