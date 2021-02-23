@@ -25,9 +25,7 @@ class GameSettings: ObservableObject {
     
     @Published var pointBuffer: Int?
     
-    @Published var rule: Rule {
-        didSet { processRuleUpdate() }
-    }
+    @Published var rule: Rule { didSet { processRuleUpdate() } }
         
     /// players that can be chosen. Will be set by rules
     var availablePlayers : [Int] = []
@@ -132,7 +130,7 @@ class GameSettings: ObservableObject {
     }
         
     var possibleRules = [Rule]()
-
+    
     /// a value to be added to player's scores in interface
     @Published var scoreStep: Int = 1
     
@@ -212,13 +210,13 @@ class GameSettings: ObservableObject {
     }
 
     /// checks the current rules if they have flexible player amounts
-    var canAddPlayers: Bool { players.count < rule.players.maxValue }
+    var canAddPlayer: Bool { players.count < rule.players.maxValue }
     
     /// checks the current rules if they have flexible player amounts
     var canRemovePlayer: Bool { players.count > rule.players.minValue }
     
     func addRandomPlayer() {
-        guard canAddPlayers else { return }
+        guard canAddPlayer else { return }
         players.add(name: "Player \(players.count + 1)")
         resetPlayers() // set all counts to zerio
         objectWillChange.send()

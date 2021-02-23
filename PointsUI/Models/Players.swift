@@ -33,7 +33,7 @@ class Player: ObservableObject, Identifiable, Equatable {
     func add(score newScore: Int) {
         score.add(points: newScore)
     }
-    
+        
     func store(score newScore: Int) {
         score.store(points: newScore)
     }
@@ -76,7 +76,11 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     @Published var items : [Player] = []
-    
+
+    func deleteItems(at offsets: IndexSet) {
+        items.remove(atOffsets: offsets)
+    }
+
     var count: Int { items.count }
     
     static var sample = Players(names: ["Alexander", "Lili"])

@@ -26,10 +26,16 @@ struct EditableTextField: View {
             
             if let placeholder = placeholder {
                 TextField(placeholder, text: $binding)
+                    .disableAutocorrection(true)
                     .padding(5)
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
             } else {
-                Text(binding)
+                // hack to have the whole width detecting the touch
+                Rectangle().fill(Color.white.opacity(0.001))
+                    .overlay(
+                        Text(binding),
+                        alignment: .leading
+                    )
             }
         }
         .padding(5)
@@ -95,7 +101,7 @@ struct TestEditing: View {
     
     var errorOpacity: Double { error == "" ? 0.0 : 1.0 }
     
-    var canAddPlayer : Bool { settings.canAddPlayers }
+    var canAddPlayer : Bool { settings.canAddPlayer }
     var canRemovePlayer: Bool { settings.canRemovePlayer }
     
     var body: some View {
@@ -124,7 +130,7 @@ struct TestEditing: View {
                             Image(systemName: "plus.circle")
                                 .font(.system(size: 32))
                         }
-                        .disabled(!settings.canAddPlayers)
+                        .disabled(!settings.canAddPlayer)
                         
                         Button() {
                             withAnimation() {
