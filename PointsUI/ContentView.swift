@@ -73,6 +73,7 @@ struct ContentView: View {
             .onTapGesture() {
                 withAnimation() {
                     showHistory = false
+                    settings.editingPlayer = nil
                 }
             }
             .gesture(dragHistoryGesture)

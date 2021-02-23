@@ -204,6 +204,8 @@ struct Rule : Identifiable, Hashable {
     var maxPlayers: Int { players.maxValue }
     var scoreStep: ScoreStep = .one(1)
     
+    static let defaultRule : Rule = .trucoVenezolano
+    
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([24,30]),
                                      players: .selection([2,3]),

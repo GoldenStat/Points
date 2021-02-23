@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-
 struct SettingsView : View {
     @EnvironmentObject var settings: GameSettings
     @Environment(\.presentationMode) var isPresented

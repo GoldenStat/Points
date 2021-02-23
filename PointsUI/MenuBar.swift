@@ -57,7 +57,7 @@ struct MenuBar : View {
 
 // MARK: - subviews
 
-/// shows the scoresteps if they are configurable
+/// shows the scoresteps if they are configurable, just the values, if not
 struct ScoreRulePicker: View {
     @EnvironmentObject var settings: GameSettings
 

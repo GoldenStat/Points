@@ -10,27 +10,126 @@ import Foundation
 
 class GameSettings: ObservableObject {
     
+    /// the player objects store all current data
+    /// reset history when this is reset
     @Published var players : Players { didSet { history.reset() }}
+    
+    /// one player is active at a time - e.g. dealing
     @Published var activePlayer: Player?
+    
+    /// only one Player can be 'modified' at a time - use for name change
+    @Published var editingPlayer: Player?
+    
+    /// all game states so far
     @Published var history : History
+    
+    /// after these many games the game is over and a winning animation is shon
     @Published var maxGames: Int
+    // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
+    var maxGamesString: String {
+        get { String(maxGames) }
+        set { maxGames = Int(newValue) ?? GlobalSettings.maxGames }
+    }
+    
+    /// the amount you need to win a game
     @Published var maxPoints: Int
+    var maxPointsString: String {
+        get { String(maxPoints) }
+        set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
+    }
+
+    /// set this if a player has reached max points
     @Published var playerWonRound: Player?
+    
+    /// set this if a player has reached max games
     @Published var playerWonGame: Player?
+    
+    /// how fast should do you have to type points to count for a round
     @Published var updateSpeed: UpdateTimes = UpdateTimes(value: GlobalSettings.updateTimeInterval) {
         didSet {
             GlobalSettings.updateTimeInterval = updateSpeed.double
         }
     }
     
+    /// used to drag'n drop points around
     @Published var pointBuffer: Int?
-    
+
+    /// the rules of the game - determines player interface, possible score steps, maxpoints
     @Published var rule: Rule { didSet { processRuleUpdate() } }
         
     /// players that can be chosen. Will be set by rules
     var availablePlayers : [Int] = []
 
-    /// assigns new values from the rules to the settings
+    /// how many players are actually playing
+    /// modifies the players object
+    // NOTE: can be refactored if it is not used anywhere else (cleanup stage)
+    @Published var chosenNumberOfPlayers : Int {
+        didSet {
+            handlePlayerChange(to: chosenNumberOfPlayers)
+        }
+    }
+
+    // MARK: - setup
+    
+    /// reset the settings to get a defined default
+    func resetToFactorySettings() {
+        activePlayer = nil
+        players = Players.sample
+        chosenNumberOfPlayers = players.names.count
+        history = History()
+        maxPoints = 0
+        maxGames = 2
+        rule = .maumau
+        createRules()
+    }
+    
+    init() {
+        chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
+        players = Players(names: GlobalSettings.playerNames)
+        history = History()
+        maxPoints = GlobalSettings.scorePerGame
+        maxGames = GlobalSettings.maxGames
+        rule = Rule.defaultRule // needs to be set to enable calling methods
+        setupRules()
+    }
+    
+    /// update stored glogal - TODO: chek if obsolete
+    func updateSettings() {
+        // if number of players changed, restart the game
+        GlobalSettings.playerNames = players.names
+        GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
+        GlobalSettings.scorePerGame = maxPoints
+        GlobalSettings.maxGames = maxGames
+        GlobalSettings.updateTimeInterval = updateSpeed.double
+        GlobalSettings.ruleID = rule.id
+    }
+
+    // setup something for testing
+    fileprivate func setupHistoryTests() {
+        var scores: [Int] = .init(repeating: 0, count: numberOfPlayers)
+        
+        for _ in 1 ... 10 {
+            scores[0] += Int.random(in: (1 ... 3)) * 10
+            history.add(state: GameState(buffer: scores))
+            history.save()
+        }
+        updatePlayers()
+    }
+    
+    // MARK: - rules
+    func setupRules() {
+        createRules()
+        rule = rule(id: GlobalSettings.ruleID)
+        processRuleUpdate()
+    }
+
+    /// returns the rule with given ID or the default rule
+    func rule(id: Int) -> Rule {
+        possibleRules.first() { $0.id == id } ?? Rule.defaultRule
+    }
+
+    /// when rules change, several values have to be re-read
+    ///
     /// should be called whenever the rules change (the game changed)
     private func processRuleUpdate() {
         switch rule.maxPoints {
@@ -61,74 +160,7 @@ class GameSettings: ObservableObject {
         
         scoreStep = rule.scoreStep.defaultValue
     }
-    
-    @Published var chosenNumberOfPlayers : Int {
-        didSet {
-            handlePlayerChange(to: chosenNumberOfPlayers)
-        }
-    }
-
-    /// reset the settings to get a defined default
-    func resetToFactorySettings() {
-        activePlayer = nil
-        players = Players.sample
-        chosenNumberOfPlayers = players.names.count
-        history = History()
-        maxPoints = 0
-        maxGames = 2
-        rule = .maumau
-        createRules()
-    }
-    
-    init() {
-        chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
-        players = Players(names: GlobalSettings.playerNames)
-        history = History()
-        maxPoints = GlobalSettings.scorePerGame
-        maxGames = GlobalSettings.maxGames
-        rule = .doppelkopf // needs to be set to enable calling methods
-        setupRules()
-    }
-    
-    // setup something for testing
-    fileprivate func setupHistoryTests() {
-        var scores: [Int] = .init(repeating: 0, count: numberOfPlayers)
-        
-        for _ in 1 ... 10 {
-            scores[0] += Int.random(in: (1 ... 3)) * 10
-            history.add(state: GameState(buffer: scores))
-            history.save()
-        }
-        updatePlayers()
-    }
-    
-    func setupRules() {
-        createRules()
-        rule = rule(id: GlobalSettings.ruleID)
-        processRuleUpdate()
-    }
-    
-    func rule(id: Int) -> Rule {
-        let defaultRule = possibleRules.randomElement()
-        for rule in possibleRules {
-            if rule.id == id {
-                return rule
-            }
-        }
-        return defaultRule!
-    }
-    
-    // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
-    var maxGamesString: String {
-        get { String(maxGames) }
-        set { maxGames = Int(newValue) ?? GlobalSettings.maxGames }
-    }
-    
-    var maxPointsString: String {
-        get { String(maxPoints) }
-        set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
-    }
-        
+            
     var possibleRules = [Rule]()
     
     /// a value to be added to player's scores in interface
@@ -147,16 +179,6 @@ class GameSettings: ObservableObject {
     
     func addRule(_ rule: Rule) {
         possibleRules.append(rule)
-    }
-                
-    func updateSettings() {
-        // if number of players changed, restart the game
-        GlobalSettings.playerNames = players.names
-        GlobalSettings.chosenNumberOfPlayers = chosenNumberOfPlayers
-        GlobalSettings.scorePerGame = maxPoints
-        GlobalSettings.maxGames = maxGames
-        GlobalSettings.updateTimeInterval = updateSpeed.double
-        GlobalSettings.ruleID = rule.id        
     }
         
     // MARK: - control player data
@@ -253,13 +275,7 @@ class GameSettings: ObservableObject {
         playerWonRound = nil
         playerWonGame = nil
     }
-    
-    /// clears all players buffers (used for undo)
-    /// returns true if a buffer was cleared
-    private func clearBuffers() -> Bool {
-        return players.clearBuffers()
-    }
-        
+            
     // MARK: - Timers
     @Published private var registerPointsTimer : Timer?
     @Published private var registerRoundTimer : Timer?
@@ -278,27 +294,20 @@ class GameSettings: ObservableObject {
                                      repeats: false)
     }
     
+    /// invalidates timer and sets it to nil
     func stop(timer: inout Timer?) {
         timer?.invalidate()
         timer = nil
     }
     
+    /// stops timers and starts the registerPointsTimer
     func startTimer() {
         /// starts two timers: one to register the points and one that counts the points as rounds in the background
         cancelTimers()
         registerPointsTimer = timer(interval: timeIntervalToCountPoints, selector: #selector(updatePoints))
     }
     
-    /// overwrite history in save buffer with player's points totals
-    func storeInHistory() {
-        history.store(state: players.totals)
-        updatePlayers()
-        players.objectWillChange.send()
-        objectWillChange.send()
-    }
-    
-    /// control Timer from outside
-    /// invalidates it
+    /// stops all timers
     func cancelTimers() {
         stop(timer: &registerPointsTimer)
         stop(timer: &registerRoundTimer)
@@ -344,6 +353,15 @@ class GameSettings: ObservableObject {
         history.save()
         cancelTimers()
     }
+    
+    // MARK: - history functions
+    /// overwrite history in save buffer with player's points totals
+    func storeInHistory() {
+        history.store(state: players.totals)
+        updatePlayers()
+        players.objectWillChange.send()
+        objectWillChange.send()
+    }
         
     // needed for object update
     func undoHistory() {
@@ -366,7 +384,6 @@ class GameSettings: ObservableObject {
         history.clearBuffer()
         updatePlayers()
     }
-
     
     /// updates Players to current history state
     /// calculates the difference of buffer and score, if buffer is given (assumes that buffer is in a 'later' state)

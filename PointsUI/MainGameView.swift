@@ -24,7 +24,6 @@ struct MainGameView: View {
             // MARK: Board
             BoardUI()
                 .padding(.horizontal)
-//                .drawingGroup()
                 .environmentObject(settings)
             
             // MARK: Won Round

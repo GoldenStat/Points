@@ -18,6 +18,31 @@ extension Int : StringExpressable {
     var description: String { "\(self)" }
 }
 
+// to select score steps
+struct ScorePicker : View {
+    @EnvironmentObject var settings: GameSettings
+
+    var sections: [String:[Int]] = ["Empty":[]]
+    
+    var keys: [String] { sections.keys.sorted() }
+    
+    var body : some View {
+        ScalingTextView("\(settings.scoreStep)", scale: 0.5)
+            .frame(width: 60, height: 40)
+            .contextMenu() {
+                ForEach(keys, id: \.self) { sectionName in
+                    Section(header: Text(sectionName)) {
+                        ForEach(sections[sectionName]!, id: \.self) { value in
+                            Button("\(value)") {
+                                settings.scoreStep = value
+                            }
+                        }
+                    }
+                }
+            }
+    }
+}
+
 struct PointsUIPickerBuilder<Value: StringExpressable>: View where Value: Hashable {
     var title: String
     var binding: Binding<Value>

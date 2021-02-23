@@ -8,36 +8,43 @@
 
 import SwiftUI
 
+/// for use in a List context where you want a Text that can be activated to a Text Field
+///
+/// if a placeholder is given, show a Textfield
+/// if not, show just a Text
 struct EditableTextField: View {
     @Binding var binding: String
     let placeholder: String?
-    var index: Int?
     
     var body: some View {
-        HStack {
+        if let placeholder = placeholder {
+            TextField(placeholder, text: $binding)
+                .disableAutocorrection(true)
+                .padding(5)
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
+        } else {
+            // hack to have the whole width detecting the touch
+            Rectangle().fill(Color.white.opacity(0.001))
+                .overlay(
+                    Text(binding),
+                    alignment: .leading
+                )
             
-            Image(systemName: "person").foregroundColor(.gray)
-            
-            if let index = index {
-                Text("\(index)")
-                    .scaleEffect(0.6)
-                    .padding(.horizontal)
-            }
-            
-            if let placeholder = placeholder {
-                TextField(placeholder, text: $binding)
-                    .disableAutocorrection(true)
-                    .padding(5)
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
-            } else {
-                // hack to have the whole width detecting the touch
-                Rectangle().fill(Color.white.opacity(0.001))
-                    .overlay(
-                        Text(binding),
-                        alignment: .leading
-                    )
-            }
         }
+    }
+}
+
+/// adds a "person" system image to an EditableTextField
+struct EditableTextFieldWithImage: View {
+    @Binding var binding: String
+    let placeholder: String?
+    
+    var body: some View {
+        Label(
+            title: { EditableTextField(binding: $binding,
+                                       placeholder: placeholder) },
+            icon: { Image(systemName: "person").foregroundColor(.gray) }
+        )
         .padding(5)
     }
 }
@@ -64,7 +71,7 @@ struct EditPlayerNames: View {
     
     var body: some View {
         List(players.items) { player in
-            EditableTextField(binding: binding(for: player), placeholder: placeholder(for: player))
+            EditableTextFieldWithImage(binding: binding(for: player), placeholder: placeholder(for: player))
                 .onTapGesture() {
                     selectedPlayer = player
                 }
