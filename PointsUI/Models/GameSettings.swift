@@ -60,6 +60,8 @@ class GameSettings: ObservableObject {
                     }
                 }
         }
+        
+        scoreStep = rule.scoreStep.defaultValue
     }
     
     @Published var chosenNumberOfPlayers : Int {
@@ -130,6 +132,9 @@ class GameSettings: ObservableObject {
     }
         
     var possibleRules = [Rule]()
+
+    /// a value to be added to player's scores in interface
+    @Published var scoreStep: Int = 1
     
     func createRules() {
         addRule(.trucoArgentino)

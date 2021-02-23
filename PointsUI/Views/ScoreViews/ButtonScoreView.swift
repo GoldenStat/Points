@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+/// a text view that the text size to it's frame
 struct ScalingTextView: View {
     var text: String
     var scaleFactor : CGFloat // scale Factor relative to the view's frame

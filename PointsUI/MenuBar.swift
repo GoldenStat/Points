@@ -43,6 +43,9 @@ struct MenuBar : View {
 
                 Spacer()
                 
+                ScoreRulePicker()
+                    .padding(.horizontal, 20)
+                
                 InfoMenuSymbol(show: $showInfo)
                     .fontSized()
             }
@@ -53,6 +56,24 @@ struct MenuBar : View {
 }
 
 // MARK: - subviews
+
+/// shows the scoresteps if they are configurable
+struct ScoreRulePicker: View {
+    @EnvironmentObject var settings: GameSettings
+
+    var body: some View {
+        switch settings.rule.scoreStep {
+        case .namedMultiple(let dict):
+            // we get a dictionary, so we want a context-menu with all the values
+            ScorePicker(sections: dict)
+        case .some(_):
+            ScalingTextView("\(settings.scoreStep)", scale: 0.5)
+                .frame(width: 60, height: 40)
+        default:
+            EmptyView()
+        }
+    }
+}
 
 /// show the symbol in the left part of the menu
 /// history control: show
@@ -110,7 +131,6 @@ fileprivate struct InfoMenuSymbol: View {
 /// scale a view according to a given font
 extension View {
     func fontSized(_ font: Font = .largeTitle) -> some View {
-        
             Image(systemName: "circle")
                 .font(font)
                 .opacity(0.01)

@@ -91,11 +91,22 @@ struct PointsPicker: View {
     }
 }
 
+struct ScoreValuePicker: View {
+    @Binding var selectedValue: Int
+    @EnvironmentObject var settings: GameSettings
+    var set: [Int]
+
+    var body: some View {
+        PointsUIPickerBuilder<Int>(title: "Values", binding: $selectedValue, orderedSet: set)
+    }
+}
+
 struct JuegosPicker: View {
     @EnvironmentObject var settings: GameSettings
-     
+    var set: [Int] = [2,3,5]
+    
     var body: some View {
-        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: [2,3,5])
+        PointsUIPickerBuilder<Int>(title: "Juegos", binding: $settings.maxGames, orderedSet: set)
     }
 }
 

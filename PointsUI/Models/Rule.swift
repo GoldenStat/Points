@@ -13,6 +13,7 @@ protocol SelectableEnum: Hashable {
     var minValue: Int { get }
 }
 
+
 extension Int {
     static let highestGamePointsEverPossilbe = 1001
 }
@@ -81,6 +82,7 @@ enum PointsSelection: SelectableEnum {
             return 0
         }
     }
+    
 }
 
 /// the scores that can be added
@@ -94,9 +96,9 @@ enum ScoreStep : SelectableEnum {
     case one(Int),
          two(Int, Int),
          some([Int]),
-         multiple([Int],[Int])
-
-
+         multiple([Int],[Int]),
+         namedMultiple([String:[Int]])
+    
     var defaultValue: Int {
         switch self {
         case .one(let value):
@@ -107,6 +109,8 @@ enum ScoreStep : SelectableEnum {
             return values.max()!
         case .multiple(let flexible, let fixed):
             return [ flexible.max()!, fixed.max()! ].max()!
+        case .namedMultiple(let dict):
+            return dict.randomElement()!.value.min()!
         }
     }
     
@@ -121,6 +125,8 @@ enum ScoreStep : SelectableEnum {
             return values.max()!
         case .multiple(let flexible, let fixed):
             return [ flexible.max()!, fixed.max()! ].max()!
+        case .namedMultiple( let dict):
+            return dict[dict.keys.sorted().first!]!.max()!
         }
     }
     
@@ -134,8 +140,26 @@ enum ScoreStep : SelectableEnum {
             return values.min()!
         case .multiple(let flexible, let fixed):
             return [ flexible.min()!, fixed.min()! ].min()!
+        case .namedMultiple( let dict):
+            return dict[dict.keys.sorted().first!]!.min()!
         }
     }
+    
+    var allValues: [Int] {
+        switch self {
+        case .one(let value):
+            return [value]
+        case .two(let one, let two):
+            return [one, two]
+        case .some(let values):
+            return values
+        case .multiple(let flexible, let fixed):
+            return flexible + fixed
+        case .namedMultiple( let dict):
+            return dict.values.reduce([]) { $0 + $1 }
+        }
+    }
+
 }
 
 /// how many rounds should be counted
@@ -208,16 +232,18 @@ struct Rule : Identifiable, Hashable {
     static let skat = Rule(name: "Skat",
                            maxPoints: .free(501),
                            players: .fixed(3),
-                           playerUI: .selectionBox([9,10,11,12,23,24]), // selection with multiplier? keypad?
+                           playerUI: .numberBox,
                            rounds: .one,
-                           scoreStep: .multiple([9,10,11,12],[23,35,46])
+                           scoreStep: .namedMultiple(["Farben":[9,10,11,12],
+                                                      "Grand":[24,36],
+                                                      "Null":[23,35,46]])
     )
     static let shitzu = Rule(name: "Shitzu",
                              maxPoints: .fixed(1001),
                              players: .fixed(4),
-                             playerUI: .selectionBox([-25,5,10,25]), // keypad?
+                             playerUI: .selectionBox([-25,5,10,25]), // menu? - not used, at the moment
                              rounds: .wins([1,2,3]),
-                             scoreStep: .some([5,10,15,20,25,-25])
+                             scoreStep: .some([-5,-10,5,10])
     )
     static let romme = Rule(name: "Rommé",
                             maxPoints: .fixed(501),

@@ -9,16 +9,26 @@
 import SwiftUI
 
 struct SelectionScoreView: View {
+    @EnvironmentObject var settings: GameSettings
+    
     var score: Score = Score()
     var selection: [Int] = [-10,10]
     
     var body: some View {
-        Text("Selection Score View")
+        ButtonScoreView(score: score)
+            .contextMenu() {
+                ForEach(selection, id: \.self) { value in
+                    Button(value.description) {
+                        settings.scoreStep = value
+                    }
+                }
+            }
     }
 }
 
 struct SelectionScoreView_Previews: PreviewProvider {
     static var previews: some View {
         SelectionScoreView()
+            .environmentObject(GameSettings())
     }
 }

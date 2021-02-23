@@ -10,6 +10,7 @@ import SwiftUI
 
 /// a View that handles a score depending on the representation Type
 struct ScoreRepresentationView: View {
+    @EnvironmentObject var settings: GameSettings
     var score: Score
     var uiType: PlayerUIType
         
@@ -29,8 +30,9 @@ struct ScoreRepresentationView: View {
                 .padding()
                 .buffered(score: score)
             
-        case .selectionBox(let values):
-            SelectionScoreView(score: score, selection: values)
+        case .selectionBox(_):
+            let steps = settings.rule.scoreStep
+            SelectionScoreView(score: score, selection: steps.allValues)
         }
     }
 }

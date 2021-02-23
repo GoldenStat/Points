@@ -22,8 +22,10 @@ struct BoardUI: View {
     ] }
     
     var body: some View {
-            ZStack {
-                Color.invisible
+        ZStack {
+            Color.invisible
+            VStack {
+
                 if UIDevice.current.orientation.isLandscape {
                     // in landscape we put all players in a row -- there must be enough space
                     HStack() {
@@ -36,6 +38,7 @@ struct BoardUI: View {
                         playerViews
                     }
                 }
+            }
         }
         .ignoresSafeArea(edges: .all)
     }
@@ -70,6 +73,42 @@ struct BoardUI: View {
                     return true
                 }
         }
+    }
+}
+
+
+struct ScorePicker : View {
+    @EnvironmentObject var settings: GameSettings
+
+    var sections: [String:[Int]] = ["Empty":[]]
+    
+    var keys: [String] { sections.keys.sorted() }
+    
+    var body : some View {
+        ScalingTextView("\(settings.scoreStep)", scale: 0.5)
+            .frame(width: 60, height: 40)
+            .contextMenu() {
+                ForEach(keys, id: \.self) { sectionName in
+                    Section(header: Text(sectionName)) {
+                        ForEach(sections[sectionName]!, id: \.self) { value in
+                            Button("\(value)") {
+                                settings.scoreStep = value
+                            }
+                        }
+                    }
+                }
+//                } else {
+//                    ForEach(valueSets, id: \.self) { valueSet in
+//
+//                        ForEach(valueSet, id: \.self) { value in
+//                            Button("\(value)") {
+//                                settings.scoreStep = value
+//                            }
+//                        }
+//                    }
+//                    Divider()
+//            }
+            }
     }
 }
 

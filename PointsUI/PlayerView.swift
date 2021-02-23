@@ -50,7 +50,7 @@ struct PlayerView: View {
                 .onTapGesture(perform: {
                     withAnimation(.easeInOut(duration: 2.0)) {
                         // add score for this player
-                        player.add(score: currentRule.scoreStep.defaultValue)
+                        player.add(score: settings.scoreStep)
                         // modify current history buffer
                         settings.storeInHistory()
                     }
