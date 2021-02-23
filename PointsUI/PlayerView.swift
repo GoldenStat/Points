@@ -84,19 +84,22 @@ struct PlayerHeadline: View {
     
     /// the name is being edited - accessible from parent
     private var isEditing: Bool { settings.editingPlayer == player }
+    @State private var ignore = false
     
     var body: some View {
         VStack(spacing: 0) {
             Group{
                 if (isEditing) {
-                    TextField(player.name, text: $player.name)
-                        .padding(3)
-                        .background(Color.white.opacity(0.5)
-                                        .cornerRadius(12)
-                        )
-                        .disableAutocorrection(true)
-                        .keyboardType(.alphabet)
-                        .scaleEffect(1.1)
+                    TextField(player.name, text: $player.name, onCommit: {
+                        settings.editingPlayer = nil
+                    })
+                    .autocapitalization(.words)
+                    .padding(3)
+                    .disableAutocorrection(true)
+                    .keyboardType(.alphabet)
+                    .background(Color.white.opacity(0.5)
+                                    .cornerRadius(12))
+                    .scaleEffect(1.1)
                 } else {
                     Text(player.name)
                 }
