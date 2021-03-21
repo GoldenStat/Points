@@ -41,6 +41,9 @@ struct MatchesScoreView: View {
                 box
                     .animation(.easeInOut(duration: .lineAnimationSpeed))
                     .aspectRatio(ratio, contentMode: .fit)
+                    .frame(minHeight: 150,
+                           idealHeight: 200,
+                           maxHeight: 220)
             }
         }
     }

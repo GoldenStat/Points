@@ -187,7 +187,7 @@ enum GamesCount: Hashable {
 /// - *numberBox*: a number that counts up (like a button)
 /// - *selectionBox*: a number where you can select points - (tbd - could have a number array with points to select)
 /// - *matches*: like counting with matches, five lines are drawn vertically and a fifth horizontally (tbd)
-enum PlayerUIType : Hashable { case checkbox(Int), numberBox, selectionBox([Int]), matches }
+enum PlayerUIType : Hashable { case checkbox(Int), numberBox, selectionBox([Int]), matches, scrollBox }
 
 struct Rule : Identifiable, Hashable {
 
@@ -230,6 +230,13 @@ struct Rule : Identifiable, Hashable {
                                  playerUI: .numberBox,
                                  rounds: .one,
                                  scoreStep: .one(10)
+    )
+    static let domino = Rule(name: "Domino",
+                             maxPoints: .fixed(100),
+                             players: .selection([2,3,4]),
+                             playerUI: .scrollBox,
+                             rounds: .rounds([2,3,4,5]),
+                             scoreStep: .one(1)
     )
     static let skat = Rule(name: "Skat",
                            maxPoints: .free(501),

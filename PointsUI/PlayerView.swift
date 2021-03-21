@@ -108,9 +108,8 @@ struct PlayerHeadline: View {
             }
             .textFieldStyle(PlayerNameTextField())
 
-            .overlay(CounterView(counter: player.games)
-                        .padding(.horizontal)
-                     , alignment: .bottomTrailing)
+            CounterView(counter: player.games)
+                .padding(.horizontal)
         }
         .onTapGesture(count: 2) {
             withAnimation() {
@@ -128,7 +127,7 @@ struct CounterView: View {
     var counterImage: some View {
         Image(systemName: "circle.fill")
             .font(.caption)
-            .foregroundColor(.pointbuffer.opacity(0.6))
+            .foregroundColor(.pointbuffer.opacity(0.8))
     }
     
     var body: some View {
@@ -192,6 +191,7 @@ struct PlayerNameTextField: TextFieldStyle {
             .font(.largeTitle)
             .fixedSize()
             .neumorphic()
+            .frame(width: .infinity)
     }
 }
 

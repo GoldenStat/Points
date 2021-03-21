@@ -24,6 +24,9 @@ struct ScoreRepresentationView: View {
         case .numberBox: // add steps for the buttons?
             ButtonScoreView(score: score)
 
+        case .scrollBox: // add steps for the buttons?
+            ScrollScoreView(score: score)
+
         case .matches:
             MatchesScoreView(score: score)
                 .padding()
@@ -31,7 +34,8 @@ struct ScoreRepresentationView: View {
             
         case .selectionBox(_):
             let steps = settings.rule.scoreStep
-            SelectionScoreView(score: score, selection: steps.allValues)
+            SelectionScoreView(score: score,
+                               selection: steps.allValues)
         }
     }
 }
