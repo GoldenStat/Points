@@ -17,71 +17,93 @@ import SwiftUI
 /// new tap: register points
 
 struct ScrollScoreView: View {
+    
     @EnvironmentObject var settings: GameSettings
-    var score: Score
+    @EnvironmentObject var player: Player
+    
+    var score: Score { player.score }
     var step : Int { settings.rule.scoreStep.defaultValue }
-
-    let visibleSteps = 3
-    let minZoom = 0.3
-    let minOpacity = 0.2
-    let maxZoom = 1.8
     
-    let zoomingOpacity = 0.8
-    let bufferColor = Color.pointbuffer
-    
-    @State private var isSelectingScore = true
-
-    func registerPoints() {
-        isSelectingScore = false
+    private var isSelectingScore : Bool {
+        settings.timerPointsStarted && score.buffer != 0
     }
     
     var bufferDescription : String {
         score.buffer > 0 ? "+\(score.buffer)" : "\(score.buffer)"
     }
     
+    @State var scrollingSpeed: CGFloat = 100
     
     var body: some View {
-        if isSelectingScore {
-            scoreWheel
-                .frame(width: 200, height: 300)
-                .foregroundColor(.points)
-                .background(Color.background)
-                .overlay(ScalingTextView(bufferDescription)
-                            .foregroundColor(bufferColor)
-                            .scaleEffect(0.4)
-                            .offset(x: 120, y: -200))
-
-        } else {
-        ScalingTextView(score.value.description)
-            .foregroundColor(.points)
-            .background(Color.background)
-            .onTapGesture() {
-                withAnimation() {
-                    isSelectingScore.toggle()
-                }
+        Group {
+            if isSelectingScore {
+                scoreWheel
+                    .frame(width: 200)
+                    .overlay(ScalingTextView(bufferDescription)
+                                .foregroundColor(bufferColor)
+                                .scaleEffect(0.4)
+                                .offset(x: 30, y: -100))
+            } else {
+                ScalingTextView(score.value.description)
             }
         }
+        .onTapGesture {
+            withAnimation() {
+                player.saveScore() // sets the buffer to 0 -> isSelected = false
+            }
+        }
+        .foregroundColor(.points)
+        .background(Color.background)
+        .highPriorityGesture(moveGesture)
     }
-    
-    /// calculate a zoom factor for numbers further away from score
-    /// linear interpolation
-    func zoomFactor(for num: Int) -> CGFloat {
-        guard score.sum != minNum, score.sum != -maxNum else { return CGFloat(minZoom) }
-        let distFromScore = Double(abs(score.sum - num))
-
-        // 0 < distFactor < 1
-        let distFactor = distFromScore / Double(score.sum - minNum)
         
-        return CGFloat(minZoom * distFactor + maxZoom * ( 1 - distFactor ))
+    // MARK: - supporting views and gestures
+    
+    /// on Drag this function will be called
+    /// changes the buffer Value and starts the timer when movement ended
+    /// uses projection value
+    let steps : [CGFloat] = [100, 200, 300]
+
+    var stepLength: CGFloat {
+        guard let movement = movement else { return .zero }
+        return movement.translation.height
+    }
+    
+    @GestureState var movement: DragGesture.Value?
+
+    @State var count = 0
+    
+    var moveGesture : some Gesture {
+        DragGesture(minimumDistance: 10)
+            .updating($movement) { value, movement, transaction in
+                guard count < 5 else { return }
+                movement = value
+                // stepLength: movement in points
+                // three options : 1,5,10
+                if abs(stepLength) > steps[0] {
+                    withAnimation(.easeInOut(duration: 1.0)) {
+
+                    let direction = value.startLocation.y < value.location.y ? -1 : 1
+                    var value = 1
+                    if abs(stepLength) > steps[1] {
+                        value = 5
+                        if abs(stepLength) > steps[2] {
+                            value = 10
+                        }
+                    }
+                        player.score.add(points: direction * value)
+                    }
+                }
+                count += 1
+            }
+            .onEnded() { _ in
+                count = 0
+                settings.startTimer()
+            }
     }
 
-    /// all visible options during selection
-    /// NOTE: assuming stride (scoreStep) of 1!
-    var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
-    
-    var minNum : Int { score.sum - visibleSteps }
-    var maxNum : Int { score.sum + visibleSteps }
 
+    /// the current seletction is shown as kind of a picker, with numbers diminishing up or down
     var scoreWheel: some View {
         VStack(spacing: 10) {
             ForEach(scoreNumbers, id: \.self) { num in
@@ -90,13 +112,193 @@ struct ScrollScoreView: View {
             }
         }
     }
+
+    /// calculate a zoom factor for numbers further away from score
+    /// uses linear interpolation
+    func zoomFactor(for num: Int) -> CGFloat {
+        guard score.sum != minNum, score.sum != -maxNum else { return CGFloat(minZoom) }
+        let distFromScore = Double(abs(score.sum - num))
+        
+        // 0 < distFactor < 1
+        let distFactor = distFromScore / Double(score.sum - minNum)
+        
+        return CGFloat(minZoom * distFactor + maxZoom * ( 1 - distFactor ))
+    }
+    
+    /// all visible options during selection
+    /// NOTE: assuming stride (scoreStep) of 1!
+    var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
+    
+    var minNum : Int { score.sum - visibleSteps }
+    var maxNum : Int { score.sum + visibleSteps }
+        
+    // MARK: - constants
+    let visibleSteps = 3
+    let minZoom = 0.6
+    let minOpacity = 0.2
+    let maxZoom = 1.8
+    
+    let zoomingOpacity = 0.8
+    let bufferColor = Color.pointbuffer
 }
 
+struct ScoreWheel: View {
+    @Binding var score: Score
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.1)
 
+            VStack(spacing: 10) {
+                ForEach(scoreNumbers, id: \.self) { num in
+                    Text(num.description)
+                        .font(.title)
+                        .scaleEffect(zoomFactor(for: num))
+                }
+            }
+            
+            if let movement = movement {
+                Circle()
+                    .strokeBorder(Color.black)
+                    .background(Color.clear)
+                    .position(movement.startLocation)
+                    .frame(width: 20, height: 20)
+                                
+                Circle()
+                    .position(movement.location)
+                    .background(Color.clear)
+                    .frame(width: 20, height: 20)
+            }
+            
+            if stepLength != .zero {
+                HStack {
+                    Text("".appendingFormat("%d",stepLength))
+                    ZStack {
+                    Rectangle()
+                        .fill(barColor)
+                        .frame(width: 5, height: stepLength)
+                        .offset(x: 0, y: -stepLength / 2)
+                        // first marker at 0
+                    Rectangle()
+                        .frame(width: 10, height: 1)
+                        .offset(x: -2.5, y: -steps[0])
+                        // second marker at 50
+                    Rectangle()
+                        .frame(width: 10, height: 1)
+                        .offset(x: -2.5, y: -steps[1])
+                        // third marker at 100
+                    Rectangle()
+                        .frame(width: 10, height: 1)
+                        .offset(x: -2.5, y: -steps[2])
+                    }
+                }
+                .offset(x: 150)
+            }
+        }
+        .gesture(moveGesture)
+        .onTapGesture {
+            score.add(points: 1)
+        }
+        onTapGesture(count: 2) {
+            score.add(points: -1)
+        }
+    }
+    
+    var barColor : Color { switch abs(stepLength) {
+    case steps[0]..<steps[1]:
+        return .yellow
+    case steps[1]..<steps[2]:
+        return .green
+    case steps[2]...:
+        return .red
+    default:
+        return .black
+    }
+    }
+    
+    let steps : [CGFloat] = [0, 100, 200]
+
+    var stepLength: CGFloat {
+        guard let movement = movement else { return .zero }
+        return movement.translation.height
+    }
+    
+    @GestureState var movement: DragGesture.Value?
+
+    @State var count = 0
+    
+    var moveGesture : some Gesture {
+        DragGesture(minimumDistance: 10)
+            .updating($movement) { value, movement, transaction in
+                guard count < 5 else { return }
+                movement = value
+                // stepLength: movement in points
+                // three options : 1,5,10
+                if abs(stepLength) > steps[0] {
+                    let direction = value.startLocation.y < value.location.y ? 1 : -1
+                    var value = 1
+                    if abs(stepLength) > steps[1] {
+                        value = 5
+                        if abs(stepLength) > steps[2] {
+                            value = 10
+                        }
+                    }
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        score.add(points: direction * value)
+                    }
+                }
+                count += 1
+            }
+            .onEnded() { _ in
+                count = 0
+            }
+    }
+
+    /// calculate a zoom factor for numbers further away from score
+    /// uses linear interpolation
+    func zoomFactor(for num: Int) -> CGFloat {
+        guard score.sum != minNum, score.sum != -maxNum else { return CGFloat(minZoom) }
+        let distFromScore = Double(abs(score.sum - num))
+        
+        // 0 < distFactor < 1
+        let distFactor = distFromScore / Double(score.sum - minNum)
+        
+        return CGFloat(minZoom * distFactor + maxZoom * ( 1 - distFactor ))
+    }
+    
+    /// all visible options during selection
+    /// NOTE: assuming stride (scoreStep) of 1!
+    var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
+    
+    var minNum : Int { score.sum - visibleSteps }
+    var maxNum : Int { score.sum + visibleSteps }
+        
+    // MARK: - constants
+    let visibleSteps = 3
+    let minZoom = 0.6
+    let minOpacity = 0.2
+    let maxZoom = 1.8
+    
+    let zoomingOpacity = 0.8
+    let bufferColor = Color.pointbuffer
+}
+
+struct ScoreWheelTest: View {
+    @State var score = Score()
+    
+    var body: some View {
+        ScoreWheel(score: $score)
+    }
+}
 
 struct ScrollScoreView_Previews: PreviewProvider {
     static var previews: some View {
-        ScrollScoreView(score: Score(4, buffer: 20))
-            .frame(width: 300, height: 400)
+//        HStack {
+//            ScrollScoreView()
+//                .environmentObject(Player(name: "Lili", score: Score(43,buffer: 0)))
+//            ScrollScoreView()
+//                .environmentObject(Player(name: "Alex", score: Score(32,buffer: 0)))
+//        }
+        ScoreWheelTest()
     }
 }

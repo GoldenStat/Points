@@ -25,7 +25,7 @@ struct ScoreRepresentationView: View {
             ButtonScoreView(score: score)
 
         case .scrollBox: // add steps for the buttons?
-            ScrollScoreView(score: score)
+            ScrollScoreView()
 
         case .matches:
             MatchesScoreView(score: score)

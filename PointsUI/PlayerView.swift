@@ -36,10 +36,11 @@ struct PlayerView: View {
                     score: player.score,
                     uiType: playerUI
                 )
-                .gesture(countScoreGesture)
+                .environmentObject(player)
             }
             .emphasizeShape(cornerRadius: cornerRadius)
             .padding()
+            .gesture(countScoreGesture)
             .overlay(playerName(titleStyle == .inline))
         }
     }
@@ -191,7 +192,6 @@ struct PlayerNameTextField: TextFieldStyle {
             .font(.largeTitle)
             .fixedSize()
             .neumorphic()
-            .frame(width: .infinity)
     }
 }
 

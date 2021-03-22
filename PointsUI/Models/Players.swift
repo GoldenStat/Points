@@ -50,6 +50,11 @@ class Player: ObservableObject, Identifiable, Equatable {
         self.name = name
     }
     
+    init(name: String, score: Score) {
+        self.name = name
+        self.score = score
+    }
+
     struct Data {
         var name: String
         var score: Score

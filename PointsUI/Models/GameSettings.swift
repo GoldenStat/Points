@@ -175,6 +175,7 @@ class GameSettings: ObservableObject {
         addRule(.skat)
         addRule(.shitzu)
         addRule(.maumau)
+        addRule(.domino)
     }
     
     func addRule(_ rule: Rule) {

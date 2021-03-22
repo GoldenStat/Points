@@ -156,25 +156,26 @@ struct ContentView: View {
     @GestureState var modifyHistory = HistoryControl()
     
     var dragHistoryGesture : some Gesture {
-        DragGesture(minimumDistance: 100)
+        DragGesture(minimumDistance: 800)
 
             .updating($modifyHistory) { value, historyControl, _ in
                 
                 switch value.dir {
                 case .up: // is handled only once
-                    if historyControl.verticalDragHandled { return }
-                    withAnimation() { menuBarPosition.moveUp() }
-                    historyControl.verticalDragHandled = true
+//                    if historyControl.verticalDragHandled { return }
+//                    withAnimation() { menuBarPosition.moveUp() }
+//                    historyControl.verticalDragHandled = true
+                    break
                 case .down: // is handled only once
-                    if historyControl.verticalDragHandled { return }
-                    withAnimation() { menuBarPosition.moveDown() }
-                    historyControl.verticalDragHandled = true
+//                    if historyControl.verticalDragHandled { return }
+//                    withAnimation() { menuBarPosition.moveDown() }
+//                    historyControl.verticalDragHandled = true
+                    break
                 default:
                     historyControl.verticalDragHandled = true
                     historyControl.set(settings: settings)
                     withAnimation() {
                         historyControl.compareSteps(to: value.steps)
-                        
                     }
                 }
             }
@@ -189,9 +190,13 @@ struct ContentView: View {
 
 /// an extension to measure steps and direction of movement
 extension DragGesture.Value {
+    
+    /// determines how many steps where taken. WARNING: step length is a global constant (60) (Magic Number!)
     var steps: Int {
         Int((location.xDelta(startLocation) / 60).rounded(.towardZero))
     }
+
+    /// return in which direction the drag was done
     var dir: Direction {
         .move(from: startLocation,
               to: location)
