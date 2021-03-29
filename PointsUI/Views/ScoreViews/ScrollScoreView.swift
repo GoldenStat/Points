@@ -59,49 +59,54 @@ struct ScrollScoreView: View {
         
     // MARK: - supporting views and gestures
     
+    @GestureState var movement: DragGesture.Value?
+    
+    var scoreDidChange : Bool { movement != nil }
+
     /// on Drag this function will be called
     /// changes the buffer Value and starts the timer when movement ended
     /// uses projection value
-    let steps : [CGFloat] = [100, 200, 300]
-
-    var stepLength: CGFloat {
-        guard let movement = movement else { return .zero }
-        return movement.translation.height
-    }
-    
-    @GestureState var movement: DragGesture.Value?
-
-    @State var count = 0
-    
     var moveGesture : some Gesture {
         DragGesture(minimumDistance: 10)
             .updating($movement) { value, movement, transaction in
-                guard count < 5 else { return }
-                movement = value
-                // stepLength: movement in points
-                // three options : 1,5,10
-                if abs(stepLength) > steps[0] {
-                    withAnimation(.easeInOut(duration: 1.0)) {
-
-                    let direction = value.startLocation.y < value.location.y ? -1 : 1
-                    var value = 1
-                    if abs(stepLength) > steps[1] {
-                        value = 5
-                        if abs(stepLength) > steps[2] {
-                            value = 10
-                        }
-                    }
-                        player.score.add(points: direction * value)
-                    }
+                guard !scoreDidChange else { return }
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    handleDrag(from: value.startLocation, to: value.location)
                 }
-                count += 1
             }
             .onEnded() { _ in
-                count = 0
                 settings.startTimer()
             }
     }
 
+    func handleDrag(from start: CGPoint, to end: CGPoint) {
+        
+        // stepLength: movement in points
+        // three options : 1,5,10
+        let steps : [CGFloat] = [100, 200, 300]
+
+        var stepLength: CGFloat {
+            guard let movement = movement else { return .zero }
+            return movement.translation.height
+        }
+        
+        
+        
+        let direction = start.y < end.y ? -1 : 1
+        
+        if abs(stepLength) > steps[2] {
+            addPoints(direction * 10)
+        } else if abs(stepLength) > steps[1] {
+            addPoints(direction * 5)
+        } else {
+            addPoints(direction)
+        }
+            
+    }
+    
+    func addPoints(_ points: Int) {
+        player.add(score: points)
+    }
 
     /// the current seletction is shown as kind of a picker, with numbers diminishing up or down
     var scoreWheel: some View {

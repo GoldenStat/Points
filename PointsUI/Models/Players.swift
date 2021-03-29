@@ -81,14 +81,38 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     @Published var items : [Player] = []
-
+    @Published var activePlayerIndex : Int? = nil
+    var activePlayer : Player? {
+        guard let activeIndex = activePlayerIndex else { return nil }
+        guard activeIndex < items.count else { return nil }
+        return items[activeIndex]
+    }
+    
+    /// move the active player one further
+    func updateActivePlayer() {
+        guard let activeIndex = activePlayerIndex else {
+            activePlayerIndex = 0
+            return
+        }
+        
+        activePlayerIndex = (activeIndex + 1) % items.count
+    }
+    
+    func activate(_ player: Player) {
+        activePlayerIndex = items.firstIndex(of: player)
+    }
+    
+    func index(for player: Player) -> Int? {
+        items.firstIndex(of: player)
+    }
+    
     func deleteItems(at offsets: IndexSet) {
         items.remove(atOffsets: offsets)
     }
 
     var count: Int { items.count }
     
-    static var sample = Players(names: ["Alexander", "Lili"])
+    static var sample = Players(names: ["Alexander", "Lili", "Player 3"])
     
     func add(name: String) {
         let player = Player(name: name)

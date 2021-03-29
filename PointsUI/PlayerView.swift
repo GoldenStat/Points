@@ -12,6 +12,7 @@ enum PlayerViewTitleStyle {
     case normal, inline
 }
 
+
 struct PlayerView: View {
     
     @EnvironmentObject var settings: GameSettings
@@ -29,7 +30,14 @@ struct PlayerView: View {
                 .padding(.horizontal)
             
             VStack() {
+                // TODO: move CounterView to the grid's frame's alignment
+//                CounterView(counter: player.games)
+//                    .padding(.horizontal)
+//                    .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
+//                        dimension[.bottom]
+//                    })
                 Spacer()
+//                playerName(titleStyle == .inline)
                     .frame(height: 40)
                 
                 ScoreRepresentationView(
@@ -38,6 +46,9 @@ struct PlayerView: View {
                 )
                 .environmentObject(player)
             }
+            .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
+                dimension[.top]
+            })
             .emphasizeShape(cornerRadius: cornerRadius)
             .padding()
             .gesture(countScoreGesture)
@@ -109,8 +120,6 @@ struct PlayerHeadline: View {
             }
             .textFieldStyle(PlayerNameTextField())
 
-            CounterView(counter: player.games)
-                .padding(.horizontal)
         }
         .onTapGesture(count: 2) {
             withAnimation() {

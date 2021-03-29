@@ -79,7 +79,7 @@ class GameSettings: ObservableObject {
         history = History()
         maxPoints = 0
         maxGames = 2
-        rule = .maumau
+        rule = .trucoVenezolano
         createRules()
     }
     
@@ -91,6 +91,7 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = Rule.defaultRule // needs to be set to enable calling methods
         setupRules()
+        resetToFactorySettings()
     }
     
     /// update stored glogal - TODO: chek if obsolete
@@ -204,7 +205,7 @@ class GameSettings: ObservableObject {
         // create new players
         // also resets the wonGames!
         players = Players(names: players.names)
-        activePlayer = nil
+        activePlayer = players.items.first!
     }
     
     /// reset only the scores of the players, not the game count
@@ -393,7 +394,10 @@ class GameSettings: ObservableObject {
         
         // sets values and buffers according to history stacks
         players.setScores(to: history.redoScores ?? zeroScores)
+        
+        // activate next player
+        players.updateActivePlayer()
     }
-
+    
 }
 

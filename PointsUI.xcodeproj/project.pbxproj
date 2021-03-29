@@ -10,6 +10,7 @@
 		4103BFF7252F6B9F00043ACE /* ButtonScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */; };
 		4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFFA252F8F7B00043ACE /* BufferView.swift */; };
 		41054157256EAE22001E60CA /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41054156256EAE22001E60CA /* GameState.swift */; };
+		410A97F32611E2A2007AC698 /* PlayerGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410A97F22611E2A2007AC698 /* PlayerGrid.swift */; };
 		410CA6692532569100D92A29 /* EditPlayerNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410CA6682532569100D92A29 /* EditPlayerNames.swift */; };
 		410EF6F12607EA7200CBB152 /* ScrollScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410EF6F02607EA7200CBB152 /* ScrollScoreView.swift */; };
 		411DF22123607CD100A37C64 /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF22023607CD100A37C64 /* MainGameView.swift */; };
@@ -35,6 +36,7 @@
 		41694CDF258AC1A000E8DB8C /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41694CDE258AC1A000E8DB8C /* CountdownView.swift */; };
 		416E83E424F9843200609A87 /* ScoreHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E83E324F9843200609A87 /* ScoreHistoryView.swift */; };
 		416F37972442AB1A00D9D55B /* EdgeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416F37962442AB1A00D9D55B /* EdgeShape.swift */; };
+		417300E5260BB3F40010C9D1 /* ActivePlayerMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417300E4260BB3F40010C9D1 /* ActivePlayerMarkerView.swift */; };
 		4173575C24A3EA47002C10B2 /* ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173575B24A3EA47002C10B2 /* ViewBuilder.swift */; };
 		4173575E24A4B676002C10B2 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173575D24A4B676002C10B2 /* Score.swift */; };
 		4173576624A509D6002C10B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173576524A509D6002C10B2 /* SettingsView.swift */; };
@@ -73,6 +75,7 @@
 		4103BFF6252F6B9F00043ACE /* ButtonScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonScoreView.swift; sourceTree = "<group>"; };
 		4103BFFA252F8F7B00043ACE /* BufferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferView.swift; sourceTree = "<group>"; };
 		41054156256EAE22001E60CA /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		410A97F22611E2A2007AC698 /* PlayerGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGrid.swift; sourceTree = "<group>"; };
 		410CA6682532569100D92A29 /* EditPlayerNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlayerNames.swift; sourceTree = "<group>"; };
 		410EF6F02607EA7200CBB152 /* ScrollScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollScoreView.swift; sourceTree = "<group>"; };
 		411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxesScoreView.swift; sourceTree = "<group>"; };
@@ -102,6 +105,7 @@
 		41694CDE258AC1A000E8DB8C /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		416E83E324F9843200609A87 /* ScoreHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreHistoryView.swift; sourceTree = "<group>"; };
 		416F37962442AB1A00D9D55B /* EdgeShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeShape.swift; sourceTree = "<group>"; };
+		417300E4260BB3F40010C9D1 /* ActivePlayerMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivePlayerMarkerView.swift; sourceTree = "<group>"; };
 		4173575B24A3EA47002C10B2 /* ViewBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewBuilder.swift; sourceTree = "<group>"; };
 		4173575D24A4B676002C10B2 /* Score.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
 		4173576524A509D6002C10B2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 				41E11F2A25C5E54700E7B4F6 /* HistoryScoresTable.swift */,
 				41E11F2425C5DD9E00E7B4F6 /* CellData.swift */,
 				4173575D24A4B676002C10B2 /* Score.swift */,
+				410A97F22611E2A2007AC698 /* PlayerGrid.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 		411DF1FF235B194800A37C64 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				417300E4260BB3F40010C9D1 /* ActivePlayerMarkerView.swift */,
 				4180CC9C25C84EA5009B0A42 /* TestViews */,
 				4105415E256EAEF6001E60CA /* extensions */,
 				4105415D256EAED3001E60CA /* stateViews */,
@@ -376,6 +382,7 @@
 				410EF6F12607EA7200CBB152 /* ScrollScoreView.swift in Sources */,
 				4173575C24A3EA47002C10B2 /* ViewBuilder.swift in Sources */,
 				4173576624A509D6002C10B2 /* SettingsView.swift in Sources */,
+				417300E5260BB3F40010C9D1 /* ActivePlayerMarkerView.swift in Sources */,
 				418D8B8624AE19F7008A4A3E /* PlayerWon.swift in Sources */,
 				4180CC9E25C850CC009B0A42 /* HistoryTestView.swift in Sources */,
 				412EF8E525BF20DD003FDB7E /* HistoryControlsTestView.swift in Sources */,
@@ -404,6 +411,7 @@
 				41648E64258D1E340070FB42 /* MenuBar.swift in Sources */,
 				41E2E3A625D1ABD000005043 /* HistoryView.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
+				410A97F32611E2A2007AC698 /* PlayerGrid.swift in Sources */,
 				4125D14624D59DD700D00BA9 /* Box.swift in Sources */,
 				41EC900224EE7D9900038F5C /* Pickers.swift in Sources */,
 				4173575E24A4B676002C10B2 /* Score.swift in Sources */,
