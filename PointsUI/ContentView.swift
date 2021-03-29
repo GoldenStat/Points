@@ -120,8 +120,8 @@ struct ContentView: View {
         mutating func moveDown() {
             if self == .hidden {
                 self = .top
-            } else {
-                self = .center
+//            } else {
+//                self = .center
             }
         }
     }
@@ -162,14 +162,14 @@ struct ContentView: View {
                 
                 switch value.dir {
                 case .up: // is handled only once
-//                    if historyControl.verticalDragHandled { return }
-//                    withAnimation() { menuBarPosition.moveUp() }
-//                    historyControl.verticalDragHandled = true
+                    if historyControl.verticalDragHandled { return }
+                    withAnimation() { menuBarPosition.moveUp() }
+                    historyControl.verticalDragHandled = true
                     break
                 case .down: // is handled only once
-//                    if historyControl.verticalDragHandled { return }
-//                    withAnimation() { menuBarPosition.moveDown() }
-//                    historyControl.verticalDragHandled = true
+                    if historyControl.verticalDragHandled { return }
+                    withAnimation() { menuBarPosition.moveDown() }
+                    historyControl.verticalDragHandled = true
                     break
                 default:
                     historyControl.verticalDragHandled = true

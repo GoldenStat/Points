@@ -11,6 +11,7 @@
 		4103BFFB252F8F7B00043ACE /* BufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4103BFFA252F8F7B00043ACE /* BufferView.swift */; };
 		41054157256EAE22001E60CA /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41054156256EAE22001E60CA /* GameState.swift */; };
 		410A97F32611E2A2007AC698 /* PlayerGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410A97F22611E2A2007AC698 /* PlayerGrid.swift */; };
+		410A97F5261239DA007AC698 /* TokenAnchorPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410A97F4261239DA007AC698 /* TokenAnchorPreferenceKey.swift */; };
 		410CA6692532569100D92A29 /* EditPlayerNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410CA6682532569100D92A29 /* EditPlayerNames.swift */; };
 		410EF6F12607EA7200CBB152 /* ScrollScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410EF6F02607EA7200CBB152 /* ScrollScoreView.swift */; };
 		411DF22123607CD100A37C64 /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DF22023607CD100A37C64 /* MainGameView.swift */; };
@@ -76,6 +77,7 @@
 		4103BFFA252F8F7B00043ACE /* BufferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferView.swift; sourceTree = "<group>"; };
 		41054156256EAE22001E60CA /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		410A97F22611E2A2007AC698 /* PlayerGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGrid.swift; sourceTree = "<group>"; };
+		410A97F4261239DA007AC698 /* TokenAnchorPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAnchorPreferenceKey.swift; sourceTree = "<group>"; };
 		410CA6682532569100D92A29 /* EditPlayerNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlayerNames.swift; sourceTree = "<group>"; };
 		410EF6F02607EA7200CBB152 /* ScrollScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollScoreView.swift; sourceTree = "<group>"; };
 		411DF1F22359EAFA00A37C64 /* BoxesScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxesScoreView.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				41E11F2425C5DD9E00E7B4F6 /* CellData.swift */,
 				4173575D24A4B676002C10B2 /* Score.swift */,
 				410A97F22611E2A2007AC698 /* PlayerGrid.swift */,
+				410A97F4261239DA007AC698 /* TokenAnchorPreferenceKey.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4168CE2924B3899D00DACD62 /* PointsUIApp.swift in Sources */,
+				410A97F5261239DA007AC698 /* TokenAnchorPreferenceKey.swift in Sources */,
 				4196485524D2CF09002FD363 /* ContentView.swift in Sources */,
 				41DB1E1523E5C8B800E17CC8 /* Players.swift in Sources */,
 				41694CDF258AC1A000E8DB8C /* CountdownView.swift in Sources */,

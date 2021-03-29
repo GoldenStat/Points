@@ -80,10 +80,11 @@ class GameSettings: ObservableObject {
         maxPoints = 0
         maxGames = 2
         rule = .trucoVenezolano
-        createRules()
+//        createRules()
     }
     
     init() {
+        activePlayer = nil
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
         history = History()
@@ -91,7 +92,7 @@ class GameSettings: ObservableObject {
         maxGames = GlobalSettings.maxGames
         rule = Rule.defaultRule // needs to be set to enable calling methods
         setupRules()
-        resetToFactorySettings()
+//        resetToFactorySettings()
     }
     
     /// update stored glogal - TODO: chek if obsolete

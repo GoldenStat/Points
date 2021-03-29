@@ -8,62 +8,115 @@
 
 import SwiftUI
 
+
 /// the marker shows who is "active", e.g. the dealer
 struct ActivePlayerMarkerView: View {
-    var size : CGFloat
+ 
+    class Token {
+        var size: CGFloat = 80
+        var origin: CGPoint = CGPoint(x: 200, y: 80)
+        var location: CGPoint = CGPoint(x: 80, y: 80)
+        var delta: CGSize = .zero
+        
+        /// consists of startLocation + delta
+        var currentLocation : CGPoint {
+            location.applying(.init(translationX: delta.width, y: delta.height))
+        }
+    }
+
+    var token = Token()
+    @Binding var activeIndex: Int?
+    var rects: [CGRect]
+    
     var body: some View {
         Circle()
-            .frame(width: size, height: size)
+            .frame(width: token.size, height: token.size)
+            .opacity(0.8)
+            .gesture(dragGesture)
     }
-}
-
-struct PlayerBox: View {
-    var name: String
-    var isActive: Bool = false
-    var borderColor: Color { isActive ? .primary : .secondary }
-    var body: some View {
-        Color.green
-            .cornerRadius(20)
-            .opacity(isActive ? 0.8 : 0.4)
-            .frame(width: 100, height: 200)
-            .overlay(Text(name)
-                        .font(.largeTitle)
-                        .scaleEffect(isActive ? 1.3 : 1.0)
-                        .foregroundColor(isActive ? .red : .white)
-        )
+    
+    // MARK: - handle token position
+    var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 10)
+            .onChanged() { dragValue in
+                token.delta = dragValue.translation
+                updateActiveIndex(in: rects)
+            }
+            .onEnded() { value in
+                updateActiveIndex(in: rects)
+                updateLocation(for: token, to: activeIndex, rects: rects)
+            }
     }
-}
-
-/// to make the code a little clearer
-///
-/// GridIndex(0,0).index == 1
-///
-/// GridIndex.rows == 2, GridIndex.cols == 2 means a 2x2-Grid
-
-struct GridIndex {
-    static let rows = 2
-    static let cols = 3
     
-    /// how many objects the Grid can hold
-    static var maxObject: Int { rows * cols }
+    /// figure out nearest view to Token position
+    func updateActiveIndex(in rects: [CGRect]) {
+        var nearestDistance: CGFloat = .infinity
+        for (index,rect) in rects.enumerated() {
+            let distanceToLocation = rect.center.squareDistance(to: token.currentLocation)
+            if nearestDistance > distanceToLocation {
+                nearestDistance = distanceToLocation
+                activeIndex = index
+            }
+        }
+    }
     
-    var row: Int
-    var col: Int
-    
-    /// calculated index for this row and column
-    var index: Int {
-        get {
-            row * Self.cols + col + 1
+    /// called when the move gesture ends
+    /// moves the token to the active Frame
+    func updateLocation(for token: Token, to index: Int?, rects: [CGRect]) {
+        let padding = token.size / 2
+        let markerSize = token.size
+        
+        guard let index = index else { token.location = token.origin; return }
+        token.location = location(for: index, and: rects[index])
+        token.delta = .zero
+        
+        /// get token Location for a given index
+        ///
+        /// orientates itself on the Grid's tokenEdge method
+        /// defaults to center of the frame
+        
+        func location(for index: Int, and frame: CGRect ) -> CGPoint {
+            let item = PlayerGrid(index: index)
+            let distanceFromEdge = padding + markerSize / 2
+            let newTokenLocation : CGPoint
+            
+            if item.tokenEdge == Edge.Set.top {
+                // move token above the frame
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.minY - distanceFromEdge
+                )
+            } else if item.tokenEdge == Edge.Set.bottom {
+                // move token below the frame
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.maxY + distanceFromEdge
+                )
+            } else if item.tokenEdge == Edge.Set.leading {
+                // move token left the frame ... not right if .leading is not "left"
+                newTokenLocation = CGPoint(
+                    x: frame.minX - distanceFromEdge + padding / 4 * 3,
+                    y: frame.midY
+                )
+            } else if item.tokenEdge == Edge.Set.trailing {
+                // move token right of the frame
+                newTokenLocation = CGPoint(
+                    x: frame.maxX + distanceFromEdge - padding / 4 * 3,
+                    y: frame.midY
+                )
+            } else {
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.minY + distanceFromEdge
+                )
+            }
+            
+            return newTokenLocation
         }
         
-        // not really needed in this example, but since we are already at it...
-        set {
-            let adjustedIndex = newValue - 1
-            self.row = adjustedIndex / Self.cols
-            self.col = adjustedIndex % Self.cols
-        }
     }
 }
+
 
 extension VerticalAlignment {
     private enum MarkerAlignment: AlignmentID {
@@ -73,110 +126,4 @@ extension VerticalAlignment {
     }
     
     static let markerAlignment = VerticalAlignment(MarkerAlignment.self)
-}
-
-extension HorizontalAlignment {
-    private enum MarkerAlignment: AlignmentID {
-        static func defaultValue(in d: ViewDimensions) -> CGFloat {
-            return d[HorizontalAlignment.center]
-        }
-    }
-    
-    static let markerAlignment = HorizontalAlignment(MarkerAlignment.self)
-}
-
-extension Alignment {
-    static let markerAlignment = Alignment(horizontal: .markerAlignment, vertical: .markerAlignment)
-}
-
-struct GameView: View {
-    @State private var activeIndex = 1
-    
-    let objectCount = 5 // must be smaller than GridIndex.maxObjects
-
-    let markerSize : CGFloat = 80
-        
-    var body: some View {
-        ZStack(alignment: .markerAlignment) {
-            VStack {
-                ForEach(0 ..< GridIndex.rows) { row in
-                    HStack
-                    {
-                        ForEach(0 ..< GridIndex.cols) { col in
-                            let count = GridIndex(row: row, col: col)
-                            if objectCount >= count.index {
-                                if count.index == activeIndex {
-                                    PlayerBox(name: count.index.description, isActive: true)
-                                        .transition(AnyTransition.identity)
-                                        .alignmentGuide(HorizontalAlignment.markerAlignment, computeValue: { dimension in
-                                            dimension[AlignmentObject.alignment(for: activeIndex).playerAlignment.horizontal]
-                                        })
-                                        .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
-                                            dimension[AlignmentObject.alignment(for: activeIndex).playerAlignment.vertical]
-                                        })
-                                        .onTapGesture {
-                                                activeIndex = count.index
-                                        }
-                                } else {
-                                    PlayerBox(name: count.index.description, isActive: false)
-                                        .onTapGesture {
-                                            activeIndex = count.index
-                                        }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(markerSize)
-            
-            ActivePlayerMarkerView(size: markerSize)
-                .transition(AnyTransition.identity)
-                .alignmentGuide(HorizontalAlignment.markerAlignment, computeValue: { dimension in
-                    dimension[AlignmentObject.alignment(for: activeIndex).markerAlignment.horizontal]
-                })
-                .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
-                    dimension[AlignmentObject.alignment(for: activeIndex).markerAlignment.vertical]
-                })
-        }
-        .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)
-
-    }
-    
-    /// hard-coded alignments for indices, wrapped into an object
-    struct AlignmentObject {
-        var markerAlignment: Alignment
-        var playerAlignment: Alignment
-        
-        static func alignment(for index: Int) -> AlignmentObject {
-            switch index {
-            case 1:
-                return AlignmentObject(markerAlignment: .center,
-                                       playerAlignment: .topLeading)
-            case 2:
-                return AlignmentObject(markerAlignment: .bottom,
-                                       playerAlignment: .top)
-            case 3:
-                return AlignmentObject(markerAlignment: .center,
-                                       playerAlignment: .topTrailing)
-            case 4:
-                return AlignmentObject(markerAlignment: .topTrailing,
-                                       playerAlignment: .bottomLeading)
-            case 5:
-                return AlignmentObject(markerAlignment: .topLeading,
-                                       playerAlignment: .bottomTrailing)
-            default:
-                return AlignmentObject(markerAlignment: .center,
-                                       playerAlignment: .center)
-            }
-        }
-    }
-    
-}
-
-
-struct ActivePlayerMarkerView_Previews: PreviewProvider {
-    static var previews: some View {
-        GameView()
-    }
 }

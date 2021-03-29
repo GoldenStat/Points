@@ -30,14 +30,8 @@ struct PlayerView: View {
                 .padding(.horizontal)
             
             VStack() {
-                // TODO: move CounterView to the grid's frame's alignment
-//                CounterView(counter: player.games)
-//                    .padding(.horizontal)
-//                    .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
-//                        dimension[.bottom]
-//                    })
+
                 Spacer()
-//                playerName(titleStyle == .inline)
                     .frame(height: 40)
                 
                 ScoreRepresentationView(
@@ -53,8 +47,19 @@ struct PlayerView: View {
             .padding()
             .gesture(countScoreGesture)
             .overlay(playerName(titleStyle == .inline))
+            .background(backgroundView
+                            .cornerRadius(30)
+                            .blur(radius: 3.0, opaque: true)
+            )
         }
     }
+    
+    var backgroundView : some View {
+        isActive ? Color.green : Color.clear
+    }
+    
+    var isActive: Bool { settings.players.activePlayer ==  player }
+    
     
     @ViewBuilder func playerName(_ isVisible: Bool) -> some View {
         if isVisible {
@@ -237,7 +242,8 @@ extension View {
 
 struct PlayerUI_Previews: PreviewProvider {
     static var previews: some View {
-        BoardUI()
+//        BoardUI()
+        PlayerView(player: Player(name: "Alexander"))
             .environmentObject(GameSettings())
     }
 }
