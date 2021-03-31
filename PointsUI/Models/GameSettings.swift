@@ -273,6 +273,7 @@ class GameSettings: ObservableObject {
             playerWon.games += 1
             playerWonRound = nil
         }
+        
         // only set scores to zero, don't reset won games!
         resetPlayerScores()
         history.reset()
@@ -347,7 +348,7 @@ class GameSettings: ObservableObject {
         cancelTimers()
 
         players.saveScore() // reset all player scores' buffers, updates values, reflects visually
-
+        
         // check if a player has won and handle the win
         checkPlayerWon()
 
