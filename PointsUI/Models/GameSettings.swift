@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class GameSettings: ObservableObject {
     
@@ -83,6 +84,9 @@ class GameSettings: ObservableObject {
 //        createRules()
     }
     
+    /// a token to show the active Player
+    @Published var token: Token
+    
     init() {
         activePlayer = nil
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
@@ -91,6 +95,7 @@ class GameSettings: ObservableObject {
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = Rule.defaultRule // needs to be set to enable calling methods
+        token = Token(for: GlobalSettings.playerNames.count)
         setupRules()
 //        resetToFactorySettings()
     }
@@ -355,6 +360,12 @@ class GameSettings: ObservableObject {
     @objc private func registerRound() {
         history.save()
         cancelTimers()
+        // activate next player
+        if self.activePlayer != nil {
+            players.updateActivePlayer()
+        } else {
+            self.activePlayer = players.items.first
+        }
     }
     
     // MARK: - history functions
@@ -396,8 +407,6 @@ class GameSettings: ObservableObject {
         // sets values and buffers according to history stacks
         players.setScores(to: history.redoScores ?? zeroScores)
         
-        // activate next player
-        players.updateActivePlayer()
     }
     
 }

@@ -76,7 +76,7 @@ struct ContentView: View {
                     settings.editingPlayer = nil
                 }
             }
-            .gesture(dragHistoryGesture)
+            .simultaneousGesture(dragHistoryGesture)
             
             // MARK: Popovers
         }

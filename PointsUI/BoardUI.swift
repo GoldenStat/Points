@@ -9,61 +9,25 @@
 import SwiftUI
 
 /// the whole board, all player's points are seen here
+/// here it all comes together:
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
+    // manage visual representation and controls active Player
+    var token : Token { settings.token }
+
     var objects : Int {
         settings.players.count
     }
-        
-    var vGridItems : [GridItem] { [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ] }
     
     @State var lastOrientation = UIDevice.current.orientation
-  
-    
-//    var body: some View {
-//        ZStack {
-//            VStack {
-//                if lastOrientation.isLandscape {
-//                        playerViews
-//                            .asGrid(columns: objects)
-//                            .frame(minHeight: 400, maxHeight: 400)
-//                } else if lastOrientation.isPortrait {
-//                    // can't get it to work with LazyVGrid
-//                        playerViews
-//                            .asGrid(columns: 2)
-//                }
-//            }
-//        }
-//        .onRotate(perform: {
-//                    orientation in
-//            if orientation == .landscapeLeft || orientation == .landscapeRight || orientation == .portrait {
-//                lastOrientation = orientation
-//            }
-//            withAnimation() { settings.objectWillChange.send() }
-//        })
-//        .ignoresSafeArea(edges: .all)
-//    }
-
-    @State var activeIndex : Int? = 0
-//    private var activeIndex : Int? { settings.players.activePlayer }
-    
-    /// holds all Player View's frames, determines max Players
-    @State private var rects = Array<CGRect>(repeating: CGRect(), count: 4 )
-    var activeFrame: CGRect? { activeIndex == nil ? nil : rects[activeIndex!] }
-
-    let markerSize : CGFloat = 40
-    let padding : CGFloat = 20
-
 
     // MARK: - main view
     var body: some View {
+        // MARK: the player views arranged in a grid
         GeometryReader { geom in
-            ZStack {
-                                
+            ZStack { // use all the space
+                Color.clear
                 VStack {
                     ForEach(0 ..< PlayerGrid.rows) { rowIndex in
                         HStack {
@@ -71,33 +35,39 @@ struct BoardUI: View {
                                 let index = PlayerGrid(row: rowIndex, col: colIndex).index
                                 if  index < objects {
                                     let player = settings.players.items[index]
+                                    
                                     VStack {
                                         CounterView(counter: player.games)
                                             .padding(.horizontal)
                                         playerView(for: player)
                                             .frame(width: geom.size.width / 2,
                                                    height: geom.size.height / 2)
+                                            .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                                                              value: .bounds,
+                                                              transform: { bounds in
+                                                                [TokenAnchor(viewIdx: index, bounds: bounds)]
+                                            })
                                     }
                                 }
                             }
                         }
                     }
                 }
-                
-                ActivePlayerMarkerView(
-                    activeIndex: $settings.players.activePlayerIndex,
-                    rects: rects
-                )
-                
             }
         }
         .ignoresSafeArea(edges: .all)
-        // update the player boards positions
+
+        // update the Token with the Player rects
         .overlayPreferenceValue(TokenAnchorPreferenceKey.self) {
             preferences in
             GeometryReader { geometry in
                 updateRects(geometry, preferences)
             }
+        }
+        
+        .onAppear() {
+            settings.resetPlayers()
+            token.resetPosition()
         }
     }
     
@@ -115,12 +85,22 @@ struct BoardUI: View {
     func updateRects(_ geometry: GeometryProxy,
                      _ preferences: [TokenAnchor]) -> some View {
 
-        rects = preferences.map { geometry[$0.bounds] }
+        token.update(rects: preferences.map { geometry[$0.bounds] })
 
-        return Color.clear // important for the Geometry Proxy Dimensions
+        return ActivePlayerMarkerView()
+            .gesture(dragGesture)
+
     }
-    
-
+        
+    var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 10)
+            .onChanged() { dragValue in
+                token.update(translation: dragValue.translation)
+            }
+            .onEnded() { value in
+                token.moveToActiveRect()
+            }
+    }
     
     // MARK: - show the buffer
     private let showBufferContents = true

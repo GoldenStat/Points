@@ -47,19 +47,8 @@ struct PlayerView: View {
             .padding()
             .gesture(countScoreGesture)
             .overlay(playerName(titleStyle == .inline))
-            .background(backgroundView
-                            .cornerRadius(30)
-                            .blur(radius: 3.0, opaque: true)
-            )
         }
     }
-    
-    var backgroundView : some View {
-        isActive ? Color.green : Color.clear
-    }
-    
-    var isActive: Bool { settings.players.activePlayer ==  player }
-    
     
     @ViewBuilder func playerName(_ isVisible: Bool) -> some View {
         if isVisible {
@@ -100,10 +89,7 @@ struct PlayerHeadline: View {
     
     @EnvironmentObject var settings: GameSettings
     @ObservedObject var player : Player
-    
-    /// marks a player as 'active' (e.g. he's the dealer)
-    private var isActive: Bool { settings.activePlayer == player }
-    
+        
     /// the name is being edited - accessible from parent
     private var isEditing: Bool { settings.editingPlayer == player }
     @State private var ignore = false
