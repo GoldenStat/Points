@@ -18,11 +18,6 @@ class Token : ObservableObject {
     var size: CGFloat = 80
     private var origin: CGPoint = CGPoint(x: 200, y: 80)
     @Published var location: CGPoint = CGPoint(x: 80, y: 80)
-    @Published var delta: CGSize = .zero
-    /// consists of startLocation + delta
-    var currentLocation : CGPoint {
-        location.applying(.init(translationX: delta.width, y: delta.height))
-    }
 
     @Published var activeIndex: Int? = nil
     @Published var rects: [CGRect]
@@ -51,20 +46,14 @@ class Token : ObservableObject {
         self.rects = rects
     }
 
-    public func update(translation: CGSize) {
-        delta = translation
-        activateNearestRect()
-    }
-
     public func resetPosition() {
-        delta = .zero
         location = origin
     }
         
-    public func activateNearestRect() {
+    public func activateNearestRect(for location: CGPoint) {
         var nearestDistance: CGFloat = .infinity
         for (index,rect) in rects.enumerated() {
-            let distanceToLocation = rect.center.squareDistance(to: currentLocation)
+            let distanceToLocation = rect.center.squareDistance(to: location)
             if nearestDistance > distanceToLocation {
                 nearestDistance = distanceToLocation
                 activeIndex = index
@@ -77,12 +66,11 @@ class Token : ObservableObject {
     /// needed if token Index Is set
     public func moveToActiveRect() {
         
-        guard let index = activeIndex, index > 0, index < rects.count else { self.location = origin; return } // reset location if no activeIndex is set
-        
+        // reset location if no activeIndex is set
+        guard let index = activeIndex, index > 0, index < rects.count else { self.location = origin; return }
         
         self.location = location(for: index, and: rects[index])
-        delta = .zero
-        
+                
         /// get token Location for a given index
         ///
         /// orientates itself on the Grid's tokenEdge method
@@ -136,31 +124,23 @@ class Token : ObservableObject {
 
 /// the marker shows who is "active", e.g. the dealer and puts a frame around the active one
 struct ActivePlayerMarkerView: View {
+    
     @EnvironmentObject var settings: GameSettings
     var token : Token { settings.token }
+    @Binding var drag: CGSize
     
     var body: some View {
-        ZStack {
-            Circle()
-                .frame(width: token.size, height: token.size)
-                .opacity(0.8)
-                .overlay(
-                    Text ("T")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                )
-                .position(token.currentLocation)
-
-            if let activeRect = token.activeFrame {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.clear)
-                    .border(Color.green)
-                    .frame(width: activeRect.width,
-                           height: activeRect.height)
-            }
-        }
-    }
-        
+        Circle()
+            .frame(width: token.size, height: token.size)
+            .opacity(0.8)
+            .overlay(
+                Text ("T")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+            )
+            .position(token.location)
+            .offset(drag)
+    }        
 }
 
 

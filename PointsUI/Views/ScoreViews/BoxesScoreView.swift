@@ -64,7 +64,7 @@ struct BoxesScoreView: View {
         
         for point in start ... end {
             if point < score.value {
-                thisBoxScore.add(points: 1)
+                thisBoxScore.add(points: settings.rule.scoreStep.defaultValue)
                 thisBoxScore.save()
             } else if point < score.sum {
                 thisBoxScore.add()

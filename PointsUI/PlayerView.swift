@@ -49,7 +49,7 @@ struct PlayerView: View {
             .overlay(playerName(titleStyle == .inline))
         }
     }
-    
+        
     @ViewBuilder func playerName(_ isVisible: Bool) -> some View {
         if isVisible {
             VStack {

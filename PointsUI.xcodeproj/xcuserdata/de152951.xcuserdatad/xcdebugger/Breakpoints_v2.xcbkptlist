@@ -62,13 +62,13 @@
             filePath = "PointsUI/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
             landmarkName = "dragHistoryGesture"
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "079E1EE8-F941-429D-BD11-2DCA34293ABC - 72e677fd615f10df"
+                  uuid = "079E1EE8-F941-429D-BD11-2DCA34293ABC - 72e677fd615f11f6"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -78,12 +78,12 @@
                   urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/ContentView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "184"
-                  endingLineNumber = "184"
+                  startingLineNumber = "193"
+                  endingLineNumber = "193"
                   offsetFromSymbolStart = "324">
                </Location>
                <Location
-                  uuid = "079E1EE8-F941-429D-BD11-2DCA34293ABC - 4627a672f1815a86"
+                  uuid = "079E1EE8-F941-429D-BD11-2DCA34293ABC - 4627a672f1815be9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -93,8 +93,8 @@
                   urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/ContentView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "185"
-                  endingLineNumber = "185"
+                  startingLineNumber = "194"
+                  endingLineNumber = "194"
                   offsetFromSymbolStart = "24">
                </Location>
             </Locations>
@@ -103,33 +103,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DDC86B97-29DE-4C0E-AF38-5654D5309FD3"
+            uuid = "781E2288-8EF7-4BAB-BEA4-2DB252C69335"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PointsUI/Views/ActivePlayerMarkerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "update(translation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1139681D-F9BC-436D-AF9E-A2786C046BD0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PointsUI/Views/ActivePlayerMarkerView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "activateNearestRect()"
-            landmarkType = "7">
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "location(for:and:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

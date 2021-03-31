@@ -23,40 +23,29 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 ZStack {
-                    MainGameView()
-                        .blur(radius: blurRadius)                    
-                        .popover(isPresented: $showSettings) {
-                            NavigationView {
-                                SettingsView()
-                            }
-                            .environmentObject(settings)
+                    
+                    VStack {
+                        if menuBarPosition == .top {
+                            menu
                         }
 
+                        MainGameView()
+                            .blur(radius: blurRadius)
+
+                        
+                        if menuBarPosition == .bottom {
+                            menu
+                        }
+                    }
+                    
                     // MARK: History Views
                     if showHistory {
                         GeometryReader { geo in
                             historyView(sized: geo.size)
+                                .scaleEffect(0.9)
                                 .offset(x: 0, y: 100)
                         }
                     }
-                }
-                
-                VStack {
-                    MenuBar(showSettings: $showSettings,
-                            showInfo: $showInfo,
-                            showHistory: $showHistory,
-                            steps: stepsToUndo
-                            )
-                        .padding(.horizontal)
-                        .zIndex(1) // needs to be in front for buttons to work...
-                        .drawingGroup()
-                        .offset(x: 0, y: menuBarPosition.rawValue)
-                        .shadow(color: .black, radius: 10, x: 8, y: 8)
-                    
-                    if menuBarPosition != .center {
-                        Spacer()
-                    }
-                    
                 }
                 .popover(isPresented: $showInfo) {
                     NavigationView {
@@ -65,6 +54,13 @@ struct ContentView: View {
                 }
 
             }
+            .popover(isPresented: $showSettings) {
+                NavigationView {
+                    SettingsView()
+                }
+                .environmentObject(settings)
+            }
+
             .statusBar(hidden: true)
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
@@ -84,6 +80,19 @@ struct ContentView: View {
         .environmentObject(settings)
     }
     
+    var menu: some View {
+        MenuBar(showSettings: $showSettings,
+                showInfo: $showInfo,
+                showHistory: $showHistory,
+                steps: stepsToUndo
+                )
+            .padding(.horizontal)
+            .zIndex(1) // needs to be in front for buttons to work...
+//            .drawingGroup()
+//            .offset(x: 0, y: menuBarPosition.rawValue)
+            .shadow(color: .black, radius: 10, x: 8, y: 8)
+    }
+    
     // MARK: - overlay View triggers
     @State var showInfo: Bool = false
     @State var showSettings: Bool = false
@@ -95,10 +104,10 @@ struct ContentView: View {
     private var blurBackground: Bool { showHistory || showInfo || showSettings }
     
     func historyView(sized geometrySize: CGSize) -> some View {
-        let heightFactor: CGFloat = 0.6
+        let heightFactor: CGFloat = 0.7
         let height = geometrySize.height * heightFactor
         
-        // NOTE: use @ScaledMetric for height? Use maxHeight, instead?
+        // NOTE: use @ScaledMetric for height? Use maxHeight, instead? ScaleFactor?
         return ScoreHistoryView(showBuffer: modifyHistory.steps != 0)
             .frame(height: height)
             .emphasizeShape(cornerRadius: 16.0)
@@ -108,7 +117,7 @@ struct ContentView: View {
     
     // MARK: - Status Bar
     enum BarPosition : CGFloat {
-        case hidden = -100, top = 0.0, center = 0.1
+        case hidden = -100, top = 0.0, center = 0.1, bottom = 800
         mutating func moveUp() {
             if self == .center {
                 self = .top
@@ -120,8 +129,8 @@ struct ContentView: View {
         mutating func moveDown() {
             if self == .hidden {
                 self = .top
-//            } else {
-//                self = .center
+            } else {
+                self = .bottom
             }
         }
     }

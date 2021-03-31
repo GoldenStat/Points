@@ -37,16 +37,33 @@ struct BoardUI: View {
                                     let player = settings.players.items[index]
                                     
                                     VStack {
-                                        CounterView(counter: player.games)
-                                            .padding(.horizontal)
-                                        playerView(for: player)
-                                            .frame(width: geom.size.width / 2,
-                                                   height: geom.size.height / 2)
-                                            .anchorPreference(key: TokenAnchorPreferenceKey.self,
-                                                              value: .bounds,
-                                                              transform: { bounds in
-                                                                [TokenAnchor(viewIdx: index, bounds: bounds)]
-                                            })
+                                        ZStack {
+
+                                            // MARKER: highlight background
+                                            if player == settings.activePlayer {
+                                                Color.clear
+//                                                    .opacity(0.05)
+                                                    .cornerRadius(12)
+                                                    .clipped()
+                                                    .emphasizeShape()
+                                                    .blur(radius: 20, opaque: false)
+                                                    .frame(width: geom.size.width / 2,
+                                                           height: geom.size.height / 2)
+                                            }
+                                            
+                                            CounterView(counter: player.games)
+                                                .padding(.horizontal)
+                                            
+                                            playerView(for: player)
+                                                .padding()
+                                                .frame(width: geom.size.width / 2,
+                                                       height: geom.size.height / 2)
+                                                .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                                                                  value: .bounds,
+                                                                  transform: { bounds in
+                                                                    [TokenAnchor(viewIdx: index, bounds: bounds)]
+                                                                  })
+                                        }
                                     }
                                 }
                             }
@@ -87,18 +104,22 @@ struct BoardUI: View {
 
         token.update(rects: preferences.map { geometry[$0.bounds] })
 
-        return ActivePlayerMarkerView()
+        return ActivePlayerMarkerView(drag: $drag)
             .gesture(dragGesture)
 
     }
         
+    @State var drag: CGSize = .zero
+    
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 10)
             .onChanged() { dragValue in
-                token.update(translation: dragValue.translation)
+                drag = dragValue.translation
+                token.activateNearestRect(for: dragValue.location)
             }
             .onEnded() { value in
                 token.moveToActiveRect()
+                token.location = value.location
             }
     }
     
