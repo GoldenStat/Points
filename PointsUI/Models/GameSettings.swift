@@ -310,9 +310,9 @@ class GameSettings: ObservableObject {
     @objc private func registerRound() {
         history.save()
         cancelTimers()
-        // activate next player
+        // activate next player - why doesn't Token update?
         players.updateActivePlayerIndex()
-        objectWillChange.send()
+        token?.objectWillChange.send()
     }
     
     // MARK: - active player handling using a token Marker

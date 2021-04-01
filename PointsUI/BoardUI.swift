@@ -76,6 +76,7 @@ struct BoardUI: View {
     // manage visual representation and controls active Player
     @State var token : Token = Token()
     @State var tokenLocation = Token().location
+    
     var activeIndex: Int? { settings.players.activePlayerIndex }
     
     /// this function is triggered by .overlayPreferenceValue when the geometries change

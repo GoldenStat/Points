@@ -15,7 +15,7 @@ import SwiftUI
 ///
 class Token : ObservableObject {
 
-    var size: CGFloat = 40
+    var size: CGFloat = 60
     
     private var origin: CGPoint = CGPoint(x: 100, y: 100)
     
@@ -124,17 +124,47 @@ class Token : ObservableObject {
 
 /// the marker shows who is "active", e.g. the dealer and puts a frame around the active one
 struct ActivePlayerMarkerView: View {
+    
     var size : CGFloat
+
     var animate : Bool = false
+    var zoomFactor: CGFloat { animate ? 1.3 : 1.0 }
+    
+    struct ShadowModifier {
+        var color: Color
+        var radius: CGFloat
+        var x: CGFloat
+        var y: CGFloat
+
+        static let up = ShadowModifier(color: .black, radius: 10, x: 8, y: 8)
+        static let down = ShadowModifier(color: .black, radius: 4, x: 2, y: 2)
+    }
+    
+    var shadow : ShadowModifier { animate ? .up : .down }
+    var shadowColor: Color { animate ? .black : .clear }
+    var rotationAngle: Angle { animate ? .degrees(30) : .zero }
+    var tokenAnimation: Animation {
+        animate ? .spring(response: 1, dampingFraction: 0.1, blendDuration: 0.3) : .default
+    }
     var body: some View {
         Circle()
             .frame(width: size, height: size)
-            .opacity(0.8)
             .overlay(
                 Text ("T")
                     .font(.largeTitle)
                     .foregroundColor(.white)
             )
+            .animation(nil)
+            .rotation3DEffect(
+                rotationAngle,
+                axis: (x: 0.0, y: 1.0, z: 0.0)
+                )
+            .animation(tokenAnimation)
+            .scaleEffect(zoomFactor)
+            .shadow(color: shadow.color,
+                    radius: shadow.radius,
+                    x: shadow.x, y: shadow.y)
+            .animation(.default)
     }        
 }
 
@@ -338,8 +368,11 @@ struct AnchorView : View {
     
 }
 
-//struct AnchorView_Previews: PreviewProvider {
-//    static var previews: some View {
+struct AnchorView_Previews: PreviewProvider {
+    static var previews: some View {
 //        AnchorView()
-//    }
-//}
+        ActivePlayerMarkerView(size: 60,
+                               animate: true
+        )
+    }
+}
