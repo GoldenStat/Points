@@ -50,7 +50,7 @@ class Token : ObservableObject {
         
     /// called internally whenever the location is updated
     /// returns the rect closest to the token
-    private func activateNearestRect() {
+    public func activateNearestRect() {
         var nearestDistance: CGFloat = .infinity
         for (index,rect) in rects.enumerated() {
             let distanceToLocation = rect.center.squareDistance(to: location)
@@ -64,7 +64,7 @@ class Token : ObservableObject {
     /// called when the move gesture ends
     /// moves the token to the active Frame
     /// needed if token Index Is set
-    private func moveToActiveRect() {
+    public func moveToActiveRect() {
         
         // reset location if no activeIndex is set
         guard let index = activeIndex, index > 0, index < rects.count else { self.location = origin; return }

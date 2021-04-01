@@ -112,9 +112,11 @@ struct BoardUI: View {
                 state = dragValue.translation
                 
                 updateActiveIndex()
+//                token.activeIndex = settings.players.activePlayerIndex
             }
             .onEnded() { value in
                 updateTokenLocation()
+//                token.moveToActiveRect()
                 tokenLocation = token.location
             }
     }
