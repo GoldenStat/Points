@@ -9,7 +9,8 @@
 import Foundation
 
 /// GameState: a list of the current players and their scores
-/// every struct captures a moment in the game
+///
+/// every entity captures a round in the game
 struct GameState : Codable, Hashable, Identifiable, Equatable {
     
     static func == (lhs: GameState, rhs: GameState) -> Bool {

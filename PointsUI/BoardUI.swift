@@ -14,7 +14,7 @@ struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
     // manage visual representation and controls active Player
-    var token : Token { settings.token }
+    @State var token : Token = Token()
 
     var objects : Int {
         settings.players.count
@@ -36,34 +36,32 @@ struct BoardUI: View {
                                 if  index < objects {
                                     let player = settings.players.items[index]
                                     
-                                    VStack {
-                                        ZStack {
-
-                                            // MARKER: highlight background
-                                            if player == settings.players.activePlayer {
-                                                Color.clear
-//                                                    .opacity(0.05)
-                                                    .cornerRadius(12)
-                                                    .clipped()
-                                                    .emphasizeShape()
-                                                    .blur(radius: 20, opaque: false)
-                                                    .frame(width: geom.size.width / 2,
-                                                           height: geom.size.height / 2)
-                                            }
-                                            
-                                            CounterView(counter: player.games)
-                                                .padding(.horizontal)
-                                            
-                                            playerView(for: player)
-                                                .padding()
+                                    ZStack {
+                                        
+                                        // MARK: - highlight background
+                                        if player == settings.players.activePlayer {
+                                            Color.clear
+                                                //                                                    .opacity(0.05)
+                                                .cornerRadius(12)
+                                                .clipped()
+                                                .emphasizeShape()
+                                                .blur(radius: 20, opaque: false)
                                                 .frame(width: geom.size.width / 2,
                                                        height: geom.size.height / 2)
-                                                .anchorPreference(key: TokenAnchorPreferenceKey.self,
-                                                                  value: .bounds,
-                                                                  transform: { bounds in
-                                                                    [TokenAnchor(viewIdx: index, bounds: bounds)]
-                                                                  })
                                         }
+                                        
+                                        playerView(for: player)
+                                            .padding()
+                                            .frame(width: geom.size.width / 2,
+                                                   height: geom.size.height / 2)
+                                            
+                                            // MARK: preference data for the views
+                                            .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                                                              value: .bounds,
+                                                              transform: { bounds in
+                                                                [TokenAnchor(viewIdx: index, bounds: bounds)]
+                                                              })
+                                        
                                     }
                                 }
                             }
@@ -82,78 +80,93 @@ struct BoardUI: View {
             }
         }
         
+        // actions when the view appears:
+        // reset players
+        // * initialize token position
+        // connect settings with token instance
         .onAppear() {
             settings.players.reset()
             token.resetPosition()
+            settings.token = token
+            token.setup(with: settings.numberOfPlayers)
         }
     }
-    
-    // MARK: - player views
-    
-    @ViewBuilder private var playerViews : some View {
-        ForEach(settings.players.items) { player in
-            playerView(for: player)
-        }
-    }
-    
+        
     // MARK: - token code
-    /// a pseudo - view to use its side effect to update the active Frame
-    /// it exists, because GeometryReader's block is a ViewBuiler function
+    ///
+    /// this function is triggered by .overlayPreferenceValue when the geometries change
+    /// it creates a token View, this view needs all the preferences of the player's views to calcluate
+    /// the token's position
     func updateRects(_ geometry: GeometryProxy,
                      _ preferences: [TokenAnchor]) -> some View {
 
-        token.update(rects: preferences.map { geometry[$0.bounds] })
+        let rects = preferences.map { geometry[$0.bounds] }
+        
+        // update the rects in the toke structure to calculate the active Index
+        // base on the token's position
+        token.update(rects: rects)
 
-        return ActivePlayerMarkerView(drag: $drag)
+        return ActivePlayerMarkerView(token: token)
             .gesture(dragGesture)
 
     }
-        
-    @State var drag: CGSize = .zero
-    
+            
+    /// Attached to
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 10)
             .onChanged() { dragValue in
-                drag = dragValue.translation
-                token.activateNearestRect(for: dragValue.location)
+                token.location = dragValue.location
             }
             .onEnded() { value in
-                token.moveToActiveRect()
-                token.location = value.location
+                if token.activeIndex != nil {
+                    token.moveToActiveRect()
+                } else {
+                    token.resetPosition()
+                }
             }
     }
     
     // MARK: - show the buffer
+    
     private let showBufferContents = true
     
     let bufferViewSize : CGFloat = 144.0
     
     /// a player accepting a text-to number convertible onDrop for the buffer
-    /// starts a timer
+    ///
+    /// starts a timer. Modified to be a VStack with a GameCounter
+    ///
     func playerView(for player: Player) -> some View {
-        PlayerView(player: player)
-            // to receive drop values, the .onDrag must be called in the correspondent subview
-            .onDrop(of: ["public.utf8-plain-text"], isTargeted: nil) { provider in
-                guard let pkg = provider.first, pkg.canLoadObject(ofClass: NSString.self) else {
-                    // just to make sure we have the buffer
-                    return false
-                }
-                _ = pkg.loadObject(ofClass: NSString.self) { reading, error in
-                    if let string = reading as? String {
-                        if let buffer = Int(string) {
-                            DispatchQueue.main.async {
-                                withAnimation(.easeInOut(duration: 2.0)) {
-                                    // overwrite what's in the buffer
-                                    player.store(score: buffer)
-                                    settings.storeInHistory()
+        
+        VStack {
+            
+            CounterView(counter: player.games)
+                .padding(.horizontal)
+            
+            PlayerView(player: player)
+                // to receive drop values, the .onDrag must be called in the correspondent subview
+                .onDrop(of: ["public.utf8-plain-text"], isTargeted: nil) { provider in
+                    guard let pkg = provider.first, pkg.canLoadObject(ofClass: NSString.self) else {
+                        // just to make sure we have the buffer
+                        return false
+                    }
+                    _ = pkg.loadObject(ofClass: NSString.self) { reading, error in
+                        if let string = reading as? String {
+                            if let buffer = Int(string) {
+                                DispatchQueue.main.async {
+                                    withAnimation(.easeInOut(duration: 2.0)) {
+                                        // overwrite what's in the buffer
+                                        player.store(score: buffer)
+                                        settings.storeInHistory()
+                                    }
+                                    settings.startTimer()
                                 }
-                                settings.startTimer()
                             }
                         }
                     }
-                }
-                return true
-            }
+                    return true
+                } // the onDrop modifier
+        }
     }
 }
 

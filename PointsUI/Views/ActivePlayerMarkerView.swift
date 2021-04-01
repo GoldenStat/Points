@@ -10,47 +10,57 @@ import SwiftUI
 
 /// Main components of the token are it's original position, a manipulatatble
 ///
-/// change the delta to it's original position -> the location is calculated as delta to it's last location
 /// change the activeIndex (index of the referring rect) -> the lastPosition is updated regarding on the geometry of this rect. Delta is reset
 /// calling updateLocation() -> the nearest center of the rects is found, and lastPosition is updated in reference to that rect
 ///
 class Token : ObservableObject {
+
     var size: CGFloat = 80
-    private var origin: CGPoint = CGPoint(x: 200, y: 80)
-    @Published var location: CGPoint = CGPoint(x: 80, y: 80)
-
-    @Published var activeIndex: Int? = nil
-    @Published var rects: [CGRect]
-
-    init(for number: Int) {
-        rects = Array<CGRect>(repeating: CGRect(), count: number)
-    }
     
+    private var origin: CGPoint = CGPoint(x: 200, y: 80)
+    
+    @Published var location: CGPoint = CGPoint(x: 80, y: 80) {
+        didSet {
+            activateNearestRect()
+        }
+    }
+
+    public func setup(with numberOfRects: Int) {
+        rects = Array<CGRect>(repeating: CGRect(), count: numberOfRects)
+    }
+
+    @Published var activeIndex: Int? = nil { didSet {
+        moveToActiveRect()
+    }}
+    
+    @Published var rects: [CGRect] = []
+    
+    /// if our calling view wants to do something with this information (e.g. highligt the area)
     public var activeFrame: CGRect? {
         if let index = activeIndex, index < rects.count, index > 0 {
             return rects[activeIndex!]            
         }
         return nil
     }
-    
-    func update(activeIndex: Int?, rects: [CGRect]) {
-        self.activeIndex = activeIndex
-        self.rects = rects
-    }
-        
+            
+    /// a controller might want to set the rect we should move to
     public func update(activeIndex: Int?) {
         self.activeIndex = activeIndex
     }
     
+    /// called if the referencing rect's bounds change
     public func update(rects: [CGRect]) {
         self.rects = rects
     }
 
+    /// go back to original location (e.g. if the game restarts / no player got activated)
     public func resetPosition() {
         location = origin
     }
         
-    public func activateNearestRect(for location: CGPoint) {
+    /// called internally whenever the location is updated
+    /// returns the rect closest to the token
+    private func activateNearestRect() {
         var nearestDistance: CGFloat = .infinity
         for (index,rect) in rects.enumerated() {
             let distanceToLocation = rect.center.squareDistance(to: location)
@@ -126,8 +136,7 @@ class Token : ObservableObject {
 struct ActivePlayerMarkerView: View {
     
     @EnvironmentObject var settings: GameSettings
-    var token : Token { settings.token }
-    @Binding var drag: CGSize
+    @ObservedObject var token : Token
     
     var body: some View {
         Circle()
@@ -139,7 +148,6 @@ struct ActivePlayerMarkerView: View {
                     .foregroundColor(.white)
             )
             .position(token.location)
-            .offset(drag)
     }        
 }
 
