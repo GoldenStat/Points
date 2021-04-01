@@ -13,9 +13,6 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
-    // manage visual representation and controls active Player
-    @State var token : Token = Token()
-
     var objects : Int {
         settings.players.count
     }
@@ -36,33 +33,18 @@ struct BoardUI: View {
                                 if  index < objects {
                                     let player = settings.players.items[index]
                                     
-                                    ZStack {
+                                    activePlayerView(for: player)
+                                        .frame(width: geom.size.width * 0.5,
+                                               height: geom.size.height * 0.39)
                                         
-                                        // MARK: - highlight background
-                                        if player == settings.players.activePlayer {
-                                            Color.clear
-                                                //                                                    .opacity(0.05)
-                                                .cornerRadius(12)
-                                                .clipped()
-                                                .emphasizeShape()
-                                                .blur(radius: 20, opaque: false)
-                                                .frame(width: geom.size.width / 2,
-                                                       height: geom.size.height / 2)
-                                        }
-                                        
-                                        playerView(for: player)
-                                            .padding()
-                                            .frame(width: geom.size.width / 2,
-                                                   height: geom.size.height / 2)
-                                            
-                                            // MARK: preference data for the views
-                                            .anchorPreference(key: TokenAnchorPreferenceKey.self,
-                                                              value: .bounds,
-                                                              transform: { bounds in
-                                                                [TokenAnchor(viewIdx: index, bounds: bounds)]
-                                                              })
-                                        
-                                    }
+                                        // MARK: preference data for the views
+                                        .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                                                          value: .bounds,
+                                                          transform: { bounds in
+                                                            [TokenAnchor(viewIdx: index, bounds: bounds)]
+                                                          })
+                                    
+                                    
                                 }
                             }
                         }
@@ -77,54 +59,141 @@ struct BoardUI: View {
             preferences in
             GeometryReader { geometry in
                 updateRects(geometry, preferences)
+                    .position(tokenLocation)
+                    .gesture(dragGesture)
+                    .scaleEffect(zoomFactor)
+                    .shadow(color: zoomFactor > 1 ? .black : .clear,
+                            radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 14, y: 14)
             }
         }
         
         // actions when the view appears:
         // reset players
-        // * initialize token position
         // connect settings with token instance
         .onAppear() {
             settings.players.reset()
             token.resetPosition()
             settings.token = token
-            token.setup(with: settings.numberOfPlayers)
         }
     }
-        
+    @State var tokenLocation = Token().location
+            
     // MARK: - token code
-    ///
+    // manage visual representation and controls active Player
+    @State var token : Token = Token()
+
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
     /// the token's position
     func updateRects(_ geometry: GeometryProxy,
                      _ preferences: [TokenAnchor]) -> some View {
 
-        let rects = preferences.map { geometry[$0.bounds] }
+        token.rects = preferences.map { geometry[$0.bounds] }
         
         // update the rects in the toke structure to calculate the active Index
         // base on the token's position
-        token.update(rects: rects)
+        token.update(rects: token.rects)
 
-        return ActivePlayerMarkerView(token: token)
-            .gesture(dragGesture)
-
+        return ActivePlayerMarkerView()
     }
-            
-    /// Attached to
+                
+    func activePlayerView(for player: Player) -> some View {
+        func shadowColor(for player: Player) -> Color {
+            player == settings.players.activePlayer ? .green : .clear
+        }
+
+        return playerView(for: player)
+            .shadow(color: shadowColor(for: player),
+                    radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
+    }
+    
+    @GestureState var zoomFactor: CGFloat = 1
+    
+    // MARK: handle token position
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 10)
-            .onChanged() { dragValue in
+            .updating($zoomFactor) { dragValue, state, _ in
+                withAnimation() {
+                    state = 1.3
+                }
                 token.location = dragValue.location
+                tokenLocation = dragValue.location
+                
+                updateActiveIndex()
             }
             .onEnded() { value in
-                if token.activeIndex != nil {
-                    token.moveToActiveRect()
-                } else {
-                    token.resetPosition()
+                updateActiveIndex()
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    updateTokenLocation()
                 }
             }
     }
+    
+    /// called when the move gesture ends
+    /// moves the token to the active Frame
+    func updateTokenLocation() {
+        guard let activeIndex = settings.players.activePlayerIndex else { return }
+        
+        token.location = tokenLocation(for: activeIndex)
+        
+        /// get token Location for a given index
+        ///
+        /// orientates itself on the Grid's tokenEdge method
+        /// defaults to center of the frame
+        func tokenLocation(for index: Int) -> CGPoint {
+            let padding = token.size * 3 / 4
+            let frame = token.rects[index]
+            let item = PlayerGrid(index: index)
+            let distanceFromEdge = padding + token.size / 2
+            let newTokenLocation : CGPoint
+            
+            if item.tokenEdge == Edge.Set.top {
+                // move token above the frame
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.minY - distanceFromEdge
+                )
+            } else if item.tokenEdge == Edge.Set.bottom {
+                // move token below the frame
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.maxY + distanceFromEdge
+                )
+            } else if item.tokenEdge == Edge.Set.leading {
+                // move token left the frame ... not right if .leading is not "left"
+                newTokenLocation = CGPoint(
+                    x: frame.minX - distanceFromEdge + padding / 4 * 3,
+                    y: frame.midY
+                )
+            } else if item.tokenEdge == Edge.Set.trailing {
+                // move token right of the frame
+                newTokenLocation = CGPoint(
+                    x: frame.maxX + distanceFromEdge - padding / 4 * 3,
+                    y: frame.midY
+                )
+            } else {
+                newTokenLocation = CGPoint(
+                    x: frame.midX,
+                    y: frame.minY + distanceFromEdge
+                )
+            }
+            
+            return newTokenLocation
+        }
+    }
+    
+    /// figure out nearest view to Token position
+    func updateActiveIndex() {
+        var nearestDistance: CGFloat = .infinity
+        for (index,rect) in token.rects.enumerated() {
+            let distanceToLocation = rect.center.squareDistance(to: token.location)
+            if nearestDistance > distanceToLocation {
+                nearestDistance = distanceToLocation
+                settings.players.activePlayerIndex = index
+            }
+        }
+    }
+    
     
     // MARK: - show the buffer
     

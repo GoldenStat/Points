@@ -40,9 +40,9 @@ struct PlayerView: View {
                 )
                 .environmentObject(player)
             }
-            .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
-                dimension[.top]
-            })
+//            .alignmentGuide(VerticalAlignment.markerAlignment, computeValue: { dimension in
+//                dimension[.top]
+//            })
             .emphasizeShape(cornerRadius: cornerRadius)
             .padding()
             .gesture(countScoreGesture)
