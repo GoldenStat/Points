@@ -76,7 +76,8 @@ struct BoardUI: View {
     // manage visual representation and controls active Player
     @State var token : Token = Token()
     @State var tokenLocation = Token().location
-
+    var activeIndex: Int? { settings.players.activePlayerIndex }
+    
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
     /// the token's position
@@ -85,43 +86,29 @@ struct BoardUI: View {
 
         token.rects = preferences.map { geometry[$0.bounds] }
         
-        // update the rects in the toke structure to calculate the active Index
+        // update the rects in the token structure to calculate the active Index
         // base on the token's position
         token.update(rects: token.rects)
         
-        return ActivePlayerMarkerView()
-            // animated
-            .scaleEffect(zoomFactor)
-            .shadow(color: zoomFactor > 1 ? .black : .clear,
-                    radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 14, y: 14)
-            .animation(.easeInOut)
-
+        return ActivePlayerMarkerView(size: token.size,
+                                      animate: isDraggingToken)
             // not animated
             .position(tokenLocation)
+            .offset(tokenDelta)
             .gesture(dragGesture)
             .animation(nil)
  
     }
-                
-    func activePlayerView(for player: Player) -> some View {
-        func shadowColor(for player: Player) -> Color {
-            player == settings.players.activePlayer ? .green : .clear
-        }
+                    
+    @GestureState var tokenDelta: CGSize = .zero
+    var isDraggingToken: Bool { tokenDelta != .zero }
 
-        return playerView(for: player)
-            .shadow(color: shadowColor(for: player),
-                    radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
-    }
-    
-    @GestureState var zoomFactor: CGFloat = 1
-    
     // MARK: handle token position
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 10)
-            .updating($zoomFactor) { dragValue, state, _ in
-                state = 1.3
+            .updating($tokenDelta) { dragValue, state, _ in
                 token.location = dragValue.location
-                tokenLocation = dragValue.location
+                state = dragValue.translation
                 
                 updateActiveIndex()
             }
@@ -153,30 +140,30 @@ struct BoardUI: View {
                 // move token above the frame
                 newTokenLocation = CGPoint(
                     x: frame.midX,
-                    y: frame.minY - distanceFromEdge
+                    y: frame.minY - distanceFromEdge - padding
                 )
             } else if item.tokenEdge == Edge.Set.bottom {
                 // move token below the frame
                 newTokenLocation = CGPoint(
                     x: frame.midX,
-                    y: frame.maxY + distanceFromEdge
+                    y: frame.maxY + distanceFromEdge + padding
                 )
             } else if item.tokenEdge == Edge.Set.leading {
                 // move token left the frame ... not right if .leading is not "left"
                 newTokenLocation = CGPoint(
-                    x: frame.minX - distanceFromEdge + padding / 4 * 3,
+                    x: frame.minX - distanceFromEdge + padding * 0.75,
                     y: frame.midY
                 )
             } else if item.tokenEdge == Edge.Set.trailing {
                 // move token right of the frame
                 newTokenLocation = CGPoint(
-                    x: frame.maxX + distanceFromEdge - padding / 4 * 3,
+                    x: frame.maxX + distanceFromEdge - padding * 0.75,
                     y: frame.midY
                 )
             } else {
                 newTokenLocation = CGPoint(
                     x: frame.midX,
-                    y: frame.minY + distanceFromEdge
+                    y: frame.minY + distanceFromEdge + padding
                 )
             }
             
@@ -195,6 +182,18 @@ struct BoardUI: View {
             }
         }
     }
+    
+    /// emphasize the active Player a little
+    func activePlayerView(for player: Player) -> some View {
+        func shadowColor(for player: Player) -> Color {
+            player == settings.players.activePlayer ? .green : .clear
+        }
+
+        return playerView(for: player)
+            .shadow(color: shadowColor(for: player),
+                    radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
+    }
+
     
     
     // MARK: - show the buffer

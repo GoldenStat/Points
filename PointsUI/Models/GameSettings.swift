@@ -312,7 +312,7 @@ class GameSettings: ObservableObject {
         cancelTimers()
         // activate next player
         players.updateActivePlayerIndex()
-        token?.update(activeIndex: players.activePlayerIndex)
+        objectWillChange.send()
     }
     
     // MARK: - active player handling using a token Marker

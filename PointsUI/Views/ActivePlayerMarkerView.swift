@@ -37,12 +37,7 @@ class Token : ObservableObject {
         }
         return nil
     }
-            
-    /// a controller might want to set the rect we should move to
-    public func update(activeIndex: Int?) {
-        self.activeIndex = activeIndex
-    }
-    
+                
     /// called if the referencing rect's bounds change
     public func update(rects: [CGRect]) {
         self.rects = rects
@@ -129,10 +124,8 @@ class Token : ObservableObject {
 
 /// the marker shows who is "active", e.g. the dealer and puts a frame around the active one
 struct ActivePlayerMarkerView: View {
-    @EnvironmentObject var settings: GameSettings
-    var token : Token? { settings.token }
-    var size : CGFloat { token?.size ?? .zero}
-    
+    var size : CGFloat
+    var animate : Bool = false
     var body: some View {
         Circle()
             .frame(width: size, height: size)
