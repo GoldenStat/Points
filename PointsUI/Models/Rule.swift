@@ -205,6 +205,23 @@ struct Rule : Identifiable, Hashable {
     var scoreStep: ScoreStep = .one(1)
     
     static let defaultRule : Rule = .trucoVenezolano
+    static var selectableRules: [Rule] = []
+    
+    static func setup() {
+        add(rule: .trucoArgentino)
+        add(rule: .trucoVenezolano)
+        add(rule: .doppelkopf)
+        add(rule: .caida)
+        add(rule: .scopa)
+        add(rule: .skat)
+        add(rule: .shitzu)
+        add(rule: .maumau)
+        add(rule: .domino)
+    }
+    
+    static func add(rule: Rule) {
+        selectableRules.append(rule)
+    }
     
     static let trucoArgentino = Rule(name: "Truco Argentino",
                                      maxPoints: .selection([24,30]),

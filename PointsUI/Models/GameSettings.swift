@@ -63,6 +63,11 @@ class GameSettings: ObservableObject {
             handlePlayerChange(to: chosenNumberOfPlayers)
         }
     }
+    
+    // MARK: - active player handling using a token Marker
+    /// a token to show the active Player - will be set and used by a view
+    @Published var token: Token
+
 
     // MARK: - setup
     
@@ -70,16 +75,12 @@ class GameSettings: ObservableObject {
     func resetToFactorySettings() {
         players = Players.sample
         chosenNumberOfPlayers = players.names.count
-        history = History()
-        maxPoints = 0
+        history.reset()
         maxGames = 2
         rule = .trucoVenezolano
-//        createRules()
+        maxPoints = rule.maxPoints.maxValue
     }
-    
-    /// a token to show the active Player - will be set and used by a view
-    @Published var token: Token
-    
+        
     init() {
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
@@ -120,7 +121,7 @@ class GameSettings: ObservableObject {
     @Published var rule: Rule { didSet { processRuleUpdate() } }
 
     func setupRules() {
-        createRules()
+        Rule.setup()
         rule = rule(id: GlobalSettings.ruleID)
         processRuleUpdate()
     }
@@ -163,28 +164,12 @@ class GameSettings: ObservableObject {
         scoreStep = rule.scoreStep.defaultValue
     }
             
-    var possibleRules = [Rule]()
+    var possibleRules : [Rule] { Rule.selectableRules }
     
     /// a value to be added to player's scores in interface
     /// must be updated when the rules change
     @Published var scoreStep: Int = 1
-    
-    func createRules() {
-        addRule(.trucoArgentino)
-        addRule(.trucoVenezolano)
-        addRule(.doppelkopf)
-        addRule(.caida)
-        addRule(.scopa)
-        addRule(.skat)
-        addRule(.shitzu)
-        addRule(.maumau)
-        addRule(.domino)
-    }
-    
-    func addRule(_ rule: Rule) {
-        possibleRules.append(rule)
-    }
-        
+                
     // MARK: - control player data
     var numberOfPlayers: Int { players.count }
         
