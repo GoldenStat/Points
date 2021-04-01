@@ -12,6 +12,8 @@ struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
     @State var showSums = false
     
+    private var players : Players { settings.players }
+    
     private var historyMode : HistoryView.Mode {
         showSums ? .perRow : .total
     }
@@ -27,7 +29,7 @@ struct ScoreHistoryView: View {
                 .padding()
             
             HistoryView(history: settings.history,
-                        playerNames: settings.playerNames,
+                        playerNames: players.names,
                         showHistoryBuffer: showBuffer,
                         mode:  historyMode)
                 .animation(/*@START_MENU_TOKEN@*/.easeIn/*@END_MENU_TOKEN@*/)

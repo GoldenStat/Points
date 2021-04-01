@@ -14,18 +14,13 @@ class GameSettings: ObservableObject {
     /// the player objects store all current data
     /// reset history when this is reset
     @Published var players : Players { didSet { history.reset() }}
-    
-    /// one player is active at a time - e.g. dealing
-    @Published var activePlayer: Player?
-    
-    /// only one Player can be 'modified' at a time - use for name change
-    @Published var editingPlayer: Player?
-    
-    /// all game states so far
+        
+    /// track all game states - scores of all rounds
     @Published var history : History
     
     /// after these many games the game is over and a winning animation is shon
     @Published var maxGames: Int
+    
     // MARK: TODO: make a stringconvertible property wrapper to save typing below functions
     var maxGamesString: String {
         get { String(maxGames) }
@@ -34,6 +29,7 @@ class GameSettings: ObservableObject {
     
     /// the amount you need to win a game
     @Published var maxPoints: Int
+    
     var maxPointsString: String {
         get { String(maxPoints) }
         set { maxPoints = Int(newValue) ?? GlobalSettings.scorePerGame }
@@ -55,8 +51,6 @@ class GameSettings: ObservableObject {
     /// used to drag'n drop points around
     @Published var pointBuffer: Int?
 
-    /// the rules of the game - determines player interface, possible score steps, maxpoints
-    @Published var rule: Rule { didSet { processRuleUpdate() } }
         
     /// players that can be chosen. Will be set by rules
     var availablePlayers : [Int] = []
@@ -74,7 +68,6 @@ class GameSettings: ObservableObject {
     
     /// reset the settings to get a defined default
     func resetToFactorySettings() {
-        activePlayer = nil
         players = Players.sample
         chosenNumberOfPlayers = players.names.count
         history = History()
@@ -84,18 +77,17 @@ class GameSettings: ObservableObject {
 //        createRules()
     }
     
-    /// a token to show the active Player
+    /// a token to show the active Player - will be set and used by a view
     @Published var token: Token
     
     init() {
-        activePlayer = nil
         chosenNumberOfPlayers = GlobalSettings.chosenNumberOfPlayers
         players = Players(names: GlobalSettings.playerNames)
         history = History()
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = Rule.defaultRule // needs to be set to enable calling methods
-        token = Token(for: GlobalSettings.playerNames.count)
+        token = Token(for: GlobalSettings.playerNames.count) // initializes the token with the player count
         setupRules()
 //        resetToFactorySettings()
     }
@@ -124,6 +116,9 @@ class GameSettings: ObservableObject {
     }
     
     // MARK: - rules
+    /// the rules of the game - determines player interface, possible score steps, maxpoints
+    @Published var rule: Rule { didSet { processRuleUpdate() } }
+
     func setupRules() {
         createRules()
         rule = rule(id: GlobalSettings.ruleID)
@@ -171,6 +166,7 @@ class GameSettings: ObservableObject {
     var possibleRules = [Rule]()
     
     /// a value to be added to player's scores in interface
+    /// must be updated when the rules change
     @Published var scoreStep: Int = 1
     
     func createRules() {
@@ -191,34 +187,8 @@ class GameSettings: ObservableObject {
         
     // MARK: - control player data
     var numberOfPlayers: Int { players.count }
-    
-    var playerNames: [ String ] { players.names }
-    
-    func player(named name: String) -> Player? {
-        // TODO: move to *Players*
-        players.items.filter {$0.name == name}.first
-    }
-    
-    func changePlayerName(from name: String, to newName: String) {
-        if let player = player(named: name) {
-            player.name = newName
-        }
-    }
-    
-    /// reset the players. Changes scores, resets history - for starting a new game
-    func resetPlayers() {
-        // TODO: move to *Players*
-        // create new players
-        // also resets the wonGames!
-        players = Players(names: players.names)
-        activePlayer = players.items.first!
-    }
-    
-    /// reset only the scores of the players, not the game count
-    func resetPlayerScores() {
-        // TODO: move to *Players*
-        _ = players.items.map { $0.score = Score(0) }
-    }
+        
+    @Published var editingPlayer: Player?
     
     // add or remove players appropriately
     func handlePlayerChange(to newPlayers: Int) {
@@ -231,7 +201,7 @@ class GameSettings: ObservableObject {
         }
 
         // start a new game
-        resetPlayers()
+        players.reset()
     }
 
     // add or remove players appropriately
@@ -248,14 +218,14 @@ class GameSettings: ObservableObject {
     func addRandomPlayer() {
         guard canAddPlayer else { return }
         players.add(name: "Player \(players.count + 1)")
-        resetPlayers() // set all counts to zerio
+        players.reset() // set all counts to zerio
         objectWillChange.send()
     }
     
     func removeLastPlayer() {
         guard canRemovePlayer else { return }
         _ = players.removeLast()
-        resetPlayers()
+        players.reset()
     }
 
     // MARK: - control game State
@@ -275,12 +245,12 @@ class GameSettings: ObservableObject {
         }
         
         // only set scores to zero, don't reset won games!
-        resetPlayerScores()
+        players.resetScores()
         history.reset()
     }
     
     func newGame() {
-        resetPlayers() // also resets history
+        players.reset() // also resets history
         playerWonRound = nil
         playerWonGame = nil
     }
@@ -347,7 +317,7 @@ class GameSettings: ObservableObject {
 
         cancelTimers()
 
-        players.saveScore() // reset all player scores' buffers, updates values, reflects visually
+        players.saveScores() // reset all player scores' buffers, updates values, reflects visually
         
         // check if a player has won and handle the win
         checkPlayerWon()
@@ -362,11 +332,7 @@ class GameSettings: ObservableObject {
         history.save()
         cancelTimers()
         // activate next player
-        if self.activePlayer != nil {
-            players.updateActivePlayer()
-        } else {
-            self.activePlayer = players.items.first
-        }
+        players.updateActivePlayerIndex()
     }
     
     // MARK: - history functions

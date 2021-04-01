@@ -96,7 +96,7 @@ struct HistoryTestView: View {
     func saveRound() {
         /// makes the round permament (as in GameSettings.updateRound())
 
-        players.saveScore() // saves players score
+        players.saveScores() // saves players score
         
         let newState = GameState(players: players.data)
 

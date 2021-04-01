@@ -40,7 +40,7 @@ struct BoardUI: View {
                                         ZStack {
 
                                             // MARKER: highlight background
-                                            if player == settings.activePlayer {
+                                            if player == settings.players.activePlayer {
                                                 Color.clear
 //                                                    .opacity(0.05)
                                                     .cornerRadius(12)
@@ -83,7 +83,7 @@ struct BoardUI: View {
         }
         
         .onAppear() {
-            settings.resetPlayers()
+            settings.players.reset()
             token.resetPosition()
         }
     }

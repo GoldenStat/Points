@@ -116,5 +116,53 @@
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9712AB28-36E8-433B-9426-09EA0E8A23B6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PointsUI/BoardUI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "9712AB28-36E8-433B-9426-09EA0E8A23B6 - 23c859e5bb1f76a1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Int) -&gt; SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Color, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;, SwiftUI.VStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt;&gt;)&gt; in closure #1 (SwiftUI.GeometryProxy) -&gt; SwiftUI.ZStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Color, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;, SwiftUI.VStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt;&gt;)&gt;&gt; in PointsUI.BoardUI.body.getter : some"
+                  moduleName = "PointsUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/BoardUI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42"
+                  offsetFromSymbolStart = "824">
+               </Location>
+               <Location
+                  uuid = "9712AB28-36E8-433B-9426-09EA0E8A23B6 - b94dfe16a8b3c8dc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt; in closure #1 (Swift.Int) -&gt; SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Color, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;, SwiftUI.VStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt;&gt;)&gt; in closure #1 (SwiftUI.GeometryProxy) -&gt; SwiftUI.ZStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Color, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.position(__C.CGPoint) -&gt; some&gt;&gt;.0&gt;, SwiftUI.VStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, SwiftUI.HStack&lt;SwiftUI.ForEach&lt;Swift.Range&lt;Swift.Int&gt;, Swift.Int, Swift.Optional&lt;SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.anchorPreference&lt;&#x3c4;_0_0, &#x3c4;_0_1 where &#x3c4;_1_1: SwiftUI.PreferenceKey&gt;(key: &#x3c4;_1_1.Type, value: SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;.Source, transform: (SwiftUI.Anchor&lt;&#x3c4;_1_0&gt;) -&gt; &#x3c4;_1_1.Value) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;&gt;&gt;&gt;&gt;)&gt;&gt; in PointsUI.BoardUI.body.getter : some"
+                  moduleName = "PointsUI"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/de152951/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Developer/Points/PointsUI/BoardUI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "43"
+                  endingLineNumber = "43"
+                  offsetFromSymbolStart = "380">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

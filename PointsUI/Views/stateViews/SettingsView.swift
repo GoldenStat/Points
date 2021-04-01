@@ -47,7 +47,7 @@ struct PreviewSettingsView : View {
         NavigationView {
             VStack {
                 Form {
-                    Text("Players: \(settings.playerNames.count)")
+                    Text("Players: \(settings.players.names.count)")
                     Text("MaxPoints: \(settings.maxPoints)")
                     Text("MaxGames: \(settings.maxGames)")
                     Text("Players: \(settings.chosenNumberOfPlayers)")

@@ -87,9 +87,33 @@ class Players: ObservableObject {
         guard activeIndex < items.count else { return nil }
         return items[activeIndex]
     }
+   
+    func player(named name: String) -> Player? {
+        items.filter {$0.name == name}.first
+    }
     
-    /// move the active player one further
-    func updateActivePlayer() {
+    func changePlayerName(from name: String, to newName: String) {
+        if let player = player(named: name) {
+            player.name = newName
+        }
+    }
+    
+    /// reset the players. Changes scores, resets history - for starting a new game
+    func reset() {
+        // create new players
+        // also resets the wonGames!
+        items = Players(names: names).items
+    }
+    
+    /// reset only the scores of the players, not the game count
+    func resetScores() {
+        _ = items.map { $0.score = Score(0) }
+    }
+
+    // MARK: - active player mechanics
+    /// move the active player index one further
+    /// set the index to 0 if no player is active
+    func updateActivePlayerIndex() {
         guard let activeIndex = activePlayerIndex else {
             activePlayerIndex = 0
             return
@@ -102,6 +126,7 @@ class Players: ObservableObject {
         activePlayerIndex = items.firstIndex(of: player)
     }
     
+    // MARK: - manipulating items
     func index(for player: Player) -> Int? {
         items.firstIndex(of: player)
     }
@@ -140,10 +165,10 @@ class Players: ObservableObject {
     }
     
     /// TODO: implement Property wrappers to simplify this
-    var names: [String] { items.map {$0.name} }
-    var scores: [Score] { items.map {$0.score} }
+    public var names: [String] { items.map {$0.name} }
+    public var scores: [Score] { items.map {$0.score} }
     
-    // MARK: conversion
+    // MARK: - conversion
     var data: [Player.Data] {
         get { items.map {$0.data} }
         set { // updates the players with the given data
@@ -151,7 +176,7 @@ class Players: ObservableObject {
         }
     }
     
-    var gameState: GameState { // as
+    var gameState: GameState {
         get { GameState(players: data) }
         set { setScores(to: newValue.scores) }
     }
@@ -163,7 +188,7 @@ class Players: ObservableObject {
     }
     
     // MARK: update score for all players
-    func saveScore() { _ = items.map { $0.score.save() } }
+    func saveScores() { _ = items.map { $0.score.save() } }
     
     subscript(index: Int) -> Player { items[index] }
     
@@ -209,7 +234,7 @@ class Players: ObservableObject {
 
 }
 
-// MARK: Player equality functions 
+// MARK: - Make Players Equatable
 func == (lhs: Player, rhs: Player) -> Bool {
     return lhs.name == rhs.name && lhs.score == rhs.score
 }
