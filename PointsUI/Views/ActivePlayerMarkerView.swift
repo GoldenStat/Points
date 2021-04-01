@@ -345,8 +345,8 @@ struct AnchorView : View {
     
 }
 
-struct AnchorView_Previews: PreviewProvider {
-    static var previews: some View {
-        AnchorView()
-    }
-}
+//struct AnchorView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AnchorView()
+//    }
+//}

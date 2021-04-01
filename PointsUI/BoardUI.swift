@@ -59,11 +59,6 @@ struct BoardUI: View {
             preferences in
             GeometryReader { geometry in
                 updateRects(geometry, preferences)
-                    .position(tokenLocation)
-                    .gesture(dragGesture)
-                    .scaleEffect(zoomFactor)
-                    .shadow(color: zoomFactor > 1 ? .black : .clear,
-                            radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 14, y: 14)
             }
         }
         
@@ -76,11 +71,11 @@ struct BoardUI: View {
             settings.token = token
         }
     }
-    @State var tokenLocation = Token().location
             
     // MARK: - token code
     // manage visual representation and controls active Player
     @State var token : Token = Token()
+    @State var tokenLocation = Token().location
 
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
@@ -93,8 +88,19 @@ struct BoardUI: View {
         // update the rects in the toke structure to calculate the active Index
         // base on the token's position
         token.update(rects: token.rects)
-
+        
         return ActivePlayerMarkerView()
+            // animated
+            .scaleEffect(zoomFactor)
+            .shadow(color: zoomFactor > 1 ? .black : .clear,
+                    radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 14, y: 14)
+            .animation(.easeInOut)
+
+            // not animated
+            .position(tokenLocation)
+            .gesture(dragGesture)
+            .animation(nil)
+ 
     }
                 
     func activePlayerView(for player: Player) -> some View {
@@ -113,19 +119,15 @@ struct BoardUI: View {
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 10)
             .updating($zoomFactor) { dragValue, state, _ in
-                withAnimation() {
-                    state = 1.3
-                }
+                state = 1.3
                 token.location = dragValue.location
                 tokenLocation = dragValue.location
                 
                 updateActiveIndex()
             }
             .onEnded() { value in
-                updateActiveIndex()
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    updateTokenLocation()
-                }
+                updateTokenLocation()
+                tokenLocation = token.location
             }
     }
     
@@ -141,10 +143,10 @@ struct BoardUI: View {
         /// orientates itself on the Grid's tokenEdge method
         /// defaults to center of the frame
         func tokenLocation(for index: Int) -> CGPoint {
-            let padding = token.size * 3 / 4
+            let padding = token.size * 0.25
             let frame = token.rects[index]
             let item = PlayerGrid(index: index)
-            let distanceFromEdge = padding + token.size / 2
+            let distanceFromEdge = token.size / 2
             let newTokenLocation : CGPoint
             
             if item.tokenEdge == Edge.Set.top {
