@@ -25,30 +25,48 @@ struct BoardUI: View {
         GeometryReader { geom in
             ZStack { // use all the space
                 Color.clear
-                VStack {
-                    ForEach(0 ..< PlayerGrid.rows) { rowIndex in
-                        HStack {
-                            ForEach(0 ..< PlayerGrid.cols) { colIndex in
-                                let index = PlayerGrid(row: rowIndex, col: colIndex).index
-                                if  index < objects {
-                                    let player = settings.players.items[index]
-                                    
-                                    activePlayerView(for: player)
-                                        .frame(width: geom.size.width * 0.5,
-                                               height: geom.size.height * 0.39)
+                // vertical layout
+                if geom.size.width < geom.size.height {
+                    VStack {
+                        ForEach(0 ..< PlayerGrid.rows) { rowIndex in
+                            HStack {
+                                ForEach(0 ..< PlayerGrid.cols) { colIndex in
+                                    let index = PlayerGrid(row: rowIndex, col: colIndex).index
+                                    if  index < objects {
+                                        let player = settings.players.items[index]
                                         
-                                        // MARK: preference data for the views
-                                        .anchorPreference(key: TokenAnchorPreferenceKey.self,
-                                                          value: .bounds,
-                                                          transform: { bounds in
-                                                            [TokenAnchor(viewIdx: index, bounds: bounds)]
-                                                          })
-                                    
-                                    
+                                        activePlayerView(for: player)
+                                            .frame(width: geom.size.width * 0.5,
+                                                   height: geom.size.height * 0.39)
+                                            
+                                            // MARK: preference data for the views
+                                            .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                                                              value: .bounds,
+                                                              transform: { bounds in
+                                                                [TokenAnchor(viewIdx: index, bounds: bounds)]
+                                                              })
+                                    }
                                 }
                             }
                         }
                     }
+                } else {
+                        // horizontal layout
+                        HStack {
+                            ForEach(settings.players.items) { player in
+                                activePlayerView(for: player)
+                                    .frame(width: geom.size.width * 0.9 / CGFloat(objects),
+                                           height: geom.size.height * 0.9)
+
+//                                    // MARK: preference data for the views
+//                                    .anchorPreference(key: TokenAnchorPreferenceKey.self,
+//                                                      value: .bounds,
+//                                                      transform: { bounds in
+//                                                        [TokenAnchor(viewIdx: index, bounds: bounds)]
+//                                                      })
+//
+                            }
+                        }
                 }
             }
         }
