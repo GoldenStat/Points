@@ -81,7 +81,12 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     @Published var items : [Player] = []
-    @Published var activePlayerIndex : Int? = nil
+    @Published var activePlayerIndex : Int? = nil { didSet {
+        token.activeIndex = activePlayerIndex
+    }}
+    
+    @Published var token = Token()
+    
     var activePlayer : Player? {
         guard let activeIndex = activePlayerIndex else { return nil }
         guard activeIndex < items.count else { return nil }

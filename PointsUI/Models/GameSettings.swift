@@ -83,7 +83,6 @@ class GameSettings: ObservableObject {
         maxPoints = GlobalSettings.scorePerGame
         maxGames = GlobalSettings.maxGames
         rule = Rule.defaultRule // needs to be set to enable calling methods
-        token = nil // the token must be set up by the view using it
         setupRules()
     }
     
@@ -310,17 +309,9 @@ class GameSettings: ObservableObject {
     @objc private func registerRound() {
         history.save()
         cancelTimers()
-        // activate next player - why doesn't Token update?
         players.updateActivePlayerIndex()
-        token?.objectWillChange.send()
     }
     
-    // MARK: - active player handling using a token Marker
-    /// a token to show the active Player - will be set and used by a view to store view geometry data
-    ///
-    /// here we use it to trigger an update when the timer fires and the next round begins
-    @Published var token: Token?
-
     
     // MARK: - history functions
     /// overwrite history in save buffer with player's points totals

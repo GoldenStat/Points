@@ -86,7 +86,7 @@ struct BoardUI: View {
         .onAppear() {
             settings.players.reset()
             token.resetPosition()
-            settings.token = token
+            settings.players.token = token
         }
     }
             
@@ -129,79 +129,14 @@ struct BoardUI: View {
                 token.location = dragValue.location
                 state = dragValue.translation
                 
-                updateActiveIndex()
-//                token.activeIndex = settings.players.activePlayerIndex
+                settings.players.activePlayerIndex =
+                    token.findIndexOfNearestRect()
+                
             }
             .onEnded() { value in
-                updateTokenLocation()
-//                token.moveToActiveRect()
+                token.moveToActiveRect()
                 tokenLocation = token.location
             }
-    }
-    
-    /// called when the move gesture ends
-    /// moves the token to the active Frame
-    func updateTokenLocation() {
-        guard let activeIndex = settings.players.activePlayerIndex else { return }
-        
-        token.location = tokenLocation(for: activeIndex)
-        
-        /// get token Location for a given index
-        ///
-        /// orientates itself on the Grid's tokenEdge method
-        /// defaults to center of the frame
-        func tokenLocation(for index: Int) -> CGPoint {
-            let padding = token.size * 0.25
-            let frame = token.rects[index]
-            let item = PlayerGrid(index: index)
-            let distanceFromEdge = token.size / 2
-            let newTokenLocation : CGPoint
-            
-            if item.tokenEdge == Edge.Set.top {
-                // move token above the frame
-                newTokenLocation = CGPoint(
-                    x: frame.midX,
-                    y: frame.minY - distanceFromEdge - padding
-                )
-            } else if item.tokenEdge == Edge.Set.bottom {
-                // move token below the frame
-                newTokenLocation = CGPoint(
-                    x: frame.midX,
-                    y: frame.maxY + distanceFromEdge + padding
-                )
-            } else if item.tokenEdge == Edge.Set.leading {
-                // move token left the frame ... not right if .leading is not "left"
-                newTokenLocation = CGPoint(
-                    x: frame.minX - distanceFromEdge + padding * 0.75,
-                    y: frame.midY
-                )
-            } else if item.tokenEdge == Edge.Set.trailing {
-                // move token right of the frame
-                newTokenLocation = CGPoint(
-                    x: frame.maxX + distanceFromEdge - padding * 0.75,
-                    y: frame.midY
-                )
-            } else {
-                newTokenLocation = CGPoint(
-                    x: frame.midX,
-                    y: frame.minY + distanceFromEdge + padding
-                )
-            }
-            
-            return newTokenLocation
-        }
-    }
-    
-    /// figure out nearest view to Token position
-    func updateActiveIndex() {
-        var nearestDistance: CGFloat = .infinity
-        for (index,rect) in token.rects.enumerated() {
-            let distanceToLocation = rect.center.squareDistance(to: token.location)
-            if nearestDistance > distanceToLocation {
-                nearestDistance = distanceToLocation
-                settings.players.activePlayerIndex = index
-            }
-        }
     }
     
     /// emphasize the active Player a little
@@ -274,7 +209,6 @@ extension CGPoint {
 }
 
 // MARK: - previews
-
 struct BoardUI_Previews: PreviewProvider {
     static var previews: some View {
         Group {

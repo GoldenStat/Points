@@ -43,6 +43,7 @@
 		4173576624A509D6002C10B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4173576524A509D6002C10B2 /* SettingsView.swift */; };
 		4180CC9E25C850CC009B0A42 /* HistoryTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4180CC9D25C850CC009B0A42 /* HistoryTestView.swift */; };
 		418D8B8624AE19F7008A4A3E /* PlayerWon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418D8B8524AE19F7008A4A3E /* PlayerWon.swift */; };
+		4190E44526176F0B0018C9DE /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4190E44426176F0A0018C9DE /* Token.swift */; };
 		4194BF1B24A29209007CDBA1 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4194BF1A24A29209007CDBA1 /* TitleView.swift */; };
 		4196485524D2CF09002FD363 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4196485424D2CF09002FD363 /* ContentView.swift */; };
 		41ABA24A25C468FC0074A862 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ABA24925C468FC0074A862 /* DebugView.swift */; };
@@ -113,6 +114,7 @@
 		4173576524A509D6002C10B2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4180CC9D25C850CC009B0A42 /* HistoryTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTestView.swift; sourceTree = "<group>"; };
 		418D8B8524AE19F7008A4A3E /* PlayerWon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlayerWon.swift; path = ../PlayerWon.swift; sourceTree = "<group>"; };
+		4190E44426176F0A0018C9DE /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		4194BF1A24A29209007CDBA1 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		4196485424D2CF09002FD363 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		41ABA24925C468FC0074A862 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 		41054155256EAE22001E60CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4190E44426176F0A0018C9DE /* Token.swift */,
 				4168CE2624AF925800DACD62 /* GameSettings.swift */,
 				41054156256EAE22001E60CA /* GameState.swift */,
 				41EC8FFF24E8240100038F5C /* Rule.swift */,
@@ -415,6 +418,7 @@
 				41648E64258D1E340070FB42 /* MenuBar.swift in Sources */,
 				41E2E3A625D1ABD000005043 /* HistoryView.swift in Sources */,
 				4168CE2724AF925800DACD62 /* GameSettings.swift in Sources */,
+				4190E44526176F0B0018C9DE /* Token.swift in Sources */,
 				410A97F32611E2A2007AC698 /* PlayerGrid.swift in Sources */,
 				4125D14624D59DD700D00BA9 /* Box.swift in Sources */,
 				41EC900224EE7D9900038F5C /* Pickers.swift in Sources */,
