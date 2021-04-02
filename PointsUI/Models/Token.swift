@@ -19,7 +19,11 @@ class Token : ObservableObject {
     
     private var origin: CGPoint = CGPoint(x: 100, y: 100)
     
-    @Published var location: CGPoint = CGPoint(x: 80, y: 80)
+    @Published var location: CGPoint = CGPoint(x: 80, y: 80) {
+        didSet {
+            objectWillChange.send()
+        }
+    }
 
     public func setup(with numberOfRects: Int) {
         rects = Array<CGRect>(repeating: CGRect(), count: numberOfRects)
@@ -28,7 +32,7 @@ class Token : ObservableObject {
     @Published var activeIndex: Int? = nil
     
     // there have to be more rects than max players
-    @Published var rects: [CGRect] = Array<CGRect>(repeating: CGRect(), count: 8)
+    private var rects: [CGRect] = Array<CGRect>(repeating: CGRect(), count: 8)
         
     /// if our calling view wants to do something with this information (e.g. highligt the area)
     public var activeFrame: CGRect? {
@@ -39,8 +43,8 @@ class Token : ObservableObject {
     }
                 
     /// called if the referencing rect's bounds change
-    public func update(rects: [CGRect]) {
-        self.rects = rects
+    public func update(bounds: [CGRect]) {
+        self.rects = bounds
     }
 
     /// go back to original location (e.g. if the game restarts / no player got activated)

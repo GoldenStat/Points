@@ -92,8 +92,7 @@ struct BoardUI: View {
             
     // MARK: - token code
     // manage visual representation and controls active Player
-    @State var token : Token = Token()
-    @State var tokenLocation = Token().location
+    var token : Token { settings.players.token }
     
     var activeIndex: Int? { settings.players.activePlayerIndex }
     
@@ -103,17 +102,11 @@ struct BoardUI: View {
     func updateRects(_ geometry: GeometryProxy,
                      _ preferences: [TokenAnchor]) -> some View {
 
-        token.rects = preferences.map { geometry[$0.bounds] }
-        
-        // update the rects in the token structure to calculate the active Index
-        // base on the token's position
-        token.update(rects: token.rects)
-        
-        return ActivePlayerMarkerView(size: token.size,
+        token.update(bounds: preferences.map { geometry[$0.bounds] })
+                
+        return ActivePlayerMarkerView(token: token,
                                       animate: isDraggingToken)
             // not animated
-            .position(tokenLocation)
-            .offset(tokenDelta)
             .gesture(dragGesture)
             .animation(nil)
  
@@ -135,11 +128,11 @@ struct BoardUI: View {
             }
             .onEnded() { value in
                 token.moveToActiveRect()
-                tokenLocation = token.location
             }
     }
     
-    /// emphasize the active Player a little
+    // MARK: - border for active Player
+    /// emphasize the active Player
     func activePlayerView(for player: Player) -> some View {
         func shadowColor(for player: Player) -> Color {
             player == settings.players.activePlayer ? .green : .clear
