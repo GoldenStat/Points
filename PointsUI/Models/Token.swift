@@ -49,9 +49,7 @@ class Token : ObservableObject {
     }}
     
     func toggleState() {
-        
         state.toggle()
-                
     }
 
     public func setup(with numberOfRects: Int) {
@@ -122,7 +120,7 @@ class Token : ObservableObject {
             var padding : CGFloat { size / 2 }
 
             let item = PlayerGrid(index: index)
-            let distanceFromEdge = padding
+            let distanceFromEdge = padding + size / 2
             let newTokenLocation : CGPoint
             
             if item.tokenEdge == Edge.Set.top {
@@ -153,11 +151,6 @@ class Token : ObservableObject {
                 // don't change
                 return self.location
             }
-            
-            /// don't move if distance is too big
-//            if newTokenLocation.squareDistance(to: self.location) > 100 {
-//                return self.location
-//            }
             
             return newTokenLocation
         }

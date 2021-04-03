@@ -155,6 +155,10 @@ class GameSettings: ObservableObject {
         }
         
         scoreStep = rule.scoreStep.defaultValue
+        
+        // reset player's scores and history
+        players.resetScores()
+        history.reset()
     }
             
     var possibleRules : [Rule] { Rule.selectableRules }

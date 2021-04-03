@@ -81,16 +81,12 @@ class Players: ObservableObject {
     ///   - items: an array of <Player>-objects
     ///   - names: a convenience variable that returns only the names as strings from above array
     @Published var items : [Player] = []
+    
+    /// the index manages the active player
     @Published var activePlayerIndex : Int? = nil { didSet {
         token.activeIndex = activePlayerIndex
     }}
-    
-    var activePlayer : Player? {
-        guard let activeIndex = activePlayerIndex else { return nil }
-        guard activeIndex < items.count else { return nil }
-        return items[activeIndex]
-    }
-   
+       
     func player(named name: String) -> Player? {
         items.filter {$0.name == name}.first
     }
@@ -117,16 +113,23 @@ class Players: ObservableObject {
     // MARK: - token code
     @Published var token = Token()
     
+    /// update token location and send it to nearest rect of that location
     func updateToken(location: CGPoint) {
         // update token location
         token.location = location
         
         // update player index
         activePlayerIndex = token.findIndexOfNearestRect()
-
     }
 
     // MARK: - active player mechanics
+
+    var activePlayer : Player? {
+        guard let activeIndex = activePlayerIndex else { return nil }
+        guard activeIndex < items.count else { return nil }
+        return items[activeIndex]
+    }
+
     /// move the active player index one further
     /// set the index to 0 if no player is active
     func updateActivePlayerIndex() {
@@ -136,6 +139,17 @@ class Players: ObservableObject {
         }
         
         activePlayerIndex = (activeIndex + 1) % items.count
+        token.moveToActiveRect()
+    }
+    
+    func disableActivePlayer() {
+        activePlayerIndex = nil
+    }
+    
+    /// only set the index to 1 if it's nil, as otherwise it invalidates the active player
+    func enableActivePlayer() {
+        guard activePlayerIndex == nil else { return }
+        activePlayerIndex = 0
     }
     
     func activate(_ player: Player) {
