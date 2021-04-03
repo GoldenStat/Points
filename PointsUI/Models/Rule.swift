@@ -287,8 +287,9 @@ struct Rule : Identifiable, Hashable {
     static let maumau = Rule(name: "Mau Mau",
                             maxPoints: .none,
                             players: .selection([2,3,4,5,6]),
-                            playerUI: .matches,
-                            rounds: .wins([1,2,3,5])
+                            playerUI: .numberBox,
+                            rounds: .wins([1,2,3,5]),
+                            scoreStep: .one(1)
     )
 
     init(name: String, maxPoints: PointsSelection = .none, players: PlayerCount, playerUI: PlayerUIType, rounds: GamesCount, scoreStep : ScoreStep = .one(1)) {

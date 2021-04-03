@@ -47,8 +47,6 @@ struct ButtonScoreView: View {
     var bufferOffset: CGSize = BufferParameters.final.offset
     var scaleFactor: CGFloat = 0.8
 
-    // TODO: attach onDrag gesture to get this player's buffer out of the history
-    // the text should be the biggest possible to look good, so we would get our available area, select a "box" out of it and calculate the best size
     var body: some View {
         ZStack {
             ScalingTextView(score.value.description)

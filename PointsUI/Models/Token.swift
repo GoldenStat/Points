@@ -155,9 +155,9 @@ class Token : ObservableObject {
             }
             
             /// don't move if distance is too big
-            if newTokenLocation.squareDistance(to: self.location) > 100 {
-                return self.location
-            }
+//            if newTokenLocation.squareDistance(to: self.location) > 100 {
+//                return self.location
+//            }
             
             return newTokenLocation
         }
