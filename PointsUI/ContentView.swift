@@ -84,6 +84,7 @@ struct ContentView: View {
         MenuBar(showSettings: $showSettings,
                 showInfo: $showInfo,
                 showHistory: $showHistory,
+                tokenState: $settings.players.token.state,
                 steps: stepsToUndo
                 )
             .padding(.horizontal)

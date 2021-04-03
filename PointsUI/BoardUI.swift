@@ -97,6 +97,7 @@ struct BoardUI: View {
     
     // MARK: - token code
         
+    
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
     /// the token's position
@@ -107,24 +108,44 @@ struct BoardUI: View {
         
         return ActivePlayerMarkerView(token: token,
                                       animate: isDraggingToken)
+            .opacity(tokenopacity)
+            .animation(.default)
             // not animated
             .gesture(dragGesture)
             .animation(nil)
+
  
     }
-                    
-    @GestureState var isDraggingToken: Bool = false
-
+    
+    var tokenopacity : Double {
+        if token.state == .inactive {
+            return 0.01
+        } else {
+            return 1.0
+        }
+    }
+    
+    @GestureState var draggingToken: Bool = false
+    var isDraggingToken : Bool {
+        if token.state == .inactive {
+            return false
+        } else {
+            return draggingToken
+        }
+    }
+    
     // MARK: handle token position
     var dragGesture: some Gesture {
         DragGesture()
-            .updating($isDraggingToken) { dragValue, state, _ in
+            .updating($draggingToken) { dragValue, state, _ in
                 // animate token
+                guard token.state != .inactive else { return }
                 state = true
                 
                 players.updateToken(location: dragValue.location)                
             }
             .onEnded() { value in
+                guard token.state != .inactive else { return }
                 token.moveToActiveRect()
             }
     }

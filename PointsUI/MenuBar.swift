@@ -24,39 +24,75 @@ struct MenuBar : View {
 
         /// Settings display control
     @Binding var showSettings: Bool
-
+    
         /// info display control
     @Binding var showInfo: Bool
 
         /// History control (with step counter for preview)
     @Binding var showHistory: Bool
+    
+    /// Connect the token
+    var token: Token { settings.players.token }
+    
+    @Binding var tokenState: TokenState
+
     var steps: Int = 0
         
     var body : some View {
-        ZStack {
-
-            SettingsButton(show: $showSettings)
-
-            HStack {
-                HistoryMenuSymbol(show: $showHistory, counter: steps)
-                    .fontSized()
-
-                Spacer()
-                
-                ScoreRulePicker()
-                    .padding(.horizontal, 20)
-                
-                InfoMenuSymbol(show: $showInfo)
-                    .fontSized()
-            }
-            .frame(width: 400)
-            .padding(.horizontal)
+        HStack {
+            
+            HistoryMenuSymbol(show: $showHistory, counter: steps)
+                .fontSized()
+            
+            Button() {
+                withAnimation() {
+                    tokenState.toggle()
+                    token.state = tokenState
+                }
+            } label: {
+                MenuTokenView(size: 32, state: tokenState)
+            }            
+            
+            Spacer()
+            
+            ScoreRulePicker()
+                .padding(.horizontal, 20)
+            
+            InfoMenuSymbol(show: $showInfo)
+                .fontSized()
         }
+        .frame(width: 400, height: 80)
+        .overlay(SettingsButton(show: $showSettings))
+        .padding(.horizontal)
+        
     }
 }
 
 // MARK: - subviews
 
+struct MenuTokenView: View {
+    var size: CGFloat
+    var state: TokenState
+    @Namespace var tokenMenuSpace
+    
+    // .active -> .free -> .inactive (see Token().toggle())
+    var opacity: Double { state == .free ? 0.5 : 1.0 }
+    var shadowColor: Color { state == .active ? .black : .clear }
+    
+    var body: some View {
+        Circle()
+            .frame(width: size, height: size)
+            .overlay(
+                Text ("T")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+            )
+//            .matchedGeometryEffect(id: "TokenMenu", in: tokenMenuSpace)
+            .opacity(opacity)
+            .shadow(color: shadowColor, radius: 8, x: 2, y: 2)
+    }
+    
+}
 /// shows the scoresteps if they are configurable, just the values, if not
 struct ScoreRulePicker: View {
     @EnvironmentObject var settings: GameSettings
@@ -148,12 +184,14 @@ fileprivate struct MenuBarSampleView: View {
     @State private var showInfo = false
     @State private var showHistory = false
     @State private var padding : CGFloat = 10
+    @State var tokenState : TokenState = .inactive
     
     var body: some View {
         VStack {
             MenuBar(showSettings: $showSettings,
                     showInfo: $showInfo,
-                    showHistory: $showHistory
+                    showHistory: $showHistory,
+                    tokenState: $tokenState
             )
             .sheet(isPresented: $showSettings) {
                 SettingsView()
@@ -161,7 +199,20 @@ fileprivate struct MenuBarSampleView: View {
             .sheet(isPresented: $showInfo) {
                 InfoView()
             }
+            
             VStack {
+                Section(header: Text("Token")) {
+                    switch tokenState {
+                    case .inactive:
+                        Text("inactive")
+                        
+                    case .active:
+                        Text("active")
+                        
+                    case .free:
+                        Text("free")
+                    }
+                }
                 Section(header: Text("Timer")) {
                     HStack {
                         Button(action: { settings.startTimer() }) {
@@ -187,12 +238,22 @@ fileprivate struct MenuBarSampleView: View {
                 }
                 
                 Section(header: Text("Size")) {
+                    
                     HStack {
                         Text("Padding: ".appendingFormat("%2.0f", padding))
                         Spacer()
+                        
+                        HStack {
                         Button("+") { padding = padding + CGFloat(1) }
+                            .emphasizeCircle()
                         Button("-") { padding = padding - CGFloat(1) }
+                            .emphasizeCircle()
+                        }
+                        .frame(width: 80)
                     }
+                    .padding()
+                    .background(Color.secondary
+                                    .cornerRadius(20))
                 }
             }
         }

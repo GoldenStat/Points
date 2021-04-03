@@ -14,7 +14,7 @@ struct ActivePlayerMarkerView: View {
     
     @ObservedObject var token: Token
     var size : CGFloat { token.size }
-
+    
     var animate : Bool = false
     var zoomFactor: CGFloat { animate ? 1.3 : 1.0 }
     
@@ -34,6 +34,8 @@ struct ActivePlayerMarkerView: View {
     var tokenAnimation: Animation {
         animate ? .spring(response: 1, dampingFraction: 0.1, blendDuration: 0.3) : .default
     }
+    
+    
     var body: some View {
         Circle()
             .frame(width: size, height: size)

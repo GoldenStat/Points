@@ -8,6 +8,23 @@
 
 import SwiftUI
 
+enum TokenState {
+    case active // token is used normally, aligns to player's views
+    case inactive // token is hidden in menu
+    case free // token is active, but moves around freely
+    
+    mutating func toggle() {
+        switch self {
+        case .active:
+            self = .free
+        case .free:
+            self = .inactive
+        case .inactive:
+            self = .active
+        }
+    }
+}
+
 /// Main components of the token are it's original position, a manipulatatble
 ///
 /// change the activeIndex (index of the referring rect) -> the lastPosition is updated regarding on the geometry of this rect. Delta is reset
@@ -23,6 +40,18 @@ class Token : ObservableObject {
         didSet {
             objectWillChange.send()
         }
+    }
+    
+    var state : TokenState = .inactive { didSet {
+        if state == .inactive {
+            resetPosition()
+        }
+    }}
+    
+    func toggleState() {
+        
+        state.toggle()
+                
     }
 
     public func setup(with numberOfRects: Int) {
@@ -72,10 +101,16 @@ class Token : ObservableObject {
     /// needed if token Index Is set
     public func moveToActiveRect() {
         
+        // don't move unless state is .active (as opposed to .inactive or .free)
+        
+        guard state == .active else {
+            return
+        }
+        
         // reset location if no activeIndex is set
         guard let index = activeIndex, index >= 0, index < rects.count else { self.location = origin; return }
         
-//        self.location = location(for: index, and: rects[index])
+        self.location = location(for: index, and: rects[index])
                 
         /// get token Location for a given index
         ///
