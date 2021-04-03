@@ -13,10 +13,12 @@ import SwiftUI
 struct BoardUI: View {
     @EnvironmentObject var settings: GameSettings
     
-    var objects : Int {
-        settings.players.count
-    }
-    
+    var objects : Int { players.count }
+    var players: Players { settings.players }
+
+    // manage visual representation and controls active Player
+    var token : Token { players.token }
+
     @State var lastOrientation = UIDevice.current.orientation
 
     // MARK: - main view
@@ -33,13 +35,13 @@ struct BoardUI: View {
                                 ForEach(0 ..< PlayerGrid.cols) { colIndex in
                                     let index = PlayerGrid(row: rowIndex, col: colIndex).index
                                     if  index < objects {
-                                        let player = settings.players.items[index]
+                                        let player = players.items[index]
                                         
                                         activePlayerView(for: player)
                                             .frame(width: geom.size.width * 0.5,
                                                    height: geom.size.height * 0.39)
                                             
-                                            // MARK: preference data for the views
+                                            // preference data for the views
                                             .anchorPreference(key: TokenAnchorPreferenceKey.self,
                                                               value: .bounds,
                                                               transform: { bounds in
@@ -53,12 +55,12 @@ struct BoardUI: View {
                 } else {
                         // horizontal layout
                         HStack {
-                            ForEach(settings.players.items) { player in
+                            ForEach(players.items) { player in
                                 activePlayerView(for: player)
                                     .frame(width: geom.size.width * 0.9 / CGFloat(objects),
                                            height: geom.size.height * 0.9)
 
-//                                    // MARK: preference data for the views
+//                                    // preference data for the views
 //                                    .anchorPreference(key: TokenAnchorPreferenceKey.self,
 //                                                      value: .bounds,
 //                                                      transform: { bounds in
@@ -84,15 +86,16 @@ struct BoardUI: View {
         // reset players
         // connect settings with token instance
         .onAppear() {
-            settings.players.reset()
-            token.resetPosition()
-            settings.players.token = token
+            players.reset()
         }
     }
-            
+     
+    struct idRect : Identifiable{
+        let id=UUID()
+        let rect : CGRect
+    }
+    
     // MARK: - token code
-    // manage visual representation and controls active Player
-    var token : Token { settings.players.token }
         
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
@@ -101,7 +104,7 @@ struct BoardUI: View {
                      _ preferences: [TokenAnchor]) -> some View {
 
         token.update(bounds: preferences.map { geometry[$0.bounds] })
-                
+        
         return ActivePlayerMarkerView(token: token,
                                       animate: isDraggingToken)
             // not animated
@@ -116,12 +119,10 @@ struct BoardUI: View {
     var dragGesture: some Gesture {
         DragGesture()
             .updating($isDraggingToken) { dragValue, state, _ in
-                token.location = dragValue.location
+                // animate token
                 state = true
                 
-                settings.players.activePlayerIndex =
-                    token.findIndexOfNearestRect()
-                
+                players.updateToken(location: dragValue.location)                
             }
             .onEnded() { value in
                 token.moveToActiveRect()
@@ -132,7 +133,7 @@ struct BoardUI: View {
     /// emphasize the active Player - handled over the players object
     func activePlayerView(for player: Player) -> some View {
         func shadowColor(for player: Player) -> Color {
-            player == settings.players.activePlayer ? .green : .clear
+            player == players.activePlayer ? .green : .clear
         }
 
         return playerView(for: player)

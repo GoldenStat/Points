@@ -17,7 +17,7 @@ class Token : ObservableObject {
 
     var size: CGFloat = 60
     
-    private var origin: CGPoint = CGPoint(x: 100, y: 100)
+    private var origin: CGPoint = CGPoint(x: 100, y: 0)
     
     @Published var location: CGPoint = CGPoint(x: 80, y: 80) {
         didSet {
@@ -73,9 +73,9 @@ class Token : ObservableObject {
     public func moveToActiveRect() {
         
         // reset location if no activeIndex is set
-        guard let index = activeIndex, index > 0, index < rects.count else { self.location = origin; return }
+        guard let index = activeIndex, index >= 0, index < rects.count else { self.location = origin; return }
         
-        self.location = location(for: index, and: rects[index])
+//        self.location = location(for: index, and: rects[index])
                 
         /// get token Location for a given index
         ///
@@ -85,10 +85,9 @@ class Token : ObservableObject {
 
         func location(for index: Int, and frame: CGRect ) -> CGPoint {
             var padding : CGFloat { size / 2 }
-            var markerSize : CGFloat { size }
 
             let item = PlayerGrid(index: index)
-            let distanceFromEdge = padding + markerSize / 2
+            let distanceFromEdge = padding
             let newTokenLocation : CGPoint
             
             if item.tokenEdge == Edge.Set.top {
@@ -117,6 +116,11 @@ class Token : ObservableObject {
                 )
             } else {
                 // don't change
+                return self.location
+            }
+            
+            /// don't move if distance is too big
+            if newTokenLocation.squareDistance(to: self.location) > 100 {
                 return self.location
             }
             

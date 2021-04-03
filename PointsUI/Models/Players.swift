@@ -85,8 +85,6 @@ class Players: ObservableObject {
         token.activeIndex = activePlayerIndex
     }}
     
-    @Published var token = Token()
-    
     var activePlayer : Player? {
         guard let activeIndex = activePlayerIndex else { return nil }
         guard activeIndex < items.count else { return nil }
@@ -108,11 +106,24 @@ class Players: ObservableObject {
         // create new players
         // also resets the wonGames!
         items = Players(names: names).items
+        token.resetPosition()
     }
     
     /// reset only the scores of the players, not the game count
     func resetScores() {
         _ = items.map { $0.score = Score(0) }
+    }
+
+    // MARK: - token code
+    @Published var token = Token()
+    
+    func updateToken(location: CGPoint) {
+        // update token location
+        token.location = location
+        
+        // update player index
+        activePlayerIndex = token.findIndexOfNearestRect()
+
     }
 
     // MARK: - active player mechanics
