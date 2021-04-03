@@ -116,10 +116,8 @@ class Token : ObservableObject {
                     y: frame.midY
                 )
             } else {
-                newTokenLocation = CGPoint(
-                    x: frame.midX,
-                    y: frame.minY + distanceFromEdge
-                )
+                // don't change
+                return self.location
             }
             
             return newTokenLocation

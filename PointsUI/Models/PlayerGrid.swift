@@ -65,22 +65,24 @@ import SwiftUI
 
 extension PlayerGrid {
     
-    /// if it's at the grid's border, return that edge, if not return nil
-    /// prioritize vertical borders
+    /// assign an edge to each grid position
+    ///
+    /// if it's at the grid's border, return that edge, if not return nil.
+    ///
+    /// _prioritizes vertical borders_
     var tokenEdge: Edge.Set? {
-        if row == 0 {
+        switch (row,col) {
+        case (0,_):
             return .top
-        }
-        if row == Self.rows - 1 {
+        case (Self.rows - 1,_):
             return .bottom
-        }
-        if col == 0 {
+        case (_,0):
             return Edge.Set.leading
-        }
-        if col == Self.cols - 1{
+        case (_,Self.cols - 1):
             return Edge.Set.trailing
+        default:
+            return nil
         }
-        return nil
     }
 
 }

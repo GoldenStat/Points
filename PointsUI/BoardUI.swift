@@ -93,9 +93,7 @@ struct BoardUI: View {
     // MARK: - token code
     // manage visual representation and controls active Player
     var token : Token { settings.players.token }
-    
-    var activeIndex: Int? { settings.players.activePlayerIndex }
-    
+        
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
     /// the token's position
@@ -112,15 +110,14 @@ struct BoardUI: View {
  
     }
                     
-    @GestureState var tokenDelta: CGSize = .zero
-    var isDraggingToken: Bool { tokenDelta != .zero }
+    @GestureState var isDraggingToken: Bool = false
 
     // MARK: handle token position
     var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 10)
-            .updating($tokenDelta) { dragValue, state, _ in
+        DragGesture()
+            .updating($isDraggingToken) { dragValue, state, _ in
                 token.location = dragValue.location
-                state = dragValue.translation
+                state = true
                 
                 settings.players.activePlayerIndex =
                     token.findIndexOfNearestRect()
@@ -132,7 +129,7 @@ struct BoardUI: View {
     }
     
     // MARK: - border for active Player
-    /// emphasize the active Player
+    /// emphasize the active Player - handled over the players object
     func activePlayerView(for player: Player) -> some View {
         func shadowColor(for player: Player) -> Color {
             player == settings.players.activePlayer ? .green : .clear
@@ -143,7 +140,6 @@ struct BoardUI: View {
                     radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
     }
 
-    
     
     // MARK: - show the buffer
     
