@@ -204,7 +204,7 @@ struct ScoreWheel: View {
         .onTapGesture {
             score.add(points: 1)
         }
-        onTapGesture(count: 2) {
+        .onTapGesture(count: 2) {
             score.add(points: -1)
         }
     }
@@ -275,10 +275,11 @@ struct ScoreWheel: View {
     /// NOTE: assuming stride (scoreStep) of 1!
     var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
     
-    var minNum : Int { score.sum - visibleSteps }
-    var maxNum : Int { score.sum + visibleSteps }
+    var minNum : Int { score.sum - totalSteps }
+    var maxNum : Int { score.sum + totalSteps }
         
     // MARK: - constants
+    let totalSteps = 10
     let visibleSteps = 3
     let minZoom = 0.6
     let minOpacity = 0.2
@@ -289,21 +290,57 @@ struct ScoreWheel: View {
 }
 
 struct ScoreWheelTest: View {
-    @State var score = Score()
+    @State private var score = Score()
     
     var body: some View {
-        ScoreWheel(score: $score)
+        VStack {
+            HStack {
+                Text("Score: \(score.value)")
+                Text("Buffer: \(score.buffer)")
+            }
+            .font(.title)
+            HStack {
+                ScoreWheel(score: $score)
+                    .frame(width: 200, height: 300)
+                VStack(spacing: 8) {
+                    Button() {
+                        score.add(points: 10)
+                    } label: {
+                        Image(systemName: "car.circle")
+                    }
+                    Button() {
+                        score.add(points: 5)
+                    } label: {
+                        Image(systemName: "arrow.up.circle")
+                    }
+                    Button() {
+                        score.add(points: 1)
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                    Button() {
+                        score.add(points: -1)
+                    } label: {
+                        Image(systemName: "minus.circle")
+                    }
+                }
+                .font(.largeTitle)
+
+
+            }
+            Button("Save") {
+                score.save()
+            }
+            .font(.title)
+        }
+        .animation(.easeInOut)
     }
 }
 
 struct ScrollScoreView_Previews: PreviewProvider {
     static var previews: some View {
-//        HStack {
-//            ScrollScoreView()
-//                .environmentObject(Player(name: "Lili", score: Score(43,buffer: 0)))
-//            ScrollScoreView()
-//                .environmentObject(Player(name: "Alex", score: Score(32,buffer: 0)))
-//        }
         ScoreWheelTest()
+//            .frame(width: 200, height: 300)
+//            .previewLayout(.sizeThatFits)
     }
 }
