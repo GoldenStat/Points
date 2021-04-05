@@ -47,7 +47,7 @@ class History : ObservableObject {
             }
         }
     }
-
+    
     /// what scores should our players get if we redo all steps (total scores - current game state)
     public var tmpScores: [ Score ]? {
         // subtracts first undoBuffer or last state pending from current state

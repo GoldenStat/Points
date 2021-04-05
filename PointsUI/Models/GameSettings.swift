@@ -315,9 +315,12 @@ class GameSettings: ObservableObject {
         cancelTimers()
         players.updateActivePlayerIndex()
     }
-    
-    
+        
     // MARK: - history functions
+    
+    // remember how to visualize history
+    @Published var showSumsInHistory: Bool = false
+    
     /// overwrite history in save buffer with player's points totals
     func storeInHistory() {
         history.store(state: players.totals)

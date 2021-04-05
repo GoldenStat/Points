@@ -10,21 +10,21 @@ import SwiftUI
 
 struct ScoreHistoryView: View {
     @EnvironmentObject var settings: GameSettings
-    @State var showSums = false
     
     private var players : Players { settings.players }
     
     private var historyMode : HistoryView.Mode {
-        showSums ? .perRow : .total
+        settings.showSumsInHistory ? .perRow : .total
     }
-    var showBuffer = false // show stored steps
+    
+    var showBuffer = false // during update phase
     private var history: History { settings.history }
     
     var body: some View {
         VStack {
             
             // Sum toggle button
-            SumButtonRow(toggle: $showSums)
+            SumButtonRow(toggle: $settings.showSumsInHistory)
                 .disabled(history.isEmpty)
                 .padding()
             
