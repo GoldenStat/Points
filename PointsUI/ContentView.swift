@@ -139,27 +139,8 @@ struct ContentView: View {
     @State var menuBarPosition = BarPosition.top
     
     struct HistoryControl {
-        var settings: GameSettings?
         var steps: Int = 0
         var verticalDragHandled = false
-        private(set) var storedSteps: Int = 0
-        var valueChanged: Bool { storedSteps != steps }
-        mutating func compareSteps(to valueSteps: Int) {
-            if steps < valueSteps {
-                if settings!.history.canUndo {
-                    steps = valueSteps
-                    settings?.undoHistory()
-                }
-            } else if steps > valueSteps {
-                if settings!.history.canRedo {
-                    steps = valueSteps
-                    settings?.redoHistory()
-                }
-            }
-        }
-        mutating func set(settings: GameSettings) {
-            self.settings = settings
-        }
     }
     
     // has a link to history
@@ -181,12 +162,20 @@ struct ContentView: View {
                     withAnimation() { menuBarPosition.moveDown() }
                     historyControl.verticalDragHandled = true
                     break
-                default:
+                case .left:
                     historyControl.verticalDragHandled = true
-                    historyControl.set(settings: settings)
+                    historyControl.steps = -1
                     withAnimation() {
-                        historyControl.compareSteps(to: value.steps)
+                        settings.history.undo()
                     }
+                case .right:
+                    historyControl.verticalDragHandled = true
+                    historyControl.steps = 1
+                    withAnimation() {
+                        settings.history.redo()
+                    }
+                case .none:
+                    historyControl.verticalDragHandled = true
                 }
             }
             .onEnded() { value in
