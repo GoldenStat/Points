@@ -10,287 +10,174 @@ import SwiftUI
 
 
 /// show Score
-/// tap: enter scroll mode
-/// scroll mode: show points above and below (score + buffer) like a one-armed bandit show just buffer as (+-buffer) in small upper left
-/// scroll up or down
-/// start timer, when it fires, register points
-/// new tap: register points
-
+///
+/// * TAP: toggle between scroll mode (add buffer) and showing score
+///
+/// * scrolling shows the points that will be added (the buffer)
+///
+/// * as an overlay you see the score that will result in
+///
+/// * when you exit scroll mode, the buffer is set to the selected score and the timer is started
+///
 struct ScrollScoreView: View {
     
     @EnvironmentObject var settings: GameSettings
     @EnvironmentObject var player: Player
     
     var score: Score { player.score }
-    var step : Int { settings.rule.scoreStep.defaultValue }
-    
-    private var isSelectingScore : Bool {
-        settings.timerPointsStarted && score.buffer != 0
-    }
-    
-    var bufferDescription : String {
-        score.buffer > 0 ? "+\(score.buffer)" : "\(score.buffer)"
-    }
-    
-    @State var scrollingSpeed: CGFloat = 100
+        
+    @State var pickerSelected = false
+        
+    @State var bufferScore = 0
     
     var body: some View {
         Group {
-            if isSelectingScore {
-                scoreWheel
-                    .frame(width: 200)
-                    .overlay(ScalingTextView(bufferDescription)
-                                .foregroundColor(bufferColor)
-                                .scaleEffect(0.4)
-                                .offset(x: 30, y: -100))
+            if pickerSelected {
+                CustomScoreWheelPicker(selected: $bufferScore)
             } else {
                 ScalingTextView(score.value.description)
             }
         }
-        .onTapGesture {
-            withAnimation() {
-                player.saveScore() // sets the buffer to 0 -> isSelected = false
-            }
-        }
+        .frame(width: 200)
+        .overlay(ScalingTextView(bufferText)
+                    .foregroundColor(bufferColor)
+                    .frame(width: 100, height: 100)
+                 ,alignment: .topTrailing)
         .foregroundColor(.points)
         .background(Color.background)
-        .highPriorityGesture(moveGesture)
-    }
-        
-    // MARK: - supporting views and gestures
-    
-    @GestureState var movement: DragGesture.Value?
-    
-    var scoreDidChange : Bool { movement != nil }
-
-    /// on Drag this function will be called
-    /// changes the buffer Value and starts the timer when movement ended
-    /// uses projection value
-    var moveGesture : some Gesture {
-        DragGesture(minimumDistance: 10)
-            .updating($movement) { value, movement, transaction in
-                guard !scoreDidChange else { return }
-                withAnimation(.easeInOut(duration: 1.0)) {
-                    handleDrag(from: value.startLocation, to: value.location)
+        .onTapGesture() {
+            withAnimation() {
+                if pickerSelected {
+                    // if the picker was selected, add the selected value
+                    player.add(score: bufferScore)
+                    settings.startTimer()
+                } else {
+                    // if not, reset the buffer and the timer
+                    settings.cancelTimers()
+                    bufferScore = 0
                 }
+                pickerSelected.toggle()
             }
-            .onEnded() { _ in
-                settings.startTimer()
-            }
-    }
-
-    func handleDrag(from start: CGPoint, to end: CGPoint) {
-        
-        // stepLength: movement in points
-        // three options : 1,5,10
-        let steps : [CGFloat] = [100, 200, 300]
-
-        var stepLength: CGFloat {
-            guard let movement = movement else { return .zero }
-            return movement.translation.height
         }
-        
-        
-        
-        let direction = start.y < end.y ? -1 : 1
-        
-        if abs(stepLength) > steps[2] {
-            addPoints(direction * 10)
-        } else if abs(stepLength) > steps[1] {
-            addPoints(direction * 5)
+        // with this the tap gesture doesn't work
+//        .onReceive([$settings.registerRoundTimer].publisher, perform: { _ in
+//            pickerSelected = false
+//        })
+
+    }
+    
+    var bufferText: String {
+        if pickerSelected {
+            return score.sum.description
         } else {
-            addPoints(direction)
+            return score.buffer.description
         }
-            
     }
     
-    func addPoints(_ points: Int) {
-        player.add(score: points)
-    }
-
-    /// the current seletction is shown as kind of a picker, with numbers diminishing up or down
-    var scoreWheel: some View {
-        VStack(spacing: 10) {
-            ForEach(scoreNumbers, id: \.self) { num in
-                Text(num.description)
-                    .scaleEffect(zoomFactor(for: num))
+    var bufferColor : Color {
+        if pickerSelected {
+            return .pointbuffer
+        } else {
+            if score.buffer == 0 {
+                return .clear
+            } else {
+                return .blue
             }
         }
     }
-
-    /// calculate a zoom factor for numbers further away from score
-    /// uses linear interpolation
-    func zoomFactor(for num: Int) -> CGFloat {
-        guard score.sum != minNum, score.sum != -maxNum else { return CGFloat(minZoom) }
-        let distFromScore = Double(abs(score.sum - num))
-        
-        // 0 < distFactor < 1
-        let distFactor = distFromScore / Double(score.sum - minNum)
-        
-        return CGFloat(minZoom * distFactor + maxZoom * ( 1 - distFactor ))
-    }
-    
-    /// all visible options during selection
-    /// NOTE: assuming stride (scoreStep) of 1!
-    var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
-    
-    var minNum : Int { score.sum - visibleSteps }
-    var maxNum : Int { score.sum + visibleSteps }
-        
-    // MARK: - constants
-    let visibleSteps = 3
-    let minZoom = 0.6
-    let minOpacity = 0.2
-    let maxZoom = 1.8
-    
-    let zoomingOpacity = 0.8
-    let bufferColor = Color.pointbuffer
 }
 
-struct ScoreWheel: View {
-    @Binding var score: Score
-    
-    var body: some View {
-        ZStack {
-            Color.black.opacity(0.1)
+// MARK: custom picker declaration
 
-            VStack(spacing: 10) {
-                ForEach(scoreNumbers, id: \.self) { num in
-                    Text(num.description)
-                        .font(.title)
-                        .scaleEffect(zoomFactor(for: num))
-                }
-            }
+/// The picker to select the buffer you want to add to the points
+struct CustomScoreWheelPicker : UIViewRepresentable {
+    
+    /// the binding to the value that will be modified by the picker
+    @Binding var selected: Int
+    
+    /// <#Description#>
+    /// - Returns: <#description#>
+    func makeCoordinator() -> Coordinator {
+        CustomScoreWheelPicker.Coordinator(parent: self, value: selected)
+    }
+    
+    /// <#Description#>
+    /// - Parameter context: <#context description#>
+    /// - Returns: <#description#>
+    func makeUIView(context: UIViewRepresentableContext<CustomScoreWheelPicker>) -> UIPickerView {
+        let picker = UIPickerView()
+        picker.dataSource = context.coordinator
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIView(_ uiView: UIPickerView, context: UIViewRepresentableContext<CustomScoreWheelPicker>) {
+        
+    }
+    
+    class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+        var parent: CustomScoreWheelPicker
+        var value: Int
+        private var data : [Int] { Array(value ...  value + 50) }
+        let stepRange = 50
+
+        init(parent: CustomScoreWheelPicker, value: Int) {
+            self.parent = parent
+            self.value = value
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            data.count
+        }
+        
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            self.parent.selected = data[row]
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: 220, height: 120))
             
-            if let movement = movement {
-                Circle()
-                    .strokeBorder(Color.black)
-                    .background(Color.clear)
-                    .position(movement.startLocation)
-                    .frame(width: 20, height: 20)
-                                
-                Circle()
-                    .position(movement.location)
-                    .background(Color.clear)
-                    .frame(width: 20, height: 20)
-            }
+            view.backgroundColor = .clear
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
+            label.text = String(data[row])
             
-            if stepLength != .zero {
-                HStack {
-                    Text("".appendingFormat("%d",stepLength))
-                    ZStack {
-                    Rectangle()
-                        .fill(barColor)
-                        .frame(width: 5, height: stepLength)
-                        .offset(x: 0, y: -stepLength / 2)
-                        // first marker at 0
-                    Rectangle()
-                        .frame(width: 10, height: 1)
-                        .offset(x: -2.5, y: -steps[0])
-                        // second marker at 50
-                    Rectangle()
-                        .frame(width: 10, height: 1)
-                        .offset(x: -2.5, y: -steps[1])
-                        // third marker at 100
-                    Rectangle()
-                        .frame(width: 10, height: 1)
-                        .offset(x: -2.5, y: -steps[2])
-                    }
-                }
-                .offset(x: 150)
-            }
-        }
-        .gesture(moveGesture)
-        .onTapGesture {
-            score.add(points: 1)
-        }
-        .onTapGesture(count: 2) {
-            score.add(points: -1)
-        }
-    }
-    
-    var barColor : Color { switch abs(stepLength) {
-    case steps[0]..<steps[1]:
-        return .yellow
-    case steps[1]..<steps[2]:
-        return .green
-    case steps[2]...:
-        return .red
-    default:
-        return .black
-    }
-    }
-    
-    let steps : [CGFloat] = [0, 100, 200]
+            label.textColor = .white
+            label.textAlignment = .center
+            label.font = .systemFont(ofSize: 128, weight: .bold)
 
-    var stepLength: CGFloat {
-        guard let movement = movement else { return .zero }
-        return movement.translation.height
-    }
-    
-    @GestureState var movement: DragGesture.Value?
+            view.addSubview(label)
+            
+            view.clipsToBounds = true
+            view.layer.cornerRadius = view.bounds.height / 2
+            
+            view.layer.borderWidth = 2.0
+            view.layer.borderColor = UIColor.blue.cgColor
+            
+            return view
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+            return 120
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+            return 260
+        }
+        
 
-    @State var count = 0
-    
-    var moveGesture : some Gesture {
-        DragGesture(minimumDistance: 10)
-            .updating($movement) { value, movement, transaction in
-                guard count < 5 else { return }
-                movement = value
-                // stepLength: movement in points
-                // three options : 1,5,10
-                if abs(stepLength) > steps[0] {
-                    let direction = value.startLocation.y < value.location.y ? 1 : -1
-                    var value = 1
-                    if abs(stepLength) > steps[1] {
-                        value = 5
-                        if abs(stepLength) > steps[2] {
-                            value = 10
-                        }
-                    }
-                    withAnimation(.easeInOut(duration: 1.0)) {
-                        score.add(points: direction * value)
-                    }
-                }
-                count += 1
-            }
-            .onEnded() { _ in
-                count = 0
-            }
     }
-
-    /// calculate a zoom factor for numbers further away from score
-    /// uses linear interpolation
-    func zoomFactor(for num: Int) -> CGFloat {
-        guard score.sum != minNum, score.sum != -maxNum else { return CGFloat(minZoom) }
-        let distFromScore = Double(abs(score.sum - num))
-        
-        // 0 < distFactor < 1
-        let distFactor = distFromScore / Double(score.sum - minNum)
-        
-        return CGFloat(minZoom * distFactor + maxZoom * ( 1 - distFactor ))
-    }
-    
-    /// all visible options during selection
-    /// NOTE: assuming stride (scoreStep) of 1!
-    var scoreNumbers: [Int] { [Int](minNum ... maxNum) }
-    
-    var minNum : Int { score.sum - totalSteps }
-    var maxNum : Int { score.sum + totalSteps }
-        
-    // MARK: - constants
-    let totalSteps = 10
-    let visibleSteps = 3
-    let minZoom = 0.6
-    let minOpacity = 0.2
-    let maxZoom = 1.8
-    
-    let zoomingOpacity = 0.8
-    let bufferColor = Color.pointbuffer
 }
+
 
 struct ScoreWheelTest: View {
-    @State private var score = Score()
+    @State private var buffer : Int = 0
+    @State private var points = 0
+    
+    var score: Score { Score(points, buffer: buffer) }
     
     var body: some View {
         VStack {
@@ -299,39 +186,10 @@ struct ScoreWheelTest: View {
                 Text("Buffer: \(score.buffer)")
             }
             .font(.title)
-            HStack {
-                ScoreWheel(score: $score)
-                    .frame(width: 200, height: 300)
-                VStack(spacing: 8) {
-                    Button() {
-                        score.add(points: 10)
-                    } label: {
-                        Image(systemName: "car.circle")
-                    }
-                    Button() {
-                        score.add(points: 5)
-                    } label: {
-                        Image(systemName: "arrow.up.circle")
-                    }
-                    Button() {
-                        score.add(points: 1)
-                    } label: {
-                        Image(systemName: "plus.circle")
-                    }
-                    Button() {
-                        score.add(points: -1)
-                    } label: {
-                        Image(systemName: "minus.circle")
-                    }
-                }
-                .font(.largeTitle)
 
+            CustomScoreWheelPicker(selected: $buffer)
+                .frame(width: 200, height: 300)
 
-            }
-            Button("Save") {
-                score.save()
-            }
-            .font(.title)
         }
         .animation(.easeInOut)
     }
@@ -339,8 +197,11 @@ struct ScoreWheelTest: View {
 
 struct ScrollScoreView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoreWheelTest()
-//            .frame(width: 200, height: 300)
-//            .previewLayout(.sizeThatFits)
+        ScrollScoreView()
+//            ScoreWheelTest()
+            .environmentObject(GameSettings())
+            .environmentObject(Player(name: "Alex"))
+            .frame(width: 200, height: 300)
+            .previewLayout(.sizeThatFits)
     }
 }

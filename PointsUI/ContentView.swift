@@ -72,9 +72,8 @@ struct ContentView: View {
                     settings.editingPlayer = nil
                 }
             }
-            .simultaneousGesture(dragHistoryGesture)
+            .highPriorityGesture(dragHistoryGesture)
             
-            // MARK: Popovers
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .environmentObject(settings)
@@ -147,7 +146,7 @@ struct ContentView: View {
     @GestureState var modifyHistory = HistoryControl()
     
     var dragHistoryGesture : some Gesture {
-        DragGesture(minimumDistance: 800)
+        DragGesture(minimumDistance: 80)
 
             .updating($modifyHistory) { value, historyControl, _ in
                 

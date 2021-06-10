@@ -25,8 +25,10 @@ struct BoardUI: View {
     var body: some View {
         // MARK: the player views arranged in a grid
         GeometryReader { geom in
-            ZStack { // use all the space
-                Color.clear
+            ZStack {
+                
+                Color.clear // to use all the space
+                
                 // vertical layout
                 if geom.size.width < geom.size.height {
                     VStack {
@@ -37,9 +39,7 @@ struct BoardUI: View {
                                     if  index < objects {
                                         let player = players.items[index]
                                         
-                                        activePlayerView(for: player)
-                                            .frame(width: geom.size.width * 0.5,
-                                                   height: geom.size.height * 0.39)
+                                        activePlayerView(for: player, with: geom.size)
                                             
                                             // preference data for the views
                                             .anchorPreference(key: TokenAnchorPreferenceKey.self,
@@ -53,27 +53,26 @@ struct BoardUI: View {
                         }
                     }
                 } else {
-                        // horizontal layout
-                        HStack {
-                            ForEach(players.items) { player in
-                                activePlayerView(for: player)
-                                    .frame(width: geom.size.width * 0.9 / CGFloat(objects),
-                                           height: geom.size.height * 0.9)
-
-//                                    // preference data for the views
-//                                    .anchorPreference(key: TokenAnchorPreferenceKey.self,
-//                                                      value: .bounds,
-//                                                      transform: { bounds in
-//                                                        [TokenAnchor(viewIdx: index, bounds: bounds)]
-//                                                      })
-//
-                            }
+                    // horizontal layout
+                    HStack {
+                        ForEach(players.items) { player in
+                            activePlayerView(for: player, with: geom.size)
+                            
+                            //                                    // preference data for the views
+                            //                                    .anchorPreference(key: TokenAnchorPreferenceKey.self,
+                            //                                                      value: .bounds,
+                            //                                                      transform: { bounds in
+                            //                                                        [TokenAnchor(viewIdx: index, bounds: bounds)]
+                            //                                                      })
+                            //
                         }
+                    }
                 }
             }
         }
+//        .padding(.horizontal,2)
         .ignoresSafeArea(edges: .all)
-
+        
         // update the Token with the Player rects
         .overlayPreferenceValue(TokenAnchorPreferenceKey.self) {
             preferences in
@@ -87,23 +86,26 @@ struct BoardUI: View {
         // connect settings with token instance
         .onAppear() {
             players.reset()
+            withAnimation(.default.delay(1.0)) {
+                players.enableActivePlayer()
+            }
         }
     }
-     
+    
     struct idRect : Identifiable{
         let id=UUID()
         let rect : CGRect
     }
     
     // MARK: - token code
-        
+    
     
     /// this function is triggered by .overlayPreferenceValue when the geometries change
     /// it creates a token View, this view needs all the preferences of the player's views to calcluate
     /// the token's position
     func updateRects(_ geometry: GeometryProxy,
                      _ preferences: [TokenAnchor]) -> some View {
-
+        
         token.update(bounds: preferences.map { geometry[$0.bounds] })
         
         return ActivePlayerMarkerView(token: token,
@@ -113,8 +115,8 @@ struct BoardUI: View {
             // not animated
             .gesture(dragGesture)
             .animation(nil)
-
- 
+        
+        
     }
     
     var tokenopacity : Double {
@@ -152,15 +154,36 @@ struct BoardUI: View {
     
     // MARK: - border for active Player
     /// emphasize the active Player - handled over the players object
-    func activePlayerView(for player: Player) -> some View {
+    func activePlayerView(for player: Player, with size: CGSize) -> some View {
+
         func shadowColor(for player: Player) -> Color {
             player == players.activePlayer ? .green : .clear
         }
+        
+        func height(for size: CGSize) -> CGFloat {
+            if size.width < size.height {
+                return size.height * 0.43 // 2 players could be taller
+            } else {
+                return size.height * 0.9
+            }
+        }
+        
+        func width(for size: CGSize) -> CGFloat {
+            if size.width < size.height {
+                return size.width * 0.5 // 2 - 4 players
+            } else {
+                return size.width * 0.9 / CGFloat(objects)
+            }
+        }
 
         return playerView(for: player)
+            .frame(width: width(for: size),
+                   height: height(for: size))
+            // a shadow shows the active player
             .shadow(color: shadowColor(for: player),
                     radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
     }
+    
 
     
     // MARK: - show the buffer

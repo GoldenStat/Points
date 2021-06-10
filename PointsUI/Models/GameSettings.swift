@@ -239,7 +239,7 @@ class GameSettings: ObservableObject {
             
     // MARK: - Timers
     @Published private var registerPointsTimer : Timer?
-    @Published private var registerRoundTimer : Timer?
+    @Published var registerRoundTimer : Timer?
 
     public var timeIntervalToCountPoints: TimeInterval { updateSpeed.double }
     public var timeIntervalToCountRound: TimeInterval { updateSpeed.double }
