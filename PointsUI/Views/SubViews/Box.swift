@@ -41,13 +41,13 @@ struct Box: View, Identifiable {
                     Color.inactive,
                     style: strokeStyle)
                 .zIndex(-1)
-                .animation(nil)
+                .animation(nil, value: score)
             
             EdgeShape(totalLength: cappedPoints)
                 .stroke(
                     Color.points,
                     style: strokeStyle)
-                .animation(nil)
+                .animation(nil, value: score)
                 .zIndex(1)
             
             EdgeShape(totalLength: cappedTotal,

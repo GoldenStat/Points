@@ -35,26 +35,25 @@ struct ActivePlayerMarkerView: View {
         animate ? .spring(response: 1, dampingFraction: 0.1, blendDuration: 0.3) : .default
     }
     
-    
     var body: some View {
         Circle()
             .frame(width: size, height: size)
             .overlay(
                 Text ("T")
-                    .font(.largeTitle)
+                    .font(.title)
                     .foregroundColor(.white)
             )
-            .animation(nil)
+            .animation(nil, value: animate)
             .rotation3DEffect(
                 rotationAngle,
                 axis: (x: 0.0, y: 1.0, z: 0.0)
                 )
-            .animation(tokenAnimation)
+            .animation(tokenAnimation, value: animate)
             .scaleEffect(zoomFactor)
             .shadow(color: shadow.color,
                     radius: shadow.radius,
                     x: shadow.x, y: shadow.y)
-            .animation(.default)
+            .animation(Animation.default, value: token.location)
             .position(token.location)
 
     }        

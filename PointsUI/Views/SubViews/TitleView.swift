@@ -27,7 +27,7 @@ struct TitleView: View {
                 .scaleEffect(animatedState.textZoom)
                 .opacity(animatedState.opacity)
                 .foregroundColor(animatedState.color)
-                .animation(animatedState.spring)
+                .animation(animatedState.spring, value: animatedState.offset)
         }
     }
         

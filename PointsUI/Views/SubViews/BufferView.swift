@@ -19,7 +19,7 @@ struct BufferView: View {
             .font(.system(size: scoreSize, weight: .semibold, design: .rounded))
             .opacity(scoreOpacity)
             .scaleEffect(scale)
-            .animation(.easeIn(duration: 0.5))
+            .animation(.easeIn(duration: 0.5), value: score)
             .onAppear() {
                 withAnimation {
                     scale = 2.0
