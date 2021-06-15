@@ -347,7 +347,7 @@ class GameSettings: ObservableObject {
         /// we have the history states where we want them, just have to erase the  buffers of set the last state as the current one
         cancelTimers()
         history.save() // update history, throw buffer away
-        history.clearBuffer()
+        history.clearBuffer() // maybe don't?
         updatePlayers()
     }
     

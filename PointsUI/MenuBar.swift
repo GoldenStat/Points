@@ -84,7 +84,7 @@ struct MenuTokenView: View {
             .frame(width: size, height: size)
             .overlay(
                 Text ("T")
-                    .font(.largeTitle)
+                    .font(.title)
                     .foregroundColor(.white)
             )
 //            .matchedGeometryEffect(id: "TokenMenu", in: tokenMenuSpace)

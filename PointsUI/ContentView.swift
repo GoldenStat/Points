@@ -10,17 +10,14 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var settings : GameSettings = GameSettings()
+    @EnvironmentObject var settings : GameSettings
 
     var stepsToUndo: Int {
         settings.history.undoBuffer.count
     }
     
     var body: some View {
-        NavigationView {
             ZStack {
-                Color.boardbgColor
-                    .edgesIgnoringSafeArea(.all)
                 
                 ZStack {
                     
@@ -33,9 +30,9 @@ struct ContentView: View {
                             .blur(radius: blurRadius)
 
                         
-                        if menuBarPosition == .bottom {
-                            menu
-                        }
+//                        if menuBarPosition == .bottom {
+//                            menu
+//                        }
                     }
                     
                     // MARK: History Views
@@ -65,6 +62,7 @@ struct ContentView: View {
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationTitle(settings.rule.description)
+            
             // MARK: Gestures
             .onTapGesture() {
                 withAnimation() {
@@ -73,11 +71,8 @@ struct ContentView: View {
                 }
             }
             .simultaneousGesture(dragHistoryGesture)
-            
-            // MARK: Popovers
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .environmentObject(settings)
+            .background(Color.boardbgColor, ignoresSafeAreaEdges: .all)
+        
     }
     
     var menu: some View {
@@ -87,10 +82,9 @@ struct ContentView: View {
                 tokenState: $settings.players.token.state,
                 steps: stepsToUndo
                 )
+            .drawingGroup()
             .padding(.horizontal)
             .zIndex(1) // needs to be in front for buttons to work...
-//            .drawingGroup()
-//            .offset(x: 0, y: menuBarPosition.rawValue)
             .shadow(color: .black, radius: 10, x: 8, y: 8)
     }
     
@@ -120,19 +114,11 @@ struct ContentView: View {
     enum BarPosition : CGFloat {
         case hidden = -100, top = 0.0, center = 0.1, bottom = 800
         mutating func moveUp() {
-            if self == .center {
-                self = .top
-            } else {
-                self = .hidden
-            }
+            self = .hidden
         }
         
         mutating func moveDown() {
-            if self == .hidden {
-                self = .top
-            } else {
-                self = .bottom
-            }
+            self = .top
         }
     }
 
@@ -147,39 +133,32 @@ struct ContentView: View {
     @GestureState var modifyHistory = HistoryControl()
     
     var dragHistoryGesture : some Gesture {
-        DragGesture(minimumDistance: 800)
-
+        DragGesture(minimumDistance: 80)
             .updating($modifyHistory) { value, historyControl, _ in
+                // abort if it was already handled during the gesture
+                guard !historyControl.verticalDragHandled else { return }
                 
-                switch value.dir {
-                case .up: // is handled only once
-                    if historyControl.verticalDragHandled { return }
-                    withAnimation() { menuBarPosition.moveUp() }
-                    historyControl.verticalDragHandled = true
-                    break
-                case .down: // is handled only once
-                    if historyControl.verticalDragHandled { return }
-                    withAnimation() { menuBarPosition.moveDown() }
-                    historyControl.verticalDragHandled = true
-                    break
-                case .left:
-                    historyControl.verticalDragHandled = true
-                    historyControl.steps = -1
-                    withAnimation() {
+                withAnimation() {
+                    switch value.dir {
+                    case .up: // is handled only once
+                        menuBarPosition.moveUp()
+                        break
+                    case .down: // is handled only once
+                        menuBarPosition.moveDown()
+                        break
+                    case .left:
                         settings.history.undo()
-                    }
-                case .right:
-                    historyControl.verticalDragHandled = true
-                    historyControl.steps = 1
-                    withAnimation() {
+                    case .right:
                         settings.history.redo()
+                    case .none:
+                        break
                     }
-                case .none:
-                    historyControl.verticalDragHandled = true
+                historyControl.verticalDragHandled = true
                 }
+                /// start timer, then update History?
             }
             .onEnded() { value in
-                // update history changes
+                // update history changes - timer, first?
                 withAnimation() {
                     settings.updateHistory()
                 }
