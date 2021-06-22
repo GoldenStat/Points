@@ -134,6 +134,7 @@ struct ContentView: View {
     
     var dragHistoryGesture : some Gesture {
         DragGesture(minimumDistance: 80)
+
             .updating($modifyHistory) { value, historyControl, _ in
                 // abort if it was already handled during the gesture
                 guard !historyControl.verticalDragHandled else { return }

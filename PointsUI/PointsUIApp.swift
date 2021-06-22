@@ -9,6 +9,19 @@
 // MARK: main entry point
 import SwiftUI
 
+/// Canvas(context, size)
+///  TimelineView(timeline)
+///  Particle animation (when winning, during the game?)
+///  .background modifier
+///   .safeAreaInset modifier
+///   history in 1-steps and time for actualizing
+///  5 -  share scores with friends
+/// make app discoverable
+///  internationalize
+///  make accessible
+///  add new rules
+///  menu design - "hamburger menu"? slide in?
+///
 @main
 struct PointsUIApp: App {
     static let name = "Points UI"

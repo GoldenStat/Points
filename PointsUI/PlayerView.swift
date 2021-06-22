@@ -21,7 +21,9 @@ struct PlayerView: View {
     var titleStyle : PlayerViewTitleStyle = .inline
     
     private var currentRule : Rule { settings.rule }
-    private var playerUI: PlayerUIType { currentRule.playerUI }
+    var playerUI: PlayerUIType { settings.rule.playerUI }
+    
+    //  currentRule.playerUI }
     
     var body: some View {
         VStack() {

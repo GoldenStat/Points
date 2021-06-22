@@ -69,9 +69,11 @@ struct EditPlayerNames: View {
         }
     }
     
+    var playerItems : Binding<[Player]> { $settings.players.items }
+    
     var body: some View {
-        List(players.items) { player in
-            EditableTextFieldWithImage(binding: binding(for: player), placeholder: placeholder(for: player))
+        List(playerItems) { $player in
+            EditableTextFieldWithImage(binding: $player.name, placeholder: placeholder(for: player))
                 .onTapGesture() {
                     selectedPlayer = player
                 }
